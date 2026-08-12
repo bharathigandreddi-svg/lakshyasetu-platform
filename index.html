@@ -1,412 +1,761 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>LakshyaSetu | UPSC & APPSC Preparation</title>
+<title>LakshyaSetu | లక్ష్యసేతు</title>
+
+<meta name="description"
+content="LakshyaSetu - Concept-first preparation platform for UPSC and APPSC aspirants. Visualized classes, faculty explained classes, current affairs and test series.">
 
 <style>
+
+:root{
+  --navy:#102746;
+  --navy2:#17365d;
+  --blue:#2563eb;
+  --light:#f5f8fc;
+  --white:#ffffff;
+  --text:#172033;
+  --muted:#667085;
+  --border:#dfe6ef;
+  --green:#0f766e;
+  --gold:#d59b2b;
+  --shadow:0 12px 35px rgba(16,39,70,.08);
+  --radius:18px;
+}
+
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+  box-sizing:border-box;
 }
 
 html{
-    scroll-behavior:smooth;
+  scroll-behavior:smooth;
 }
 
 body{
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f5f7fb;
-    color:#17233c;
-    line-height:1.6;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:var(--light);
+  line-height:1.6;
 }
 
 a{
-    text-decoration:none;
-    color:inherit;
+  color:inherit;
 }
 
-.topbar{
-    background:#102544;
-    color:white;
-    padding:14px 6%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position:sticky;
-    top:0;
-    z-index:1000;
+.container{
+  width:min(1180px,92%);
+  margin:auto;
+}
+
+/* HEADER */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(16,39,70,.97);
+  color:white;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+}
+
+.navbar{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
 }
 
 .brand{
-    font-size:25px;
-    font-weight:800;
+  text-decoration:none;
+  color:white;
+  font-size:25px;
+  font-weight:800;
+  line-height:1.1;
 }
 
 .brand small{
-    display:block;
-    font-size:11px;
-    color:#b9d7ff;
-    letter-spacing:.5px;
+  display:block;
+  font-size:11px;
+  color:#b9d8ff;
+  margin-top:4px;
+  font-weight:600;
 }
 
-.nav{
-    display:flex;
-    gap:22px;
-    align-items:center;
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:20px;
 }
 
-.nav a{
-    color:white;
-    font-size:14px;
+.nav-links a{
+  text-decoration:none;
+  color:#e9f0fa;
+  font-size:14px;
+  font-weight:600;
 }
 
-.nav a:hover{
-    color:#8ed8ff;
+.nav-links a:hover{
+  color:white;
 }
 
-.nav-btn{
-    background:white;
-    color:#102544 !important;
-    padding:9px 17px;
-    border-radius:8px;
-    font-weight:700;
-}
-
-.hero{
-    background:linear-gradient(135deg,#102544,#193e6d);
-    color:white;
-    padding:80px 6%;
-}
-
-.hero-content{
-    max-width:1100px;
-    margin:auto;
-}
-
-.hero h1{
-    font-size:48px;
-    line-height:1.15;
-    max-width:800px;
-    margin-bottom:18px;
-}
-
-.hero h1 span{
-    color:#8ed8ff;
-}
-
-.hero p{
-    max-width:750px;
-    font-size:18px;
-    color:#dbe8f7;
-    margin-bottom:28px;
-}
-
-.hero-buttons{
-    display:flex;
-    gap:14px;
-    flex-wrap:wrap;
+.nav-buttons{
+  display:flex;
+  gap:10px;
 }
 
 .btn{
-    display:inline-block;
-    padding:12px 22px;
-    border-radius:8px;
-    font-weight:700;
-    cursor:pointer;
-    border:none;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  padding:11px 19px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:14px;
+  border:1px solid transparent;
+  cursor:pointer;
 }
 
 .btn-primary{
-    background:#ffffff;
-    color:#102544;
+  background:var(--blue);
+  color:white;
 }
 
-.btn-secondary{
-    border:1px solid #9fc7ef;
-    color:white;
-    background:transparent;
+.btn-primary:hover{
+  background:#1d4ed8;
 }
 
-.section{
-    max-width:1200px;
-    margin:auto;
-    padding:65px 6%;
+.btn-light{
+  background:white;
+  color:var(--navy);
+}
+
+.btn-outline{
+  border-color:#b9c8da;
+  color:var(--navy);
+  background:white;
+}
+
+.btn-outline:hover{
+  border-color:var(--blue);
+  color:var(--blue);
+}
+
+/* HERO */
+
+.hero{
+  background:
+    linear-gradient(135deg,#102746 0%,#173b68 55%,#214f84 100%);
+  color:white;
+  padding:90px 0 85px;
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:55px;
+  align-items:center;
+}
+
+.hero h1{
+  font-size:52px;
+  line-height:1.08;
+  margin:0 0 20px;
+  letter-spacing:-1px;
+}
+
+.hero h1 span{
+  color:#9dd2ff;
+}
+
+.hero-subtitle{
+  font-size:19px;
+  color:#d8e7f7;
+  max-width:700px;
+  margin-bottom:28px;
+}
+
+.hero-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.hero-card{
+  background:white;
+  color:var(--text);
+  padding:30px;
+  border-radius:24px;
+  box-shadow:0 25px 60px rgba(0,0,0,.25);
+}
+
+.hero-card h3{
+  margin-top:0;
+  color:var(--navy);
+  font-size:23px;
+}
+
+.hero-card p{
+  color:var(--muted);
+}
+
+.hero-points{
+  display:grid;
+  gap:12px;
+}
+
+.hero-point{
+  padding:13px 15px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#f8fbff;
+  font-weight:600;
+}
+
+/* COMMON */
+
+section{
+  padding:75px 0;
 }
 
 .section-heading{
-    text-align:center;
-    margin-bottom:40px;
+  text-align:center;
+  max-width:800px;
+  margin:0 auto 45px;
 }
 
 .section-heading h2{
-    font-size:34px;
-    margin-bottom:8px;
+  font-size:34px;
+  color:var(--navy);
+  margin:0 0 10px;
 }
 
 .section-heading p{
-    color:#65738a;
+  color:var(--muted);
+  margin:0;
 }
 
-.exam-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:25px;
+.badge{
+  display:inline-block;
+  background:#e8f1ff;
+  color:#1d4ed8;
+  padding:6px 12px;
+  border-radius:50px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:12px;
 }
 
-.exam-card{
-    background:white;
-    border:1px solid #e1e7ef;
-    border-radius:16px;
-    padding:28px;
-    box-shadow:0 8px 25px rgba(16,37,68,.06);
-}
-
-.exam-card.featured{
-    border:2px solid #2c72c9;
-}
-
-.exam-tag{
-    display:inline-block;
-    background:#e9f3ff;
-    color:#1d5c9f;
-    padding:5px 11px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:700;
-    margin-bottom:12px;
-}
-
-.exam-card h3{
-    font-size:25px;
-    margin-bottom:8px;
-}
-
-.exam-card > p{
-    color:#66748a;
-    margin-bottom:20px;
-}
-
-.subject-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:9px;
-    margin:18px 0 22px;
-}
-
-.subject{
-    background:#f5f7fb;
-    border-radius:7px;
-    padding:9px 11px;
-    font-size:13px;
-    color:#263750;
-}
-
-.subject:hover{
-    background:#e9f3ff;
-}
-
-.learning-section{
-    background:#eef4fb;
-}
+/* LEARNING MODE */
 
 .learning-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:25px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
 }
 
 .learning-card{
-    background:white;
-    border-radius:16px;
-    padding:30px;
-    border:1px solid #dfe7f0;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:32px;
+  box-shadow:var(--shadow);
 }
 
-.learning-icon{
-    font-size:35px;
-    margin-bottom:10px;
+.learning-card.visual{
+  border-top:5px solid var(--blue);
+}
+
+.learning-card.explained{
+  border-top:5px solid var(--green);
 }
 
 .learning-card h3{
-    font-size:24px;
-    margin-bottom:10px;
+  margin:0 0 10px;
+  font-size:24px;
+  color:var(--navy);
 }
 
 .learning-card p{
-    color:#65738a;
-    margin-bottom:18px;
+  color:var(--muted);
 }
 
-.learning-card ul{
-    padding-left:20px;
-    margin-bottom:20px;
+.learning-list{
+  padding:0;
+  margin:20px 0 25px;
+  list-style:none;
 }
 
-.learning-card li{
-    margin-bottom:7px;
+.learning-list li{
+  padding:8px 0;
+  border-bottom:1px solid #edf1f6;
 }
 
-.visual{
-    border-top:5px solid #286fc2;
+/* COURSE CARDS */
+
+.course-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:25px;
 }
 
-.faculty{
-    border-top:5px solid #1c8b70;
+.course-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:30px;
+  box-shadow:var(--shadow);
 }
 
-.structure{
-    background:white;
+.course-card.featured{
+  border:2px solid #7fb5ff;
 }
 
-.flow{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:12px;
-    align-items:stretch;
+.course-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
 }
 
-.flow-card{
-    background:#f5f7fb;
-    padding:22px 15px;
-    text-align:center;
-    border-radius:12px;
-    border:1px solid #e1e7ef;
+.course-card h3{
+  margin:0;
+  font-size:26px;
+  color:var(--navy);
 }
 
-.flow-card strong{
-    display:block;
-    margin-bottom:7px;
+.course-card .course-description{
+  color:var(--muted);
 }
 
-.flow-card span{
-    color:#68768a;
-    font-size:13px;
+.course-tag{
+  background:#edf6f5;
+  color:var(--green);
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
-.features{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
+.subject-list{
+  margin:22px 0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 20px;
+}
+
+.subject-list li{
+  padding:8px 0;
+  border-bottom:1px solid #edf1f6;
+  color:#354052;
+  font-size:14px;
+}
+
+.course-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* SUBJECT EXPLORER */
+
+.explorer{
+  background:white;
+}
+
+.subject-sections{
+  display:grid;
+  gap:18px;
+}
+
+.subject-box{
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+.subject-header{
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  background:#f9fbfe;
+}
+
+.subject-header h3{
+  margin:0;
+  color:var(--navy);
+  font-size:18px;
+}
+
+.subject-header span{
+  color:var(--blue);
+  font-weight:800;
+}
+
+.subject-content{
+  padding:20px;
+  display:none;
+}
+
+.subject-content.open{
+  display:block;
+}
+
+.topic-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.topic{
+  background:#f7f9fc;
+  border:1px solid #e7edf5;
+  padding:10px 12px;
+  border-radius:9px;
+  font-size:13px;
+}
+
+/* APPPSC */
+
+.exam-section{
+  background:#f0f5fb;
+}
+
+.exam-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.exam-card{
+  background:white;
+  border-radius:18px;
+  padding:26px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+.exam-card h3{
+  color:var(--navy);
+  margin-top:0;
+  font-size:23px;
+}
+
+.exam-card p{
+  color:var(--muted);
+}
+
+.exam-subjects{
+  list-style:none;
+  padding:0;
+  margin:20px 0;
+}
+
+.exam-subjects li{
+  padding:7px 0;
+  border-bottom:1px solid #edf1f6;
+  font-size:14px;
+}
+
+/* FEATURES */
+
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
 }
 
 .feature{
-    background:white;
-    border:1px solid #e1e7ef;
-    padding:25px;
-    border-radius:14px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:23px;
+  text-align:center;
 }
 
 .feature h3{
-    margin-bottom:8px;
+  margin:8px 0;
+  color:var(--navy);
+  font-size:18px;
 }
 
 .feature p{
-    color:#68768a;
-    font-size:14px;
+  color:var(--muted);
+  font-size:14px;
 }
 
-.cta{
-    background:#102544;
-    color:white;
-    text-align:center;
-    padding:65px 6%;
+/* CURRENT AFFAIRS */
+
+.current-box{
+  background:linear-gradient(135deg,#102746,#1b4778);
+  color:white;
+  border-radius:25px;
+  padding:45px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:35px;
+  align-items:center;
 }
 
-.cta h2{
-    font-size:34px;
-    margin-bottom:12px;
+.current-box h2{
+  font-size:32px;
+  margin-top:0;
 }
 
-.cta p{
-    color:#cbd8e9;
-    margin-bottom:25px;
+.current-box p{
+  color:#d8e6f4;
 }
+
+.current-list{
+  background:white;
+  color:var(--text);
+  border-radius:18px;
+  padding:25px;
+}
+
+.current-list div{
+  padding:11px 0;
+  border-bottom:1px solid #edf1f6;
+  font-weight:600;
+}
+
+/* TEST SERIES */
+
+.test-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:35px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  max-width:850px;
+  margin:auto;
+}
+
+.test-card h2{
+  color:var(--navy);
+  margin-top:0;
+}
+
+.test-features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin:25px 0;
+}
+
+.test-feature{
+  background:#f7f9fc;
+  border-radius:12px;
+  padding:15px;
+  font-size:14px;
+}
+
+/* PRICE */
+
+.price-box{
+  background:#fff;
+  border:2px solid #bcd5f5;
+  border-radius:25px;
+  padding:45px;
+  max-width:700px;
+  margin:auto;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+
+.price{
+  font-size:48px;
+  font-weight:800;
+  color:var(--navy);
+  margin:10px 0;
+}
+
+.price-note{
+  color:var(--muted);
+}
+
+/* FAQ */
+
+.faq{
+  max-width:850px;
+  margin:auto;
+}
+
+details{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:12px;
+  padding:18px 20px;
+}
+
+summary{
+  cursor:pointer;
+  font-weight:700;
+  color:var(--navy);
+}
+
+details p{
+  color:var(--muted);
+  margin-bottom:0;
+}
+
+/* CTA */
+
+.final-cta{
+  background:#102746;
+  color:white;
+  text-align:center;
+}
+
+.final-cta h2{
+  font-size:36px;
+  margin-top:0;
+}
+
+.final-cta p{
+  color:#d5e3f2;
+  max-width:700px;
+  margin:0 auto 25px;
+}
+
+/* FOOTER */
 
 footer{
-    background:#091a31;
-    color:#b9c8db;
-    padding:30px 6%;
-    text-align:center;
+  background:#0b1d34;
+  color:#cbd8e7;
+  padding:45px 0 25px;
 }
 
-footer strong{
-    color:white;
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:35px;
 }
 
-.footer-links{
-    margin-top:12px;
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    flex-wrap:wrap;
+footer h3{
+  color:white;
+  margin-top:0;
 }
 
-.footer-links a:hover{
-    color:white;
+footer a{
+  display:block;
+  color:#cbd8e7;
+  text-decoration:none;
+  margin:7px 0;
+  font-size:14px;
 }
+
+footer a:hover{
+  color:white;
+}
+
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.12);
+  margin-top:30px;
+  padding-top:20px;
+  text-align:center;
+  font-size:13px;
+}
+
+/* RESPONSIVE */
 
 @media(max-width:900px){
 
-    .nav{
-        display:none;
-    }
+  .nav-links{
+    display:none;
+  }
 
-    .hero h1{
-        font-size:38px;
-    }
+  .hero-grid,
+  .learning-grid,
+  .course-grid,
+  .current-box{
+    grid-template-columns:1fr;
+  }
 
-    .exam-grid,
-    .learning-grid{
-        grid-template-columns:1fr;
-    }
+  .exam-grid{
+    grid-template-columns:1fr 1fr;
+  }
 
-    .features{
-        grid-template-columns:1fr;
-    }
+  .feature-grid{
+    grid-template-columns:1fr 1fr;
+  }
 
-    .flow{
-        grid-template-columns:1fr 1fr;
-    }
+  .topic-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
 }
 
 @media(max-width:600px){
 
-    .hero{
-        padding:55px 6%;
-    }
+  .navbar{
+    min-height:68px;
+  }
 
-    .hero h1{
-        font-size:31px;
-    }
+  .brand{
+    font-size:20px;
+  }
 
-    .hero p{
-        font-size:16px;
-    }
+  .nav-buttons .btn{
+    padding:8px 11px;
+    font-size:12px;
+  }
 
-    .section{
-        padding:45px 5%;
-    }
+  .hero{
+    padding:60px 0;
+  }
 
-    .section-heading h2{
-        font-size:28px;
-    }
+  .hero h1{
+    font-size:38px;
+  }
 
-    .subject-grid{
-        grid-template-columns:1fr;
-    }
+  .hero-subtitle{
+    font-size:16px;
+  }
 
-    .flow{
-        grid-template-columns:1fr;
-    }
+  section{
+    padding:55px 0;
+  }
 
-    .brand{
-        font-size:21px;
-    }
+  .section-heading h2{
+    font-size:28px;
+  }
+
+  .exam-grid,
+  .feature-grid,
+  .subject-list,
+  .test-features{
+    grid-template-columns:1fr;
+  }
+
+  .topic-grid{
+    grid-template-columns:1fr;
+  }
+
+  .current-box,
+  .price-box{
+    padding:28px;
+  }
+
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+
 }
+
 </style>
 </head>
 
@@ -414,22 +763,28 @@ footer strong{
 
 <!-- HEADER -->
 
-<header class="topbar">
+<header>
+  <div class="container navbar">
 
-    <a href="index.html">
-        <div class="brand">
-            LakshyaSetu
-            <small>లక్ష్యసేతు</small>
-        </div>
+    <a href="index.html" class="brand">
+      LakshyaSetu
+      <small>లక్ష్యసేతు</small>
     </a>
 
-    <nav class="nav">
-        <a href="#courses">Courses</a>
-        <a href="#learning">Learning Modes</a>
-        <a href="#structure">How It Works</a>
-        <a href="login.html" class="nav-btn">Student Login</a>
+    <nav class="nav-links">
+      <a href="#courses">Courses</a>
+      <a href="#learning">Learning</a>
+      <a href="#current-affairs">Current Affairs</a>
+      <a href="#tests">Test Series</a>
+      <a href="#faq">FAQ</a>
     </nav>
 
+    <div class="nav-buttons">
+      <a href="login.html" class="btn btn-light">Login</a>
+      <a href="signup.html" class="btn btn-primary">Sign Up</a>
+    </div>
+
+  </div>
 </header>
 
 
@@ -437,434 +792,1433 @@ footer strong{
 
 <section class="hero">
 
-    <div class="hero-content">
+  <div class="container hero-grid">
 
-        <h1>
-            Concept-first learning for
-            <span>UPSC & APPSC aspirants</span>
-        </h1>
+    <div>
 
-        <p>
-            Learn difficult concepts through visualized classes,
-            faculty explanations, topic-wise notes and practice.
-            Built for serious competitive-exam preparation.
-        </p>
+      <div class="badge">Concept-first learning</div>
 
-        <div class="hero-buttons">
-            <a href="#courses" class="btn btn-primary">
-                Explore Courses
-            </a>
+      <h1>
+        Learn concepts.<br>
+        <span>Visualize them.</span><br>
+        Crack your exam.
+      </h1>
 
-            <a href="login.html" class="btn btn-secondary">
-                Student Login
-            </a>
-        </div>
+      <p class="hero-subtitle">
+        LakshyaSetu is a focused learning platform for UPSC and APPSC aspirants,
+        combining visualized teaching, faculty explained classes, current affairs
+        and exam-oriented practice.
+      </p>
 
-    </div>
+      <div class="hero-buttons">
+        <a href="#courses" class="btn btn-primary">
+          Explore Courses
+        </a>
 
-</section>
-
-
-<!-- COURSES -->
-
-<section class="section" id="courses">
-
-    <div class="section-heading">
-
-        <h2>Our Courses</h2>
-
-        <p>
-            Choose your examination and explore the complete subject structure.
-        </p>
+        <a href="signup.html" class="btn btn-light">
+          Create Account
+        </a>
+      </div>
 
     </div>
 
 
-    <div class="exam-grid">
+    <div class="hero-card">
 
+      <h3>One platform. Multiple learning paths.</h3>
 
-        <!-- UPSC -->
+      <p>
+        Choose the way you learn best and study according to your examination goal.
+      </p>
 
-        <div class="exam-card featured">
+      <div class="hero-points">
 
-            <span class="exam-tag">UPSC CSE</span>
-
-            <h3>UPSC Civil Services</h3>
-
-            <p>
-                Integrated preparation for Prelims and Mains with
-                concept-first learning.
-            </p>
-
-            <div class="subject-grid">
-
-                <div class="subject">Geography</div>
-                <div class="subject">Indian History</div>
-                <div class="subject">Art & Culture</div>
-                <div class="subject">Indian Polity</div>
-                <div class="subject">Economy</div>
-                <div class="subject">Environment</div>
-                <div class="subject">Science & Technology</div>
-                <div class="subject">Indian Society</div>
-                <div class="subject">Governance</div>
-                <div class="subject">International Relations</div>
-                <div class="subject">Internal Security</div>
-                <div class="subject">Disaster Management</div>
-                <div class="subject">Ethics</div>
-                <div class="subject">Essay</div>
-                <div class="subject">CSAT</div>
-                <div class="subject">Current Affairs</div>
-
-            </div>
-
-            <a href="#learning" class="btn btn-primary">
-                Explore UPSC
-            </a>
-
+        <div class="hero-point">
+          UPSC Civil Services
         </div>
 
-
-        <!-- GROUP 1 -->
-
-        <div class="exam-card">
-
-            <span class="exam-tag">APPSC</span>
-
-            <h3>APPSC Group 1</h3>
-
-            <p>
-                Subject-oriented preparation for APPSC Group 1.
-            </p>
-
-            <div class="subject-grid">
-
-                <div class="subject">General Studies</div>
-                <div class="subject">Indian History</div>
-                <div class="subject">AP History</div>
-                <div class="subject">Indian Geography</div>
-                <div class="subject">AP Geography</div>
-                <div class="subject">Indian Polity</div>
-                <div class="subject">AP Polity</div>
-                <div class="subject">Indian Economy</div>
-                <div class="subject">AP Economy</div>
-                <div class="subject">Environment</div>
-                <div class="subject">Science & Technology</div>
-                <div class="subject">Current Affairs</div>
-                <div class="subject">Mental Ability</div>
-                <div class="subject">Governance</div>
-                <div class="subject">Social Issues</div>
-                <div class="subject">Ethics</div>
-
-            </div>
-
-            <a href="#learning" class="btn btn-primary">
-                Explore Group 1
-            </a>
-
+        <div class="hero-point">
+          APPSC Group 1
         </div>
 
-
-        <!-- GROUP 2 -->
-
-        <div class="exam-card">
-
-            <span class="exam-tag">APPSC</span>
-
-            <h3>APPSC Group 2</h3>
-
-            <p>
-                Complete subject-oriented preparation for Group 2.
-            </p>
-
-            <div class="subject-grid">
-
-                <div class="subject">Indian History</div>
-                <div class="subject">AP History</div>
-                <div class="subject">Geography</div>
-                <div class="subject">AP Geography</div>
-                <div class="subject">Indian Society</div>
-                <div class="subject">AP Society</div>
-                <div class="subject">Indian Polity</div>
-                <div class="subject">Economy</div>
-                <div class="subject">AP Economy</div>
-                <div class="subject">Science & Technology</div>
-                <div class="subject">Environment</div>
-                <div class="subject">Current Affairs</div>
-                <div class="subject">Mental Ability</div>
-
-            </div>
-
-            <a href="#learning" class="btn btn-primary">
-                Explore Group 2
-            </a>
-
+        <div class="hero-point">
+          APPSC Group 2
         </div>
 
-
-        <!-- GROUP 4 -->
-
-        <div class="exam-card">
-
-            <span class="exam-tag">APPSC</span>
-
-            <h3>APPSC Group 4</h3>
-
-            <p>
-                Foundation-oriented preparation for Group 4 aspirants.
-            </p>
-
-            <div class="subject-grid">
-
-                <div class="subject">General Studies</div>
-                <div class="subject">General Science</div>
-                <div class="subject">Indian History</div>
-                <div class="subject">AP History & Culture</div>
-                <div class="subject">Indian Geography</div>
-                <div class="subject">AP Geography</div>
-                <div class="subject">Indian Polity</div>
-                <div class="subject">Economy</div>
-                <div class="subject">Current Affairs</div>
-                <div class="subject">Mental Ability</div>
-                <div class="subject">General English</div>
-                <div class="subject">Computer & Office Skills</div>
-
-            </div>
-
-            <a href="#learning" class="btn btn-primary">
-                Explore Group 4
-            </a>
-
+        <div class="hero-point">
+          APPSC Group 4
         </div>
+
+      </div>
 
     </div>
+
+  </div>
 
 </section>
 
 
 <!-- LEARNING MODES -->
 
-<section class="learning-section" id="learning">
+<section id="learning">
 
-    <div class="section">
+  <div class="container">
 
-        <div class="section-heading">
+    <div class="section-heading">
 
-            <h2>Choose How You Want to Learn</h2>
+      <span class="badge">Two ways to learn</span>
 
-            <p>
-                Two learning experiences for different learning preferences.
-            </p>
+      <h2>Choose how you want to study</h2>
 
-        </div>
-
-
-        <div class="learning-grid">
-
-
-            <!-- VISUALIZED -->
-
-            <div class="learning-card visual">
-
-                <div class="learning-icon">🎬</div>
-
-                <h3>Visualized Classes</h3>
-
-                <p>
-                    Learn difficult concepts through powerful visuals,
-                    animations, maps, diagrams and storytelling.
-                </p>
-
-                <ul>
-                    <li>Concept-based visual explanations</li>
-                    <li>Maps and diagrams</li>
-                    <li>Animated learning</li>
-                    <li>Easy-to-remember presentation</li>
-                    <li>UPSC and APPSC focused concepts</li>
-                </ul>
-
-                <a href="login.html" class="btn btn-primary">
-                    Explore Visualized Classes
-                </a>
-
-            </div>
-
-
-            <!-- FACULTY -->
-
-            <div class="learning-card faculty">
-
-                <div class="learning-icon">👨‍🏫</div>
-
-                <h3>Faculty Explained Classes</h3>
-
-                <p>
-                    Detailed classroom-style teaching using PPT,
-                    PentaTab and direct faculty explanation.
-                </p>
-
-                <ul>
-                    <li>Direct faculty explanation</li>
-                    <li>PPT-based teaching</li>
-                    <li>PentaTab explanations</li>
-                    <li>Detailed conceptual coverage</li>
-                    <li>Exam-oriented teaching</li>
-                </ul>
-
-                <a href="login.html" class="btn btn-primary">
-                    Explore Faculty Classes
-                </a>
-
-            </div>
-
-        </div>
+      <p>
+        Not every student learns in the same way.
+        LakshyaSetu provides both visualized and faculty explained learning.
+      </p>
 
     </div>
+
+
+    <div class="learning-grid">
+
+
+      <div class="learning-card visual">
+
+        <h3>Visualized Classes</h3>
+
+        <p>
+          Concept-first educational videos created with maps, diagrams,
+          animations and visual explanations.
+        </p>
+
+        <ul class="learning-list">
+
+          <li>Visual explanation of difficult concepts</li>
+          <li>Maps and diagrams</li>
+          <li>Concept-based storytelling</li>
+          <li>Short and focused lessons</li>
+          <li>UPSC and APPSC oriented content</li>
+
+        </ul>
+
+        <a href="#courses" class="btn btn-primary">
+          Explore Visualized Classes
+        </a>
+
+      </div>
+
+
+      <div class="learning-card explained">
+
+        <h3>Faculty Explained Classes</h3>
+
+        <p>
+          Detailed classes where the faculty explains the subject directly
+          using presentations, digital teaching and board-based explanation.
+        </p>
+
+        <ul class="learning-list">
+
+          <li>Detailed topic explanation</li>
+          <li>PPT and digital teaching</li>
+          <li>Exam-oriented examples</li>
+          <li>Concept clarification</li>
+          <li>Revision-friendly lessons</li>
+
+        </ul>
+
+        <a href="#courses" class="btn btn-outline">
+          Explore Faculty Classes
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- LEARNING STRUCTURE -->
+<!-- COURSES -->
 
-<section class="section structure" id="structure">
+<section id="courses" class="explorer">
+
+  <div class="container">
 
     <div class="section-heading">
 
-        <h2>One Topic. Complete Learning.</h2>
+      <span class="badge">Courses</span>
 
-        <p>
-            Our platform is designed around topics instead of random videos.
+      <h2>Choose your examination</h2>
+
+      <p>
+        Select an examination and explore its complete subject structure.
+      </p>
+
+    </div>
+
+
+    <div class="course-grid">
+
+
+      <!-- UPSC -->
+
+      <div class="course-card featured">
+
+        <div class="course-top">
+
+          <h3>UPSC Civil Services</h3>
+
+          <span class="course-tag">Flagship</span>
+
+        </div>
+
+        <p class="course-description">
+          Integrated concept-first preparation for UPSC Prelims and Mains.
         </p>
 
+        <ul class="subject-list">
+
+          <li>Indian Polity</li>
+          <li>History</li>
+          <li>Geography</li>
+          <li>Indian Economy</li>
+          <li>Environment & Ecology</li>
+          <li>Science & Technology</li>
+          <li>International Relations</li>
+          <li>Internal Security</li>
+          <li>Society</li>
+          <li>Governance</li>
+          <li>Ethics</li>
+          <li>Art & Culture</li>
+          <li>Social Issues</li>
+          <li>Disaster Management</li>
+          <li>Essay</li>
+          <li>Current Affairs</li>
+
+        </ul>
+
+        <div class="course-actions">
+
+          <a href="#upsc-subjects" class="btn btn-primary">
+            Explore UPSC
+          </a>
+
+          <a href="login.html" class="btn btn-outline">
+            Login to Learn
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- GROUP 1 -->
+
+      <div class="course-card">
+
+        <div class="course-top">
+
+          <h3>APPSC Group 1</h3>
+
+          <span class="course-tag">APPSC</span>
+
+        </div>
+
+        <p class="course-description">
+          Subject-oriented preparation for APPSC Group 1 aspirants.
+        </p>
+
+        <ul class="subject-list">
+
+          <li>Indian History</li>
+          <li>AP History</li>
+          <li>Geography</li>
+          <li>AP Geography</li>
+          <li>Indian Polity</li>
+          <li>Governance</li>
+          <li>Indian Economy</li>
+          <li>AP Economy</li>
+          <li>Science & Technology</li>
+          <li>Environment</li>
+          <li>Current Affairs</li>
+          <li>Mental Ability</li>
+          <li>Society</li>
+          <li>Culture</li>
+          <li>Disaster Management</li>
+          <li>Ethics & Values</li>
+
+        </ul>
+
+        <div class="course-actions">
+
+          <a href="#group1" class="btn btn-primary">
+            Explore Group 1
+          </a>
+
+          <a href="login.html" class="btn btn-outline">
+            Login
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- GROUP 2 -->
+
+      <div class="course-card">
+
+        <div class="course-top">
+
+          <h3>APPSC Group 2</h3>
+
+          <span class="course-tag">APPSC</span>
+
+        </div>
+
+        <p class="course-description">
+          Focused preparation for APPSC Group 2 examination.
+        </p>
+
+        <ul class="subject-list">
+
+          <li>Indian History</li>
+          <li>AP History</li>
+          <li>Geography</li>
+          <li>Geography & Society</li>
+          <li>Indian Constitution</li>
+          <li>Governance</li>
+          <li>Indian Economy</li>
+          <li>AP Economy</li>
+          <li>Science & Technology</li>
+          <li>Environment</li>
+          <li>Current Affairs</li>
+          <li>Mental Ability</li>
+
+        </ul>
+
+        <div class="course-actions">
+
+          <a href="#group2" class="btn btn-primary">
+            Explore Group 2
+          </a>
+
+          <a href="login.html" class="btn btn-outline">
+            Login
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- GROUP 4 -->
+
+      <div class="course-card">
+
+        <div class="course-top">
+
+          <h3>APPSC Group 4</h3>
+
+          <span class="course-tag">APPSC</span>
+
+        </div>
+
+        <p class="course-description">
+          Foundation and examination-oriented preparation for Group 4 aspirants.
+        </p>
+
+        <ul class="subject-list">
+
+          <li>General Studies</li>
+          <li>Current Affairs</li>
+          <li>Indian History</li>
+          <li>AP History</li>
+          <li>Geography</li>
+          <li>Indian Polity</li>
+          <li>Economy</li>
+          <li>Science & Technology</li>
+          <li>Environment</li>
+          <li>Mental Ability</li>
+          <li>General English</li>
+          <li>Telugu</li>
+
+        </ul>
+
+        <div class="course-actions">
+
+          <a href="#group4" class="btn btn-primary">
+            Explore Group 4
+          </a>
+
+          <a href="login.html" class="btn btn-outline">
+            Login
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- UPSC SUBJECT EXPLORER -->
+
+<section id="upsc-subjects">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">UPSC</span>
+
+      <h2>UPSC Subject Explorer</h2>
+
+      <p>
+        Explore the subjects first. Then go deeper into topics and lessons.
+      </p>
+
     </div>
 
 
-    <div class="flow">
+    <div class="subject-sections">
 
-        <div class="flow-card">
-            <strong>Exam</strong>
-            <span>UPSC / APPSC</span>
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Geography</h3>
+
+          <span>Explore</span>
+
         </div>
 
-        <div class="flow-card">
-            <strong>Subject</strong>
-            <span>Geography / History / Polity</span>
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Physical Geography</div>
+            <div class="topic">Geomorphology</div>
+            <div class="topic">Climatology</div>
+            <div class="topic">Oceanography</div>
+            <div class="topic">Biogeography</div>
+            <div class="topic">Human Geography</div>
+            <div class="topic">Economic Geography</div>
+            <div class="topic">Indian Geography</div>
+            <div class="topic">World Geography</div>
+            <div class="topic">Resources</div>
+            <div class="topic">Agriculture</div>
+            <div class="topic">Industries</div>
+            <div class="topic">Transport</div>
+            <div class="topic">Population</div>
+            <div class="topic">Urbanization</div>
+            <div class="topic">Mapping</div>
+
+          </div>
+
         </div>
 
-        <div class="flow-card">
-            <strong>Topic</strong>
-            <span>Concept-wise learning</span>
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Indian Polity</h3>
+
+          <span>Explore</span>
+
         </div>
 
-        <div class="flow-card">
-            <strong>Classes</strong>
-            <span>Visualized / Faculty</span>
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Constitution</div>
+            <div class="topic">Fundamental Rights</div>
+            <div class="topic">Directive Principles</div>
+            <div class="topic">Parliament</div>
+            <div class="topic">President</div>
+            <div class="topic">Prime Minister</div>
+            <div class="topic">Judiciary</div>
+            <div class="topic">Federalism</div>
+            <div class="topic">Local Government</div>
+            <div class="topic">Constitutional Bodies</div>
+            <div class="topic">Governance</div>
+            <div class="topic">Elections</div>
+
+          </div>
+
         </div>
 
-        <div class="flow-card">
-            <strong>Practice</strong>
-            <span>Notes / MCQs / Tests</span>
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>History & Art Culture</h3>
+
+          <span>Explore</span>
+
         </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Ancient India</div>
+            <div class="topic">Medieval India</div>
+            <div class="topic">Modern India</div>
+            <div class="topic">Freedom Movement</div>
+            <div class="topic">Post Independence</div>
+            <div class="topic">Architecture</div>
+            <div class="topic">Literature</div>
+            <div class="topic">Religion & Philosophy</div>
+            <div class="topic">Paintings</div>
+            <div class="topic">Dance</div>
+            <div class="topic">Music</div>
+            <div class="topic">Culture</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Indian Economy</h3>
+
+          <span>Explore</span>
+
+        </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Basic Economics</div>
+            <div class="topic">National Income</div>
+            <div class="topic">Inflation</div>
+            <div class="topic">Banking</div>
+            <div class="topic">Monetary Policy</div>
+            <div class="topic">Fiscal Policy</div>
+            <div class="topic">Budget</div>
+            <div class="topic">Taxation</div>
+            <div class="topic">External Sector</div>
+            <div class="topic">Agriculture</div>
+            <div class="topic">Industry</div>
+            <div class="topic">Infrastructure</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Environment & Ecology</h3>
+
+          <span>Explore</span>
+
+        </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Ecology</div>
+            <div class="topic">Ecosystems</div>
+            <div class="topic">Biodiversity</div>
+            <div class="topic">Climate Change</div>
+            <div class="topic">Pollution</div>
+            <div class="topic">Environmental Laws</div>
+            <div class="topic">Protected Areas</div>
+            <div class="topic">Conservation</div>
+            <div class="topic">Forests</div>
+            <div class="topic">Wildlife</div>
+            <div class="topic">International Conventions</div>
+            <div class="topic">Sustainable Development</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Science & Technology</h3>
+
+          <span>Explore</span>
+
+        </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Space Technology</div>
+            <div class="topic">Biotechnology</div>
+            <div class="topic">Nanotechnology</div>
+            <div class="topic">Artificial Intelligence</div>
+            <div class="topic">Quantum Technology</div>
+            <div class="topic">Defence Technology</div>
+            <div class="topic">Health Technology</div>
+            <div class="topic">Energy Technology</div>
+            <div class="topic">Digital Technology</div>
+            <div class="topic">Nuclear Technology</div>
+            <div class="topic">Robotics</div>
+            <div class="topic">Emerging Technologies</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>International Relations</h3>
+
+          <span>Explore</span>
+
+        </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">India & Neighbours</div>
+            <div class="topic">India & USA</div>
+            <div class="topic">India & Europe</div>
+            <div class="topic">India & Russia</div>
+            <div class="topic">India & China</div>
+            <div class="topic">Indo-Pacific</div>
+            <div class="topic">International Organizations</div>
+            <div class="topic">Global Groupings</div>
+            <div class="topic">Regional Organizations</div>
+            <div class="topic">Global Issues</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Internal Security</h3>
+
+          <span>Explore</span>
+
+        </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Terrorism</div>
+            <div class="topic">Cyber Security</div>
+            <div class="topic">Border Management</div>
+            <div class="topic">Organized Crime</div>
+            <div class="topic">Money Laundering</div>
+            <div class="topic">Insurgency</div>
+            <div class="topic">Left Wing Extremism</div>
+            <div class="topic">Coastal Security</div>
+            <div class="topic">Security Agencies</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="subject-box">
+
+        <div class="subject-header"
+             onclick="toggleSubject(this)">
+
+          <h3>Ethics & Integrity</h3>
+
+          <span>Explore</span>
+
+        </div>
+
+        <div class="subject-content">
+
+          <div class="topic-grid">
+
+            <div class="topic">Ethics</div>
+            <div class="topic">Integrity</div>
+            <div class="topic">Attitude</div>
+            <div class="topic">Emotional Intelligence</div>
+            <div class="topic">Civil Service Values</div>
+            <div class="topic">Probity</div>
+            <div class="topic">Accountability</div>
+            <div class="topic">Case Studies</div>
+
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
+
+  </div>
+
+</section>
+
+
+<!-- APPSC GROUP 1 -->
+
+<section id="group1" class="exam-section">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">APPSC Group 1</span>
+
+      <h2>Group 1 Subject Structure</h2>
+
+      <p>
+        Complete subject-wise learning structure for APPSC Group 1 aspirants.
+      </p>
+
+    </div>
+
+
+    <div class="exam-grid">
+
+      <div class="exam-card">
+
+        <h3>History & Culture</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian History</li>
+          <li>AP History</li>
+          <li>Ancient India</li>
+          <li>Medieval India</li>
+          <li>Modern India</li>
+          <li>Freedom Movement</li>
+          <li>Art & Culture</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Geography</h3>
+
+        <ul class="exam-subjects">
+          <li>Physical Geography</li>
+          <li>Indian Geography</li>
+          <li>AP Geography</li>
+          <li>Economic Geography</li>
+          <li>Resources</li>
+          <li>Agriculture</li>
+          <li>Mapping</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Polity & Governance</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian Constitution</li>
+          <li>Parliament</li>
+          <li>Judiciary</li>
+          <li>Federalism</li>
+          <li>Local Government</li>
+          <li>Governance</li>
+          <li>AP Administration</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Economy</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian Economy</li>
+          <li>AP Economy</li>
+          <li>Agriculture</li>
+          <li>Industry</li>
+          <li>Infrastructure</li>
+          <li>Budget</li>
+          <li>Development</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Science & Environment</h3>
+
+        <ul class="exam-subjects">
+          <li>Science & Technology</li>
+          <li>Space</li>
+          <li>Biotechnology</li>
+          <li>Environment</li>
+          <li>Ecology</li>
+          <li>Climate Change</li>
+          <li>Biodiversity</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Current Affairs & Ability</h3>
+
+        <ul class="exam-subjects">
+          <li>National Current Affairs</li>
+          <li>International Current Affairs</li>
+          <li>AP Current Affairs</li>
+          <li>Mental Ability</li>
+          <li>Logical Reasoning</li>
+          <li>Data Interpretation</li>
+          <li>Exam Practice</li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- GROUP 2 -->
+
+<section id="group2">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">APPSC Group 2</span>
+
+      <h2>Group 2 Subject Structure</h2>
+
+      <p>
+        Focused learning areas for Group 2 preparation.
+      </p>
+
+    </div>
+
+
+    <div class="exam-grid">
+
+      <div class="exam-card">
+
+        <h3>History</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian History</li>
+          <li>AP History</li>
+          <li>Freedom Movement</li>
+          <li>Culture</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Geography & Society</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian Geography</li>
+          <li>AP Geography</li>
+          <li>Physical Geography</li>
+          <li>Society</li>
+          <li>Population</li>
+          <li>Urbanization</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Constitution & Governance</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian Constitution</li>
+          <li>Political System</li>
+          <li>Governance</li>
+          <li>Public Administration</li>
+          <li>Local Government</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Economy</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian Economy</li>
+          <li>AP Economy</li>
+          <li>Development</li>
+          <li>Agriculture</li>
+          <li>Budget & Planning</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Science & Environment</h3>
+
+        <ul class="exam-subjects">
+          <li>General Science</li>
+          <li>Technology</li>
+          <li>Environment</li>
+          <li>Ecology</li>
+          <li>Current Developments</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Current Affairs & Mental Ability</h3>
+
+        <ul class="exam-subjects">
+          <li>National Affairs</li>
+          <li>International Affairs</li>
+          <li>AP Current Affairs</li>
+          <li>Reasoning</li>
+          <li>Numerical Ability</li>
+          <li>Data Interpretation</li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- GROUP 4 -->
+
+<section id="group4" class="exam-section">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">APPSC Group 4</span>
+
+      <h2>Group 4 Subject Structure</h2>
+
+      <p>
+        A simple and structured learning path for Group 4 aspirants.
+      </p>
+
+    </div>
+
+
+    <div class="exam-grid">
+
+      <div class="exam-card">
+
+        <h3>General Studies</h3>
+
+        <ul class="exam-subjects">
+          <li>Indian History</li>
+          <li>AP History</li>
+          <li>Geography</li>
+          <li>Indian Polity</li>
+          <li>Economy</li>
+          <li>Science & Technology</li>
+          <li>Environment</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Current Affairs</h3>
+
+        <ul class="exam-subjects">
+          <li>National Current Affairs</li>
+          <li>International Current Affairs</li>
+          <li>Andhra Pradesh Current Affairs</li>
+          <li>Government Schemes</li>
+          <li>Important Reports</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Mental Ability</h3>
+
+        <ul class="exam-subjects">
+          <li>Logical Reasoning</li>
+          <li>Analytical Ability</li>
+          <li>Numerical Ability</li>
+          <li>Data Interpretation</li>
+          <li>Problem Solving</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Language Preparation</h3>
+
+        <ul class="exam-subjects">
+          <li>General English</li>
+          <li>Grammar</li>
+          <li>Vocabulary</li>
+          <li>Comprehension</li>
+          <li>Telugu</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>AP Specific Areas</h3>
+
+        <ul class="exam-subjects">
+          <li>Andhra Pradesh Geography</li>
+          <li>AP Economy</li>
+          <li>AP Government</li>
+          <li>AP Development</li>
+          <li>AP Current Affairs</li>
+        </ul>
+
+      </div>
+
+
+      <div class="exam-card">
+
+        <h3>Practice</h3>
+
+        <ul class="exam-subjects">
+          <li>Topic-wise Questions</li>
+          <li>Revision</li>
+          <li>Mock Tests</li>
+          <li>Previous Questions</li>
+          <li>Exam Strategy</li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </section>
 
 
 <!-- FEATURES -->
 
-<section class="section">
+<section>
+
+  <div class="container">
 
     <div class="section-heading">
 
-        <h2>Built for Serious Aspirants</h2>
+      <span class="badge">LakshyaSetu</span>
 
+      <h2>Built for serious aspirants</h2>
+
+      <p>
+        The platform is designed around understanding first, revision next,
+        and examination practice after that.
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div class="feature">
+        <h3>Concept First</h3>
         <p>
-            Everything organized around the way students actually study.
+          Understand the concept before memorizing facts.
         </p>
+      </div>
+
+      <div class="feature">
+        <h3>Visual Learning</h3>
+        <p>
+          Difficult concepts explained using visuals and diagrams.
+        </p>
+      </div>
+
+      <div class="feature">
+        <h3>Exam Focused</h3>
+        <p>
+          Content structured around UPSC and APPSC requirements.
+        </p>
+      </div>
+
+      <div class="feature">
+        <h3>Continuous Revision</h3>
+        <p>
+          Learn, revise and practice through a structured system.
+        </p>
+      </div>
 
     </div>
 
-
-    <div class="features">
-
-        <div class="feature">
-
-            <h3>Concept First</h3>
-
-            <p>
-                Understand the concept before memorizing facts.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <h3>Topic-wise Learning</h3>
-
-            <p>
-                Navigate from subject to topic and learn systematically.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <h3>Practice & Revision</h3>
-
-            <p>
-                Notes, MCQs and tests will connect directly with learning.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <h3>Current Affairs</h3>
-
-            <p>
-                Important current issues connected with static concepts.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <h3>Student Dashboard</h3>
-
-            <p>
-                Access enrolled courses and learning material from one place.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <h3>Continuous Expansion</h3>
-
-            <p>
-                New topics, lessons and practice material can be added regularly.
-            </p>
-
-        </div>
-
-    </div>
+  </div>
 
 </section>
 
 
-<!-- CTA -->
+<!-- CURRENT AFFAIRS -->
 
-<section class="cta">
+<section id="current-affairs">
 
-    <h2>Start Your Preparation with LakshyaSetu</h2>
+  <div class="container">
+
+    <div class="current-box">
+
+      <div>
+
+        <span class="badge">Current Affairs</span>
+
+        <h2>Stay connected with what matters for the exam.</h2>
+
+        <p>
+          Current affairs will be organized around important UPSC and APPSC
+          themes instead of simply giving students a long list of news items.
+        </p>
+
+        <a href="login.html" class="btn btn-light">
+          Explore Current Affairs
+        </a>
+
+      </div>
+
+
+      <div class="current-list">
+
+        <div>National Issues</div>
+        <div>International Relations</div>
+        <div>Economy & Government Policies</div>
+        <div>Environment & Climate</div>
+        <div>Science & Technology</div>
+        <div>Andhra Pradesh Current Affairs</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- TEST SERIES -->
+
+<section id="tests">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">Practice</span>
+
+      <h2>Test Series</h2>
+
+      <p>
+        Learning becomes useful when you can test what you have understood.
+      </p>
+
+    </div>
+
+
+    <div class="test-card">
+
+      <h2>Practice. Analyse. Improve.</h2>
+
+      <p>
+        Topic-wise tests, revision tests, current affairs questions and
+        examination-oriented practice will be integrated into the learning journey.
+      </p>
+
+
+      <div class="test-features">
+
+        <div class="test-feature">
+          Topic-wise Tests
+        </div>
+
+        <div class="test-feature">
+          Revision Tests
+        </div>
+
+        <div class="test-feature">
+          Mock Tests
+        </div>
+
+      </div>
+
+
+      <a href="login.html" class="btn btn-primary">
+        Access Test Series
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- COURSE VALUE -->
+
+<section>
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">LakshyaSetu Courses</span>
+
+      <h2>Serious preparation, without unnecessary complexity</h2>
+
+      <p>
+        Our flagship learning experience combines structured content,
+        visualized classes and faculty explained classes.
+      </p>
+
+    </div>
+
+
+    <div class="price-box">
+
+      <div class="badge">
+        Flagship Learning Program
+      </div>
+
+      <div class="price">
+        ₹4,999
+      </div>
+
+      <p class="price-note">
+        Designed to provide structured concept-first preparation through
+        multiple learning formats.
+      </p>
+
+      <br>
+
+      <a href="signup.html" class="btn btn-primary">
+        Create Student Account
+      </a>
+
+      <a href="login.html" class="btn btn-outline">
+        Already a Student? Login
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FAQ -->
+
+<section id="faq" class="explorer">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span class="badge">FAQ</span>
+
+      <h2>Frequently Asked Questions</h2>
+
+      <p>
+        Quick answers before you start.
+      </p>
+
+    </div>
+
+
+    <div class="faq">
+
+      <details>
+
+        <summary>
+          What is LakshyaSetu?
+        </summary>
+
+        <p>
+          LakshyaSetu is a concept-first learning platform designed for
+          UPSC and APPSC aspirants.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          What are Visualized Classes?
+        </summary>
+
+        <p>
+          Visualized Classes explain difficult concepts using diagrams,
+          maps, animations and structured visual storytelling.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          What are Faculty Explained Classes?
+        </summary>
+
+        <p>
+          These are detailed classes where the faculty directly explains
+          the topic using PPT, digital teaching and structured explanation.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          Can I access the courses after creating an account?
+        </summary>
+
+        <p>
+          Yes. Students can create an account and access the learning
+          content available to their enrolled courses.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          Will Current Affairs be available?
+        </summary>
+
+        <p>
+          Yes. Current Affairs will be organized according to examination
+          relevance and important UPSC and APPSC themes.
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          Will Test Series be available?
+        </summary>
+
+        <p>
+          Yes. The platform is being structured to include topic-wise,
+          revision and examination-oriented tests.
+        </p>
+
+      </details>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FINAL CTA -->
+
+<section class="final-cta">
+
+  <div class="container">
+
+    <h2>Start your preparation with LakshyaSetu</h2>
 
     <p>
-        Structured learning. Clear concepts. Consistent preparation.
+      Understand the concept. Build the foundation. Revise. Practice.
+      Move closer to your goal.
     </p>
 
-    <a href="signup.html" class="btn btn-primary">
-        Create Student Account
-    </a>
+    <div class="hero-buttons" style="justify-content:center;">
+
+      <a href="signup.html" class="btn btn-light">
+        Create Account
+      </a>
+
+      <a href="login.html" class="btn btn-primary">
+        Student Login
+      </a>
+
+    </div>
+
+  </div>
 
 </section>
 
@@ -873,27 +2227,87 @@ footer strong{
 
 <footer>
 
-    <strong>LakshyaSetu | లక్ష్యసేతు</strong>
+  <div class="container">
 
-    <br>
+    <div class="footer-grid">
 
-    <small>
-        Concept-first learning for competitive-exam aspirants.
-    </small>
+      <div>
 
-    <div class="footer-links">
+        <h3>LakshyaSetu</h3>
 
-        <a href="index.html">Home</a>
+        <p>
+          లక్ష్యసేతు
+        </p>
+
+        <p>
+          Concept-first learning for serious competitive-exam aspirants.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h3>Explore</h3>
+
+        <a href="#courses">Courses</a>
+        <a href="#learning">Learning Modes</a>
+        <a href="#current-affairs">Current Affairs</a>
+        <a href="#tests">Test Series</a>
+        <a href="#faq">FAQ</a>
+
+      </div>
+
+
+      <div>
+
+        <h3>Account</h3>
 
         <a href="login.html">Student Login</a>
-
         <a href="signup.html">Create Account</a>
-
         <a href="admin.html">Admin</a>
+
+      </div>
 
     </div>
 
+
+    <div class="footer-bottom">
+
+      LakshyaSetu | లక్ష్యసేతు
+
+      <br>
+
+      <small>
+        Concept-first learning for competitive-exam aspirants.
+      </small>
+
+    </div>
+
+  </div>
+
 </footer>
+
+
+<script>
+
+function toggleSubject(header){
+
+  const content = header.nextElementSibling;
+
+  const isOpen = content.classList.contains("open");
+
+  document.querySelectorAll(".subject-content").forEach(function(item){
+    item.classList.remove("open");
+  });
+
+  if(!isOpen){
+    content.classList.add("open");
+  }
+
+}
+
+</script>
 
 </body>
 </html>

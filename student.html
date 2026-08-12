@@ -1,8 +1,551 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Student | LakshyaSetu</title><link rel="stylesheet" href="styles.css"></head><body>
-<header class="top"><div class="brand">LakshyaSetu <small>Student Dashboard</small></div><button id="logout" class="btn alt">Logout</button></header>
-<main class="wrap"><section class="panel"><h1 id="courseTitle">Geography Concepts</h1><p id="courseDesc" class="muted"></p><div id="lessons" class="list"></div></section></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script>
-const sb=window.supabase.createClient(LAKSHYASETU_CONFIG.supabaseUrl,LAKSHYASETU_CONFIG.supabasePublishableKey);
-async function boot(){const u=await sb.auth.getUser();if(!u.data.user){location.href="login.html";return}const slug=new URLSearchParams(location.search).get("course")||"geography-concepts";const c=await sb.from("courses").select("*").eq("slug",slug).eq("published",true).single();if(c.error){lessons.innerHTML='<div class="item">Course not found.</div>';return}courseTitle.textContent=c.data.title;courseDesc.textContent=c.data.description||"";const l=await sb.from("lessons").select("*").eq("course_id",c.data.id).eq("published",true).order("sort_order");lessons.innerHTML=l.data?.map(x=>'<div class="item"><h2>'+x.title+'</h2><p class="muted">'+(x.description||"")+'</p>'+(x.video_url?'<video controls style="width:100%;max-height:600px" src="'+x.video_url+'"></video>':'<span class="status">Video pending</span>')+(x.pdf_url?'<p><a class="btn alt" href="'+x.pdf_url+'" target="_blank">Open Notes PDF</a></p>':"")+"</div>").join("")||'<div class="item">No published lessons yet.</div>'}
-logout.onclick=async()=>{await sb.auth.signOut();location.href="login.html"};boot();
-</script></body></html>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Student | LakshyaSetu</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .course-card {
+      display: block;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .course-card h3 {
+      margin: 0 0 8px;
+    }
+
+    .course-card p {
+      margin: 0;
+    }
+
+    .section-title {
+      margin-top: 32px;
+      margin-bottom: 12px;
+    }
+
+    .info-card {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      margin-top: 16px;
+    }
+
+    .back-btn {
+      margin-bottom: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="top">
+  <div class="brand">
+    LakshyaSetu
+    <small>Student Dashboard</small>
+  </div>
+
+  <button id="logout" class="btn alt">Logout</button>
+</header>
+
+<main class="wrap">
+
+  <section class="panel">
+
+    <div id="backArea"></div>
+
+    <h1 id="courseTitle">Loading...</h1>
+
+    <p id="courseDesc" class="muted"></p>
+
+    <!-- APPSC GROUP 1 SUBJECTS -->
+    <div id="subjectArea"></div>
+
+    <!-- LESSONS -->
+    <div id="lessonArea"></div>
+
+    <!-- FAQ -->
+    <div id="faqArea"></div>
+
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<script>
+
+const sb = window.supabase.createClient(
+  LAKSHYASETU_CONFIG.supabaseUrl,
+  LAKSHYASETU_CONFIG.supabasePublishableKey
+);
+
+const courseTitle = document.getElementById("courseTitle");
+const courseDesc = document.getElementById("courseDesc");
+const subjectArea = document.getElementById("subjectArea");
+const lessonArea = document.getElementById("lessonArea");
+const faqArea = document.getElementById("faqArea");
+const backArea = document.getElementById("backArea");
+
+
+/* -------------------------------------------------
+   APPSC GROUP 1 SUBJECTS
+------------------------------------------------- */
+
+const appscSubjects = [
+
+  {
+    title: "Geography",
+    description: "Indian and World Geography concepts for APPSC Group 1.",
+    keywords: ["geography"]
+  },
+
+  {
+    title: "History",
+    description: "Ancient, Medieval and Modern Indian History.",
+    keywords: ["history"]
+  },
+
+  {
+    title: "AP History",
+    description: "History of Andhra Pradesh and important regional developments.",
+    keywords: ["ap-history", "andhra-history"]
+  },
+
+  {
+    title: "AP Geography",
+    description: "Andhra Pradesh Geography, resources, rivers, agriculture and regional development.",
+    keywords: ["ap-geography", "andhra-geography"]
+  },
+
+  {
+    title: "Science and Technology",
+    description: "Important Science and Technology concepts for competitive examinations.",
+    keywords: ["science-technology", "science-and-technology"]
+  },
+
+  {
+    title: "Environment",
+    description: "Environment, Ecology, Biodiversity and Climate Change.",
+    keywords: ["environment", "ecology"]
+  },
+
+  {
+    title: "Current Affairs",
+    description: "Important national, international and Andhra Pradesh current affairs.",
+    keywords: ["current-affairs"]
+  },
+
+  {
+    title: "Test Series",
+    description: "Practice tests, MCQs and examination-oriented assessments.",
+    keywords: ["test-series", "tests"]
+  }
+
+];
+
+
+/* -------------------------------------------------
+   LOGIN CHECK
+------------------------------------------------- */
+
+async function boot() {
+
+  const u = await sb.auth.getUser();
+
+  if (!u.data.user) {
+    location.href = "login.html";
+    return;
+  }
+
+  const params = new URLSearchParams(location.search);
+
+  const slug =
+    params.get("course") || "appsc-group-1";
+
+
+  /* -------------------------------------------------
+     GET CURRENT COURSE
+  ------------------------------------------------- */
+
+  const c = await sb
+    .from("courses")
+    .select("*")
+    .eq("slug", slug)
+    .eq("published", true)
+    .single();
+
+
+  if (c.error) {
+
+    courseTitle.textContent = "Course not found";
+
+    courseDesc.textContent =
+      "The requested course is not currently available.";
+
+    return;
+  }
+
+
+  const course = c.data;
+
+  courseTitle.textContent = course.title;
+
+  courseDesc.textContent =
+    course.description || "";
+
+
+  /* -------------------------------------------------
+     APPSC GROUP 1 MAIN PAGE
+  ------------------------------------------------- */
+
+  if (
+    slug === "appsc-group-1" ||
+    course.title.toLowerCase().includes("appsc group 1")
+  ) {
+
+    renderSubjects();
+
+    await loadAllPublishedCourses();
+
+    renderFAQs();
+
+    return;
+  }
+
+
+  /* -------------------------------------------------
+     NORMAL COURSE PAGE
+  ------------------------------------------------- */
+
+  renderBackButton();
+
+  await loadLessons(course.id);
+
+}
+
+
+/* -------------------------------------------------
+   RENDER APPSC SUBJECTS
+------------------------------------------------- */
+
+function renderSubjects() {
+
+  subjectArea.innerHTML = `
+    <h2 class="section-title">
+      APPSC Group 1 Subjects
+    </h2>
+
+    <div class="course-grid">
+
+      ${appscSubjects.map(subject => `
+
+        <a class="course-card"
+           href="student.html?course=${subject.keywords[0]}">
+
+          <h3>${subject.title}</h3>
+
+          <p class="muted">
+            ${subject.description}
+          </p>
+
+        </a>
+
+      `).join("")}
+
+    </div>
+  `;
+}
+
+
+/* -------------------------------------------------
+   LOAD ALL PUBLISHED COURSES
+   This allows us to match actual Supabase courses.
+------------------------------------------------- */
+
+async function loadAllPublishedCourses() {
+
+  const result = await sb
+    .from("courses")
+    .select("*")
+    .eq("published", true)
+    .order("title");
+
+
+  if (result.error || !result.data) {
+    return;
+  }
+
+
+  const courses = result.data;
+
+
+  const matchingCourses = appscSubjects
+    .map(subject => {
+
+      return courses.find(course => {
+
+        const title = (course.title || "").toLowerCase();
+        const slug = (course.slug || "").toLowerCase();
+
+        return subject.keywords.some(keyword => {
+
+          return (
+            slug === keyword ||
+            slug.includes(keyword) ||
+            title.includes(keyword.replaceAll("-", " "))
+          );
+
+        });
+
+      });
+
+    })
+    .filter(Boolean);
+
+
+  if (!matchingCourses.length) {
+    return;
+  }
+
+
+  subjectArea.innerHTML += `
+
+    <h2 class="section-title">
+      Available Courses
+    </h2>
+
+    <div class="course-grid">
+
+      ${matchingCourses.map(course => `
+
+        <a class="course-card"
+           href="student.html?course=${course.slug}">
+
+          <h3>${course.title}</h3>
+
+          <p class="muted">
+            ${course.description || "Open course"}
+          </p>
+
+        </a>
+
+      `).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* -------------------------------------------------
+   LOAD LESSONS
+------------------------------------------------- */
+
+async function loadLessons(courseId) {
+
+  const l = await sb
+    .from("lessons")
+    .select("*")
+    .eq("course_id", courseId)
+    .eq("published", true)
+    .order("sort_order");
+
+
+  if (l.error) {
+
+    lessonArea.innerHTML = `
+      <div class="info-card">
+        Unable to load lessons.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  if (!l.data || !l.data.length) {
+
+    lessonArea.innerHTML = `
+      <div class="info-card">
+        <h3>No published lessons yet.</h3>
+        <p class="muted">
+          Lessons will appear here once they are published.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  lessonArea.innerHTML = `
+
+    <h2 class="section-title">
+      Lessons
+    </h2>
+
+    <div class="list">
+
+      ${l.data.map(x => `
+
+        <div class="item">
+
+          <h2>${x.title}</h2>
+
+          <p class="muted">
+            ${x.description || ""}
+          </p>
+
+          ${
+            x.video_url
+            ?
+            `<video
+              controls
+              style="width:100%;max-height:600px"
+              src="${x.video_url}">
+            </video>`
+            :
+            `<span class="status">
+              Video pending
+            </span>`
+          }
+
+          ${
+            x.pdf_url
+            ?
+            `<p>
+              <a
+                class="btn alt"
+                href="${x.pdf_url}"
+                target="_blank">
+                Open Notes PDF
+              </a>
+            </p>`
+            :
+            ""
+          }
+
+        </div>
+
+      `).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* -------------------------------------------------
+   BACK BUTTON
+------------------------------------------------- */
+
+function renderBackButton() {
+
+  backArea.innerHTML = `
+    <a
+      class="btn alt back-btn"
+      href="student.html?course=appsc-group-1">
+      Back to APPSC Group 1
+    </a>
+  `;
+
+}
+
+
+/* -------------------------------------------------
+   FAQ SECTION
+------------------------------------------------- */
+
+function renderFAQs() {
+
+  faqArea.innerHTML = `
+
+    <h2 class="section-title">
+      Frequently Asked Questions
+    </h2>
+
+    <div class="info-card">
+
+      <h3>How do I access a subject?</h3>
+
+      <p class="muted">
+        Select the required subject from the APPSC Group 1 course page.
+      </p>
+
+    </div>
+
+
+    <div class="info-card">
+
+      <h3>Where will the lessons appear?</h3>
+
+      <p class="muted">
+        Published lessons, videos and PDF notes will appear inside the
+        respective subject.
+      </p>
+
+    </div>
+
+
+    <div class="info-card">
+
+      <h3>Where can I access the Test Series?</h3>
+
+      <p class="muted">
+        Open the Test Series section from the APPSC Group 1 course page.
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* -------------------------------------------------
+   LOGOUT
+------------------------------------------------- */
+
+document.getElementById("logout").onclick = async () => {
+
+  await sb.auth.signOut();
+
+  location.href = "login.html";
+
+};
+
+
+/* -------------------------------------------------
+   START
+------------------------------------------------- */
+
+boot();
+
+</script>
+
+</body>
+</html>

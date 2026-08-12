@@ -7,6 +7,105 @@
   <title>LakshyaSetu | లక్ష్యసేతు</title>
 
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .subject-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .subject-card .subject-list {
+      margin: 14px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .subject-card .subject-list li {
+      margin-bottom: 7px;
+    }
+
+    .subject-actions {
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .roadmap {
+      margin-top: 30px;
+    }
+
+    .roadmap details {
+      background: #ffffff;
+      border: 1px solid #dfe5ee;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .roadmap summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px 22px;
+      margin-top: 18px;
+    }
+
+    .topic-grid li {
+      margin-bottom: 5px;
+      line-height: 1.45;
+    }
+
+    .mini-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .mini-tag {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 20px;
+      background: #eef3f8;
+      font-size: 13px;
+    }
+
+    .exam-section {
+      margin-top: 70px;
+    }
+
+    .exam-header {
+      margin-bottom: 24px;
+    }
+
+    .feature-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .feature-box h3 {
+      margin-top: 0;
+    }
+
+    @media (max-width: 900px) {
+      .topic-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -20,9 +119,13 @@
 
   <nav>
     <a href="#exams">Examinations</a>
-    <a href="#courses">Courses</a>
+    <a href="#upsc-courses">UPSC</a>
+    <a href="#appsc-group1">Group 1</a>
+    <a href="#appsc-group2">Group 2</a>
+    <a href="#appsc-group4">Group 4</a>
     <a href="#features">Why Us</a>
     <a href="login.html">Student Login</a>
+    <a href="admin.html">Admin</a>
     <a class="btn" href="signup.html">Join Now</a>
   </nav>
 
@@ -47,7 +150,8 @@
 
     <p class="muted">
       Concept-first lectures, structured notes, MCQs,
-      PYQs, tests and revision for serious competitive-exam aspirants.
+      PYQs, tests, current affairs and revision for serious
+      competitive-exam aspirants.
     </p>
 
     <div style="margin-top:24px">
@@ -56,7 +160,9 @@
         Explore Examinations
       </a>
 
-      <a class="btn alt" href="signup.html" style="margin-left:8px">
+      <a class="btn alt"
+         href="signup.html"
+         style="margin-left:8px">
         Create Student Account
       </a>
 
@@ -70,119 +176,154 @@
 <main class="wrap">
 
 
+<!-- ========================================================= -->
 <!-- EXAMINATIONS -->
+<!-- ========================================================= -->
 
 <section id="exams" style="margin-top:50px">
 
   <h2>Choose Your Examination</h2>
 
   <p class="muted">
-    Choose your examination and explore the preparation structure.
+    Choose your examination and explore the complete preparation structure.
   </p>
 
 
   <div class="grid">
 
-
     <div class="card">
-
       <span class="status">UPSC</span>
 
-      <h2>UPSC CSE</h2>
+      <h2>UPSC Civil Services</h2>
 
       <p class="muted">
-        Integrated preparation for Prelims and Mains.
+        Integrated Prelims and Mains preparation with subject-wise learning.
       </p>
 
-      <a class="btn alt" href="#upsc-courses">
-        Explore UPSC
-      </a>
+      <div class="mini-tags">
+        <span class="mini-tag">16 Core Subjects</span>
+        <span class="mini-tag">200+ Geography Topics</span>
+        <span class="mini-tag">MCQs</span>
+        <span class="mini-tag">PYQs</span>
+        <span class="mini-tag">Tests</span>
+      </div>
 
+      <div class="subject-actions">
+        <a class="btn alt" href="#upsc-courses">
+          Explore UPSC
+        </a>
+      </div>
     </div>
 
 
     <div class="card">
-
       <span class="status">APPSC</span>
 
       <h2>APPSC Group 1</h2>
 
       <p class="muted">
-        Complete subject-oriented preparation for Group 1.
+        Complete subject-wise preparation for APPSC Group 1.
       </p>
 
-      <a class="btn alt" href="#appsc-courses">
-        Explore Group 1
-      </a>
+      <div class="mini-tags">
+        <span class="mini-tag">History</span>
+        <span class="mini-tag">Geography</span>
+        <span class="mini-tag">Polity</span>
+        <span class="mini-tag">Economy</span>
+        <span class="mini-tag">Science</span>
+      </div>
 
+      <div class="subject-actions">
+        <a class="btn alt" href="#appsc-group1">
+          Explore Group 1
+        </a>
+      </div>
     </div>
 
 
     <div class="card">
-
       <span class="status">APPSC</span>
 
       <h2>APPSC Group 2</h2>
 
       <p class="muted">
-        Conceptual learning, practice and revision.
+        AP-focused History, Constitution, Economy, Geography,
+        Science and Mental Ability.
       </p>
 
-      <a class="btn alt" href="#appsc-courses">
-        Explore Group 2
-      </a>
+      <div class="mini-tags">
+        <span class="mini-tag">AP History</span>
+        <span class="mini-tag">Constitution</span>
+        <span class="mini-tag">Economy</span>
+        <span class="mini-tag">Geography</span>
+        <span class="mini-tag">Mental Ability</span>
+      </div>
 
+      <div class="subject-actions">
+        <a class="btn alt" href="#appsc-group2">
+          Explore Group 2
+        </a>
+      </div>
     </div>
 
 
     <div class="card">
-
       <span class="status">APPSC</span>
 
       <h2>APPSC Group 4</h2>
 
       <p class="muted">
-        Exam-focused preparation and practice.
+        General Studies, Mental Ability, English, Telugu,
+        Computer Proficiency and AP-focused preparation.
       </p>
 
-      <a class="btn alt" href="#appsc-courses">
-        Explore Group 4
-      </a>
+      <div class="mini-tags">
+        <span class="mini-tag">General Studies</span>
+        <span class="mini-tag">Mental Ability</span>
+        <span class="mini-tag">English</span>
+        <span class="mini-tag">Telugu</span>
+        <span class="mini-tag">Computer</span>
+      </div>
 
+      <div class="subject-actions">
+        <a class="btn alt" href="#appsc-group4">
+          Explore Group 4
+        </a>
+      </div>
     </div>
 
 
     <div class="card">
-
       <span class="status">TGPSC</span>
 
       <h2>TGPSC</h2>
 
       <p class="muted">
-        Structured preparation for Telangana competitive examinations.
+        Telangana-focused competitive examination preparation.
       </p>
 
-      <a class="btn alt" href="#courses">
-        Explore Courses
-      </a>
-
+      <div class="subject-actions">
+        <a class="btn alt" href="#other-courses">
+          Explore Courses
+        </a>
+      </div>
     </div>
 
 
     <div class="card">
-
       <span class="status">UGC-NET</span>
 
       <h2>UGC-NET</h2>
 
       <p class="muted">
-        Paper II concepts, thinkers, PYQs and tests.
+        Paper II concepts, thinkers, theories, PYQs and tests.
       </p>
 
-      <a class="btn alt" href="#courses">
-        Explore Courses
-      </a>
-
+      <div class="subject-actions">
+        <a class="btn alt" href="#other-courses">
+          Explore Courses
+        </a>
+      </div>
     </div>
 
   </div>
@@ -190,42 +331,64 @@
 </section>
 
 
-<!-- UPSC COURSES -->
 
-<section id="upsc-courses" style="margin-top:60px">
+<!-- ========================================================= -->
+<!-- UPSC -->
+<!-- ========================================================= -->
 
-  <h2>UPSC Subject Courses</h2>
+<section id="upsc-courses" class="exam-section">
 
-  <p class="muted">
-    Build conceptual understanding subject by subject.
-  </p>
+  <div class="exam-header">
+
+    <span class="status">
+      UPSC CSE
+    </span>
+
+    <h2>UPSC Subject Courses</h2>
+
+    <p class="muted">
+      Complete subject-wise preparation. Each subject will eventually
+      contain topic-wise lessons, videos, notes, MCQs, PYQs, tests and revision.
+    </p>
+
+  </div>
 
 
   <div class="grid">
 
 
-    <div class="card">
+    <div class="card subject-card">
 
       <span class="status">Published</span>
 
       <h2>Geography</h2>
 
       <p class="muted">
-        Physical, Indian and World Geography.
+        Physical Geography, World Geography, Indian Geography,
+        Human Geography and Applied Geography.
       </p>
 
-      <p>
-        Concept-first visual learning with notes,
-        MCQs, PYQs and revision.
-      </p>
+      <ul class="subject-list">
+        <li>Concepts and fundamentals</li>
+        <li>Physical Geography</li>
+        <li>Indian Geography</li>
+        <li>World Geography</li>
+        <li>Human Geography</li>
+        <li>Mapping and Applied Geography</li>
+        <li>200+ topic roadmap</li>
+      </ul>
 
-      <strong>₹4,999</strong>
-
-      <div style="margin-top:15px">
+      <div class="subject-actions">
 
         <a class="btn alt"
            href="student.html?course=geography-concepts">
-          Open Course
+          Open Geography Course
+        </a>
+
+        <a class="btn alt"
+           href="#geography-roadmap"
+           style="margin-left:6px">
+          View Topics
         </a>
 
       </div>
@@ -233,138 +396,1105 @@
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Indian History</h2>
-      <p class="muted">
-        Ancient, Medieval and Modern History.
-      </p>
+
+      <ul class="subject-list">
+        <li>Ancient India</li>
+        <li>Medieval India</li>
+        <li>Modern India</li>
+        <li>Freedom Struggle</li>
+        <li>Post-Independence India</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Indian Polity</h2>
-      <p class="muted">
-        Constitution, Parliament, Judiciary, Federalism and governance.
-      </p>
+
+      <ul class="subject-list">
+        <li>Constitution</li>
+        <li>Fundamental Rights</li>
+        <li>Parliament</li>
+        <li>Judiciary</li>
+        <li>Federalism</li>
+        <li>Constitutional Bodies</li>
+        <li>Governance</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Indian Economy</h2>
-      <p class="muted">
-        Growth, inflation, banking, fiscal policy and development.
-      </p>
+
+      <ul class="subject-list">
+        <li>Macroeconomics</li>
+        <li>Growth and Development</li>
+        <li>Inflation</li>
+        <li>Banking and Finance</li>
+        <li>Fiscal Policy</li>
+        <li>External Sector</li>
+        <li>Inclusive Growth</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
-      <h2>Environment & Ecology</h2>
-      <p class="muted">
-        Ecology, biodiversity, climate change and conservation.
-      </p>
+
+      <h2>Environment and Ecology</h2>
+
+      <ul class="subject-list">
+        <li>Ecology</li>
+        <li>Biodiversity</li>
+        <li>Climate Change</li>
+        <li>Environmental Governance</li>
+        <li>Conservation</li>
+        <li>Pollution</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
-      <h2>Science & Technology</h2>
-      <p class="muted">
-        Important scientific and technological developments.
-      </p>
+
+      <h2>Science and Technology</h2>
+
+      <ul class="subject-list">
+        <li>Space Technology</li>
+        <li>Biotechnology</li>
+        <li>Nanotechnology</li>
+        <li>Defence Technology</li>
+        <li>AI and Emerging Technologies</li>
+        <li>Health Technology</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Ethics</h2>
-      <p class="muted">
-        Ethics, integrity, aptitude and case-study preparation.
-      </p>
+
+      <ul class="subject-list">
+        <li>Ethics and Human Interface</li>
+        <li>Attitude</li>
+        <li>Emotional Intelligence</li>
+        <li>Probity</li>
+        <li>Thinkers</li>
+        <li>Case Studies</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>International Relations</h2>
-      <p class="muted">
-        India and the world, institutions and strategic relations.
-      </p>
+
+      <ul class="subject-list">
+        <li>India and Neighbours</li>
+        <li>Major Powers</li>
+        <li>International Institutions</li>
+        <li>Regional Organisations</li>
+        <li>Global Issues</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Governance</h2>
-      <p class="muted">
-        Governance, public policy and institutions.
-      </p>
+
+      <ul class="subject-list">
+        <li>Government Policies</li>
+        <li>Institutions</li>
+        <li>E-Governance</li>
+        <li>Transparency</li>
+        <li>Accountability</li>
+        <li>Citizen Participation</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Indian Society</h2>
-      <p class="muted">
-        Social structure, diversity, social issues and change.
-      </p>
+
+      <ul class="subject-list">
+        <li>Diversity</li>
+        <li>Social Empowerment</li>
+        <li>Women</li>
+        <li>Poverty</li>
+        <li>Urbanisation</li>
+        <li>Social Issues</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
-      <h2>Art & Culture</h2>
-      <p class="muted">
-        Indian art, architecture, literature and cultural traditions.
-      </p>
+
+      <h2>Art and Culture</h2>
+
+      <ul class="subject-list">
+        <li>Architecture</li>
+        <li>Sculpture</li>
+        <li>Painting</li>
+        <li>Literature</li>
+        <li>Music</li>
+        <li>Dance</li>
+        <li>Heritage</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Internal Security</h2>
-      <p class="muted">
-        Security challenges, terrorism, cyber security and borders.
-      </p>
+
+      <ul class="subject-list">
+        <li>Terrorism</li>
+        <li>Cyber Security</li>
+        <li>Border Security</li>
+        <li>Organised Crime</li>
+        <li>Money Laundering</li>
+        <li>Security Institutions</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Disaster Management</h2>
-      <p class="muted">
-        Disaster preparedness, mitigation, response and recovery.
-      </p>
+
+      <ul class="subject-list">
+        <li>Disaster Risk</li>
+        <li>Preparedness</li>
+        <li>Mitigation</li>
+        <li>Response</li>
+        <li>Recovery</li>
+        <li>Institutional Framework</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Essay</h2>
-      <p class="muted">
-        Structured thinking, examples, arguments and answer presentation.
-      </p>
+
+      <ul class="subject-list">
+        <li>Essay Structure</li>
+        <li>Introduction</li>
+        <li>Arguments</li>
+        <li>Examples</li>
+        <li>Dimensions</li>
+        <li>Conclusion</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>CSAT</h2>
-      <p class="muted">
-        Comprehension, reasoning, aptitude and quantitative practice.
-      </p>
+
+      <ul class="subject-list">
+        <li>Reading Comprehension</li>
+        <li>Logical Reasoning</li>
+        <li>Basic Numeracy</li>
+        <li>Data Interpretation</li>
+        <li>Decision Making</li>
+      </ul>
+
     </div>
 
 
-    <div class="card">
+    <div class="card subject-card">
+
       <span class="status">Coming soon</span>
+
       <h2>Current Affairs</h2>
-      <p class="muted">
-        Current issues linked with static concepts and examination requirements.
-      </p>
+
+      <ul class="subject-list">
+        <li>National Issues</li>
+        <li>International Issues</li>
+        <li>Economy</li>
+        <li>Environment</li>
+        <li>Science and Technology</li>
+        <li>Polity and Governance</li>
+        <li>Issue-based revision</li>
+      </ul>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="feature-box">
+
+    <h3>UPSC Preparation Modules</h3>
+
+    <div class="mini-tags">
+      <span class="mini-tag">Concept Lectures</span>
+      <span class="mini-tag">Topic-wise Videos</span>
+      <span class="mini-tag">Notes</span>
+      <span class="mini-tag">MCQs</span>
+      <span class="mini-tag">PYQs</span>
+      <span class="mini-tag">Prelims Tests</span>
+      <span class="mini-tag">Mains Tests</span>
+      <span class="mini-tag">Answer Writing</span>
+      <span class="mini-tag">Revision</span>
+      <span class="mini-tag">Current Affairs</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- GEOGRAPHY ROADMAP -->
+<!-- ========================================================= -->
+
+<section id="geography-roadmap"
+         class="roadmap"
+         style="margin-top:55px">
+
+  <h2>UPSC Geography Topic Roadmap</h2>
+
+  <p class="muted">
+    Geography will be organised topic-wise. The roadmap below is the
+    content architecture for the Geography course. Individual topics
+    will later open into lessons, videos, notes, MCQs and PYQs.
+  </p>
+
+
+  <details>
+
+    <summary>
+      Geography Fundamentals and Geomorphology
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Geography as a discipline</li>
+      <li>Branches of Geography</li>
+      <li>Earth as a planet</li>
+      <li>Shape and size of Earth</li>
+      <li>Latitude</li>
+      <li>Longitude</li>
+      <li>Prime Meridian</li>
+      <li>International Date Line</li>
+      <li>Great circles</li>
+      <li>Time zones</li>
+      <li>Local time</li>
+      <li>Standard time</li>
+      <li>Rotation of Earth</li>
+      <li>Revolution of Earth</li>
+      <li>Seasons</li>
+      <li>Solstices and Equinoxes</li>
+      <li>Earth's interior</li>
+      <li>Crust</li>
+      <li>Mantle</li>
+      <li>Core</li>
+      <li>Seismic waves</li>
+      <li>Earthquakes</li>
+      <li>Volcanoes</li>
+      <li>Types of volcanoes</li>
+      <li>Volcanic landforms</li>
+      <li>Plate tectonics</li>
+      <li>Continental drift</li>
+      <li>Sea floor spreading</li>
+      <li>Plate boundaries</li>
+      <li>Convergent boundaries</li>
+      <li>Divergent boundaries</li>
+      <li>Transform boundaries</li>
+      <li>Mountain building</li>
+      <li>Fold mountains</li>
+      <li>Block mountains</li>
+      <li>Faulting</li>
+      <li>Folding</li>
+      <li>Weathering</li>
+      <li>Mass wasting</li>
+      <li>Denudation</li>
+      <li>Erosion</li>
+      <li>Deposition</li>
+      <li>Fluvial landforms</li>
+      <li>Glacial landforms</li>
+      <li>Desert landforms</li>
+      <li>Karst landforms</li>
+      <li>Coastal landforms</li>
+      <li>Wind erosion</li>
+      <li>River erosion</li>
+      <li>Glacial erosion</li>
+      <li>Groundwater action</li>
+      <li>Geomorphic cycles</li>
+      <li>Soil formation</li>
+      <li>Soil profile</li>
+      <li>Soil erosion</li>
+      <li>Soil conservation</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Climatology and Atmosphere
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Atmosphere</li>
+      <li>Composition of atmosphere</li>
+      <li>Structure of atmosphere</li>
+      <li>Troposphere</li>
+      <li>Stratosphere</li>
+      <li>Mesosphere</li>
+      <li>Thermosphere</li>
+      <li>Exosphere</li>
+      <li>Solar radiation</li>
+      <li>Insolation</li>
+      <li>Heat budget</li>
+      <li>Terrestrial radiation</li>
+      <li>Temperature distribution</li>
+      <li>Horizontal temperature distribution</li>
+      <li>Vertical temperature distribution</li>
+      <li>Temperature inversion</li>
+      <li>Atmospheric pressure</li>
+      <li>Pressure belts</li>
+      <li>Planetary winds</li>
+      <li>Trade winds</li>
+      <li>Westerlies</li>
+      <li>Polar winds</li>
+      <li>Coriolis force</li>
+      <li>Jet streams</li>
+      <li>Air masses</li>
+      <li>Fronts</li>
+      <li>Cyclones</li>
+      <li>Tropical cyclones</li>
+      <li>Temperate cyclones</li>
+      <li>Anticyclones</li>
+      <li>Humidity</li>
+      <li>Relative humidity</li>
+      <li>Condensation</li>
+      <li>Clouds</li>
+      <li>Cloud classification</li>
+      <li>Precipitation</li>
+      <li>Convectional rainfall</li>
+      <li>Orographic rainfall</li>
+      <li>Cyclonic rainfall</li>
+      <li>World rainfall patterns</li>
+      <li>Monsoon mechanism</li>
+      <li>Indian monsoon</li>
+      <li>Factors affecting Indian monsoon</li>
+      <li>Monsoon variability</li>
+      <li>El Nino</li>
+      <li>La Nina</li>
+      <li>ENSO</li>
+      <li>Indian Ocean Dipole</li>
+      <li>Madden Julian Oscillation</li>
+      <li>Western disturbances</li>
+      <li>Heat waves</li>
+      <li>Cold waves</li>
+      <li>Thunderstorms</li>
+      <li>Cloudbursts</li>
+      <li>Climate classification</li>
+      <li>Koppen classification</li>
+      <li>Climate change</li>
+      <li>Global warming</li>
+      <li>Greenhouse effect</li>
+      <li>Carbon cycle</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Oceanography
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Ocean floor</li>
+      <li>Continental shelf</li>
+      <li>Continental slope</li>
+      <li>Abyssal plains</li>
+      <li>Ocean trenches</li>
+      <li>Mid oceanic ridges</li>
+      <li>Ocean sediments</li>
+      <li>Salinity</li>
+      <li>Ocean temperature</li>
+      <li>Thermocline</li>
+      <li>Ocean pressure</li>
+      <li>Ocean currents</li>
+      <li>Warm currents</li>
+      <li>Cold currents</li>
+      <li>Atlantic currents</li>
+      <li>Pacific currents</li>
+      <li>Indian Ocean currents</li>
+      <li>Upwelling</li>
+      <li>Downwelling</li>
+      <li>Tides</li>
+      <li>Spring tides</li>
+      <li>Neap tides</li>
+      <li>Waves</li>
+      <li>Coral reefs</li>
+      <li>Types of coral reefs</li>
+      <li>Coral bleaching</li>
+      <li>Marine resources</li>
+      <li>Marine pollution</li>
+      <li>Ocean acidification</li>
+      <li>Blue economy</li>
+      <li>Exclusive Economic Zone</li>
+      <li>Continental shelf rights</li>
+      <li>Law of the Sea</li>
+      <li>El Nino and fisheries</li>
+      <li>Ocean energy</li>
+      <li>Tsunamis</li>
+      <li>Tsunami generation</li>
+      <li>Tsunami warning systems</li>
+      <li>Sea level rise</li>
+      <li>Coastal vulnerability</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Biogeography and Soils
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Biogeography</li>
+      <li>Biosphere</li>
+      <li>Ecosystems and geography</li>
+      <li>Biomes</li>
+      <li>Tropical rainforest biome</li>
+      <li>Savanna biome</li>
+      <li>Desert biome</li>
+      <li>Mediterranean biome</li>
+      <li>Temperate grasslands</li>
+      <li>Taiga biome</li>
+      <li>Tundra biome</li>
+      <li>Mountain ecosystems</li>
+      <li>Forest distribution</li>
+      <li>Natural vegetation</li>
+      <li>Soil geography</li>
+      <li>Soil orders</li>
+      <li>Alluvial soils</li>
+      <li>Black soils</li>
+      <li>Red soils</li>
+      <li>Laterite soils</li>
+      <li>Arid soils</li>
+      <li>Forest soils</li>
+      <li>Saline soils</li>
+      <li>Peaty soils</li>
+      <li>Soil degradation</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      World Geography
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Continents and oceans</li>
+      <li>Major mountain systems</li>
+      <li>Rockies</li>
+      <li>Andes</li>
+      <li>Alps</li>
+      <li>Atlas Mountains</li>
+      <li>Ural Mountains</li>
+      <li>Himalayas</li>
+      <li>Major plateaus</li>
+      <li>Tibetan Plateau</li>
+      <li>Brazilian Highlands</li>
+      <li>Deccan Plateau</li>
+      <li>Major plains</li>
+      <li>Prairies</li>
+      <li>Pampas</li>
+      <li>Steppes</li>
+      <li>Velds</li>
+      <li>Downs</li>
+      <li>Major deserts</li>
+      <li>Sahara</li>
+      <li>Arabian Desert</li>
+      <li>Gobi Desert</li>
+      <li>Kalahari Desert</li>
+      <li>Atacama Desert</li>
+      <li>Australian deserts</li>
+      <li>Major rivers of world</li>
+      <li>Amazon</li>
+      <li>Nile</li>
+      <li>Mississippi</li>
+      <li>Yangtze</li>
+      <li>Yellow River</li>
+      <li>Danube</li>
+      <li>Rhine</li>
+      <li>Volga</li>
+      <li>Major lakes</li>
+      <li>Great Lakes</li>
+      <li>Caspian Sea</li>
+      <li>Lake Baikal</li>
+      <li>Major islands</li>
+      <li>Major peninsulas</li>
+      <li>Major straits</li>
+      <li>Major canals</li>
+      <li>Suez Canal</li>
+      <li>Panama Canal</li>
+      <li>Major ports</li>
+      <li>Major chokepoints</li>
+      <li>Global mineral belts</li>
+      <li>Global energy resources</li>
+      <li>Major agricultural regions</li>
+      <li>Global industrial regions</li>
+      <li>World population distribution</li>
+      <li>Migration patterns</li>
+      <li>Urbanisation patterns</li>
+      <li>Global transport corridors</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Indian Physical Geography
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Location of India</li>
+      <li>Latitudinal extent of India</li>
+      <li>Longitudinal extent of India</li>
+      <li>India's neighbours</li>
+      <li>Physiographic divisions</li>
+      <li>Himalayas</li>
+      <li>Trans Himalayas</li>
+      <li>Greater Himalayas</li>
+      <li>Lesser Himalayas</li>
+      <li>Shiwaliks</li>
+      <li>Purvanchal Hills</li>
+      <li>Northern Plains</li>
+      <li>Bhabar</li>
+      <li>Terai</li>
+      <li>Bhangar</li>
+      <li>Khadar</li>
+      <li>Peninsular Plateau</li>
+      <li>Central Highlands</li>
+      <li>Deccan Plateau</li>
+      <li>Western Ghats</li>
+      <li>Eastern Ghats</li>
+      <li>Indian Desert</li>
+      <li>Coastal Plains</li>
+      <li>Western Coastal Plain</li>
+      <li>Eastern Coastal Plain</li>
+      <li>Islands of India</li>
+      <li>Andaman and Nicobar Islands</li>
+      <li>Lakshadweep</li>
+      <li>Drainage systems of India</li>
+      <li>Himalayan rivers</li>
+      <li>Indus river system</li>
+      <li>Ganga river system</li>
+      <li>Brahmaputra system</li>
+      <li>Peninsular rivers</li>
+      <li>Godavari</li>
+      <li>Krishna</li>
+      <li>Cauvery</li>
+      <li>Mahanadi</li>
+      <li>Narmada</li>
+      <li>Tapi</li>
+      <li>River interlinking</li>
+      <li>Indian climate</li>
+      <li>Indian monsoon</li>
+      <li>Monsoon branches</li>
+      <li>Monsoon onset</li>
+      <li>Monsoon withdrawal</li>
+      <li>Rainfall distribution</li>
+      <li>Indian climatic regions</li>
+      <li>Indian soils</li>
+      <li>Natural vegetation of India</li>
+      <li>Forest types</li>
+      <li>Indian biodiversity regions</li>
+      <li>Wetlands of India</li>
+      <li>Coastal ecosystems</li>
+      <li>Indian disaster geography</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Indian Economic Geography
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Agricultural geography of India</li>
+      <li>Cropping patterns</li>
+      <li>Rice cultivation</li>
+      <li>Wheat cultivation</li>
+      <li>Millets</li>
+      <li>Pulses</li>
+      <li>Sugarcane</li>
+      <li>Cotton</li>
+      <li>Jute</li>
+      <li>Tea</li>
+      <li>Coffee</li>
+      <li>Rubber</li>
+      <li>Spices</li>
+      <li>Horticulture</li>
+      <li>Plantation agriculture</li>
+      <li>Irrigation geography</li>
+      <li>Major irrigation projects</li>
+      <li>River valley projects</li>
+      <li>Mineral resources</li>
+      <li>Coal</li>
+      <li>Iron ore</li>
+      <li>Bauxite</li>
+      <li>Manganese</li>
+      <li>Mica</li>
+      <li>Limestone</li>
+      <li>Petroleum</li>
+      <li>Natural gas</li>
+      <li>Renewable energy geography</li>
+      <li>Solar energy regions</li>
+      <li>Wind energy regions</li>
+      <li>Hydropower</li>
+      <li>Nuclear energy</li>
+      <li>Industrial geography</li>
+      <li>Iron and steel industry</li>
+      <li>Cotton textile industry</li>
+      <li>Jute industry</li>
+      <li>Sugar industry</li>
+      <li>Cement industry</li>
+      <li>Automobile industry</li>
+      <li>IT industry</li>
+      <li>Pharmaceutical industry</li>
+      <li>Petrochemical industry</li>
+      <li>Industrial corridors</li>
+      <li>Economic corridors</li>
+      <li>Ports of India</li>
+      <li>Major airports</li>
+      <li>Railway geography</li>
+      <li>Road transport</li>
+      <li>Inland waterways</li>
+      <li>Logistics corridors</li>
+      <li>Special Economic Zones</li>
+      <li>Urban economic centres</li>
+      <li>Regional development</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Human Geography and Population
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Human geography</li>
+      <li>Population distribution</li>
+      <li>Population density</li>
+      <li>Population growth</li>
+      <li>Population theories</li>
+      <li>Demographic transition</li>
+      <li>Age structure</li>
+      <li>Sex ratio</li>
+      <li>Dependency ratio</li>
+      <li>Literacy</li>
+      <li>Human Development</li>
+      <li>Migration</li>
+      <li>Push and pull factors</li>
+      <li>Internal migration</li>
+      <li>International migration</li>
+      <li>Urbanisation</li>
+      <li>Urban hierarchy</li>
+      <li>Metropolitan regions</li>
+      <li>Megacities</li>
+      <li>Smart cities</li>
+      <li>Slums</li>
+      <li>Rural settlements</li>
+      <li>Urban settlements</li>
+      <li>Settlement patterns</li>
+      <li>Central Place Theory</li>
+      <li>Agricultural systems</li>
+      <li>Von Thunen model</li>
+      <li>Industrial location</li>
+      <li>Weber theory</li>
+      <li>Transport geography</li>
+      <li>Trade geography</li>
+      <li>Globalisation</li>
+      <li>Regional disparities</li>
+      <li>Core and periphery</li>
+      <li>Resource geography</li>
+      <li>Human resource development</li>
+      <li>Tribal geography</li>
+      <li>Rural development</li>
+      <li>Urban planning</li>
+      <li>Regional planning</li>
+
+    </ol>
+
+  </details>
+
+
+  <details>
+
+    <summary>
+      Andhra Pradesh Geography and Applied Geography
+    </summary>
+
+    <ol class="topic-grid">
+
+      <li>Location of Andhra Pradesh</li>
+      <li>Boundaries of Andhra Pradesh</li>
+      <li>Physiographic divisions of Andhra Pradesh</li>
+      <li>Eastern Ghats in Andhra Pradesh</li>
+      <li>Coastal Andhra</li>
+      <li>Rayalaseema</li>
+      <li>Coastal plains</li>
+      <li>River systems of Andhra Pradesh</li>
+      <li>Godavari basin</li>
+      <li>Krishna basin</li>
+      <li>Pennar basin</li>
+      <li>Vamsadhara</li>
+      <li>Nagavali</li>
+      <li>AP irrigation projects</li>
+      <li>Major dams</li>
+      <li>Canals of Andhra Pradesh</li>
+      <li>Agriculture of Andhra Pradesh</li>
+      <li>Rice production</li>
+      <li>Horticulture</li>
+      <li>Aquaculture</li>
+      <li>Fisheries</li>
+      <li>Mineral resources of AP</li>
+      <li>Coal resources</li>
+      <li>Limestone resources</li>
+      <li>Natural gas</li>
+      <li>Oil resources</li>
+      <li>Industrial regions of AP</li>
+      <li>Industrial corridors</li>
+      <li>SEZs in AP</li>
+      <li>Ports of AP</li>
+      <li>Visakhapatnam port</li>
+      <li>Krishnapatnam port</li>
+      <li>Gangavaram port</li>
+      <li>Road network</li>
+      <li>Railway network</li>
+      <li>Urbanisation in AP</li>
+      <li>Major cities</li>
+      <li>Population distribution in AP</li>
+      <li>District geography</li>
+      <li>Climate of AP</li>
+      <li>Cyclones in AP</li>
+      <li>Floods in AP</li>
+      <li>Droughts in AP</li>
+      <li>Coastal erosion</li>
+      <li>Disaster-prone regions</li>
+      <li>Forest resources</li>
+      <li>Biodiversity regions</li>
+      <li>Wetlands</li>
+      <li>Remote sensing</li>
+      <li>GIS applications</li>
+      <li>Geographical mapping</li>
+      <li>Map-based current affairs</li>
+
+    </ol>
+
+  </details>
+
+
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- APPSC GROUP 1 -->
+<!-- ========================================================= -->
+
+<section id="appsc-group1" class="exam-section">
+
+  <div class="exam-header">
+
+    <span class="status">
+      APPSC GROUP 1
+    </span>
+
+    <h2>APPSC Group 1 Courses</h2>
+
+    <p class="muted">
+      Complete Group 1 subject structure with India and Andhra Pradesh
+      focused preparation.
+    </p>
+
+  </div>
+
+
+  <div class="grid">
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>History and Culture</h2>
+
+      <ul class="subject-list">
+        <li>Ancient Indian History</li>
+        <li>Medieval Indian History</li>
+        <li>Modern Indian History</li>
+        <li>Indian National Movement</li>
+        <li>Andhra Pradesh History</li>
+        <li>Indian Culture</li>
+        <li>Andhra Pradesh Culture</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Geography</h2>
+
+      <ul class="subject-list">
+        <li>Physical Geography</li>
+        <li>Indian Geography</li>
+        <li>World Geography</li>
+        <li>Andhra Pradesh Geography</li>
+        <li>Economic Geography</li>
+        <li>Human Geography</li>
+      </ul>
+
+      <div class="subject-actions">
+        <a class="btn alt" href="#geography-roadmap">
+          View Geography Roadmap
+        </a>
+      </div>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Polity and Constitution</h2>
+
+      <ul class="subject-list">
+        <li>Indian Constitution</li>
+        <li>Parliament</li>
+        <li>Judiciary</li>
+        <li>Federalism</li>
+        <li>Constitutional Bodies</li>
+        <li>Andhra Pradesh Administration</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Governance, Law and Ethics</h2>
+
+      <ul class="subject-list">
+        <li>Governance</li>
+        <li>Public Policy</li>
+        <li>Administrative Reforms</li>
+        <li>Law and Institutions</li>
+        <li>Ethics and Integrity</li>
+        <li>Accountability</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Economy and Development</h2>
+
+      <ul class="subject-list">
+        <li>Indian Economy</li>
+        <li>Andhra Pradesh Economy</li>
+        <li>Growth and Development</li>
+        <li>Agriculture</li>
+        <li>Industry</li>
+        <li>Infrastructure</li>
+        <li>Welfare and Development</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Science and Technology</h2>
+
+      <ul class="subject-list">
+        <li>General Science</li>
+        <li>Space Technology</li>
+        <li>Biotechnology</li>
+        <li>Information Technology</li>
+        <li>Defence Technology</li>
+        <li>Emerging Technologies</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Environment</h2>
+
+      <ul class="subject-list">
+        <li>Ecology</li>
+        <li>Biodiversity</li>
+        <li>Climate Change</li>
+        <li>Pollution</li>
+        <li>Conservation</li>
+        <li>Environmental Governance</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Mental Ability and Data Interpretation</h2>
+
+      <ul class="subject-list">
+        <li>Logical Reasoning</li>
+        <li>Analytical Ability</li>
+        <li>Numerical Ability</li>
+        <li>Data Interpretation</li>
+        <li>Data Analysis</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>General Essay</h2>
+
+      <ul class="subject-list">
+        <li>Essay Structure</li>
+        <li>Social Issues</li>
+        <li>Economic Issues</li>
+        <li>Political Issues</li>
+        <li>Science and Technology</li>
+        <li>Environment</li>
+        <li>Contemporary Issues</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Group 1</span>
+
+      <h2>Current Affairs</h2>
+
+      <ul class="subject-list">
+        <li>National Affairs</li>
+        <li>International Affairs</li>
+        <li>Andhra Pradesh Affairs</li>
+        <li>Economy</li>
+        <li>Environment</li>
+        <li>Science and Technology</li>
+        <li>Government Schemes</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Preparation</span>
+
+      <h2>Test Series</h2>
+
+      <ul class="subject-list">
+        <li>Subject Tests</li>
+        <li>Revision Tests</li>
+        <li>Full Length Tests</li>
+        <li>PYQ Tests</li>
+        <li>Current Affairs Tests</li>
+      </ul>
+    </div>
+
+
+    <div class="card subject-card">
+      <span class="status">Preparation</span>
+
+      <h2>Revision and PYQs</h2>
+
+      <ul class="subject-list">
+        <li>Topic Revision</li>
+        <li>Previous Year Questions</li>
+        <li>Rapid Revision</li>
+        <li>Exam-oriented Notes</li>
+      </ul>
     </div>
 
 
@@ -373,14 +1503,476 @@
 </section>
 
 
-<!-- APPSC COURSES -->
 
-<section id="appsc-courses" style="margin-top:60px">
+<!-- ========================================================= -->
+<!-- APPSC GROUP 2 -->
+<!-- ========================================================= -->
 
-  <h2>APPSC Courses</h2>
+<section id="appsc-group2" class="exam-section">
+
+  <div class="exam-header">
+
+    <span class="status">
+      APPSC GROUP 2
+    </span>
+
+    <h2>APPSC Group 2 Courses</h2>
+
+    <p class="muted">
+      Group 2 preparation organised around General Studies,
+      Andhra Pradesh Social History, Constitution, Economy and Mental Ability.
+    </p>
+
+  </div>
+
+
+  <div class="grid">
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>General Studies</h2>
+
+      <ul class="subject-list">
+        <li>National and International Events</li>
+        <li>Current Affairs</li>
+        <li>General Science</li>
+        <li>Science and Technology</li>
+        <li>Modern Indian History</li>
+        <li>Indian Polity</li>
+        <li>Geography</li>
+        <li>Disaster Management</li>
+        <li>Environment</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>History and Culture of Andhra Pradesh</h2>
+
+      <ul class="subject-list">
+        <li>Prehistoric Andhra</li>
+        <li>Satavahanas</li>
+        <li>Ikshvakus</li>
+        <li>Vishnukundins</li>
+        <li>Eastern Chalukyas</li>
+        <li>Telugu Cholas</li>
+        <li>Medieval Andhra</li>
+        <li>Modern Andhra</li>
+        <li>Andhra Movement</li>
+        <li>Formation of Andhra State</li>
+        <li>Formation of Andhra Pradesh</li>
+        <li>Social and Cultural Movements</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>Indian Constitution</h2>
+
+      <ul class="subject-list">
+        <li>Constitutional Development</li>
+        <li>Preamble</li>
+        <li>Fundamental Rights</li>
+        <li>DPSP</li>
+        <li>Fundamental Duties</li>
+        <li>Parliament</li>
+        <li>Executive</li>
+        <li>Judiciary</li>
+        <li>Centre-State Relations</li>
+        <li>Constitutional Bodies</li>
+        <li>Local Government</li>
+        <li>Welfare Mechanisms</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>Planning and Economy</h2>
+
+      <ul class="subject-list">
+        <li>Indian Economy</li>
+        <li>Economic Reforms</li>
+        <li>NITI Aayog</li>
+        <li>Agriculture</li>
+        <li>Industry</li>
+        <li>Money and Banking</li>
+        <li>Public Finance</li>
+        <li>National Income</li>
+        <li>Inflation</li>
+        <li>Foreign Trade</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>Andhra Pradesh Economy</h2>
+
+      <ul class="subject-list">
+        <li>AP Economy</li>
+        <li>AP Budget</li>
+        <li>Agriculture</li>
+        <li>Industries</li>
+        <li>Irrigation</li>
+        <li>Infrastructure</li>
+        <li>Welfare Programmes</li>
+        <li>AP Bifurcation Issues</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>Rural Society and Development</h2>
+
+      <ul class="subject-list">
+        <li>Rural Development</li>
+        <li>Poverty</li>
+        <li>Employment</li>
+        <li>Agriculture</li>
+        <li>Rural Infrastructure</li>
+        <li>Self Help Groups</li>
+        <li>Development Programmes</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>Geography</h2>
+
+      <ul class="subject-list">
+        <li>India Geography</li>
+        <li>Andhra Pradesh Geography</li>
+        <li>Physical Geography</li>
+        <li>Economic Geography</li>
+        <li>Resources</li>
+        <li>Disaster Geography</li>
+      </ul>
+
+      <div class="subject-actions">
+        <a class="btn alt" href="#geography-roadmap">
+          View Geography Topics
+        </a>
+      </div>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 2</span>
+
+      <h2>Mental Ability and Data Analysis</h2>
+
+      <ul class="subject-list">
+        <li>Logical Reasoning</li>
+        <li>Analytical Ability</li>
+        <li>Data Interpretation</li>
+        <li>Tables</li>
+        <li>Graphs</li>
+        <li>Basic Statistics</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Preparation</span>
+
+      <h2>Current Affairs</h2>
+
+      <ul class="subject-list">
+        <li>International</li>
+        <li>National</li>
+        <li>Andhra Pradesh</li>
+        <li>Government Schemes</li>
+        <li>Economy</li>
+        <li>Science and Technology</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Preparation</span>
+
+      <h2>Test Series and PYQs</h2>
+
+      <ul class="subject-list">
+        <li>Sectional Tests</li>
+        <li>Full Tests</li>
+        <li>PYQs</li>
+        <li>Revision Tests</li>
+        <li>Current Affairs Tests</li>
+      </ul>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- APPSC GROUP 4 -->
+<!-- ========================================================= -->
+
+<section id="appsc-group4" class="exam-section">
+
+  <div class="exam-header">
+
+    <span class="status">
+      APPSC GROUP 4
+    </span>
+
+    <h2>APPSC Group 4 Courses</h2>
+
+    <p class="muted">
+      Group 4 preparation covering General Studies and Mental Ability,
+      English, Telugu and Computer Proficiency.
+    </p>
+
+  </div>
+
+
+  <div class="grid">
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>General Studies</h2>
+
+      <ul class="subject-list">
+        <li>Current Affairs</li>
+        <li>General Science</li>
+        <li>Modern Indian History</li>
+        <li>Andhra Pradesh History</li>
+        <li>Indian Polity</li>
+        <li>AP Governance</li>
+        <li>Indian Economy</li>
+        <li>AP Economy</li>
+        <li>Indian Geography</li>
+        <li>AP Geography</li>
+        <li>Environment</li>
+        <li>Disaster Management</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>Mental Ability</h2>
+
+      <ul class="subject-list">
+        <li>Logical Reasoning</li>
+        <li>Analytical Ability</li>
+        <li>Numerical Ability</li>
+        <li>Problem Solving</li>
+        <li>Data Interpretation</li>
+        <li>Basic Statistics</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>General English</h2>
+
+      <ul class="subject-list">
+        <li>Comprehension</li>
+        <li>Grammar</li>
+        <li>Vocabulary</li>
+        <li>Synonyms</li>
+        <li>Usage and Idioms</li>
+        <li>Punctuation</li>
+        <li>Sentence Arrangement</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>General Telugu</h2>
+
+      <ul class="subject-list">
+        <li>Vocabulary</li>
+        <li>Grammar</li>
+        <li>Synonyms</li>
+        <li>Usage</li>
+        <li>Idioms</li>
+        <li>Telugu to English meanings</li>
+        <li>English to Telugu meanings</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>Science and Technology</h2>
+
+      <ul class="subject-list">
+        <li>General Science</li>
+        <li>Physics</li>
+        <li>Chemistry</li>
+        <li>Biology</li>
+        <li>Information Technology</li>
+        <li>Contemporary Technology</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>Environment and Disaster Management</h2>
+
+      <ul class="subject-list">
+        <li>Environment</li>
+        <li>Sustainable Development</li>
+        <li>Disaster Management</li>
+        <li>Disaster Risk</li>
+        <li>Prevention</li>
+        <li>Mitigation</li>
+        <li>Remote Sensing</li>
+        <li>GIS</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>Andhra Pradesh Special</h2>
+
+      <ul class="subject-list">
+        <li>AP History</li>
+        <li>AP Geography</li>
+        <li>AP Economy</li>
+        <li>AP Administration</li>
+        <li>AP Bifurcation</li>
+        <li>AP Development Issues</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Group 4</span>
+
+      <h2>Computer Proficiency</h2>
+
+      <ul class="subject-list">
+        <li>MS Word</li>
+        <li>MS Excel</li>
+        <li>PowerPoint</li>
+        <li>Database Basics</li>
+        <li>Internet</li>
+        <li>Email</li>
+        <li>Office Automation</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Preparation</span>
+
+      <h2>Current Affairs</h2>
+
+      <ul class="subject-list">
+        <li>National</li>
+        <li>International</li>
+        <li>Andhra Pradesh</li>
+        <li>Science and Technology</li>
+        <li>Economy</li>
+        <li>Government Schemes</li>
+      </ul>
+
+    </div>
+
+
+    <div class="card subject-card">
+
+      <span class="status">Preparation</span>
+
+      <h2>Test Series and PYQs</h2>
+
+      <ul class="subject-list">
+        <li>Topic Tests</li>
+        <li>Subject Tests</li>
+        <li>Grand Tests</li>
+        <li>PYQs</li>
+        <li>Revision Tests</li>
+      </ul>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- LEARNING SYSTEM -->
+<!-- ========================================================= -->
+
+<section id="learning-system" class="exam-section">
+
+  <h2>How LakshyaSetu Learning Works</h2>
 
   <p class="muted">
-    Examination-oriented preparation for Andhra Pradesh Public Service Commission examinations.
+    Every major subject will follow the same structured learning system.
   </p>
 
 
@@ -389,54 +1981,89 @@
 
     <div class="card">
 
-      <span class="status">APPSC Group 1</span>
-
-      <h2>Group 1 Preparation</h2>
+      <h2>Subject</h2>
 
       <p class="muted">
-        General Studies, Andhra Pradesh-specific topics,
-        current affairs and Mains preparation.
+        Choose a complete subject such as Geography, History,
+        Polity, Economy or Environment.
       </p>
-
-      <a class="btn alt" href="#courses">
-        View Courses
-      </a>
 
     </div>
 
 
     <div class="card">
 
-      <span class="status">APPSC Group 2</span>
-
-      <h2>Group 2 Preparation</h2>
+      <h2>Topic</h2>
 
       <p class="muted">
-        General Studies, AP-specific content,
-        concepts, MCQs and revision.
+        The subject is divided into individual concepts and topics.
       </p>
-
-      <a class="btn alt" href="#courses">
-        View Courses
-      </a>
 
     </div>
 
 
     <div class="card">
 
-      <span class="status">APPSC Group 4</span>
-
-      <h2>Group 4 Preparation</h2>
+      <h2>Video</h2>
 
       <p class="muted">
-        Exam-focused subject preparation,
-        practice questions and revision.
+        Watch the concept-first topic video.
       </p>
 
-      <a class="btn alt" href="#courses">
-        View Courses
-      </a>
+    </div>
+
+
+    <div class="card">
+
+      <h2>Notes</h2>
+
+      <p class="muted">
+        Read concise exam-oriented notes after the lesson.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>MCQs</h2>
+
+      <p class="muted">
+        Test conceptual understanding through practice questions.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>PYQs</h2>
+
+      <p class="muted">
+        Connect the topic with actual examination questions.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Tests</h2>
+
+      <p class="muted">
+        Subject-wise, revision and full-length tests.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Revision</h2>
+
+      <p class="muted">
+        Rapid revision for repeated examination practice.
+      </p>
 
     </div>
 
@@ -446,9 +2073,12 @@
 </section>
 
 
-<!-- OTHER COURSES -->
 
-<section id="courses" style="margin-top:60px">
+<!-- ========================================================= -->
+<!-- OTHER COURSES -->
+<!-- ========================================================= -->
+
+<section id="other-courses" class="exam-section">
 
   <h2>Other Courses</h2>
 
@@ -480,7 +2110,7 @@
       <h2>UGC-NET Public Administration</h2>
 
       <p class="muted">
-        Paper II concepts, thinkers, theories, PYQs and tests.
+        Thinkers, theories, concepts, PYQs and tests.
       </p>
 
     </div>
@@ -493,8 +2123,7 @@
       <h2>Future Competitive Exams</h2>
 
       <p class="muted">
-        New examination categories can be added to LakshyaSetu
-        as the platform grows.
+        New examination categories can be added as LakshyaSetu grows.
       </p>
 
     </div>
@@ -505,9 +2134,12 @@
 </section>
 
 
-<!-- FEATURES -->
 
-<section id="features" style="margin-top:60px">
+<!-- ========================================================= -->
+<!-- FEATURES -->
+<!-- ========================================================= -->
+
+<section id="features" class="exam-section">
 
   <h2>Why LakshyaSetu?</h2>
 
@@ -531,8 +2163,20 @@
       <h2>Structured Learning</h2>
 
       <p class="muted">
-        Large subject blueprints organised into clear,
+        Large subjects are organised into clear,
         manageable topics.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Topic-wise Videos</h2>
+
+      <p class="muted">
+        Each important concept can become an individual
+        learning video.
       </p>
 
     </div>
@@ -543,7 +2187,8 @@
       <h2>Practice</h2>
 
       <p class="muted">
-        MCQs, PYQs and tests to convert learning into exam readiness.
+        MCQs, PYQs and tests convert learning into
+        examination readiness.
       </p>
 
     </div>
@@ -554,7 +2199,20 @@
       <h2>Revision</h2>
 
       <p class="muted">
-        Concise notes and revision-oriented learning for repeated practice.
+        Concise notes and revision-oriented learning
+        for repeated practice.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Current Affairs</h2>
+
+      <p class="muted">
+        Current issues are connected with static concepts
+        wherever relevant.
       </p>
 
     </div>
@@ -565,7 +2223,10 @@
 </section>
 
 
+
+<!-- ========================================================= -->
 <!-- STUDENT CTA -->
+<!-- ========================================================= -->
 
 <section style="margin-top:60px;text-align:center">
 
@@ -583,7 +2244,9 @@
     </a>
 
 
-    <a class="btn alt" href="login.html" style="margin-left:8px">
+    <a class="btn alt"
+       href="login.html"
+       style="margin-left:8px">
       Student Login
     </a>
 
@@ -592,7 +2255,10 @@
 </section>
 
 
+
+<!-- ========================================================= -->
 <!-- ABOUT -->
+<!-- ========================================================= -->
 
 <section style="margin-top:60px;text-align:center">
 

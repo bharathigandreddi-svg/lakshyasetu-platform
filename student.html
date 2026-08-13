@@ -4,13 +4,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Student | LakshyaSetu</title>
 
   <link rel="stylesheet" href="styles.css">
 
   <style>
-
     .course-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -59,51 +57,49 @@
       margin-bottom: 18px;
     }
 
-    .fee-box {
-      margin-top: 24px;
-      padding: 24px;
+    .fee-card {
+      margin-top: 20px;
+      padding: 20px;
       border-radius: 14px;
-      background: #f5f8fc;
-      border: 1px solid #dfe6ef;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
     }
 
     .fee-label {
-      color: #667085;
       font-size: 14px;
+      color: #667085;
       margin-bottom: 6px;
     }
 
-    .current-fee {
-      font-size: 32px;
-      font-weight: 800;
-      color: #102746;
-    }
-
-    .original-fee {
-      margin-top: 5px;
-      color: #667085;
+    .old-fee {
       text-decoration: line-through;
-      font-size: 16px;
+      color: #777;
+      margin-right: 12px;
     }
 
-    .no-fee {
-      color: #667085;
-      font-size: 16px;
-    }
-
-    .course-status {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: #e7f5f2;
-      color: #0f766e;
-      font-size: 13px;
+    .current-fee {
+      font-size: 28px;
       font-weight: 700;
     }
 
-  </style>
+    .fee-note {
+      margin-top: 6px;
+      color: #667085;
+      font-size: 14px;
+    }
 
+    .course-card .small-fee {
+      margin-top: 12px;
+      font-weight: 600;
+    }
+
+    .error-card {
+      padding: 24px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
 
 <body>
@@ -148,7 +144,6 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="config.js"></script>
 
 
@@ -160,123 +155,102 @@ const sb = window.supabase.createClient(
 );
 
 
-const courseTitle = document.getElementById("courseTitle");
-const courseDesc = document.getElementById("courseDesc");
-const feeArea = document.getElementById("feeArea");
-const subjectArea = document.getElementById("subjectArea");
-const lessonArea = document.getElementById("lessonArea");
-const faqArea = document.getElementById("faqArea");
-const backArea = document.getElementById("backArea");
+const courseTitle =
+  document.getElementById("courseTitle");
+
+const courseDesc =
+  document.getElementById("courseDesc");
+
+const subjectArea =
+  document.getElementById("subjectArea");
+
+const lessonArea =
+  document.getElementById("lessonArea");
+
+const faqArea =
+  document.getElementById("faqArea");
+
+const backArea =
+  document.getElementById("backArea");
+
+const feeArea =
+  document.getElementById("feeArea");
 
 
-/* -------------------------------------------------
+/* =====================================================
    APPSC GROUP 1 SUBJECTS
-------------------------------------------------- */
+===================================================== */
 
 const appscSubjects = [
 
   {
     title: "Geography",
-    description: "Indian and World Geography concepts for APPSC Group 1.",
+    description:
+      "Indian and World Geography concepts for APPSC Group 1.",
     keywords: ["geography"]
   },
 
   {
     title: "History",
-    description: "Ancient, Medieval and Modern Indian History.",
+    description:
+      "Ancient, Medieval and Modern Indian History.",
     keywords: ["history"]
   },
 
   {
     title: "AP History",
-    description: "History of Andhra Pradesh and important regional developments.",
+    description:
+      "History of Andhra Pradesh and important regional developments.",
     keywords: ["ap-history", "andhra-history"]
   },
 
   {
     title: "AP Geography",
-    description: "Andhra Pradesh Geography, resources, rivers, agriculture and regional development.",
+    description:
+      "Andhra Pradesh Geography, resources, rivers, agriculture and regional development.",
     keywords: ["ap-geography", "andhra-geography"]
   },
 
   {
     title: "Science and Technology",
-    description: "Important Science and Technology concepts for competitive examinations.",
+    description:
+      "Important Science and Technology concepts for competitive examinations.",
     keywords: ["science-technology", "science-and-technology"]
   },
 
   {
     title: "Environment",
-    description: "Environment, Ecology, Biodiversity and Climate Change.",
+    description:
+      "Environment, Ecology, Biodiversity and Climate Change.",
     keywords: ["environment", "ecology"]
   },
 
   {
     title: "Current Affairs",
-    description: "Important national, international and Andhra Pradesh current affairs.",
+    description:
+      "Important national, international and Andhra Pradesh current affairs.",
     keywords: ["current-affairs"]
   },
 
   {
     title: "Test Series",
-    description: "Practice tests, MCQs and examination-oriented assessments.",
+    description:
+      "Practice tests, MCQs and examination-oriented assessments.",
     keywords: ["test-series", "tests"]
   }
 
 ];
 
 
-/* -------------------------------------------------
-   TEXT NORMALIZER
-------------------------------------------------- */
-
-function normalizeText(value) {
-
-  return (value || "")
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ");
-
-}
-
-
-/* -------------------------------------------------
-   FORMAT MONEY
-------------------------------------------------- */
-
-function formatMoney(value) {
-
-  if (
-    value === null ||
-    value === undefined ||
-    value === ""
-  ) {
-    return "";
-  }
-
-  const number = Number(value);
-
-  if (Number.isNaN(number)) {
-    return "";
-  }
-
-  return "₹" + number.toLocaleString("en-IN");
-
-}
-
-
-/* -------------------------------------------------
+/* =====================================================
    LOGIN CHECK
-------------------------------------------------- */
+===================================================== */
 
 async function boot() {
 
-  const userResult = await sb.auth.getUser();
+  const u = await sb.auth.getUser();
 
-  if (!userResult.data.user) {
+  if (!u.data.user) {
 
     location.href = "login.html";
 
@@ -284,21 +258,27 @@ async function boot() {
   }
 
 
-  const params = new URLSearchParams(
-    location.search
-  );
+  const params =
+    new URLSearchParams(location.search);
 
 
-  const requestedCourse =
-    params.get("course");
+  const slug =
+    params.get("course") || "appsc-group-1";
 
 
-  const course = await findCourse(
-    requestedCourse
-  );
+  /* ===================================================
+     GET COURSE
+  =================================================== */
+
+  const c = await sb
+    .from("courses")
+    .select("*")
+    .eq("slug", slug)
+    .eq("published", true)
+    .single();
 
 
-  if (!course) {
+  if (c.error) {
 
     courseTitle.textContent =
       "Course not found";
@@ -312,218 +292,36 @@ async function boot() {
   }
 
 
-  showCourse(course);
-
-}
-
-
-/* -------------------------------------------------
-   FIND COURSE
-------------------------------------------------- */
-
-async function findCourse(requestedCourse) {
-
-
-  /* -----------------------------------------------
-     FIRST: LOAD ALL COURSES
-  ----------------------------------------------- */
-
-  const result = await sb
-    .from("courses")
-    .select("*")
-    .order("id");
-
-
-  if (result.error) {
-
-    console.error(
-      "Course loading error:",
-      result.error
-    );
-
-    return null;
-  }
-
-
-  const courses = result.data || [];
-
-
-  if (!courses.length) {
-
-    return null;
-  }
-
-
-  /* -----------------------------------------------
-     IF NO COURSE PARAMETER
-     TRY APPSC GROUP 1 & 2
-  ----------------------------------------------- */
-
-  if (!requestedCourse) {
-
-    const defaultCourse =
-      courses.find(course => {
-
-        const title =
-          normalizeText(course.title);
-
-        return (
-          title.includes("appsc group 1")
-        );
-
-      });
-
-    return defaultCourse || courses[0];
-  }
-
-
-  const requested =
-    normalizeText(requestedCourse);
-
-
-  /* -----------------------------------------------
-     MATCH BY ID
-  ----------------------------------------------- */
-
-  const byId = courses.find(course => {
-
-    return String(course.id) ===
-      String(requestedCourse);
-
-  });
-
-
-  if (byId) {
-
-    return byId;
-  }
-
-
-  /* -----------------------------------------------
-     MATCH BY EXACT SLUG
-  ----------------------------------------------- */
-
-  const bySlug = courses.find(course => {
-
-    return normalizeText(course.slug) ===
-      requested;
-
-  });
-
-
-  if (bySlug) {
-
-    return bySlug;
-  }
-
-
-  /* -----------------------------------------------
-     MATCH BY TITLE
-  ----------------------------------------------- */
-
-  const byTitle = courses.find(course => {
-
-    return normalizeText(course.title) ===
-      requested;
-
-  });
-
-
-  if (byTitle) {
-
-    return byTitle;
-  }
-
-
-  /* -----------------------------------------------
-     MATCH SLUG AGAINST TITLE
-     Example:
-     upsc-civil-services
-     UPSC Civil Services
-  ----------------------------------------------- */
-
-  const byConvertedTitle =
-    courses.find(course => {
-
-      const title =
-        normalizeText(course.title);
-
-      return title === requested;
-
-    });
-
-
-  if (byConvertedTitle) {
-
-    return byConvertedTitle;
-  }
-
-
-  /* -----------------------------------------------
-     FLEXIBLE MATCH
-  ----------------------------------------------- */
-
-  const flexibleMatch =
-    courses.find(course => {
-
-      const title =
-        normalizeText(course.title);
-
-      const slug =
-        normalizeText(course.slug);
-
-      return (
-        title.includes(requested) ||
-        requested.includes(title) ||
-        slug.includes(requested) ||
-        requested.includes(slug)
-      );
-
-    });
-
-
-  if (flexibleMatch) {
-
-    return flexibleMatch;
-  }
-
-
-  return null;
-
-}
-
-
-/* -------------------------------------------------
-   SHOW COURSE
-------------------------------------------------- */
-
-async function showCourse(course) {
+  const course = c.data;
 
 
   courseTitle.textContent =
-    course.title || "Course";
+    course.title;
 
 
   courseDesc.textContent =
     course.description || "";
 
 
-  renderFee(course);
+  /* ===================================================
+     COURSE FEE
+  =================================================== */
+
+  renderCourseFee(course);
 
 
-  /* -----------------------------------------------
-     APPSC GROUP COURSE
-  ----------------------------------------------- */
-
-  const title =
-    normalizeText(course.title);
-
+  /* ===================================================
+     APPSC GROUP 1 MAIN PAGE
+  =================================================== */
 
   if (
-    title.includes("appsc group 1")
+    slug === "appsc-group-1" ||
+    course.title.toLowerCase().includes("appsc group 1")
   ) {
 
     renderSubjects();
+
+    await loadAllPublishedCourses();
 
     renderFAQs();
 
@@ -531,9 +329,9 @@ async function showCourse(course) {
   }
 
 
-  /* -----------------------------------------------
-     NORMAL COURSE
-  ----------------------------------------------- */
+  /* ===================================================
+     NORMAL COURSE PAGE
+  =================================================== */
 
   renderBackButton();
 
@@ -542,86 +340,91 @@ async function showCourse(course) {
 }
 
 
-/* -------------------------------------------------
-   COURSE FEE
-------------------------------------------------- */
+/* =====================================================
+   COURSE FEE DISPLAY
+===================================================== */
 
-function renderFee(course) {
+function renderCourseFee(course) {
 
+  const original =
+    Number(course.original_fee || 0);
 
-  const currentFee =
-    course.current_fee;
-
-
-  const originalFee =
-    course.original_fee;
+  const current =
+    Number(course.current_fee || 0);
 
 
-  if (
-    currentFee === null ||
-    currentFee === undefined ||
-    currentFee === ""
-  ) {
+  if (!original && !current) {
 
-    feeArea.innerHTML = `
-      <div class="fee-box">
-
-        <div class="fee-label">
-          Course Fee
-        </div>
-
-        <div class="no-fee">
-          Fee will be announced soon.
-        </div>
-
-      </div>
-    `;
+    feeArea.innerHTML = "";
 
     return;
   }
 
 
-  feeArea.innerHTML = `
-
-    <div class="fee-box">
+  let html = `
+    <div class="fee-card">
 
       <div class="fee-label">
-        Current Course Fee
+        Course Fee
       </div>
-
-      <div class="current-fee">
-        ${formatMoney(currentFee)}
-      </div>
-
-      ${
-        originalFee
-        ?
-        `
-        <div class="original-fee">
-          ${formatMoney(originalFee)}
-        </div>
-        `
-        :
-        ""
-      }
-
-      <div class="course-status">
-        Available for Enrollment
-      </div>
-
-    </div>
-
   `;
+
+
+  if (
+    original &&
+    current &&
+    original !== current
+  ) {
+
+    html += `
+      <div>
+        <span class="old-fee">
+          ₹${original.toLocaleString("en-IN")}
+        </span>
+
+        <span class="current-fee">
+          ₹${current.toLocaleString("en-IN")}
+        </span>
+      </div>
+
+      <div class="fee-note">
+        Current fee is managed by LakshyaSetu Admin.
+      </div>
+    `;
+
+  } else if (current) {
+
+    html += `
+      <div class="current-fee">
+        ₹${current.toLocaleString("en-IN")}
+      </div>
+    `;
+
+  } else {
+
+    html += `
+      <div class="current-fee">
+        ₹${original.toLocaleString("en-IN")}
+      </div>
+    `;
+  }
+
+
+  html += `
+    </div>
+  `;
+
+
+  feeArea.innerHTML = html;
 
 }
 
 
-/* -------------------------------------------------
+/* =====================================================
    RENDER APPSC SUBJECTS
-------------------------------------------------- */
+===================================================== */
 
 function renderSubjects() {
-
 
   subjectArea.innerHTML = `
 
@@ -653,48 +456,70 @@ function renderSubjects() {
     </div>
 
   `;
-
-
-  loadAvailableCourses();
-
 }
 
 
-/* -------------------------------------------------
-   LOAD AVAILABLE COURSES
-------------------------------------------------- */
+/* =====================================================
+   LOAD ALL PUBLISHED COURSES
+===================================================== */
 
-async function loadAvailableCourses() {
-
+async function loadAllPublishedCourses() {
 
   const result = await sb
     .from("courses")
     .select("*")
+    .eq("published", true)
     .order("title");
 
 
-  if (result.error) {
-
-    console.error(result.error);
+  if (
+    result.error ||
+    !result.data
+  ) {
 
     return;
   }
 
 
   const courses =
-    result.data || [];
+    result.data;
 
 
-  if (!courses.length) {
+  const matchingCourses =
+    appscSubjects
+      .map(subject => {
+
+        return courses.find(course => {
+
+          const title =
+            (course.title || "").toLowerCase();
+
+          const slug =
+            (course.slug || "").toLowerCase();
+
+
+          return subject.keywords.some(keyword => {
+
+            return (
+              slug === keyword ||
+              slug.includes(keyword) ||
+              title.includes(
+                keyword.replaceAll("-", " ")
+              )
+            );
+
+          });
+
+        });
+
+      })
+      .filter(Boolean);
+
+
+  if (!matchingCourses.length) {
 
     return;
   }
-
-
-  const currentCourseIds =
-    courses.map(course =>
-      String(course.id)
-    );
 
 
   subjectArea.innerHTML += `
@@ -705,13 +530,11 @@ async function loadAvailableCourses() {
 
     <div class="course-grid">
 
-      ${courses.map(course => `
+      ${matchingCourses.map(course => `
 
         <a
           class="course-card"
-          href="student.html?course=${encodeURIComponent(
-            course.slug || course.title
-          )}"
+          href="student.html?course=${course.slug}"
         >
 
           <h3>
@@ -724,16 +547,14 @@ async function loadAvailableCourses() {
 
           ${
             course.current_fee
-            ?
-            `
-            <p style="margin-top:12px">
-              <strong>
-                ${formatMoney(course.current_fee)}
-              </strong>
-            </p>
-            `
-            :
-            ""
+              ?
+              `
+              <div class="small-fee">
+                ₹${Number(course.current_fee).toLocaleString("en-IN")}
+              </div>
+              `
+              :
+              ""
           }
 
         </a>
@@ -747,14 +568,13 @@ async function loadAvailableCourses() {
 }
 
 
-/* -------------------------------------------------
+/* =====================================================
    LOAD LESSONS
-------------------------------------------------- */
+===================================================== */
 
 async function loadLessons(courseId) {
 
-
-  const result = await sb
+  const l = await sb
     .from("lessons")
     .select("*")
     .eq("course_id", courseId)
@@ -762,19 +582,13 @@ async function loadLessons(courseId) {
     .order("sort_order");
 
 
-  if (result.error) {
+  if (l.error) {
 
     lessonArea.innerHTML = `
 
-      <div class="info-card">
+      <div class="error-card">
 
-        <h3>
-          Unable to load lessons.
-        </h3>
-
-        <p class="muted">
-          Please try again later.
-        </p>
+        Unable to load lessons.
 
       </div>
 
@@ -784,11 +598,10 @@ async function loadLessons(courseId) {
   }
 
 
-  const lessons =
-    result.data || [];
-
-
-  if (!lessons.length) {
+  if (
+    !l.data ||
+    !l.data.length
+  ) {
 
     lessonArea.innerHTML = `
 
@@ -818,51 +631,54 @@ async function loadLessons(courseId) {
 
     <div class="list">
 
-      ${lessons.map(lesson => `
+      ${l.data.map(x => `
 
         <div class="item">
 
           <h2>
-            ${lesson.title}
+            ${x.title}
           </h2>
 
           <p class="muted">
-            ${lesson.description || ""}
+            ${x.description || ""}
           </p>
 
+
           ${
-            lesson.video_url
+            x.video_url
             ?
             `
-            <video
-              controls
-              style="width:100%;max-height:600px"
-              src="${lesson.video_url}">
-            </video>
+              <video
+                controls
+                style="width:100%;max-height:600px"
+                src="${x.video_url}">
+              </video>
             `
             :
             `
-            <span class="status">
-              Video pending
-            </span>
+              <span class="status">
+                Video pending
+              </span>
             `
           }
 
+
           ${
-            lesson.pdf_url
+            x.pdf_url
             ?
             `
-            <p>
+              <p>
 
-              <a
-                class="btn alt"
-                href="${lesson.pdf_url}"
-                target="_blank"
-              >
-                Open Notes PDF
-              </a>
+                <a
+                  class="btn alt"
+                  href="${x.pdf_url}"
+                  target="_blank">
 
-            </p>
+                  Open Notes PDF
+
+                </a>
+
+              </p>
             `
             :
             ""
@@ -879,9 +695,9 @@ async function loadLessons(courseId) {
 }
 
 
-/* -------------------------------------------------
+/* =====================================================
    BACK BUTTON
-------------------------------------------------- */
+===================================================== */
 
 function renderBackButton() {
 
@@ -889,9 +705,10 @@ function renderBackButton() {
 
     <a
       class="btn alt back-btn"
-      href="index.html#courses"
-    >
-      Back to Courses
+      href="student.html?course=appsc-group-1">
+
+      Back to APPSC Group 1
+
     </a>
 
   `;
@@ -899,9 +716,9 @@ function renderBackButton() {
 }
 
 
-/* -------------------------------------------------
+/* =====================================================
    FAQ
-------------------------------------------------- */
+===================================================== */
 
 function renderFAQs() {
 
@@ -911,6 +728,7 @@ function renderFAQs() {
       Frequently Asked Questions
     </h2>
 
+
     <div class="info-card">
 
       <h3>
@@ -918,7 +736,8 @@ function renderFAQs() {
       </h3>
 
       <p class="muted">
-        Select the required subject from the course page.
+        Select the required subject from the
+        APPSC Group 1 course page.
       </p>
 
     </div>
@@ -932,7 +751,7 @@ function renderFAQs() {
 
       <p class="muted">
         Published lessons, videos and PDF notes
-        will appear inside the respective course.
+        will appear inside the respective subject.
       </p>
 
     </div>
@@ -946,7 +765,7 @@ function renderFAQs() {
 
       <p class="muted">
         Open the Test Series section from the
-        available courses.
+        APPSC Group 1 course page.
       </p>
 
     </div>
@@ -956,12 +775,12 @@ function renderFAQs() {
 }
 
 
-/* -------------------------------------------------
+/* =====================================================
    LOGOUT
-------------------------------------------------- */
+===================================================== */
 
 document.getElementById("logout").onclick =
-  async function() {
+  async () => {
 
     await sb.auth.signOut();
 
@@ -970,9 +789,9 @@ document.getElementById("logout").onclick =
   };
 
 
-/* -------------------------------------------------
+/* =====================================================
    START
-------------------------------------------------- */
+===================================================== */
 
 boot();
 

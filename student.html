@@ -1,12 +1,16 @@
 <!doctype html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Student | LakshyaSetu</title>
+
   <link rel="stylesheet" href="styles.css">
 
   <style>
+
     .course-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -54,19 +58,69 @@
     .back-btn {
       margin-bottom: 18px;
     }
+
+    .fee-box {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 14px;
+      background: #f5f8fc;
+      border: 1px solid #dfe6ef;
+    }
+
+    .fee-label {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .current-fee {
+      font-size: 32px;
+      font-weight: 800;
+      color: #102746;
+    }
+
+    .original-fee {
+      margin-top: 5px;
+      color: #667085;
+      text-decoration: line-through;
+      font-size: 16px;
+    }
+
+    .no-fee {
+      color: #667085;
+      font-size: 16px;
+    }
+
+    .course-status {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #e7f5f2;
+      color: #0f766e;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
   </style>
+
 </head>
 
 <body>
 
 <header class="top">
+
   <div class="brand">
     LakshyaSetu
     <small>Student Dashboard</small>
   </div>
 
-  <button id="logout" class="btn alt">Logout</button>
+  <button id="logout" class="btn alt">
+    Logout
+  </button>
+
 </header>
+
 
 <main class="wrap">
 
@@ -74,25 +128,29 @@
 
     <div id="backArea"></div>
 
-    <h1 id="courseTitle">Loading...</h1>
+    <h1 id="courseTitle">
+      Loading...
+    </h1>
 
     <p id="courseDesc" class="muted"></p>
 
-    <!-- APPSC GROUP 1 SUBJECTS -->
+    <div id="feeArea"></div>
+
     <div id="subjectArea"></div>
 
-    <!-- LESSONS -->
     <div id="lessonArea"></div>
 
-    <!-- FAQ -->
     <div id="faqArea"></div>
 
   </section>
 
 </main>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="config.js"></script>
+
 
 <script>
 
@@ -101,8 +159,10 @@ const sb = window.supabase.createClient(
   LAKSHYASETU_CONFIG.supabasePublishableKey
 );
 
+
 const courseTitle = document.getElementById("courseTitle");
 const courseDesc = document.getElementById("courseDesc");
+const feeArea = document.getElementById("feeArea");
 const subjectArea = document.getElementById("subjectArea");
 const lessonArea = document.getElementById("lessonArea");
 const faqArea = document.getElementById("faqArea");
@@ -167,67 +227,303 @@ const appscSubjects = [
 
 
 /* -------------------------------------------------
+   TEXT NORMALIZER
+------------------------------------------------- */
+
+function normalizeText(value) {
+
+  return (value || "")
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ");
+
+}
+
+
+/* -------------------------------------------------
+   FORMAT MONEY
+------------------------------------------------- */
+
+function formatMoney(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return "";
+  }
+
+  const number = Number(value);
+
+  if (Number.isNaN(number)) {
+    return "";
+  }
+
+  return "₹" + number.toLocaleString("en-IN");
+
+}
+
+
+/* -------------------------------------------------
    LOGIN CHECK
 ------------------------------------------------- */
 
 async function boot() {
 
-  const u = await sb.auth.getUser();
+  const userResult = await sb.auth.getUser();
 
-  if (!u.data.user) {
+  if (!userResult.data.user) {
+
     location.href = "login.html";
+
     return;
   }
 
-  const params = new URLSearchParams(location.search);
 
-  const slug =
-    params.get("course") || "appsc-group-1";
-
-
-  /* -------------------------------------------------
-     GET CURRENT COURSE
-  ------------------------------------------------- */
-
-  const c = await sb
-    .from("courses")
-    .select("*")
-    .eq("slug", slug)
-    .eq("published", true)
-    .single();
+  const params = new URLSearchParams(
+    location.search
+  );
 
 
-  if (c.error) {
+  const requestedCourse =
+    params.get("course");
 
-    courseTitle.textContent = "Course not found";
+
+  const course = await findCourse(
+    requestedCourse
+  );
+
+
+  if (!course) {
+
+    courseTitle.textContent =
+      "Course not found";
 
     courseDesc.textContent =
       "The requested course is not currently available.";
 
+    feeArea.innerHTML = "";
+
     return;
   }
 
 
-  const course = c.data;
+  showCourse(course);
 
-  courseTitle.textContent = course.title;
+}
+
+
+/* -------------------------------------------------
+   FIND COURSE
+------------------------------------------------- */
+
+async function findCourse(requestedCourse) {
+
+
+  /* -----------------------------------------------
+     FIRST: LOAD ALL COURSES
+  ----------------------------------------------- */
+
+  const result = await sb
+    .from("courses")
+    .select("*")
+    .order("id");
+
+
+  if (result.error) {
+
+    console.error(
+      "Course loading error:",
+      result.error
+    );
+
+    return null;
+  }
+
+
+  const courses = result.data || [];
+
+
+  if (!courses.length) {
+
+    return null;
+  }
+
+
+  /* -----------------------------------------------
+     IF NO COURSE PARAMETER
+     TRY APPSC GROUP 1 & 2
+  ----------------------------------------------- */
+
+  if (!requestedCourse) {
+
+    const defaultCourse =
+      courses.find(course => {
+
+        const title =
+          normalizeText(course.title);
+
+        return (
+          title.includes("appsc group 1")
+        );
+
+      });
+
+    return defaultCourse || courses[0];
+  }
+
+
+  const requested =
+    normalizeText(requestedCourse);
+
+
+  /* -----------------------------------------------
+     MATCH BY ID
+  ----------------------------------------------- */
+
+  const byId = courses.find(course => {
+
+    return String(course.id) ===
+      String(requestedCourse);
+
+  });
+
+
+  if (byId) {
+
+    return byId;
+  }
+
+
+  /* -----------------------------------------------
+     MATCH BY EXACT SLUG
+  ----------------------------------------------- */
+
+  const bySlug = courses.find(course => {
+
+    return normalizeText(course.slug) ===
+      requested;
+
+  });
+
+
+  if (bySlug) {
+
+    return bySlug;
+  }
+
+
+  /* -----------------------------------------------
+     MATCH BY TITLE
+  ----------------------------------------------- */
+
+  const byTitle = courses.find(course => {
+
+    return normalizeText(course.title) ===
+      requested;
+
+  });
+
+
+  if (byTitle) {
+
+    return byTitle;
+  }
+
+
+  /* -----------------------------------------------
+     MATCH SLUG AGAINST TITLE
+     Example:
+     upsc-civil-services
+     UPSC Civil Services
+  ----------------------------------------------- */
+
+  const byConvertedTitle =
+    courses.find(course => {
+
+      const title =
+        normalizeText(course.title);
+
+      return title === requested;
+
+    });
+
+
+  if (byConvertedTitle) {
+
+    return byConvertedTitle;
+  }
+
+
+  /* -----------------------------------------------
+     FLEXIBLE MATCH
+  ----------------------------------------------- */
+
+  const flexibleMatch =
+    courses.find(course => {
+
+      const title =
+        normalizeText(course.title);
+
+      const slug =
+        normalizeText(course.slug);
+
+      return (
+        title.includes(requested) ||
+        requested.includes(title) ||
+        slug.includes(requested) ||
+        requested.includes(slug)
+      );
+
+    });
+
+
+  if (flexibleMatch) {
+
+    return flexibleMatch;
+  }
+
+
+  return null;
+
+}
+
+
+/* -------------------------------------------------
+   SHOW COURSE
+------------------------------------------------- */
+
+async function showCourse(course) {
+
+
+  courseTitle.textContent =
+    course.title || "Course";
+
 
   courseDesc.textContent =
     course.description || "";
 
 
-  /* -------------------------------------------------
-     APPSC GROUP 1 MAIN PAGE
-  ------------------------------------------------- */
+  renderFee(course);
+
+
+  /* -----------------------------------------------
+     APPSC GROUP COURSE
+  ----------------------------------------------- */
+
+  const title =
+    normalizeText(course.title);
+
 
   if (
-    slug === "appsc-group-1" ||
-    course.title.toLowerCase().includes("appsc group 1")
+    title.includes("appsc group 1")
   ) {
 
     renderSubjects();
-
-    await loadAllPublishedCourses();
 
     renderFAQs();
 
@@ -235,13 +531,87 @@ async function boot() {
   }
 
 
-  /* -------------------------------------------------
-     NORMAL COURSE PAGE
-  ------------------------------------------------- */
+  /* -----------------------------------------------
+     NORMAL COURSE
+  ----------------------------------------------- */
 
   renderBackButton();
 
   await loadLessons(course.id);
+
+}
+
+
+/* -------------------------------------------------
+   COURSE FEE
+------------------------------------------------- */
+
+function renderFee(course) {
+
+
+  const currentFee =
+    course.current_fee;
+
+
+  const originalFee =
+    course.original_fee;
+
+
+  if (
+    currentFee === null ||
+    currentFee === undefined ||
+    currentFee === ""
+  ) {
+
+    feeArea.innerHTML = `
+      <div class="fee-box">
+
+        <div class="fee-label">
+          Course Fee
+        </div>
+
+        <div class="no-fee">
+          Fee will be announced soon.
+        </div>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  feeArea.innerHTML = `
+
+    <div class="fee-box">
+
+      <div class="fee-label">
+        Current Course Fee
+      </div>
+
+      <div class="current-fee">
+        ${formatMoney(currentFee)}
+      </div>
+
+      ${
+        originalFee
+        ?
+        `
+        <div class="original-fee">
+          ${formatMoney(originalFee)}
+        </div>
+        `
+        :
+        ""
+      }
+
+      <div class="course-status">
+        Available for Enrollment
+      </div>
+
+    </div>
+
+  `;
 
 }
 
@@ -252,7 +622,9 @@ async function boot() {
 
 function renderSubjects() {
 
+
   subjectArea.innerHTML = `
+
     <h2 class="section-title">
       APPSC Group 1 Subjects
     </h2>
@@ -261,10 +633,14 @@ function renderSubjects() {
 
       ${appscSubjects.map(subject => `
 
-        <a class="course-card"
-           href="student.html?course=${subject.keywords[0]}">
+        <a
+          class="course-card"
+          href="student.html?course=${subject.keywords[0]}"
+        >
 
-          <h3>${subject.title}</h3>
+          <h3>
+            ${subject.title}
+          </h3>
 
           <p class="muted">
             ${subject.description}
@@ -275,59 +651,50 @@ function renderSubjects() {
       `).join("")}
 
     </div>
+
   `;
+
+
+  loadAvailableCourses();
+
 }
 
 
 /* -------------------------------------------------
-   LOAD ALL PUBLISHED COURSES
-   This allows us to match actual Supabase courses.
+   LOAD AVAILABLE COURSES
 ------------------------------------------------- */
 
-async function loadAllPublishedCourses() {
+async function loadAvailableCourses() {
+
 
   const result = await sb
     .from("courses")
     .select("*")
-    .eq("published", true)
     .order("title");
 
 
-  if (result.error || !result.data) {
+  if (result.error) {
+
+    console.error(result.error);
+
     return;
   }
 
 
-  const courses = result.data;
+  const courses =
+    result.data || [];
 
 
-  const matchingCourses = appscSubjects
-    .map(subject => {
+  if (!courses.length) {
 
-      return courses.find(course => {
-
-        const title = (course.title || "").toLowerCase();
-        const slug = (course.slug || "").toLowerCase();
-
-        return subject.keywords.some(keyword => {
-
-          return (
-            slug === keyword ||
-            slug.includes(keyword) ||
-            title.includes(keyword.replaceAll("-", " "))
-          );
-
-        });
-
-      });
-
-    })
-    .filter(Boolean);
-
-
-  if (!matchingCourses.length) {
     return;
   }
+
+
+  const currentCourseIds =
+    courses.map(course =>
+      String(course.id)
+    );
 
 
   subjectArea.innerHTML += `
@@ -338,16 +705,36 @@ async function loadAllPublishedCourses() {
 
     <div class="course-grid">
 
-      ${matchingCourses.map(course => `
+      ${courses.map(course => `
 
-        <a class="course-card"
-           href="student.html?course=${course.slug}">
+        <a
+          class="course-card"
+          href="student.html?course=${encodeURIComponent(
+            course.slug || course.title
+          )}"
+        >
 
-          <h3>${course.title}</h3>
+          <h3>
+            ${course.title}
+          </h3>
 
           <p class="muted">
             ${course.description || "Open course"}
           </p>
+
+          ${
+            course.current_fee
+            ?
+            `
+            <p style="margin-top:12px">
+              <strong>
+                ${formatMoney(course.current_fee)}
+              </strong>
+            </p>
+            `
+            :
+            ""
+          }
 
         </a>
 
@@ -366,7 +753,8 @@ async function loadAllPublishedCourses() {
 
 async function loadLessons(courseId) {
 
-  const l = await sb
+
+  const result = await sb
     .from("lessons")
     .select("*")
     .eq("course_id", courseId)
@@ -374,27 +762,48 @@ async function loadLessons(courseId) {
     .order("sort_order");
 
 
-  if (l.error) {
+  if (result.error) {
 
     lessonArea.innerHTML = `
+
       <div class="info-card">
-        Unable to load lessons.
+
+        <h3>
+          Unable to load lessons.
+        </h3>
+
+        <p class="muted">
+          Please try again later.
+        </p>
+
       </div>
+
     `;
 
     return;
   }
 
 
-  if (!l.data || !l.data.length) {
+  const lessons =
+    result.data || [];
+
+
+  if (!lessons.length) {
 
     lessonArea.innerHTML = `
+
       <div class="info-card">
-        <h3>No published lessons yet.</h3>
+
+        <h3>
+          No published lessons yet.
+        </h3>
+
         <p class="muted">
           Lessons will appear here once they are published.
         </p>
+
       </div>
+
     `;
 
     return;
@@ -409,41 +818,52 @@ async function loadLessons(courseId) {
 
     <div class="list">
 
-      ${l.data.map(x => `
+      ${lessons.map(lesson => `
 
         <div class="item">
 
-          <h2>${x.title}</h2>
+          <h2>
+            ${lesson.title}
+          </h2>
 
           <p class="muted">
-            ${x.description || ""}
+            ${lesson.description || ""}
           </p>
 
           ${
-            x.video_url
+            lesson.video_url
             ?
-            `<video
+            `
+            <video
               controls
               style="width:100%;max-height:600px"
-              src="${x.video_url}">
-            </video>`
+              src="${lesson.video_url}">
+            </video>
+            `
             :
-            `<span class="status">
+            `
+            <span class="status">
               Video pending
-            </span>`
+            </span>
+            `
           }
 
           ${
-            x.pdf_url
+            lesson.pdf_url
             ?
-            `<p>
+            `
+            <p>
+
               <a
                 class="btn alt"
-                href="${x.pdf_url}"
-                target="_blank">
+                href="${lesson.pdf_url}"
+                target="_blank"
+              >
                 Open Notes PDF
               </a>
-            </p>`
+
+            </p>
+            `
             :
             ""
           }
@@ -466,18 +886,21 @@ async function loadLessons(courseId) {
 function renderBackButton() {
 
   backArea.innerHTML = `
+
     <a
       class="btn alt back-btn"
-      href="student.html?course=appsc-group-1">
-      Back to APPSC Group 1
+      href="index.html#courses"
+    >
+      Back to Courses
     </a>
+
   `;
 
 }
 
 
 /* -------------------------------------------------
-   FAQ SECTION
+   FAQ
 ------------------------------------------------- */
 
 function renderFAQs() {
@@ -490,10 +913,12 @@ function renderFAQs() {
 
     <div class="info-card">
 
-      <h3>How do I access a subject?</h3>
+      <h3>
+        How do I access a subject?
+      </h3>
 
       <p class="muted">
-        Select the required subject from the APPSC Group 1 course page.
+        Select the required subject from the course page.
       </p>
 
     </div>
@@ -501,11 +926,13 @@ function renderFAQs() {
 
     <div class="info-card">
 
-      <h3>Where will the lessons appear?</h3>
+      <h3>
+        Where will the lessons appear?
+      </h3>
 
       <p class="muted">
-        Published lessons, videos and PDF notes will appear inside the
-        respective subject.
+        Published lessons, videos and PDF notes
+        will appear inside the respective course.
       </p>
 
     </div>
@@ -513,10 +940,13 @@ function renderFAQs() {
 
     <div class="info-card">
 
-      <h3>Where can I access the Test Series?</h3>
+      <h3>
+        Where can I access the Test Series?
+      </h3>
 
       <p class="muted">
-        Open the Test Series section from the APPSC Group 1 course page.
+        Open the Test Series section from the
+        available courses.
       </p>
 
     </div>
@@ -530,13 +960,14 @@ function renderFAQs() {
    LOGOUT
 ------------------------------------------------- */
 
-document.getElementById("logout").onclick = async () => {
+document.getElementById("logout").onclick =
+  async function() {
 
-  await sb.auth.signOut();
+    await sb.auth.signOut();
 
-  location.href = "login.html";
+    location.href = "login.html";
 
-};
+  };
 
 
 /* -------------------------------------------------

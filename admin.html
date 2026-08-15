@@ -2,74 +2,128 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <title>Admin | LakshyaSetu</title>
+<title>Admin | LakshyaSetu</title>
 
-  <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css">
 
-  <style>
-    .fee-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
+<style>
 
-    .fee-table th,
-    .fee-table td {
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
+.fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
 
-    .fee-table th {
-      font-weight: 700;
-    }
+.fee-table th,
+.fee-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
 
-    .fee-input {
-      width: 140px;
-      padding: 9px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 15px;
-    }
+.fee-table th {
+  font-weight: 700;
+}
 
-    .small-btn {
-      padding: 9px 14px;
-      border: 0;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
+.fee-input {
+  width: 140px;
+  padding: 9px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
 
-    .save-fee {
-      background: #111;
-      color: white;
-    }
+.small-btn {
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
 
-    .save-fee:hover {
-      opacity: 0.85;
-    }
+.save-fee {
+  background: #111;
+  color: white;
+}
 
-    .course-name {
-      font-weight: 700;
-    }
+.save-fee:hover {
+  opacity: 0.85;
+}
 
-    .old-fee {
-      color: #777;
-    }
+.course-name {
+  font-weight: 700;
+}
 
-    .current-fee {
-      font-weight: 700;
-    }
+.old-fee {
+  color: #777;
+}
 
-    .fee-note {
-      margin-top: 8px;
-      color: #666;
-      font-size: 14px;
-    }
-  </style>
+.current-fee {
+  font-weight: 700;
+}
+
+.fee-note {
+  margin-top: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.admin-section {
+  margin-top: 24px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.admin-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  background: #fff;
+}
+
+.admin-card h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.admin-card p {
+  color: #666;
+  line-height: 1.5;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #eef6ff;
+  color: #1457a6;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.item {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: white;
+}
+
+.empty {
+  padding: 20px;
+  color: #666;
+}
+
+</style>
 
 </head>
 
@@ -82,7 +136,10 @@
     <small>Content Management</small>
   </div>
 
-  <button id="logout" class="btn alt" style="display:none">
+  <button
+    id="logout"
+    class="btn alt"
+    style="display:none">
     Logout
   </button>
 
@@ -91,39 +148,287 @@
 
 <main class="wrap">
 
-  <div id="msg" class="message"></div>
+<div id="msg" class="message"></div>
 
 
-  <!-- ADMIN LOGIN -->
+<!-- ADMIN LOGIN -->
 
-  <section id="adminLogin" class="auth panel" style="display:none">
+<section
+  id="adminLogin"
+  class="auth panel"
+  style="display:none">
 
-    <h1>Admin Login</h1>
+  <h1>Admin Login</h1>
+
+  <p class="muted">
+    Sign in with your Admin account to manage the LakshyaSetu platform.
+  </p>
+
+  <form id="adminLoginForm" class="form">
+
+    <label>Email</label>
+
+    <input
+      id="adminEmail"
+      type="email"
+      required
+    >
+
+    <label>Password</label>
+
+    <input
+      id="adminPassword"
+      type="password"
+      required
+    >
+
+    <button class="btn">
+      Login
+    </button>
+
+  </form>
+
+</section>
+
+
+
+<!-- ADMIN DASHBOARD -->
+
+<div
+  id="adminDashboard"
+  style="display:none">
+
+
+  <!-- STATISTICS -->
+
+  <div class="stats">
+
+    <div class="stat">
+      <strong id="courseCount">0</strong>
+      Courses
+    </div>
+
+    <div class="stat">
+      <strong id="lessonCount">0</strong>
+      Lessons
+    </div>
+
+    <div class="stat">
+      <strong id="topicCount">0</strong>
+      Topics
+    </div>
+
+    <div class="stat">
+      <strong>Admin</strong>
+      Role
+    </div>
+
+  </div>
+
+
+
+  <!-- PLATFORM MANAGEMENT -->
+
+  <section class="panel admin-section">
+
+    <h2>Platform Management</h2>
 
     <p class="muted">
-      Sign in with your Admin account to manage courses, fees and lessons.
+      Manage normal platform content from the Admin Dashboard.
     </p>
 
-    <form id="adminLoginForm" class="form">
+    <div class="admin-grid">
 
-      <label>Email</label>
+      <div class="admin-card">
+
+        <h3>Courses</h3>
+
+        <p>
+          Manage available courses and course pricing.
+        </p>
+
+        <span class="status">
+          Admin Control
+        </span>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <h3>Subjects</h3>
+
+        <p>
+          Manage subjects, order and subject pricing.
+        </p>
+
+        <span class="status">
+          Admin Control
+        </span>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <h3>Topics</h3>
+
+        <p>
+          Manage topics and their display order.
+        </p>
+
+        <span class="status">
+          Admin Control
+        </span>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <h3>Lessons</h3>
+
+        <p>
+          Manage videos, PDFs, trial lessons and availability.
+        </p>
+
+        <span class="status">
+          Admin Control
+        </span>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <h3>Current Affairs</h3>
+
+        <p>
+          Daily videos, PDFs and MCQs can be managed here.
+        </p>
+
+        <span class="status">
+          Admin Control
+        </span>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <h3>Tests</h3>
+
+        <p>
+          Manage tests, questions, pricing and availability.
+        </p>
+
+        <span class="status">
+          Admin Control
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- COURSE FEE MANAGEMENT -->
+
+  <section class="panel admin-section">
+
+    <h2>Course Fee Management</h2>
+
+    <p class="muted">
+      Change the current course fee here.
+      The updated fee can be displayed on the student portal and home page.
+    </p>
+
+    <p class="fee-note">
+      Original fee is kept for reference.
+      Current fee can be changed whenever required.
+    </p>
+
+    <div id="feeManagement">
+
+      <div class="item">
+        Loading courses...
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ADD LESSON -->
+
+  <section class="panel admin-section">
+
+    <h2>Add Lesson</h2>
+
+    <form
+      id="lessonForm"
+      class="form">
+
+
+      <label>Course</label>
+
+      <select
+        id="courseSelect"
+        required>
+      </select>
+
+
+      <label>Lesson title</label>
 
       <input
-        id="adminEmail"
-        type="email"
+        id="lessonTitle"
+        placeholder="Lesson title"
         required
       >
 
-      <label>Password</label>
+
+      <label>Description</label>
+
+      <textarea
+        id="lessonDescription"
+        placeholder="Lesson description">
+      </textarea>
+
+
+      <label>Video URL</label>
 
       <input
-        id="adminPassword"
-        type="password"
-        required
+        id="videoUrl"
+        placeholder="YouTube or video URL"
       >
+
+
+      <label>PDF URL</label>
+
+      <input
+        id="pdfUrl"
+        placeholder="PDF URL"
+      >
+
+
+      <label>
+
+        <input
+          id="published"
+          type="checkbox"
+          checked
+        >
+
+        Publish lesson
+
+      </label>
+
 
       <button class="btn">
-        Login
+        Save Lesson to Database
       </button>
 
     </form>
@@ -131,144 +436,22 @@
   </section>
 
 
-  <!-- ADMIN DASHBOARD -->
 
-  <div id="adminDashboard" style="display:none">
+  <!-- EXISTING LESSONS -->
 
+  <section class="panel admin-section">
 
-    <!-- STATISTICS -->
+    <h2>Existing Lessons</h2>
 
-    <div class="stats">
+    <div id="lessons"></div>
 
-      <div class="stat">
-        <strong id="courseCount">0</strong>
-        Courses
-      </div>
-
-      <div class="stat">
-        <strong id="lessonCount">0</strong>
-        Lessons
-      </div>
-
-      <div class="stat">
-        <strong id="mcqCount">0</strong>
-        MCQs
-      </div>
-
-      <div class="stat">
-        <strong>Admin</strong>
-        Role
-      </div>
-
-    </div>
+  </section>
 
 
-    <!-- COURSE FEE MANAGEMENT -->
-
-    <section class="panel">
-
-      <h2>Course Fee Management</h2>
-
-      <p class="muted">
-        Change the current course fee here. The updated fee will be displayed
-        on the student portal and home page.
-      </p>
-
-      <p class="fee-note">
-        Original fee is kept for reference. You can increase or decrease the
-        current fee whenever required.
-      </p>
-
-      <div id="feeManagement">
-
-        <div class="item">
-          Loading courses...
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADD GEOGRAPHY LESSON -->
-
-    <section class="panel">
-
-      <h2>Add Geography Lesson</h2>
-
-      <form id="lessonForm" class="form">
-
-        <label>Course</label>
-
-        <select id="courseSelect" required></select>
-
-
-        <label>Lesson title</label>
-
-        <input
-          id="lessonTitle"
-          value="Latitude and Longitude"
-          required
-        >
-
-
-        <label>Description</label>
-
-        <textarea id="lessonDescription">Understand latitude, longitude, important parallels and meridians, time calculation and Indian Standard Time.</textarea>
-
-
-        <label>Video URL</label>
-
-        <input
-          id="videoUrl"
-          placeholder="Temporary video URL"
-        >
-
-
-        <label>PDF URL</label>
-
-        <input
-          id="pdfUrl"
-          placeholder="Temporary PDF URL"
-        >
-
-
-        <label>
-
-          <input
-            id="published"
-            type="checkbox"
-            checked
-          >
-
-          Publish lesson
-
-        </label>
-
-
-        <button class="btn">
-          Save Lesson to Database
-        </button>
-
-      </form>
-
-    </section>
-
-
-    <!-- EXISTING LESSONS -->
-
-    <section class="panel">
-
-      <h2>Existing Lessons</h2>
-
-      <div id="lessons" class="list"></div>
-
-    </section>
-
-
-  </div>
+</div>
 
 </main>
+
 
 
 <!-- SUPABASE -->
@@ -286,6 +469,69 @@ const sb = window.supabase.createClient(
 );
 
 
+
+/* --------------------------------------------------
+   ELEMENTS
+-------------------------------------------------- */
+
+const msg = document.getElementById("msg");
+
+const adminLogin =
+  document.getElementById("adminLogin");
+
+const adminDashboard =
+  document.getElementById("adminDashboard");
+
+const logout =
+  document.getElementById("logout");
+
+const adminLoginForm =
+  document.getElementById("adminLoginForm");
+
+const adminEmail =
+  document.getElementById("adminEmail");
+
+const adminPassword =
+  document.getElementById("adminPassword");
+
+const courseCount =
+  document.getElementById("courseCount");
+
+const lessonCount =
+  document.getElementById("lessonCount");
+
+const topicCount =
+  document.getElementById("topicCount");
+
+const courseSelect =
+  document.getElementById("courseSelect");
+
+const feeManagement =
+  document.getElementById("feeManagement");
+
+const lessons =
+  document.getElementById("lessons");
+
+const lessonForm =
+  document.getElementById("lessonForm");
+
+const lessonTitle =
+  document.getElementById("lessonTitle");
+
+const lessonDescription =
+  document.getElementById("lessonDescription");
+
+const videoUrl =
+  document.getElementById("videoUrl");
+
+const pdfUrl =
+  document.getElementById("pdfUrl");
+
+const published =
+  document.getElementById("published");
+
+
+
 /* --------------------------------------------------
    MESSAGE
 -------------------------------------------------- */
@@ -299,6 +545,7 @@ function show(text, error = false) {
     (error ? " error" : "");
 
 }
+
 
 
 /* --------------------------------------------------
@@ -316,6 +563,7 @@ function showLogin() {
 }
 
 
+
 /* --------------------------------------------------
    DASHBOARD SCREEN
 -------------------------------------------------- */
@@ -331,16 +579,63 @@ function showDashboard() {
 }
 
 
+
+/* --------------------------------------------------
+   VERIFY ADMIN
+   IMPORTANT:
+   Use is_admin() RPC instead of .single()
+-------------------------------------------------- */
+
+async function verifyAdmin() {
+
+  const result =
+    await sb.rpc("is_admin");
+
+  if (result.error) {
+
+    console.error(
+      "Admin verification error:",
+      result.error
+    );
+
+    show(
+      "Admin verification failed: " +
+      result.error.message,
+      true
+    );
+
+    return false;
+  }
+
+
+  if (result.data !== true) {
+
+    show(
+      "This account does not have admin access.",
+      true
+    );
+
+    return false;
+  }
+
+
+  return true;
+
+}
+
+
+
 /* --------------------------------------------------
    LOAD COURSES
 -------------------------------------------------- */
 
 async function loadCourses() {
 
-  const result = await sb
-    .from("courses")
-    .select("*")
-    .order("id");
+  const result =
+    await sb
+      .from("courses")
+      .select("*")
+      .order("id");
 
 
   if (result.error) {
@@ -351,24 +646,20 @@ async function loadCourses() {
       true
     );
 
-    console.error(
-      "COURSES ERROR:",
-      result.error
-    );
-
     return;
-
   }
 
 
-  const courses = result.data || [];
+  const courses =
+    result.data || [];
 
 
   courseCount.textContent =
     courses.length;
 
 
-  /* Course dropdown */
+
+  /* COURSE DROPDOWN */
 
   courseSelect.innerHTML =
     courses
@@ -384,17 +675,19 @@ async function loadCourses() {
       .join("");
 
 
-  /* Fee management */
+
+  /* FEE MANAGEMENT */
 
   if (courses.length === 0) {
 
     feeManagement.innerHTML =
-      `<div class="item">
-        No courses found.
-      </div>`;
+      `
+        <div class="item">
+          No courses found.
+        </div>
+      `;
 
     return;
-
   }
 
 
@@ -418,66 +711,88 @@ async function loadCourses() {
 
       </thead>
 
+
       <tbody>
 
-        ${courses.map(course => `
+        ${
+          courses
+            .map(course => `
 
-          <tr>
+              <tr>
 
-            <td class="course-name">
-              ${course.title}
-            </td>
-
-
-            <td class="old-fee">
-
-              ${
-                course.original_fee !== null &&
-                course.original_fee !== undefined
-                  ? "₹" +
-                    Number(
-                      course.original_fee
-                    ).toLocaleString("en-IN")
-                  : "Not set"
-              }
-
-            </td>
+                <td class="course-name">
+                  ${course.title}
+                </td>
 
 
-            <td>
+                <td class="old-fee">
 
-              <input
-                class="fee-input"
-                type="number"
-                min="0"
-                step="1"
-                id="fee-${course.id}"
-                value="${
-                  course.current_fee !== null &&
-                  course.current_fee !== undefined
-                    ? course.current_fee
-                    : ""
-                }"
-                placeholder="Enter fee"
-              >
+                  ${
+                    course.original_fee !== null &&
+                    course.original_fee !== undefined
 
-            </td>
+                    ? "₹" +
+                      Number(
+                        course.original_fee
+                      ).toLocaleString("en-IN")
+
+                    : "Not set"
+                  }
+
+                </td>
 
 
-            <td>
+                <td>
 
-              <button
-                class="small-btn save-fee"
-                onclick="updateCourseFee(${course.id})"
-              >
-                Save Fee
-              </button>
+                  <input
 
-            </td>
+                    class="fee-input"
 
-          </tr>
+                    type="number"
 
-        `).join("")}
+                    min="0"
+
+                    step="1"
+
+                    id="fee-${course.id}"
+
+                    value="${
+                      course.current_fee !== null &&
+                      course.current_fee !== undefined
+                      ? course.current_fee
+                      : ""
+                    }"
+
+                    placeholder="Enter fee"
+
+                  >
+
+                </td>
+
+
+                <td>
+
+                  <button
+
+                    class="small-btn save-fee"
+
+                    onclick="
+                      updateCourseFee(${course.id})
+                    "
+
+                  >
+
+                    Save Fee
+
+                  </button>
+
+                </td>
+
+              </tr>
+
+            `)
+            .join("")
+        }
 
       </tbody>
 
@@ -486,6 +801,7 @@ async function loadCourses() {
   `;
 
 }
+
 
 
 /* --------------------------------------------------
@@ -508,7 +824,6 @@ async function updateCourseFee(courseId) {
     );
 
     return;
-
   }
 
 
@@ -524,7 +839,6 @@ async function updateCourseFee(courseId) {
     );
 
     return;
-
   }
 
 
@@ -543,7 +857,6 @@ async function updateCourseFee(courseId) {
     );
 
     return;
-
   }
 
 
@@ -552,12 +865,13 @@ async function updateCourseFee(courseId) {
   );
 
 
-  const result = await sb
-    .from("courses")
-    .update({
-      current_fee: fee
-    })
-    .eq("id", courseId);
+  const result =
+    await sb
+      .from("courses")
+      .update({
+        current_fee: fee
+      })
+      .eq("id", courseId);
 
 
   if (result.error) {
@@ -568,13 +882,7 @@ async function updateCourseFee(courseId) {
       true
     );
 
-    console.error(
-      "UPDATE COURSE FEE ERROR:",
-      result.error
-    );
-
     return;
-
   }
 
 
@@ -588,16 +896,55 @@ async function updateCourseFee(courseId) {
 }
 
 
+
+/* --------------------------------------------------
+   LOAD TOPICS
+-------------------------------------------------- */
+
+async function loadTopics() {
+
+  const result =
+    await sb
+      .from("topics")
+      .select("id");
+
+
+  if (result.error) {
+
+    topicCount.textContent =
+      "0";
+
+    return;
+  }
+
+
+  const data =
+    result.data || [];
+
+
+  topicCount.textContent =
+    data.length;
+
+}
+
+
+
 /* --------------------------------------------------
    LOAD LESSONS
 -------------------------------------------------- */
 
 async function loadLessons() {
 
-  const result = await sb
-    .from("lessons")
-    .select("*")
-    .order("sort_order");
+  const result =
+    await sb
+      .from("lessons")
+      .select("*")
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      );
 
 
   if (result.error) {
@@ -608,13 +955,7 @@ async function loadLessons() {
       true
     );
 
-    console.error(
-      "LESSONS ERROR:",
-      result.error
-    );
-
     return;
-
   }
 
 
@@ -626,41 +967,73 @@ async function loadLessons() {
     data.length;
 
 
+  if (data.length === 0) {
+
+    lessons.innerHTML =
+      `
+        <div class="item">
+          No lessons yet.
+        </div>
+      `;
+
+    return;
+  }
+
+
   lessons.innerHTML =
 
-    data.map(x => `
+    data
+      .map(x => `
 
-      <div class="item">
+        <div class="item">
 
-        <b>
-          ${x.title}
-        </b>
+          <b>
+            ${x.title || "Untitled lesson"}
+          </b>
 
-        <p class="muted">
-          ${x.description || ""}
-        </p>
-
-        <span class="status">
+          <p class="muted">
+            ${x.description || ""}
+          </p>
 
           ${
-            x.published
-              ? "Published"
-              : "Draft"
+            x.video_url
+              ? `
+                <p>
+                  <strong>Video:</strong>
+                  ${x.video_url}
+                </p>
+              `
+              : ""
           }
 
-        </span>
+          ${
+            x.pdf_url
+              ? `
+                <p>
+                  <strong>PDF:</strong>
+                  ${x.pdf_url}
+                </p>
+              `
+              : ""
+          }
 
-      </div>
+          <span class="status">
 
-    `).join("")
+            ${
+              x.published
+                ? "Published"
+                : "Draft"
+            }
 
-    ||
+          </span>
 
-    `<div class="item">
-      No lessons yet.
-    </div>`;
+        </div>
+
+      `)
+      .join("");
 
 }
+
 
 
 /* --------------------------------------------------
@@ -673,7 +1046,10 @@ async function load() {
 
   await loadLessons();
 
+  await loadTopics();
+
 }
+
 
 
 /* --------------------------------------------------
@@ -681,48 +1057,43 @@ async function load() {
 -------------------------------------------------- */
 
 adminLoginForm.onsubmit =
-  async function(e) {
+async function(e) {
 
-    e.preventDefault();
+  e.preventDefault();
 
+
+  show(
+    "Signing in..."
+  );
+
+
+  const result =
+    await sb.auth.signInWithPassword({
+
+      email:
+        adminEmail.value.trim(),
+
+      password:
+        adminPassword.value
+
+    });
+
+
+  if (result.error) {
 
     show(
-      "Signing in..."
+      result.error.message,
+      true
     );
 
-
-    const result =
-      await sb.auth.signInWithPassword({
-
-        email:
-          adminEmail.value.trim(),
-
-        password:
-          adminPassword.value
-
-      });
+    return;
+  }
 
 
-    if (result.error) {
+  await boot();
 
-      show(
-        result.error.message,
-        true
-      );
+};
 
-      console.error(
-        "LOGIN ERROR:",
-        result.error
-      );
-
-      return;
-
-    }
-
-
-    await boot();
-
-  };
 
 
 /* --------------------------------------------------
@@ -730,74 +1101,88 @@ adminLoginForm.onsubmit =
 -------------------------------------------------- */
 
 lessonForm.onsubmit =
-  async function(e) {
+async function(e) {
 
-    e.preventDefault();
-
-
-    show(
-      "Saving lesson..."
-    );
+  e.preventDefault();
 
 
-    const result =
-      await sb
-        .from("lessons")
-        .insert({
-
-          course_id:
-            Number(
-              courseSelect.value
-            ),
-
-          title:
-            lessonTitle.value.trim(),
-
-          description:
-            lessonDescription.value.trim(),
-
-          video_url:
-            videoUrl.value.trim() ||
-            null,
-
-          pdf_url:
-            pdfUrl.value.trim() ||
-            null,
-
-          sort_order:
-            1,
-
-          published:
-            published.checked
-
-        });
-
-
-    if (result.error) {
-
-      show(
-        result.error.message,
-        true
-      );
-
-      console.error(
-        "ADD LESSON ERROR:",
-        result.error
-      );
-
-      return;
-
-    }
-
+  if (!courseSelect.value) {
 
     show(
-      "Lesson saved successfully."
+      "Please select a course.",
+      true
     );
 
+    return;
+  }
 
-    await loadLessons();
 
-  };
+  show(
+    "Saving lesson..."
+  );
+
+
+  const result =
+    await sb
+      .from("lessons")
+      .insert({
+
+        course_id:
+          Number(
+            courseSelect.value
+          ),
+
+        title:
+          lessonTitle.value.trim(),
+
+        description:
+          lessonDescription.value.trim() ||
+          null,
+
+        video_url:
+          videoUrl.value.trim() ||
+          null,
+
+        pdf_url:
+          pdfUrl.value.trim() ||
+          null,
+
+        sort_order:
+          1,
+
+        published:
+          published.checked
+
+      });
+
+
+  if (result.error) {
+
+    show(
+      "Could not save lesson: " +
+      result.error.message,
+      true
+    );
+
+    return;
+  }
+
+
+  show(
+    "Lesson saved successfully."
+  );
+
+
+  lessonForm.reset();
+
+  published.checked =
+    true;
+
+
+  await loadLessons();
+
+};
+
 
 
 /* --------------------------------------------------
@@ -805,13 +1190,14 @@ lessonForm.onsubmit =
 -------------------------------------------------- */
 
 logout.onclick =
-  async function() {
+async function() {
 
-    await sb.auth.signOut();
+  await sb.auth.signOut();
 
-    showLogin();
+  showLogin();
 
-  };
+};
+
 
 
 /* --------------------------------------------------
@@ -822,8 +1208,7 @@ sb.auth.onAuthStateChange(
   function(event) {
 
     if (
-      event ===
-      "SIGNED_OUT"
+      event === "SIGNED_OUT"
     ) {
 
       showLogin();
@@ -834,18 +1219,12 @@ sb.auth.onAuthStateChange(
 );
 
 
+
 /* --------------------------------------------------
    BOOT
 -------------------------------------------------- */
 
 async function boot() {
-
-  console.log(
-    "LakshyaSetu Admin boot started..."
-  );
-
-
-  /* Get current session */
 
   const sessionResult =
     await sb.auth.getSession();
@@ -854,20 +1233,14 @@ async function boot() {
   if (sessionResult.error) {
 
     show(
-      "Session error: " +
+      "Could not get login session: " +
       sessionResult.error.message,
       true
-    );
-
-    console.error(
-      "SESSION ERROR:",
-      sessionResult.error
     );
 
     showLogin();
 
     return;
-
   }
 
 
@@ -881,133 +1254,57 @@ async function boot() {
     session.user;
 
 
-  console.log(
-    "Current user:",
-    user
-  );
-
-
   if (!user) {
-
-    console.log(
-      "No authenticated user."
-    );
 
     showLogin();
 
     return;
-
   }
-
-
-  /* Verify profile */
-
-  console.log(
-    "Checking admin profile..."
-  );
-
-
-  const profile =
-    await sb
-      .from("profiles")
-      .select("full_name,role")
-      .eq("id", user.id)
-      .single();
-
-
-  console.log(
-    "Profile result:",
-    profile
-  );
 
 
   /*
-     IMPORTANT:
-     Show the REAL Supabase error.
+    IMPORTANT FIX
+
+    Do NOT use:
+
+    .from("profiles")
+    .select(...)
+    .eq(...)
+    .single()
+
+    Instead use the existing
+    SECURITY DEFINER is_admin()
+    database function.
   */
-
-  if (profile.error) {
-
-    show(
-      "Admin verification failed: " +
-      profile.error.message +
-      " | Code: " +
-      (
-        profile.error.code ||
-        "unknown"
-      ),
-      true
-    );
-
-
-    console.error(
-      "ADMIN PROFILE ERROR:",
-      profile.error
-    );
-
-
-    return;
-
-  }
-
-
-  console.log(
-    "Profile data:",
-    profile.data
-  );
-
-
-  if (
-    !profile.data ||
-    profile.data.role !== "admin"
-  ) {
-
-    show(
-      "This account is not an admin account.",
-      true
-    );
-
-
-    console.warn(
-      "User role is not admin:",
-      profile.data
-    );
-
-
-    setTimeout(
-      function() {
-
-        location.href =
-          "student.html";
-
-      },
-      2000
-    );
-
-
-    return;
-
-  }
-
-
-  /* Admin verified */
-
-  console.log(
-    "ADMIN VERIFIED SUCCESSFULLY"
-  );
 
 
   show(
-    "Admin access verified."
+    "Checking admin access..."
   );
+
+
+  const admin =
+    await verifyAdmin();
+
+
+  if (!admin) {
+
+    return;
+  }
 
 
   showDashboard();
 
 
+  show(
+    "Admin dashboard loaded successfully."
+  );
+
+
   await load();
 
 }
+
 
 
 /* --------------------------------------------------

@@ -2,35 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LakshyaSetu Admin Dashboard</title>
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
   background:#f4f7fb;
   color:#172033;
 }
+
 header{
   background:#17365d;
-  color:#fff;
+  color:white;
   padding:16px 24px;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-header h1{margin:0;font-size:22px}
-.container{max-width:1250px;margin:25px auto;padding:0 18px}
+
+header h1{
+  margin:0;
+  font-size:22px;
+}
+
+.container{
+  max-width:1250px;
+  margin:25px auto;
+  padding:0 18px;
+}
+
 .login-box,.card{
-  background:#fff;
+  background:white;
   border-radius:12px;
   padding:22px;
   box-shadow:0 2px 10px rgba(0,0,0,.06);
   margin-bottom:20px;
 }
-.login-box{max-width:430px;margin:70px auto}
+
 input,select,textarea{
   width:100%;
   padding:11px;
@@ -40,7 +52,12 @@ input,select,textarea{
   margin-bottom:14px;
   font-size:14px;
 }
-textarea{min-height:90px;resize:vertical}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
 button{
   border:0;
   border-radius:7px;
@@ -48,98 +65,177 @@ button{
   cursor:pointer;
   font-weight:600;
 }
-.primary{background:#17365d;color:#fff}
-.secondary{background:#e8eef7;color:#17365d}
-.danger{background:#ffe9e9;color:#a11}
+
+.primary{
+  background:#17365d;
+  color:white;
+}
+
+.secondary{
+  background:#e8eef7;
+  color:#17365d;
+}
+
+.danger{
+  background:#ffe9e9;
+  color:#a40000;
+}
+
+.success{
+  background:#e8f7ed;
+  color:#147333;
+}
+
+.hidden{
+  display:none!important;
+}
+
 .nav{
   display:flex;
-  gap:8px;
   flex-wrap:wrap;
+  gap:8px;
   margin-bottom:20px;
 }
-.nav button{background:#e8eef7;color:#17365d}
-.nav button.active{background:#17365d;color:#fff}
-.section{display:none}
-.section.active{display:block}
-.hidden{display:none!important}
+
+.nav button.active{
+  background:#17365d;
+  color:white;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
 .grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
 }
+
+.full{
+  grid-column:1/-1;
+}
+
 .stats{
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  gap:14px;
+  gap:15px;
   margin-bottom:20px;
 }
+
 .stat{
-  background:#fff;
+  background:white;
   padding:20px;
-  border-radius:12px;
+  border-radius:10px;
   text-align:center;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
-.stat strong{display:block;font-size:30px;color:#17365d}
-.stat span{font-size:15px}
+
+.stat strong{
+  display:block;
+  font-size:28px;
+  color:#17365d;
+  margin-bottom:5px;
+}
+
 .item{
-  background:#f8fafc;
-  border:1px solid #e0e6ee;
+  border:1px solid #dde3ec;
   border-radius:9px;
   padding:15px;
-  margin-bottom:10px;
+  margin-bottom:12px;
+  background:#fff;
 }
-.item h3{margin:0 0 8px}
-.item p{margin:5px 0 10px}
+
+.item h3{
+  margin:0 0 8px;
+}
+
 .badge{
   display:inline-block;
-  background:#e8eef7;
-  color:#17365d;
-  padding:5px 8px;
-  border-radius:5px;
+  padding:4px 8px;
+  border-radius:20px;
   font-size:12px;
-  margin:2px;
+  margin-right:5px;
+  background:#edf1f6;
 }
-.actions{margin-top:10px}
+
+.badge.green{
+  background:#e7f7ed;
+  color:#176c35;
+}
+
+.badge.red{
+  background:#ffeaea;
+  color:#a00000;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
 .message{
-  display:none;
-  padding:12px 15px;
-  background:#eaf4ff;
-  color:#174f86;
+  padding:12px;
   border-radius:7px;
   margin-bottom:15px;
+  display:none;
 }
-.message.show{display:block}
+
+.message.show{
+  display:block;
+  background:#eaf4ff;
+  color:#174a7c;
+}
+
 .message.error{
-  background:#ffe9e9;
-  color:#a11;
+  display:block;
+  background:#ffeaea;
+  color:#9c0000;
 }
+
+.table-wrap{
+  overflow:auto;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
 }
+
 th,td{
   padding:10px;
-  border-bottom:1px solid #ddd;
+  border-bottom:1px solid #e1e5eb;
   text-align:left;
 }
-.table-wrap{overflow:auto}
-label{
-  display:block;
-  font-weight:600;
+
+th{
+  background:#f1f4f8;
 }
-.checkbox{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:14px;
-}
-.checkbox input{
-  width:auto;
-  margin:0;
-}
+
 @media(max-width:800px){
-  .grid,.stats{grid-template-columns:1fr}
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:500px){
+  .stats{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -147,7 +243,7 @@ label{
 <body>
 
 <header>
-  <h1>LakshyaSetu Admin Dashboard</h1>
+  <h1>LakshyaSetu Admin</h1>
   <button id="logoutBtn" class="secondary hidden">Logout</button>
 </header>
 
@@ -156,579 +252,730 @@ label{
 <div id="message" class="message"></div>
 
 <div id="loginBox" class="login-box">
-
   <h2>Admin Login</h2>
 
   <form id="loginForm">
-
     <label>Email</label>
     <input id="email" type="email" required>
 
     <label>Password</label>
     <input id="password" type="password" required>
 
-    <button class="primary" type="submit">Login</button>
-
+    <button type="submit" class="primary">Login</button>
   </form>
+</div>
+
+<div id="dashboard" class="hidden">
+
+<div class="nav">
+  <button class="primary active" data-section="dashboardSection">Dashboard</button>
+  <button class="secondary" data-section="coursesSection">Courses</button>
+  <button class="secondary" data-section="subjectsSection">Subjects</button>
+  <button class="secondary" data-section="topicsSection">Topics</button>
+  <button class="secondary" data-section="lessonsSection">Lessons</button>
+  <button class="secondary" data-section="mcqsSection">MCQs</button>
+  <button class="secondary" data-section="pricingSection">Pricing</button>
+</div>
+
+<section id="dashboardSection" class="section active">
+
+<div class="card">
+  <h2>Admin Dashboard</h2>
+  <p>
+    Manage LakshyaSetu courses, subjects, topics, lessons and MCQs
+    without changing code.
+  </p>
+</div>
+
+<div class="stats">
+
+  <div class="stat">
+    <strong id="courseCount">0</strong>
+    Courses
+  </div>
+
+  <div class="stat">
+    <strong id="subjectCount">0</strong>
+    Subjects
+  </div>
+
+  <div class="stat">
+    <strong id="topicCount">0</strong>
+    Topics
+  </div>
+
+  <div class="stat">
+    <strong id="lessonCount">0</strong>
+    Lessons
+  </div>
+
+  <div class="stat">
+    <strong id="mcqCount">0</strong>
+    MCQs
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- COURSES -->
+
+<section id="coursesSection" class="section">
+
+<div class="card">
+
+<h2>Course Management</h2>
+
+<form id="courseForm">
+
+<input type="hidden" id="courseId">
+
+<div class="grid">
+
+<div>
+<label>Course Title</label>
+<input id="courseTitle" required>
+</div>
+
+<div>
+<label>Slug</label>
+<input id="courseSlug" required>
+</div>
+
+<div class="full">
+<label>Description</label>
+<textarea id="courseDescription"></textarea>
+</div>
+
+<div>
+<label>Language</label>
+<input id="courseLanguage" value="Telugu + English">
+</div>
+
+<div>
+<label>Validity Years</label>
+<input id="courseValidity" type="number" value="2" min="1">
+</div>
+
+<div>
+<label>Original Fee</label>
+<input id="courseOriginalFee" type="number" min="0">
+</div>
+
+<div>
+<label>Current Fee</label>
+<input id="courseCurrentFee" type="number" min="0">
+</div>
+
+<div class="full">
+
+<label>
+<input
+id="coursePublished"
+type="checkbox"
+style="width:auto"
+checked
+>
+Enable Course
+</label>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+type="submit"
+class="primary"
+id="courseSaveBtn">
+Create Course
+</button>
+
+<button
+type="button"
+class="secondary"
+id="courseCancelBtn">
+Cancel
+</button>
+
+</div>
+
+</form>
 
 </div>
 
 
-<div id="dashboard" class="hidden">
+<div class="card">
 
-  <div class="nav">
+<h2>Courses</h2>
 
-    <button class="active" data-section="dashboardSection">
-      Dashboard
-    </button>
+<div id="courseList"></div>
 
-    <button data-section="coursesSection">
-      Courses
-    </button>
+</div>
 
-    <button data-section="subjectsSection">
-      Subjects
-    </button>
+</section>
 
-    <button data-section="topicsSection">
-      Topics
-    </button>
 
-    <button data-section="lessonsSection">
-      Lessons
-    </button>
+<!-- SUBJECTS -->
 
-    <button data-section="mcqsSection">
-      MCQs
-    </button>
+<section id="subjectsSection" class="section">
 
-    <button data-section="pricingSection">
-      Pricing
-    </button>
+<div class="card">
 
-  </div>
+<h2>Subject Management</h2>
 
+<form id="subjectForm">
 
-  <!-- DASHBOARD -->
+<input type="hidden" id="subjectId">
 
-  <section id="dashboardSection" class="section active">
+<div class="grid">
 
-    <div class="card">
+<div>
+<label>Course</label>
+<select id="subjectCourse" required>
+<option value="">Select Course</option>
+</select>
+</div>
 
-      <h2>Admin Dashboard</h2>
+<div>
+<label>Subject Title</label>
+<input id="subjectTitle" required>
+</div>
 
-      <p>
-        Manage LakshyaSetu courses, subjects, topics,
-        lessons and MCQs without changing code.
-      </p>
+<div>
+<label>Slug</label>
+<input id="subjectSlug" required>
+</div>
 
-    </div>
+<div>
+<label>Order</label>
+<input id="subjectOrder" type="number" value="1">
+</div>
 
-    <div class="stats">
+<div>
+<label>Subject Price</label>
+<input id="subjectFee" type="number" min="0">
+</div>
 
-      <div class="stat">
-        <strong id="courseCount">0</strong>
-        <span>Courses</span>
-      </div>
+<div class="full">
+<label>Description</label>
+<textarea id="subjectDescription"></textarea>
+</div>
 
-      <div class="stat">
-        <strong id="subjectCount">0</strong>
-        <span>Subjects</span>
-      </div>
+<div class="full">
 
-      <div class="stat">
-        <strong id="topicCount">0</strong>
-        <span>Topics</span>
-      </div>
+<label>
+<input
+id="subjectPublished"
+type="checkbox"
+style="width:auto"
+checked
+>
+Published
+</label>
 
-      <div class="stat">
-        <strong id="lessonCount">0</strong>
-        <span>Lessons</span>
-      </div>
+<br>
 
-      <div class="stat">
-        <strong id="mcqCount">0</strong>
-        <span>MCQs</span>
-      </div>
+<label>
+<input
+id="subjectTrial"
+type="checkbox"
+style="width:auto"
+>
+Trial Subject
+</label>
 
-    </div>
+</div>
 
-  </section>
+</div>
 
+<div class="actions">
 
-  <!-- COURSES -->
+<button
+type="submit"
+class="primary"
+id="subjectSaveBtn">
+Create Subject
+</button>
 
-  <section id="coursesSection" class="section">
+<button
+type="button"
+class="secondary"
+id="subjectCancelBtn">
+Cancel
+</button>
 
-    <div class="card">
+</div>
 
-      <h2>Course Management</h2>
+</form>
 
-      <form id="courseForm">
+</div>
 
-        <input type="hidden" id="courseId">
 
-        <label>Course Title</label>
-        <input id="courseTitle" required>
+<div class="card">
 
-        <label>Slug</label>
-        <input id="courseSlug" required>
+<h2>Subjects</h2>
 
-        <label>Description</label>
-        <textarea id="courseDescription"></textarea>
+<label>Filter Course</label>
 
-        <div class="grid">
+<select id="subjectFilter">
+<option value="">All Courses</option>
+</select>
 
-          <div>
-            <label>Language</label>
-            <input id="courseLanguage" value="Telugu + English">
-          </div>
+<div id="subjectList"></div>
 
-          <div>
-            <label>Validity Years</label>
-            <input id="courseValidity" type="number" value="2" min="1">
-          </div>
+</div>
 
-          <div>
-            <label>Original Fee</label>
-            <input id="courseOriginalFee" type="number" min="0">
-          </div>
+</section>
 
-          <div>
-            <label>Current Fee</label>
-            <input id="courseCurrentFee" type="number" min="0">
-          </div>
 
-        </div>
+<!-- TOPICS -->
 
-        <div class="checkbox">
-          <input id="coursePublished" type="checkbox" checked>
-          <label for="coursePublished">Published</label>
-        </div>
+<section id="topicsSection" class="section">
 
-        <button id="courseSaveBtn" class="primary" type="submit">
-          Create Course
-        </button>
+<div class="card">
 
-        <button id="courseCancelBtn" class="secondary" type="button">
-          Cancel
-        </button>
+<h2>Topic Management</h2>
 
-      </form>
+<form id="topicForm">
 
-    </div>
+<input type="hidden" id="topicId">
 
-    <div class="card">
+<div class="grid">
 
-      <h2>Courses</h2>
+<div class="full">
 
-      <div id="courseList"></div>
+<label>Subject</label>
 
-    </div>
+<select id="topicSubject" required>
+<option value="">Select Subject</option>
+</select>
 
-  </section>
+</div>
 
+<div>
+<label>Topic Title</label>
+<input id="topicTitle" required>
+</div>
 
-  <!-- SUBJECTS -->
+<div>
+<label>Slug</label>
+<input id="topicSlug" required>
+</div>
 
-  <section id="subjectsSection" class="section">
+<div>
+<label>Order</label>
+<input id="topicOrder" type="number" value="1">
+</div>
 
-    <div class="card">
+<div>
+<label>Topic Price</label>
+<input
+id="topicFee"
+type="number"
+min="0"
+step="0.01"
+>
+</div>
 
-      <h2>Subject Management</h2>
+<div>
+<label>Number of Videos</label>
+<input
+id="topicVideoCount"
+type="number"
+min="0"
+value="0"
+>
+</div>
 
-      <form id="subjectForm">
+<div class="full">
+<label>Description</label>
+<textarea id="topicDescription"></textarea>
+</div>
 
-        <input type="hidden" id="subjectId">
+</div>
 
-        <label>Course</label>
-        <select id="subjectCourse" required></select>
+<div class="actions">
 
-        <label>Subject Title</label>
-        <input id="subjectTitle" required>
+<button
+type="submit"
+class="primary"
+id="topicSaveBtn">
+Create Topic
+</button>
 
-        <label>Slug</label>
-        <input id="subjectSlug" required>
+<button
+type="button"
+class="secondary"
+id="topicCancelBtn">
+Cancel
+</button>
 
-        <div class="grid">
+</div>
 
-          <div>
-            <label>Order</label>
-            <input id="subjectOrder" type="number" value="1">
-          </div>
+</form>
 
-          <div>
-            <label>Subject Price</label>
-            <input id="subjectFee" type="number" min="0">
-          </div>
+</div>
 
-        </div>
 
-        <label>Description</label>
-        <textarea id="subjectDescription"></textarea>
+<div class="card">
 
-        <div class="checkbox">
-          <input id="subjectPublished" type="checkbox" checked>
-          <label for="subjectPublished">Published</label>
-        </div>
+<h2>Topics</h2>
 
-        <div class="checkbox">
-          <input id="subjectTrial" type="checkbox">
-          <label for="subjectTrial">Trial Subject</label>
-        </div>
+<label>Filter Subject</label>
 
-        <button id="subjectSaveBtn" class="primary" type="submit">
-          Create Subject
-        </button>
+<select id="topicFilter">
+<option value="">All Subjects</option>
+</select>
 
-        <button id="subjectCancelBtn" class="secondary" type="button">
-          Cancel
-        </button>
+<div id="topicList"></div>
 
-      </form>
+</div>
 
-    </div>
+</section>
 
 
-    <div class="card">
+<!-- LESSONS -->
 
-      <h2>Subjects</h2>
+<section id="lessonsSection" class="section">
 
-      <label>Filter Course</label>
-      <select id="subjectFilter"></select>
+<div class="card">
 
-      <div id="subjectList"></div>
+<h2>Lesson Management</h2>
 
-    </div>
+<form id="lessonForm">
 
-  </section>
+<input type="hidden" id="lessonId">
 
+<div class="grid">
 
-  <!-- TOPICS -->
+<div class="full">
 
-  <section id="topicsSection" class="section">
+<label>Topic</label>
 
-    <div class="card">
+<select id="lessonTopic" required>
+<option value="">Select Topic</option>
+</select>
 
-      <h2>Topic Management</h2>
+</div>
 
-      <form id="topicForm">
+<div>
+<label>Course</label>
 
-        <input type="hidden" id="topicId">
+<select id="lessonCourse">
+<option value="">Select Course</option>
+</select>
 
-        <label>Subject</label>
-        <select id="topicSubject" required>
-          <option value="">Select Subject</option>
-        </select>
+</div>
 
-        <label>Topic Title</label>
-        <input id="topicTitle" required>
+<div>
+<label>Subject</label>
 
-        <label>Slug</label>
-        <input id="topicSlug" required>
+<select id="lessonSubject">
+<option value="">Select Subject</option>
+</select>
 
-        <div class="grid">
+</div>
 
-          <div>
-            <label>Order</label>
-            <input id="topicOrder" type="number" value="1">
-          </div>
+<div class="full">
+<label>Lesson Title</label>
+<input id="lessonTitle" required>
+</div>
 
-          <div>
-            <label>Topic Price</label>
-            <input id="topicFee" type="number" min="0">
-          </div>
+<div class="full">
+<label>Description</label>
+<textarea id="lessonDescription"></textarea>
+</div>
 
-          <div>
-            <label>Number of Videos</label>
-            <input id="topicVideoCount" type="number" value="0" min="0">
-          </div>
+<div>
+<label>Video URL</label>
+<input id="lessonVideoUrl">
+</div>
 
-        </div>
+<div>
+<label>PDF URL</label>
+<input id="lessonPdfUrl">
+</div>
 
-        <label>Description</label>
-        <textarea id="topicDescription"></textarea>
+<div>
+<label>Order</label>
+<input id="lessonOrder" type="number" value="1">
+</div>
 
-        <button id="topicSaveBtn" class="primary" type="submit">
-          Create Topic
-        </button>
+<div>
+<label>Number of Videos</label>
+<input
+id="lessonVideoCount"
+type="number"
+min="0"
+value="0">
+</div>
 
-        <button id="topicCancelBtn" class="secondary" type="button">
-          Cancel
-        </button>
+<div>
+<label>Visualized Fee</label>
+<input
+id="lessonVisualizedFee"
+type="number"
+min="0">
+</div>
 
-      </form>
+<div>
+<label>PPT Fee</label>
+<input
+id="lessonPptFee"
+type="number"
+min="0">
+</div>
 
-    </div>
+<div>
+<label>Visualized Video URL</label>
+<input id="lessonVisualizedUrl">
+</div>
 
+<div>
+<label>PPT Video URL</label>
+<input id="lessonPptUrl">
+</div>
 
-    <div class="card">
+<div class="full">
 
-      <h2>Topics</h2>
+<label>
+<input
+id="lessonPublished"
+type="checkbox"
+style="width:auto"
+checked>
+Published
+</label>
 
-      <label>Filter Subject</label>
-      <select id="topicFilter"></select>
+<br>
 
-      <div id="topicList"></div>
+<label>
+<input
+id="lessonTrial"
+type="checkbox"
+style="width:auto">
+Free Trial
+</label>
 
-    </div>
+</div>
 
-  </section>
+</div>
 
+<div class="actions">
 
-  <!-- LESSONS -->
+<button
+type="submit"
+class="primary"
+id="lessonSaveBtn">
+Create Lesson
+</button>
 
-  <section id="lessonsSection" class="section">
+<button
+type="button"
+class="secondary"
+id="lessonCancelBtn">
+Cancel
+</button>
 
-    <div class="card">
+</div>
 
-      <h2>Lesson Management</h2>
+</form>
 
-      <form id="lessonForm">
+</div>
 
-        <input type="hidden" id="lessonId">
 
-        <label>Topic</label>
-        <select id="lessonTopic" required>
-          <option value="">Select Topic</option>
-        </select>
+<div class="card">
 
-        <div class="grid">
+<h2>Lessons</h2>
 
-          <div>
-            <label>Course</label>
-            <select id="lessonCourse"></select>
-          </div>
+<label>Filter Topic</label>
 
-          <div>
-            <label>Subject</label>
-            <select id="lessonSubject"></select>
-          </div>
+<select id="lessonFilter">
+<option value="">All Topics</option>
+</select>
 
-        </div>
+<div id="lessonList"></div>
 
-        <label>Lesson Title</label>
-        <input id="lessonTitle" required>
+</div>
 
-        <label>Description</label>
-        <textarea id="lessonDescription"></textarea>
+</section>
 
-        <div class="grid">
 
-          <div>
-            <label>Video URL</label>
-            <input id="lessonVideoUrl">
-          </div>
+<!-- MCQS -->
 
-          <div>
-            <label>PDF URL</label>
-            <input id="lessonPdfUrl">
-          </div>
+<section id="mcqsSection" class="section">
 
-          <div>
-            <label>Order</label>
-            <input id="lessonOrder" type="number" value="1">
-          </div>
+<div class="card">
 
-          <div>
-            <label>Number of Videos</label>
-            <input id="lessonVideoCount" type="number" value="0">
-          </div>
+<h2>MCQ Management</h2>
 
-          <div>
-            <label>Visualized Fee</label>
-            <input id="lessonVisualizedFee" type="number" min="0">
-          </div>
+<form id="mcqForm">
 
-          <div>
-            <label>PPT Fee</label>
-            <input id="lessonPptFee" type="number" min="0">
-          </div>
+<input type="hidden" id="mcqId">
 
-          <div>
-            <label>Visualized Video URL</label>
-            <input id="lessonVisualizedUrl">
-          </div>
+<div class="grid">
 
-          <div>
-            <label>PPT Video URL</label>
-            <input id="lessonPptUrl">
-          </div>
+<div class="full">
 
-        </div>
+<label>Lesson</label>
 
-        <div class="checkbox">
-          <input id="lessonPublished" type="checkbox" checked>
-          <label for="lessonPublished">Published</label>
-        </div>
+<select id="mcqLesson">
+<option value="">Select Lesson</option>
+</select>
 
-        <div class="checkbox">
-          <input id="lessonTrial" type="checkbox">
-          <label for="lessonTrial">Free Trial</label>
-        </div>
+</div>
 
-        <button id="lessonSaveBtn" class="primary" type="submit">
-          Create Lesson
-        </button>
+<div class="full">
 
-        <button id="lessonCancelBtn" class="secondary" type="button">
-          Cancel
-        </button>
+<label>Question</label>
 
-      </form>
+<textarea id="mcqQuestion" required></textarea>
 
-    </div>
+</div>
 
+<div>
+<label>Option A</label>
+<input id="mcqA">
+</div>
 
-    <div class="card">
+<div>
+<label>Option B</label>
+<input id="mcqB">
+</div>
 
-      <h2>Lessons</h2>
+<div>
+<label>Option C</label>
+<input id="mcqC">
+</div>
 
-      <label>Filter Topic</label>
-      <select id="lessonFilter"></select>
+<div>
+<label>Option D</label>
+<input id="mcqD">
+</div>
 
-      <div id="lessonList"></div>
+<div>
 
-    </div>
+<label>Correct Option</label>
 
-  </section>
+<select id="mcqCorrect">
 
+<option value="">Select</option>
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="C">C</option>
+<option value="D">D</option>
 
-  <!-- MCQS -->
+</select>
 
-  <section id="mcqsSection" class="section">
+</div>
 
-    <div class="card">
+<div class="full">
 
-      <h2>MCQ Management</h2>
+<label>Explanation</label>
 
-      <form id="mcqForm">
+<textarea id="mcqExplanation"></textarea>
 
-        <input type="hidden" id="mcqId">
+</div>
 
-        <label>Lesson</label>
-        <select id="mcqLesson" required></select>
+</div>
 
-        <label>Question</label>
-        <textarea id="mcqQuestion" required></textarea>
+<div class="actions">
 
-        <div class="grid">
+<button
+type="submit"
+class="primary"
+id="mcqSaveBtn">
+Create MCQ
+</button>
 
-          <div>
-            <label>Option A</label>
-            <input id="mcqA">
-          </div>
+<button
+type="button"
+class="secondary"
+id="mcqCancelBtn">
+Cancel
+</button>
 
-          <div>
-            <label>Option B</label>
-            <input id="mcqB">
-          </div>
+</div>
 
-          <div>
-            <label>Option C</label>
-            <input id="mcqC">
-          </div>
+</form>
 
-          <div>
-            <label>Option D</label>
-            <input id="mcqD">
-          </div>
+</div>
 
-        </div>
 
-        <label>Correct Option</label>
+<div class="card">
 
-        <select id="mcqCorrect">
-          <option value="">Select</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="D">D</option>
-        </select>
+<h2>Existing MCQs</h2>
 
-        <label>Explanation</label>
-        <textarea id="mcqExplanation"></textarea>
+<div id="mcqList"></div>
 
-        <button id="mcqSaveBtn" class="primary" type="submit">
-          Create MCQ
-        </button>
+</div>
 
-        <button id="mcqCancelBtn" class="secondary" type="button">
-          Cancel
-        </button>
+</section>
 
-      </form>
 
-    </div>
+<!-- PRICING -->
 
+<section id="pricingSection" class="section">
 
-    <div class="card">
+<div class="card">
 
-      <h2>Existing MCQs</h2>
+<h2>Course Pricing</h2>
 
-      <div id="mcqList"></div>
+<div class="table-wrap">
 
-    </div>
+<table>
 
-  </section>
+<thead>
 
+<tr>
+<th>Course</th>
+<th>Original Fee</th>
+<th>Current Fee</th>
+<th>Action</th>
+</tr>
 
-  <!-- PRICING -->
+</thead>
 
-  <section id="pricingSection" class="section">
+<tbody id="coursePricingList"></tbody>
 
-    <div class="card">
+</table>
 
-      <h2>Course Pricing</h2>
+</div>
 
-      <div class="table-wrap">
+</div>
 
-        <table>
 
-          <thead>
-            <tr>
-              <th>Course</th>
-              <th>Original Fee</th>
-              <th>Current Fee</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+<div class="card">
 
-          <tbody id="coursePricingList"></tbody>
+<h2>Subject Pricing</h2>
 
-        </table>
+<div class="table-wrap">
 
-      </div>
+<table>
 
-    </div>
+<thead>
 
+<tr>
+<th>Subject</th>
+<th>Course</th>
+<th>Subject Fee</th>
+<th>Action</th>
+</tr>
 
-    <div class="card">
+</thead>
 
-      <h2>Subject Pricing</h2>
+<tbody id="subjectPricingList"></tbody>
 
-      <div class="table-wrap">
+</table>
 
-        <table>
+</div>
 
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Course</th>
-              <th>Subject Fee</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+</div>
 
-          <tbody id="subjectPricingList"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
+</section>
 
 </div>
 
@@ -736,28 +983,22 @@ label{
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 
 <script>
 
-const SUPABASE_URL =
-  "https://byounbmdyuytoqqyhgos.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa";
-
-
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+window.supabase.createClient(
+LAKSHYASETU_CONFIG.supabaseUrl,
+LAKSHYASETU_CONFIG.supabasePublishableKey
+);
 
 
-let courses = [];
-let subjects = [];
-let topics = [];
-let lessons = [];
-let mcqs = [];
+let courses=[];
+let subjects=[];
+let topics=[];
+let lessons=[];
+let mcqs=[];
 
 
 const $ = id => document.getElementById(id);
@@ -765,79 +1006,74 @@ const $ = id => document.getElementById(id);
 
 function showMessage(text,error=false){
 
-  const box = $("message");
+const box=$("message");
 
-  box.textContent = text;
+box.textContent=text;
 
-  box.className =
-    "message show" +
-    (error ? " error" : "");
+box.className=
+"message show"+
+(error ? " error" : "");
 
 }
 
 
 function escapeHtml(value){
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
 function money(value){
 
-  if(
-    value === null ||
-    value === undefined ||
-    value === ""
-  ){
-    return "Not set";
-  }
+if(
+value===null ||
+value===undefined ||
+value===""
+){
+return "Not set";
+}
 
-  return "₹" +
-    Number(value).toLocaleString("en-IN");
+return "₹"+
+Number(value).toLocaleString("en-IN");
 
 }
 
 
 function slugify(text){
 
-  return String(text || "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g,"-")
-    .replace(/^-+|-+$/g,"");
+return String(text || "")
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9]+/g,"-")
+.replace(/^-+|-+$/g,"");
 
 }
 
 
 /* NAVIGATION */
 
+document.querySelectorAll(".nav button").forEach(button=>{
+
+button.addEventListener("click",()=>{
+
 document.querySelectorAll(".nav button")
-.forEach(button => {
+.forEach(x=>x.classList.remove("active"));
 
-  button.addEventListener("click",()=>{
+document.querySelectorAll(".section")
+.forEach(x=>x.classList.remove("active"));
 
-    document.querySelectorAll(".nav button")
-    .forEach(x =>
-      x.classList.remove("active")
-    );
+button.classList.add("active");
 
-    document.querySelectorAll(".section")
-    .forEach(x =>
-      x.classList.remove("active")
-    );
+$(button.dataset.section)
+.classList.add("active");
 
-    button.classList.add("active");
-
-    $(button.dataset.section)
-      .classList.add("active");
-
-  });
+});
 
 });
 
@@ -846,132 +1082,96 @@ document.querySelectorAll(".nav button")
 
 async function checkAdmin(){
 
-  try{
+const result=
+await supabaseClient.rpc("is_admin");
 
-    const result =
-      await supabaseClient.rpc("is_admin");
+if(result.error){
 
-    if(result.error){
+showMessage(
+"Admin verification failed: "+
+result.error.message,
+true
+);
 
-      showMessage(
-        "Admin verification failed: " +
-        result.error.message,
-        true
-      );
+return false;
+}
 
-      return false;
+if(result.data!==true){
 
-    }
+showMessage(
+"This account does not have Admin access.",
+true
+);
 
-    if(result.data !== true){
+return false;
+}
 
-      showMessage(
-        "This account does not have Admin access.",
-        true
-      );
-
-      return false;
-
-    }
-
-    return true;
-
-  }catch(error){
-
-    showMessage(
-      "Admin verification failed: " +
-      error.message,
-      true
-    );
-
-    return false;
-
-  }
+return true;
 
 }
 
 
 /* LOGIN */
 
-$("loginForm")
-.addEventListener("submit",async event=>{
+$("loginForm").addEventListener(
+"submit",
+async event=>{
 
-  event.preventDefault();
+event.preventDefault();
 
-  showMessage("Logging in...");
+showMessage("Logging in...");
 
-  const email =
-    $("email").value.trim();
+const email=$("email").value.trim();
 
-  const password =
-    $("password").value;
+const password=$("password").value;
 
-  try{
+const result=
+await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
 
-    const result =
-      await supabaseClient.auth
-      .signInWithPassword({
-        email,
-        password
-      });
+if(result.error){
 
-    if(result.error){
+showMessage(
+result.error.message,
+true
+);
 
-      showMessage(
-        result.error.message,
-        true
-      );
+return;
+}
 
-      return;
+const allowed=await checkAdmin();
 
-    }
+if(!allowed){
 
-    const allowed =
-      await checkAdmin();
+await supabaseClient.auth.signOut();
 
-    if(!allowed){
+return;
+}
 
-      await supabaseClient.auth.signOut();
+$("loginBox").classList.add("hidden");
 
-      return;
+$("dashboard").classList.remove("hidden");
 
-    }
+$("logoutBtn").classList.remove("hidden");
 
-    $("loginBox")
-      .classList.add("hidden");
+showMessage("Admin login successful.");
 
-    $("dashboard")
-      .classList.remove("hidden");
-
-    $("logoutBtn")
-      .classList.remove("hidden");
-
-    showMessage(
-      "Admin login successful."
-    );
-
-    await loadAll();
-
-  }catch(error){
-
-    showMessage(
-      "Login failed: " + error.message,
-      true
-    );
-
-  }
+await loadAll();
 
 });
 
 
 /* LOGOUT */
 
-$("logoutBtn")
-.addEventListener("click",async()=>{
+$("logoutBtn").addEventListener(
+"click",
+async()=>{
 
-  await supabaseClient.auth.signOut();
+await supabaseClient.auth.signOut();
 
-  location.reload();
+location.reload();
 
 });
 
@@ -980,297 +1180,280 @@ $("logoutBtn")
 
 async function loadCourses(){
 
-  const result =
-    await supabaseClient
-    .from("courses")
-    .select("*")
-    .order("id");
+const result=
+await supabaseClient
+.from("courses")
+.select("*")
+.order("id");
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      "Course loading failed: " +
-      result.error.message,
-      true
-    );
+showMessage(
+"Course loading failed: "+
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+courses=result.data || [];
 
-  courses =
-    result.data || [];
+$("courseCount").textContent=courses.length;
 
-  $("courseCount").textContent =
-    courses.length;
+renderCourses();
 
-  renderCourses();
+populateCourseSelects();
 
-  populateCourseSelects();
-
-  renderCoursePricing();
+renderCoursePricing();
 
 }
 
 
 function renderCourses(){
 
-  if(!courses.length){
+if(!courses.length){
 
-    $("courseList").innerHTML =
-      `<div class="item">
-        No courses found.
-      </div>`;
+$("courseList").innerHTML=
+`<div class="item">No courses found.</div>`;
 
-    return;
+return;
+}
 
-  }
+$("courseList").innerHTML=
+courses.map(course=>`
 
-  $("courseList").innerHTML =
-    courses.map(course=>`
+<div class="item">
 
-      <div class="item">
+<h3>${escapeHtml(course.title)}</h3>
 
-        <h3>
-          ${escapeHtml(course.title)}
-        </h3>
+<p>${escapeHtml(course.description || "")}</p>
 
-        <p>
-          ${escapeHtml(course.description || "")}
-        </p>
+<span class="badge">
+${money(course.course_fee)}
+</span>
 
-        <span class="badge">
-          ${escapeHtml(course.language || "")}
-        </span>
+<span class="badge">
+Current: ${money(course.current_fee)}
+</span>
 
-        <span class="badge">
-          Validity:
-          ${course.validity_years || 0} years
-        </span>
+<span class="badge">
+Validity: ${course.validity_years || 2} years
+</span>
 
-        <span class="badge">
-          Original:
-          ${money(course.original_fee)}
-        </span>
+<span class="badge ${
+course.published ? "green" : "red"
+}">
+${course.published ? "Published" : "Unpublished"}
+</span>
 
-        <span class="badge">
-          Current:
-          ${money(course.current_fee ?? course.course_fee)}
-        </span>
+<div class="actions">
 
-        <span class="badge">
-          ${course.published ? "Published" : "Unpublished"}
-        </span>
+<button
+class="primary"
+onclick="editCourse(${course.id})">
+Edit
+</button>
 
-        <div class="actions">
+</div>
 
-          <button
-            class="primary"
-            onclick="editCourse(${course.id})"
-          >
-            Edit
-          </button>
+</div>
 
-        </div>
-
-      </div>
-
-    `).join("");
+`).join("");
 
 }
 
 
 function populateCourseSelects(){
 
-  const options =
-    courses.map(course=>`
+const options=
+courses.map(course=>`
 
-      <option value="${course.id}">
-        ${escapeHtml(course.title)}
-      </option>
+<option value="${course.id}">
+${escapeHtml(course.title)}
+</option>
 
-    `).join("");
+`).join("");
 
-  $("subjectCourse").innerHTML =
-    `<option value="">Select Course</option>` +
-    options;
+$("subjectCourse").innerHTML=
+`<option value="">Select Course</option>`+
+options;
 
-  $("subjectFilter").innerHTML =
-    `<option value="">All Courses</option>` +
-    options;
+$("subjectFilter").innerHTML=
+`<option value="">All Courses</option>`+
+options;
 
-  $("lessonCourse").innerHTML =
-    `<option value="">Select Course</option>` +
-    options;
+$("lessonCourse").innerHTML=
+`<option value="">Select Course</option>`+
+options;
 
 }
 
 
-$("courseTitle")
-.addEventListener("input",()=>{
+$("courseTitle").addEventListener(
+"input",
+()=>{
 
-  if(!$("courseId").value){
+if(!$("courseId").value){
 
-    $("courseSlug").value =
-      slugify($("courseTitle").value);
+$("courseSlug").value=
+slugify($("courseTitle").value);
 
-  }
-
-});
-
-
-$("courseForm")
-.addEventListener("submit",async event=>{
-
-  event.preventDefault();
-
-  showMessage("Saving course...");
-
-  const id =
-    $("courseId").value;
-
-  const data = {
-
-    title:
-      $("courseTitle").value.trim(),
-
-    slug:
-      $("courseSlug").value.trim(),
-
-    description:
-      $("courseDescription").value.trim() || null,
-
-    language:
-      $("courseLanguage").value.trim() ||
-      "Telugu + English",
-
-    validity_years:
-      Number($("courseValidity").value) || 2,
-
-    original_fee:
-      $("courseOriginalFee").value === ""
-        ? null
-        : Number($("courseOriginalFee").value),
-
-    current_fee:
-      $("courseCurrentFee").value === ""
-        ? null
-        : Number($("courseCurrentFee").value),
-
-    course_fee:
-      $("courseCurrentFee").value === ""
-        ? null
-        : Number($("courseCurrentFee").value),
-
-    published:
-      $("coursePublished").checked
-
-  };
-
-  let result;
-
-  if(id){
-
-    result =
-      await supabaseClient
-      .from("courses")
-      .update(data)
-      .eq("id",id);
-
-  }else{
-
-    result =
-      await supabaseClient
-      .from("courses")
-      .insert(data);
-
-  }
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      true
-    );
-
-    return;
-
-  }
-
-  showMessage(
-    id
-      ? "Course updated successfully."
-      : "Course created successfully."
-  );
-
-  resetCourse();
-
-  await loadCourses();
+}
 
 });
 
 
-window.editCourse = function(id){
+$("courseForm").addEventListener(
+"submit",
+async event=>{
 
-  const course =
-    courses.find(x => x.id === id);
+event.preventDefault();
 
-  if(!course) return;
+showMessage("Saving course...");
 
-  $("courseId").value =
-    course.id;
+const id=$("courseId").value;
 
-  $("courseTitle").value =
-    course.title || "";
+const data={
 
-  $("courseSlug").value =
-    course.slug || "";
+title:$("courseTitle").value.trim(),
 
-  $("courseDescription").value =
-    course.description || "";
+slug:$("courseSlug").value.trim(),
 
-  $("courseLanguage").value =
-    course.language || "Telugu + English";
+description:
+$("courseDescription").value.trim() || null,
 
-  $("courseValidity").value =
-    course.validity_years || 2;
+language:
+$("courseLanguage").value.trim() ||
+"Telugu + English",
 
-  $("courseOriginalFee").value =
-    course.original_fee ?? "";
+validity_years:
+Number($("courseValidity").value) || 2,
 
-  $("courseCurrentFee").value =
-    course.current_fee ??
-    course.course_fee ??
-    "";
+original_fee:
+$("courseOriginalFee").value===""
+? null
+: Number($("courseOriginalFee").value),
 
-  $("coursePublished").checked =
-    course.published !== false;
+current_fee:
+$("courseCurrentFee").value===""
+? null
+: Number($("courseCurrentFee").value),
 
-  $("courseSaveBtn").textContent =
-    "Save Course Changes";
+course_fee:
+$("courseCurrentFee").value===""
+? null
+: Number($("courseCurrentFee").value),
+
+published:
+$("coursePublished").checked
+
+};
+
+let result;
+
+if(id){
+
+result=
+await supabaseClient
+.from("courses")
+.update(data)
+.eq("id",id);
+
+}else{
+
+result=
+await supabaseClient
+.from("courses")
+.insert(data);
+
+}
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+}
+
+showMessage(
+id
+? "Course updated successfully."
+: "Course created successfully."
+);
+
+resetCourse();
+
+await loadCourses();
+
+});
+
+
+window.editCourse=function(id){
+
+const course=
+courses.find(x=>x.id===id);
+
+if(!course)return;
+
+$("courseId").value=course.id;
+
+$("courseTitle").value=
+course.title || "";
+
+$("courseSlug").value=
+course.slug || "";
+
+$("courseDescription").value=
+course.description || "";
+
+$("courseLanguage").value=
+course.language || "Telugu + English";
+
+$("courseValidity").value=
+course.validity_years || 2;
+
+$("courseOriginalFee").value=
+course.original_fee ?? "";
+
+$("courseCurrentFee").value=
+course.current_fee ??
+course.course_fee ??
+"";
+
+$("coursePublished").checked=
+course.published!==false;
+
+$("courseSaveBtn").textContent=
+"Save Course Changes";
 
 };
 
 
-$("courseCancelBtn")
-.addEventListener("click",resetCourse);
+$("courseCancelBtn").addEventListener(
+"click",
+resetCourse
+);
 
 
 function resetCourse(){
 
-  $("courseForm").reset();
+$("courseForm").reset();
 
-  $("courseId").value = "";
+$("courseId").value="";
 
-  $("courseLanguage").value =
-    "Telugu + English";
+$("courseLanguage").value=
+"Telugu + English";
 
-  $("courseValidity").value = 2;
+$("courseValidity").value=2;
 
-  $("coursePublished").checked = true;
+$("coursePublished").checked=true;
 
-  $("courseSaveBtn").textContent =
-    "Create Course";
+$("courseSaveBtn").textContent=
+"Create Course";
 
 }
 
@@ -1279,290 +1462,304 @@ function resetCourse(){
 
 async function loadSubjects(){
 
-  const result =
-    await supabaseClient
-    .from("course_subjects")
-    .select("*")
-    .order("course_id")
-    .order("sort_order");
+const result=
+await supabaseClient
+.from("course_subjects")
+.select("*")
+.order("course_id")
+.order("sort_order");
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      "Subject loading failed: " +
-      result.error.message,
-      true
-    );
+showMessage(
+"Subject loading failed: "+
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+subjects=result.data || [];
 
-  subjects =
-    result.data || [];
+$("subjectCount").textContent=
+subjects.length;
 
-  $("subjectCount").textContent =
-    subjects.length;
+populateSubjectSelects();
 
-  populateSubjectSelects();
+renderSubjects();
 
-  renderSubjects();
-
-  renderSubjectPricing();
+renderSubjectPricing();
 
 }
 
 
 function populateSubjectSelects(){
 
-  $("topicSubject").innerHTML =
-    `<option value="">Select Subject</option>` +
-    subjects.map(subject=>`
+const options=
+subjects.map(subject=>`
 
-      <option value="${subject.id}">
-        ${escapeHtml(subject.title)}
-      </option>
+<option value="${subject.id}">
+${escapeHtml(subject.title)}
+</option>
 
-    `).join("");
+`).join("");
+
+$("topicSubject").innerHTML=
+`<option value="">Select Subject</option>`+
+options;
+
+$("topicFilter").innerHTML=
+`<option value="">All Subjects</option>`+
+options;
+
+$("lessonSubject").innerHTML=
+`<option value="">Select Subject</option>`+
+options;
 
 }
 
 
 function renderSubjects(){
 
-  const selected =
-    $("subjectFilter").value;
+const selected=
+$("subjectFilter").value;
 
-  const list =
-    selected
-      ? subjects.filter(
-          x => String(x.course_id) === selected
-        )
-      : subjects;
+const list=
+selected
+? subjects.filter(
+x=>String(x.course_id)===selected
+)
+:subjects;
 
-  if(!list.length){
+if(!list.length){
 
-    $("subjectList").innerHTML =
-      `<div class="item">
-        No subjects found.
-      </div>`;
+$("subjectList").innerHTML=
+`<div class="item">No subjects found.</div>`;
 
-    return;
+return;
+}
 
-  }
+$("subjectList").innerHTML=
+list.map(subject=>{
 
-  $("subjectList").innerHTML =
-    list.map(subject=>{
+const course=
+courses.find(
+x=>x.id===subject.course_id
+);
 
-      const course =
-        courses.find(
-          x => x.id === subject.course_id
-        );
+return `
 
-      return `
+<div class="item">
 
-        <div class="item">
+<h3>${escapeHtml(subject.title)}</h3>
 
-          <h3>
-            ${escapeHtml(subject.title)}
-          </h3>
+<p>
+Course:
+${escapeHtml(course?.title || "Unknown")}
+</p>
 
-          <p>
-            Course:
-            ${escapeHtml(course?.title || "Unknown")}
-          </p>
+<span class="badge">
+${money(subject.subject_fee)}
+</span>
 
-          <span class="badge">
-            Order ${subject.sort_order || 1}
-          </span>
+<span class="badge">
+Order ${subject.sort_order}
+</span>
 
-          <span class="badge">
-            Price:
-            ${money(subject.subject_fee)}
-          </span>
+<span class="badge ${
+subject.published ? "green" : "red"
+}">
+${subject.published ? "Published" : "Unpublished"}
+</span>
 
-          <span class="badge">
-            ${subject.published
-              ? "Published"
-              : "Unpublished"}
-          </span>
+<div class="actions">
 
-          <div class="actions">
+<button
+class="primary"
+onclick="editSubject(${subject.id})">
+Edit
+</button>
 
-            <button
-              class="primary"
-              onclick="editSubject(${subject.id})"
-            >
-              Edit
-            </button>
+</div>
 
-          </div>
+</div>
 
-        </div>
+`;
 
-      `;
-
-    }).join("");
+}).join("");
 
 }
 
 
-$("subjectFilter")
-.addEventListener("change",renderSubjects);
+$("subjectFilter").addEventListener(
+"change",
+renderSubjects
+);
 
 
-$("subjectTitle")
-.addEventListener("input",()=>{
+$("subjectCourse").addEventListener(
+"change",
+()=>{
 
-  if(!$("subjectId").value){
-
-    $("subjectSlug").value =
-      slugify($("subjectTitle").value);
-
-  }
-
-});
-
-
-$("subjectForm")
-.addEventListener("submit",async event=>{
-
-  event.preventDefault();
-
-  showMessage("Saving subject...");
-
-  const id =
-    $("subjectId").value;
-
-  const data = {
-
-    course_id:
-      Number($("subjectCourse").value),
-
-    title:
-      $("subjectTitle").value.trim(),
-
-    slug:
-      $("subjectSlug").value.trim(),
-
-    description:
-      $("subjectDescription").value.trim() || null,
-
-    sort_order:
-      Number($("subjectOrder").value) || 1,
-
-    subject_fee:
-      $("subjectFee").value === ""
-        ? null
-        : Number($("subjectFee").value),
-
-    published:
-      $("subjectPublished").checked,
-
-    is_trial:
-      $("subjectTrial").checked
-
-  };
-
-  let result;
-
-  if(id){
-
-    result =
-      await supabaseClient
-      .from("course_subjects")
-      .update(data)
-      .eq("id",id);
-
-  }else{
-
-    result =
-      await supabaseClient
-      .from("course_subjects")
-      .insert(data);
-
-  }
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      true
-    );
-
-    return;
-
-  }
-
-  showMessage(
-    id
-      ? "Subject updated successfully."
-      : "Subject created successfully."
-  );
-
-  resetSubject();
-
-  await loadSubjects();
+$("lessonCourse").value=
+$("subjectCourse").value;
 
 });
 
 
-window.editSubject = function(id){
+$("subjectTitle").addEventListener(
+"input",
+()=>{
 
-  const subject =
-    subjects.find(x => x.id === id);
+if(!$("subjectId").value){
 
-  if(!subject) return;
+$("subjectSlug").value=
+slugify($("subjectTitle").value);
 
-  $("subjectId").value =
-    subject.id;
+}
 
-  $("subjectCourse").value =
-    subject.course_id ?? "";
+});
 
-  $("subjectTitle").value =
-    subject.title || "";
 
-  $("subjectSlug").value =
-    subject.slug || "";
+$("subjectForm").addEventListener(
+"submit",
+async event=>{
 
-  $("subjectOrder").value =
-    subject.sort_order || 1;
+event.preventDefault();
 
-  $("subjectFee").value =
-    subject.subject_fee ?? "";
+showMessage("Saving subject...");
 
-  $("subjectDescription").value =
-    subject.description || "";
+const id=$("subjectId").value;
 
-  $("subjectPublished").checked =
-    subject.published !== false;
+const data={
 
-  $("subjectTrial").checked =
-    subject.is_trial === true;
+course_id:
+Number($("subjectCourse").value),
 
-  $("subjectSaveBtn").textContent =
-    "Save Subject Changes";
+title:
+$("subjectTitle").value.trim(),
+
+slug:
+$("subjectSlug").value.trim(),
+
+description:
+$("subjectDescription").value.trim() || null,
+
+sort_order:
+Number($("subjectOrder").value) || 1,
+
+subject_fee:
+$("subjectFee").value===""
+? null
+: Number($("subjectFee").value),
+
+published:
+$("subjectPublished").checked,
+
+is_trial:
+$("subjectTrial").checked
+
+};
+
+let result;
+
+if(id){
+
+result=
+await supabaseClient
+.from("course_subjects")
+.update(data)
+.eq("id",id);
+
+}else{
+
+result=
+await supabaseClient
+.from("course_subjects")
+.insert(data);
+
+}
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+}
+
+showMessage(
+id
+? "Subject updated successfully."
+: "Subject created successfully."
+);
+
+resetSubject();
+
+await loadSubjects();
+
+});
+
+
+window.editSubject=function(id){
+
+const subject=
+subjects.find(x=>x.id===id);
+
+if(!subject)return;
+
+$("subjectId").value=
+subject.id;
+
+$("subjectCourse").value=
+subject.course_id;
+
+$("subjectTitle").value=
+subject.title || "";
+
+$("subjectSlug").value=
+subject.slug || "";
+
+$("subjectDescription").value=
+subject.description || "";
+
+$("subjectOrder").value=
+subject.sort_order || 1;
+
+$("subjectFee").value=
+subject.subject_fee ?? "";
+
+$("subjectPublished").checked=
+subject.published!==false;
+
+$("subjectTrial").checked=
+subject.is_trial===true;
+
+$("subjectSaveBtn").textContent=
+"Save Subject Changes";
 
 };
 
 
-$("subjectCancelBtn")
-.addEventListener("click",resetSubject);
+$("subjectCancelBtn").addEventListener(
+"click",
+resetSubject
+);
 
 
 function resetSubject(){
 
-  $("subjectForm").reset();
+$("subjectForm").reset();
 
-  $("subjectId").value = "";
+$("subjectId").value="";
 
-  $("subjectOrder").value = 1;
+$("subjectPublished").checked=true;
 
-  $("subjectPublished").checked = true;
-
-  $("subjectSaveBtn").textContent =
-    "Create Subject";
+$("subjectSaveBtn").textContent=
+"Create Subject";
 
 }
 
@@ -1571,631 +1768,651 @@ function resetSubject(){
 
 async function loadTopics(){
 
-  const result =
-    await supabaseClient
-    .from("course_topics")
-    .select("*")
-    .order("course_subject_id")
-    .order("sort_order");
+const result=
+await supabaseClient
+.from("course_topics")
+.select("*")
+.order("sort_order");
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      "Topic loading failed: " +
-      result.error.message,
-      true
-    );
+showMessage(
+"Topic loading failed: "+
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+topics=result.data || [];
 
-  topics =
-    result.data || [];
-
-  $("topicCount").textContent =
-    topics.length;
+$("topicCount").textContent=
+topics.length;
 
 
-  /*
-    IMPORTANT:
-    Topic dropdown is populated only after
-    subjects and topics are successfully loaded.
-  */
+/*
+ IMPORTANT FIX:
+ Always give Lesson Topic dropdown a placeholder.
+ Then load every topic from course_topics.
+*/
 
-  $("lessonTopic").innerHTML =
-    `<option value="">Select Topic</option>` +
-    topics.map(topic=>`
+$("lessonTopic").innerHTML=
+`<option value="">Select Topic</option>`+
+topics.map(topic=>`
 
-      <option value="${topic.id}">
-        ${escapeHtml(topic.title)}
-      </option>
+<option value="${topic.id}">
+${escapeHtml(topic.title)}
+</option>
 
-    `).join("");
-
-
-  $("lessonFilter").innerHTML =
-    `<option value="">All Topics</option>` +
-    topics.map(topic=>`
-
-      <option value="${topic.id}">
-        ${escapeHtml(topic.title)}
-      </option>
-
-    `).join("");
+`).join("");
 
 
-  $("topicFilter").innerHTML =
-    `<option value="">All Subjects</option>` +
-    subjects.map(subject=>`
+$("lessonFilter").innerHTML=
+`<option value="">All Topics</option>`+
+topics.map(topic=>`
 
-      <option value="${subject.id}">
-        ${escapeHtml(subject.title)}
-      </option>
+<option value="${topic.id}">
+${escapeHtml(topic.title)}
+</option>
 
-    `).join("");
+`).join("");
 
 
-  renderTopics();
+renderTopics();
 
 }
 
 
 function renderTopics(){
 
-  const selected =
-    $("topicFilter").value;
+const selected=
+$("topicFilter").value;
 
-  const list =
-    selected
-      ? topics.filter(
-          x =>
-          String(x.course_subject_id) === selected
-        )
-      : topics;
+const list=
+selected
+? topics.filter(
+x=>String(x.course_subject_id)===selected
+)
+:topics;
 
-  if(!list.length){
+if(!list.length){
 
-    $("topicList").innerHTML =
-      `<div class="item">
-        No topics found.
-      </div>`;
+$("topicList").innerHTML=
+`<div class="item">No topics found.</div>`;
 
-    return;
+return;
+}
 
-  }
+$("topicList").innerHTML=
+list.map(topic=>{
 
-  $("topicList").innerHTML =
-    list.map(topic=>{
+const subject=
+subjects.find(
+x=>x.id===topic.course_subject_id
+);
 
-      const subject =
-        subjects.find(
-          x => x.id === topic.course_subject_id
-        );
+return `
 
-      return `
+<div class="item">
 
-        <div class="item">
+<h3>
+${escapeHtml(topic.title)}
+</h3>
 
-          <h3>
-            ${escapeHtml(topic.title)}
-          </h3>
+<p>
+Subject:
+${escapeHtml(subject?.title || "Unknown")}
+</p>
 
-          <p>
-            Subject:
-            ${escapeHtml(subject?.title || "Unknown")}
-          </p>
+<span class="badge">
+Order ${topic.sort_order}
+</span>
 
-          <span class="badge">
-            Order ${topic.sort_order || 1}
-          </span>
+<span class="badge">
+Price: ${money(topic.topic_fee)}
+</span>
 
-          <span class="badge">
-            Price:
-            ${money(topic.topic_fee)}
-          </span>
+<span class="badge">
+${Number(topic.video_count || 0)} videos
+</span>
 
-          <span class="badge">
-            ${Number(topic.video_count || 0)}
-            videos
-          </span>
+<div class="actions">
 
-          <div class="actions">
+<button
+class="primary"
+onclick="editTopic(${topic.id})">
+Edit
+</button>
 
-            <button
-              class="primary"
-              onclick="editTopic(${topic.id})"
-            >
-              Edit
-            </button>
+</div>
 
-          </div>
+</div>
 
-        </div>
+`;
 
-      `;
-
-    }).join("");
+}).join("");
 
 }
 
 
-$("topicFilter")
-.addEventListener("change",renderTopics);
+$("topicFilter").addEventListener(
+"change",
+renderTopics
+);
 
 
-$("topicTitle")
-.addEventListener("input",()=>{
+window.editTopic=function(id){
 
-  if(!$("topicId").value){
+const topic=
+topics.find(x=>x.id===id);
 
-    $("topicSlug").value =
-      slugify($("topicTitle").value);
+if(!topic)return;
 
-  }
+$("topicId").value=
+topic.id;
 
-});
+$("topicSubject").value=
+topic.course_subject_id;
 
+$("topicTitle").value=
+topic.title || "";
 
-$("topicForm")
-.addEventListener("submit",async event=>{
+$("topicSlug").value=
+topic.slug || "";
 
-  event.preventDefault();
+$("topicDescription").value=
+topic.description || "";
 
-  showMessage("Saving topic...");
+$("topicOrder").value=
+topic.sort_order || 1;
 
-  const id =
-    $("topicId").value;
+$("topicFee").value=
+topic.topic_fee ?? "";
 
-  const data = {
+$("topicVideoCount").value=
+topic.video_count ?? 0;
 
-    course_subject_id:
-      Number($("topicSubject").value),
-
-    title:
-      $("topicTitle").value.trim(),
-
-    slug:
-      $("topicSlug").value.trim(),
-
-    description:
-      $("topicDescription").value.trim() || null,
-
-    sort_order:
-      Number($("topicOrder").value) || 1,
-
-    topic_fee:
-      $("topicFee").value === ""
-        ? null
-        : Number($("topicFee").value),
-
-    video_count:
-      Number($("topicVideoCount").value) || 0
-
-  };
-
-  let result;
-
-  if(id){
-
-    result =
-      await supabaseClient
-      .from("course_topics")
-      .update(data)
-      .eq("id",id);
-
-  }else{
-
-    result =
-      await supabaseClient
-      .from("course_topics")
-      .insert(data);
-
-  }
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      true
-    );
-
-    return;
-
-  }
-
-  showMessage(
-    id
-      ? "Topic updated successfully."
-      : "Topic created successfully."
-  );
-
-  resetTopic();
-
-  await loadTopics();
-
-});
-
-
-window.editTopic = function(id){
-
-  const topic =
-    topics.find(x => x.id === id);
-
-  if(!topic) return;
-
-  $("topicId").value =
-    topic.id;
-
-  $("topicSubject").value =
-    topic.course_subject_id ?? "";
-
-  $("topicTitle").value =
-    topic.title || "";
-
-  $("topicSlug").value =
-    topic.slug || "";
-
-  $("topicDescription").value =
-    topic.description || "";
-
-  $("topicOrder").value =
-    topic.sort_order || 1;
-
-  $("topicFee").value =
-    topic.topic_fee ?? "";
-
-  $("topicVideoCount").value =
-    topic.video_count ?? 0;
-
-  $("topicSaveBtn").textContent =
-    "Save Topic Changes";
+$("topicSaveBtn").textContent=
+"Save Topic Changes";
 
 };
 
 
-$("topicCancelBtn")
-.addEventListener("click",resetTopic);
+$("topicTitle").addEventListener(
+"input",
+()=>{
+
+if(!$("topicId").value){
+
+$("topicSlug").value=
+slugify($("topicTitle").value);
+
+}
+
+});
+
+
+$("topicForm").addEventListener(
+"submit",
+async event=>{
+
+event.preventDefault();
+
+showMessage("Saving topic...");
+
+const id=$("topicId").value;
+
+const data={
+
+course_subject_id:
+Number($("topicSubject").value),
+
+title:
+$("topicTitle").value.trim(),
+
+slug:
+$("topicSlug").value.trim(),
+
+description:
+$("topicDescription").value.trim() || null,
+
+sort_order:
+Number($("topicOrder").value) || 1,
+
+topic_fee:
+$("topicFee").value===""
+? null
+: Number($("topicFee").value),
+
+video_count:
+Number($("topicVideoCount").value) || 0
+
+};
+
+let result;
+
+if(id){
+
+result=
+await supabaseClient
+.from("course_topics")
+.update(data)
+.eq("id",id);
+
+}else{
+
+result=
+await supabaseClient
+.from("course_topics")
+.insert(data);
+
+}
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+}
+
+showMessage(
+id
+? "Topic updated successfully."
+: "Topic created successfully."
+);
+
+resetTopic();
+
+/*
+ IMPORTANT:
+ Reload topics immediately so the newly created
+ topic becomes available in Lesson Management.
+*/
+
+await loadTopics();
+
+});
+
+
+$("topicCancelBtn").addEventListener(
+"click",
+resetTopic
+);
 
 
 function resetTopic(){
 
-  $("topicForm").reset();
+$("topicForm").reset();
 
-  $("topicId").value = "";
+$("topicId").value="";
 
-  $("topicOrder").value = 1;
+$("topicVideoCount").value=0;
 
-  $("topicVideoCount").value = 0;
-
-  $("topicSaveBtn").textContent =
-    "Create Topic";
+$("topicSaveBtn").textContent=
+"Create Topic";
 
 }
+
+
+/* LESSON TOPIC RELATION FIX */
+
+$("lessonTopic").addEventListener(
+"change",
+()=>{
+
+const topicId=
+$("lessonTopic").value;
+
+if(!topicId){
+
+$("lessonCourse").value="";
+
+$("lessonSubject").value="";
+
+return;
+}
+
+const topic=
+topics.find(
+x=>String(x.id)===String(topicId)
+);
+
+if(!topic)return;
+
+const subject=
+subjects.find(
+x=>String(x.id)===String(topic.course_subject_id)
+);
+
+if(!subject)return;
+
+$("lessonSubject").value=
+subject.id;
+
+$("lessonCourse").value=
+subject.course_id;
+
+});
 
 
 /* LESSONS */
 
 async function loadLessons(){
 
-  const result =
-    await supabaseClient
-    .from("lessons")
-    .select("*")
-    .order("course_id")
-    .order("sort_order");
+const result=
+await supabaseClient
+.from("lessons")
+.select("*")
+.order("course_id")
+.order("sort_order");
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      "Lesson loading failed: " +
-      result.error.message,
-      true
-    );
+showMessage(
+"Lesson loading failed: "+
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+lessons=result.data || [];
 
-  lessons =
-    result.data || [];
+$("lessonCount").textContent=
+lessons.length;
 
-  $("lessonCount").textContent =
-    lessons.length;
+$("mcqLesson").innerHTML=
+`<option value="">Select Lesson</option>`+
+lessons.map(lesson=>`
 
-  $("mcqLesson").innerHTML =
-    `<option value="">Select Lesson</option>` +
-    lessons.map(lesson=>`
+<option value="${lesson.id}">
+${escapeHtml(lesson.title)}
+</option>
 
-      <option value="${lesson.id}">
-        ${escapeHtml(lesson.title)}
-      </option>
+`).join("");
 
-    `).join("");
-
-  renderLessons();
+renderLessons();
 
 }
 
 
 function renderLessons(){
 
-  const selected =
-    $("lessonFilter").value;
+const selected=
+$("lessonFilter").value;
 
-  const list =
-    selected
-      ? lessons.filter(
-          x => String(x.topic_id) === selected
-        )
-      : lessons;
+const list=
+selected
+? lessons.filter(
+x=>String(x.topic_id)===selected
+)
+:lessons;
 
-  if(!list.length){
+if(!list.length){
 
-    $("lessonList").innerHTML =
-      `<div class="item">
-        No lessons found.
-      </div>`;
+$("lessonList").innerHTML=
+`<div class="item">No lessons found.</div>`;
 
-    return;
+return;
+}
 
-  }
+$("lessonList").innerHTML=
+list.map(lesson=>{
 
-  $("lessonList").innerHTML =
-    list.map(lesson=>{
+const topic=
+topics.find(
+x=>x.id===lesson.topic_id
+);
 
-      const topic =
-        topics.find(
-          x => x.id === lesson.topic_id
-        );
+return `
 
-      return `
+<div class="item">
 
-        <div class="item">
+<h3>
+${escapeHtml(lesson.title)}
+</h3>
 
-          <h3>
-            ${escapeHtml(lesson.title)}
-          </h3>
+<p>
+Topic:
+${escapeHtml(topic?.title || "Unknown")}
+</p>
 
-          <p>
-            Topic:
-            ${escapeHtml(topic?.title || "Unknown")}
-          </p>
+<span class="badge">
+Order ${lesson.sort_order || 1}
+</span>
 
-          <span class="badge">
-            Order ${lesson.sort_order || 1}
-          </span>
+<span class="badge">
+${Number(lesson.video_count || 0)} videos
+</span>
 
-          <span class="badge">
-            ${Number(lesson.video_count || 0)}
-            videos
-          </span>
+<span class="badge">
+Visualized: ${money(lesson.visualized_fee)}
+</span>
 
-          <span class="badge">
-            Visualized:
-            ${money(lesson.visualized_fee)}
-          </span>
+<span class="badge">
+PPT: ${money(lesson.ppt_fee)}
+</span>
 
-          <span class="badge">
-            PPT:
-            ${money(lesson.ppt_fee)}
-          </span>
+<div class="actions">
 
-          <div class="actions">
+<button
+class="primary"
+onclick="editLesson(${lesson.id})">
+Edit
+</button>
 
-            <button
-              class="primary"
-              onclick="editLesson(${lesson.id})"
-            >
-              Edit
-            </button>
+</div>
 
-          </div>
+</div>
 
-        </div>
+`;
 
-      `;
-
-    }).join("");
+}).join("");
 
 }
 
 
-$("lessonFilter")
-.addEventListener("change",renderLessons);
+$("lessonFilter").addEventListener(
+"change",
+renderLessons
+);
 
 
-$("lessonForm")
-.addEventListener("submit",async event=>{
+$("lessonForm").addEventListener(
+"submit",
+async event=>{
 
-  event.preventDefault();
+event.preventDefault();
 
-  showMessage("Saving lesson...");
+showMessage("Saving lesson...");
 
-  const id =
-    $("lessonId").value;
+const id=$("lessonId").value;
 
-  const data = {
+const data={
 
-    course_id:
-      $("lessonCourse").value
-        ? Number($("lessonCourse").value)
-        : null,
+course_id:
+$("lessonCourse").value
+? Number($("lessonCourse").value)
+: null,
 
-    subject_id:
-      $("lessonSubject").value
-        ? Number($("lessonSubject").value)
-        : null,
+subject_id:
+$("lessonSubject").value
+? Number($("lessonSubject").value)
+: null,
 
-    topic_id:
-      $("lessonTopic").value
-        ? Number($("lessonTopic").value)
-        : null,
+topic_id:
+$("lessonTopic").value
+? Number($("lessonTopic").value)
+: null,
 
-    title:
-      $("lessonTitle").value.trim(),
+title:
+$("lessonTitle").value.trim(),
 
-    description:
-      $("lessonDescription").value.trim() || null,
+description:
+$("lessonDescription").value.trim() || null,
 
-    video_url:
-      $("lessonVideoUrl").value.trim() || null,
+video_url:
+$("lessonVideoUrl").value.trim() || null,
 
-    pdf_url:
-      $("lessonPdfUrl").value.trim() || null,
+pdf_url:
+$("lessonPdfUrl").value.trim() || null,
 
-    sort_order:
-      Number($("lessonOrder").value) || 1,
+sort_order:
+Number($("lessonOrder").value) || 1,
 
-    video_count:
-      Number($("lessonVideoCount").value) || 0,
+video_count:
+Number($("lessonVideoCount").value) || 0,
 
-    visualized_fee:
-      $("lessonVisualizedFee").value === ""
-        ? null
-        : Number($("lessonVisualizedFee").value),
+visualized_fee:
+$("lessonVisualizedFee").value===""
+? null
+: Number($("lessonVisualizedFee").value),
 
-    ppt_fee:
-      $("lessonPptFee").value === ""
-        ? null
-        : Number($("lessonPptFee").value),
+ppt_fee:
+$("lessonPptFee").value===""
+? null
+: Number($("lessonPptFee").value),
 
-    visualized_video_url:
-      $("lessonVisualizedUrl").value.trim() || null,
+visualized_video_url:
+$("lessonVisualizedUrl").value.trim() || null,
 
-    ppt_video_url:
-      $("lessonPptUrl").value.trim() || null,
+ppt_video_url:
+$("lessonPptUrl").value.trim() || null,
 
-    published:
-      $("lessonPublished").checked,
+published:
+$("lessonPublished").checked,
 
-    is_trial:
-      $("lessonTrial").checked
+is_trial:
+$("lessonTrial").checked
 
-  };
+};
 
-  let result;
+let result;
 
-  if(id){
+if(id){
 
-    result =
-      await supabaseClient
-      .from("lessons")
-      .update(data)
-      .eq("id",id);
+result=
+await supabaseClient
+.from("lessons")
+.update(data)
+.eq("id",id);
 
-  }else{
+}else{
 
-    result =
-      await supabaseClient
-      .from("lessons")
-      .insert(data);
+result=
+await supabaseClient
+.from("lessons")
+.insert(data);
 
-  }
+}
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      result.error.message,
-      true
-    );
+showMessage(
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+showMessage(
+id
+? "Lesson updated successfully."
+: "Lesson created successfully."
+);
 
-  showMessage(
-    id
-      ? "Lesson updated successfully."
-      : "Lesson created successfully."
-  );
+resetLesson();
 
-  resetLesson();
-
-  await loadLessons();
+await loadLessons();
 
 });
 
 
-window.editLesson = function(id){
+window.editLesson=function(id){
 
-  const lesson =
-    lessons.find(x => x.id === id);
+const lesson=
+lessons.find(x=>x.id===id);
 
-  if(!lesson) return;
+if(!lesson)return;
 
-  $("lessonId").value =
-    lesson.id;
+$("lessonId").value=
+lesson.id;
 
-  $("lessonTopic").value =
-    lesson.topic_id ?? "";
+$("lessonTopic").value=
+lesson.topic_id ?? "";
 
-  $("lessonCourse").value =
-    lesson.course_id ?? "";
+$("lessonCourse").value=
+lesson.course_id ?? "";
 
-  $("lessonSubject").value =
-    lesson.subject_id ?? "";
+$("lessonSubject").value=
+lesson.subject_id ?? "";
 
-  $("lessonTitle").value =
-    lesson.title || "";
+$("lessonTitle").value=
+lesson.title || "";
 
-  $("lessonDescription").value =
-    lesson.description || "";
+$("lessonDescription").value=
+lesson.description || "";
 
-  $("lessonVideoUrl").value =
-    lesson.video_url || "";
+$("lessonVideoUrl").value=
+lesson.video_url || "";
 
-  $("lessonPdfUrl").value =
-    lesson.pdf_url || "";
+$("lessonPdfUrl").value=
+lesson.pdf_url || "";
 
-  $("lessonOrder").value =
-    lesson.sort_order || 1;
+$("lessonOrder").value=
+lesson.sort_order || 1;
 
-  $("lessonVideoCount").value =
-    lesson.video_count ?? 0;
+$("lessonVideoCount").value=
+lesson.video_count ?? 0;
 
-  $("lessonVisualizedFee").value =
-    lesson.visualized_fee ?? "";
+$("lessonVisualizedFee").value=
+lesson.visualized_fee ?? "";
 
-  $("lessonPptFee").value =
-    lesson.ppt_fee ?? "";
+$("lessonPptFee").value=
+lesson.ppt_fee ?? "";
 
-  $("lessonVisualizedUrl").value =
-    lesson.visualized_video_url || "";
+$("lessonVisualizedUrl").value=
+lesson.visualized_video_url || "";
 
-  $("lessonPptUrl").value =
-    lesson.ppt_video_url || "";
+$("lessonPptUrl").value=
+lesson.ppt_video_url || "";
 
-  $("lessonPublished").checked =
-    lesson.published !== false;
+$("lessonPublished").checked=
+lesson.published!==false;
 
-  $("lessonTrial").checked =
-    lesson.is_trial === true;
+$("lessonTrial").checked=
+lesson.is_trial===true;
 
-  $("lessonSaveBtn").textContent =
-    "Save Lesson Changes";
+$("lessonSaveBtn").textContent=
+"Save Lesson Changes";
 
 };
 
 
-$("lessonCancelBtn")
-.addEventListener("click",resetLesson);
+$("lessonCancelBtn").addEventListener(
+"click",
+resetLesson
+);
 
 
 function resetLesson(){
 
-  $("lessonForm").reset();
+$("lessonForm").reset();
 
-  $("lessonId").value = "";
+$("lessonId").value="";
 
-  $("lessonPublished").checked = true;
+$("lessonPublished").checked=true;
 
-  $("lessonVideoCount").value = 0;
+$("lessonVideoCount").value=0;
 
-  $("lessonOrder").value = 1;
-
-  $("lessonSaveBtn").textContent =
-    "Create Lesson";
+$("lessonSaveBtn").textContent=
+"Create Lesson";
 
 }
 
@@ -2204,345 +2421,310 @@ function resetLesson(){
 
 async function loadMcqs(){
 
-  const result =
-    await supabaseClient
-    .from("mcqs")
-    .select("*")
-    .order("id");
+const result=
+await supabaseClient
+.from("mcqs")
+.select("*")
+.order("id");
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      "MCQ loading failed: " +
-      result.error.message,
-      true
-    );
+showMessage(
+"MCQ loading failed: "+
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+mcqs=result.data || [];
 
-  mcqs =
-    result.data || [];
+$("mcqCount").textContent=
+mcqs.length;
 
-  $("mcqCount").textContent =
-    mcqs.length;
-
-  renderMcqs();
+renderMcqs();
 
 }
 
 
 function renderMcqs(){
 
-  if(!mcqs.length){
+if(!mcqs.length){
 
-    $("mcqList").innerHTML =
-      `<div class="item">
-        No MCQs found.
-      </div>`;
+$("mcqList").innerHTML=
+`<div class="item">No MCQs found.</div>`;
 
-    return;
+return;
+}
 
-  }
+$("mcqList").innerHTML=
+mcqs.map(mcq=>{
 
-  $("mcqList").innerHTML =
-    mcqs.map(mcq=>{
+const lesson=
+lessons.find(
+x=>x.id===mcq.lesson_id
+);
 
-      const lesson =
-        lessons.find(
-          x => x.id === mcq.lesson_id
-        );
+return `
 
-      return `
+<div class="item">
 
-        <div class="item">
+<h3>
+${escapeHtml(mcq.question)}
+</h3>
 
-          <h3>
-            ${escapeHtml(mcq.question)}
-          </h3>
+<p>
+Lesson:
+${escapeHtml(lesson?.title || "Unknown")}
+</p>
 
-          <p>
-            Lesson:
-            ${escapeHtml(lesson?.title || "Unknown")}
-          </p>
+<span class="badge">
+Correct:
+${escapeHtml(mcq.correct_option || "Not set")}
+</span>
 
-          <span class="badge">
-            Correct:
-            ${escapeHtml(
-              mcq.correct_option || "Not set"
-            )}
-          </span>
+<div class="actions">
 
-          <div class="actions">
+<button
+class="primary"
+onclick="editMcq(${mcq.id})">
+Edit
+</button>
 
-            <button
-              class="primary"
-              onclick="editMcq(${mcq.id})"
-            >
-              Edit
-            </button>
+</div>
 
-          </div>
+</div>
 
-        </div>
+`;
 
-      `;
-
-    }).join("");
+}).join("");
 
 }
 
 
-$("mcqForm")
-.addEventListener("submit",async event=>{
+$("mcqForm").addEventListener(
+"submit",
+async event=>{
 
-  event.preventDefault();
+event.preventDefault();
 
-  showMessage("Saving MCQ...");
+showMessage("Saving MCQ...");
 
-  const id =
-    $("mcqId").value;
+const id=$("mcqId").value;
 
-  const data = {
+const data={
 
-    lesson_id:
-      $("mcqLesson").value
-        ? Number($("mcqLesson").value)
-        : null,
+lesson_id:
+$("mcqLesson").value
+? Number($("mcqLesson").value)
+: null,
 
-    question:
-      $("mcqQuestion").value.trim(),
+question:
+$("mcqQuestion").value.trim(),
 
-    option_a:
-      $("mcqA").value.trim() || null,
+option_a:
+$("mcqA").value.trim() || null,
 
-    option_b:
-      $("mcqB").value.trim() || null,
+option_b:
+$("mcqB").value.trim() || null,
 
-    option_c:
-      $("mcqC").value.trim() || null,
+option_c:
+$("mcqC").value.trim() || null,
 
-    option_d:
-      $("mcqD").value.trim() || null,
+option_d:
+$("mcqD").value.trim() || null,
 
-    correct_option:
-      $("mcqCorrect").value || null,
+correct_option:
+$("mcqCorrect").value || null,
 
-    explanation:
-      $("mcqExplanation").value.trim() || null
+explanation:
+$("mcqExplanation").value.trim() || null
 
-  };
+};
 
-  let result;
+let result;
 
-  if(id){
+if(id){
 
-    result =
-      await supabaseClient
-      .from("mcqs")
-      .update(data)
-      .eq("id",id);
+result=
+await supabaseClient
+.from("mcqs")
+.update(data)
+.eq("id",id);
 
-  }else{
+}else{
 
-    result =
-      await supabaseClient
-      .from("mcqs")
-      .insert(data);
+result=
+await supabaseClient
+.from("mcqs")
+.insert(data);
 
-  }
+}
 
-  if(result.error){
+if(result.error){
 
-    showMessage(
-      result.error.message,
-      true
-    );
+showMessage(
+result.error.message,
+true
+);
 
-    return;
+return;
+}
 
-  }
+showMessage(
+id
+? "MCQ updated successfully."
+: "MCQ created successfully."
+);
 
-  showMessage(
-    id
-      ? "MCQ updated successfully."
-      : "MCQ created successfully."
-  );
+resetMcq();
 
-  resetMcq();
-
-  await loadMcqs();
+await loadMcqs();
 
 });
 
 
-window.editMcq = function(id){
+window.editMcq=function(id){
 
-  const mcq =
-    mcqs.find(x => x.id === id);
+const mcq=
+mcqs.find(x=>x.id===id);
 
-  if(!mcq) return;
+if(!mcq)return;
 
-  $("mcqId").value =
-    mcq.id;
+$("mcqId").value=
+mcq.id;
 
-  $("mcqLesson").value =
-    mcq.lesson_id ?? "";
+$("mcqLesson").value=
+mcq.lesson_id ?? "";
 
-  $("mcqQuestion").value =
-    mcq.question || "";
+$("mcqQuestion").value=
+mcq.question || "";
 
-  $("mcqA").value =
-    mcq.option_a || "";
+$("mcqA").value=
+mcq.option_a || "";
 
-  $("mcqB").value =
-    mcq.option_b || "";
+$("mcqB").value=
+mcq.option_b || "";
 
-  $("mcqC").value =
-    mcq.option_c || "";
+$("mcqC").value=
+mcq.option_c || "";
 
-  $("mcqD").value =
-    mcq.option_d || "";
+$("mcqD").value=
+mcq.option_d || "";
 
-  $("mcqCorrect").value =
-    mcq.correct_option || "";
+$("mcqCorrect").value=
+mcq.correct_option || "";
 
-  $("mcqExplanation").value =
-    mcq.explanation || "";
+$("mcqExplanation").value=
+mcq.explanation || "";
 
-  $("mcqSaveBtn").textContent =
-    "Save MCQ Changes";
+$("mcqSaveBtn").textContent=
+"Save MCQ Changes";
 
 };
 
 
-$("mcqCancelBtn")
-.addEventListener("click",resetMcq);
+$("mcqCancelBtn").addEventListener(
+"click",
+resetMcq
+);
 
 
 function resetMcq(){
 
-  $("mcqForm").reset();
+$("mcqForm").reset();
 
-  $("mcqId").value = "";
+$("mcqId").value="";
 
-  $("mcqSaveBtn").textContent =
-    "Create MCQ";
+$("mcqSaveBtn").textContent=
+"Create MCQ";
 
 }
-
-
-/* LESSON COURSE/SUBJECT RELATION */
-
-$("lessonCourse")
-.addEventListener("change",()=>{
-
-  const courseId =
-    Number($("lessonCourse").value);
-
-  const filtered =
-    subjects.filter(
-      x => x.course_id === courseId
-    );
-
-  $("lessonSubject").innerHTML =
-    `<option value="">Select Subject</option>` +
-    filtered.map(subject=>`
-
-      <option value="${subject.id}">
-        ${escapeHtml(subject.title)}
-      </option>
-
-    `).join("");
-
-});
 
 
 /* PRICING */
 
 function renderCoursePricing(){
 
-  $("coursePricingList").innerHTML =
-    courses.map(course=>`
+$("coursePricingList").innerHTML=
+courses.map(course=>`
 
-      <tr>
+<tr>
 
-        <td>
-          ${escapeHtml(course.title)}
-        </td>
+<td>
+${escapeHtml(course.title)}
+</td>
 
-        <td>
-          ${money(course.original_fee)}
-        </td>
+<td>
+${money(course.original_fee)}
+</td>
 
-        <td>
-          ${money(
-            course.current_fee ??
-            course.course_fee
-          )}
-        </td>
+<td>
+${money(
+course.current_fee ??
+course.course_fee
+)}
+</td>
 
-        <td>
+<td>
 
-          <button
-            class="primary"
-            onclick="editCourse(${course.id})"
-          >
-            Edit
-          </button>
+<button
+class="primary"
+onclick="editCourse(${course.id})">
+Edit
+</button>
 
-        </td>
+</td>
 
-      </tr>
+</tr>
 
-    `).join("");
+`).join("");
 
 }
 
 
 function renderSubjectPricing(){
 
-  $("subjectPricingList").innerHTML =
-    subjects.map(subject=>{
+$("subjectPricingList").innerHTML=
+subjects.map(subject=>{
 
-      const course =
-        courses.find(
-          x => x.id === subject.course_id
-        );
+const course=
+courses.find(
+x=>x.id===subject.course_id
+);
 
-      return `
+return `
 
-        <tr>
+<tr>
 
-          <td>
-            ${escapeHtml(subject.title)}
-          </td>
+<td>
+${escapeHtml(subject.title)}
+</td>
 
-          <td>
-            ${escapeHtml(course?.title || "Unknown")}
-          </td>
+<td>
+${escapeHtml(course?.title || "Unknown")}
+</td>
 
-          <td>
-            ${money(subject.subject_fee)}
-          </td>
+<td>
+${money(subject.subject_fee)}
+</td>
 
-          <td>
+<td>
 
-            <button
-              class="primary"
-              onclick="editSubject(${subject.id})"
-            >
-              Edit
-            </button>
+<button
+class="primary"
+onclick="editSubject(${subject.id})">
+Edit
+</button>
 
-          </td>
+</td>
 
-        </tr>
+</tr>
 
-      `;
+`;
 
-    }).join("");
+}).join("");
 
 }
 
@@ -2551,15 +2733,15 @@ function renderSubjectPricing(){
 
 async function loadAll(){
 
-  await loadCourses();
+await loadCourses();
 
-  await loadSubjects();
+await loadSubjects();
 
-  await loadTopics();
+await loadTopics();
 
-  await loadLessons();
+await loadLessons();
 
-  await loadMcqs();
+await loadMcqs();
 
 }
 
@@ -2567,85 +2749,71 @@ async function loadAll(){
 /* AUTH STATE */
 
 supabaseClient.auth.onAuthStateChange(
-  async(event,session)=>{
+async(event,session)=>{
 
-    if(
-      session &&
-      event === "SIGNED_IN"
-    ){
+if(
+session &&
+event==="SIGNED_IN"
+){
 
-      const allowed =
-        await checkAdmin();
+const allowed=
+await checkAdmin();
 
-      if(!allowed){
+if(!allowed){
 
-        await supabaseClient.auth.signOut();
+await supabaseClient.auth.signOut();
 
-        return;
+return;
+}
 
-      }
+$("loginBox")
+.classList.add("hidden");
 
-      $("loginBox")
-        .classList.add("hidden");
+$("dashboard")
+.classList.remove("hidden");
 
-      $("dashboard")
-        .classList.remove("hidden");
+$("logoutBtn")
+.classList.remove("hidden");
 
-      $("logoutBtn")
-        .classList.remove("hidden");
+await loadAll();
 
-      await loadAll();
+}
 
-    }
-
-  }
-);
+});
 
 
 /* EXISTING SESSION */
 
 (async function(){
 
-  try{
+const result=
+await supabaseClient.auth.getSession();
 
-    const result =
-      await supabaseClient.auth.getSession();
+const session=
+result.data?.session;
 
-    const session =
-      result.data?.session;
+if(!session)return;
 
-    if(!session) return;
+const allowed=
+await checkAdmin();
 
-    const allowed =
-      await checkAdmin();
+if(!allowed){
 
-    if(!allowed){
+await supabaseClient.auth.signOut();
 
-      await supabaseClient.auth.signOut();
+return;
+}
 
-      return;
+$("loginBox")
+.classList.add("hidden");
 
-    }
+$("dashboard")
+.classList.remove("hidden");
 
-    $("loginBox")
-      .classList.add("hidden");
+$("logoutBtn")
+.classList.remove("hidden");
 
-    $("dashboard")
-      .classList.remove("hidden");
-
-    $("logoutBtn")
-      .classList.remove("hidden");
-
-    await loadAll();
-
-  }catch(error){
-
-    showMessage(
-      "Failed to fetch: " + error.message,
-      true
-    );
-
-  }
+await loadAll();
 
 })();
 

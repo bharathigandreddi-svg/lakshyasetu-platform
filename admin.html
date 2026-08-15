@@ -7,12 +7,14 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
   background:#f4f7fb;
   color:#172033;
 }
+
 header{
   background:#17365d;
   color:white;
@@ -21,8 +23,18 @@ header{
   justify-content:space-between;
   align-items:center;
 }
-header h1{margin:0;font-size:22px}
-.container{max-width:1250px;margin:25px auto;padding:0 18px}
+
+header h1{
+  margin:0;
+  font-size:22px;
+}
+
+.container{
+  max-width:1250px;
+  margin:25px auto;
+  padding:0 18px;
+}
+
 .login-box,.card{
   background:white;
   border-radius:12px;
@@ -30,6 +42,7 @@ header h1{margin:0;font-size:22px}
   box-shadow:0 2px 10px rgba(0,0,0,.06);
   margin-bottom:20px;
 }
+
 input,select,textarea{
   width:100%;
   padding:11px;
@@ -39,7 +52,12 @@ input,select,textarea{
   margin-bottom:14px;
   font-size:14px;
 }
-textarea{min-height:90px;resize:vertical}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
 button{
   border:0;
   border-radius:7px;
@@ -47,35 +65,68 @@ button{
   cursor:pointer;
   font-weight:600;
 }
-.primary{background:#17365d;color:white}
-.secondary{background:#e8eef7;color:#17365d}
-.danger{background:#ffe9e9;color:#a40000}
-.success{background:#e8f7ed;color:#147333}
-.hidden{display:none!important}
+
+.primary{
+  background:#17365d;
+  color:white;
+}
+
+.secondary{
+  background:#e8eef7;
+  color:#17365d;
+}
+
+.danger{
+  background:#ffe9e9;
+  color:#a40000;
+}
+
+.success{
+  background:#e8f7ed;
+  color:#147333;
+}
+
+.hidden{
+  display:none!important;
+}
+
 .nav{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
   margin-bottom:20px;
 }
+
 .nav button.active{
   background:#17365d;
   color:white;
 }
-.section{display:none}
-.section.active{display:block}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
 .grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:15px;
 }
-.full{grid-column:1/-1}
+
+.full{
+  grid-column:1/-1;
+}
+
 .stats{
   display:grid;
   grid-template-columns:repeat(5,1fr);
   gap:15px;
   margin-bottom:20px;
 }
+
 .stat{
   background:white;
   padding:20px;
@@ -83,12 +134,14 @@ button{
   text-align:center;
   box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
+
 .stat strong{
   display:block;
   font-size:28px;
   color:#17365d;
   margin-bottom:5px;
 }
+
 .item{
   border:1px solid #dde3ec;
   border-radius:9px;
@@ -96,7 +149,11 @@ button{
   margin-bottom:12px;
   background:#fff;
 }
-.item h3{margin:0 0 8px}
+
+.item h3{
+  margin:0 0 8px;
+}
+
 .badge{
   display:inline-block;
   padding:4px 8px;
@@ -105,41 +162,84 @@ button{
   margin-right:5px;
   background:#edf1f6;
 }
-.badge.green{background:#e7f7ed;color:#176c35}
-.badge.red{background:#ffeaea;color:#a00000}
+
+.badge.green{
+  background:#e7f7ed;
+  color:#176c35;
+}
+
+.badge.red{
+  background:#ffeaea;
+  color:#a00000;
+}
+
 .actions{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
   margin-top:12px;
 }
+
 .message{
   padding:12px;
   border-radius:7px;
   margin-bottom:15px;
   display:none;
 }
-.message.show{display:block;background:#eaf4ff;color:#174a7c}
-.message.error{display:block;background:#ffeaea;color:#9c0000}
-.table-wrap{overflow:auto}
+
+.message.show{
+  display:block;
+  background:#eaf4ff;
+  color:#174a7c;
+}
+
+.message.error{
+  display:block;
+  background:#ffeaea;
+  color:#9c0000;
+}
+
+.table-wrap{
+  overflow:auto;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
 }
+
 th,td{
   padding:10px;
   border-bottom:1px solid #e1e5eb;
   text-align:left;
 }
-th{background:#f1f4f8}
-.small-input{width:130px}
-@media(max-width:800px){
-  .grid{grid-template-columns:1fr}
-  .full{grid-column:auto}
-  .stats{grid-template-columns:repeat(2,1fr)}
+
+th{
+  background:#f1f4f8;
 }
+
+.small-input{
+  width:130px;
+}
+
+@media(max-width:800px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
 @media(max-width:500px){
-  .stats{grid-template-columns:1fr}
+  .stats{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -156,6 +256,7 @@ th{background:#f1f4f8}
 <div id="message" class="message"></div>
 
 <div id="loginBox" class="login-box">
+
   <h2>Admin Login</h2>
 
   <form id="loginForm">
@@ -166,9 +267,12 @@ th{background:#f1f4f8}
     <label>Password</label>
     <input id="password" type="password" required>
 
-    <button type="submit" class="primary">Login</button>
+    <button type="submit" class="primary">
+      Login
+    </button>
 
   </form>
+
 </div>
 
 <div id="dashboard" class="hidden">
@@ -220,6 +324,7 @@ th{background:#f1f4f8}
       </p>
 
     </div>
+
 
     <div class="stats">
 
@@ -320,7 +425,11 @@ th{background:#f1f4f8}
 
         <div class="actions">
 
-          <button type="submit" class="primary" id="courseSaveBtn">
+          <button
+            type="submit"
+            class="primary"
+            id="courseSaveBtn"
+          >
             Create Course
           </button>
 
@@ -451,6 +560,7 @@ th{background:#f1f4f8}
       <h2>Subjects</h2>
 
       <label>Filter Course</label>
+
       <select id="subjectFilter">
         <option value="">All Courses</option>
       </select>
@@ -494,6 +604,26 @@ th{background:#f1f4f8}
           <div>
             <label>Order</label>
             <input id="topicOrder" type="number" value="1">
+          </div>
+
+          <div>
+            <label>Topic Price</label>
+            <input
+              id="topicFee"
+              type="number"
+              min="0"
+              step="0.01"
+            >
+          </div>
+
+          <div>
+            <label>Number of Videos</label>
+            <input
+              id="topicVideoCount"
+              type="number"
+              min="0"
+              value="0"
+            >
           </div>
 
           <div class="full">
@@ -600,6 +730,16 @@ th{background:#f1f4f8}
           </div>
 
           <div>
+            <label>Number of Videos</label>
+            <input
+              id="lessonVideoCount"
+              type="number"
+              min="0"
+              value="0"
+            >
+          </div>
+
+          <div>
             <label>Visualized Fee</label>
             <input id="lessonVisualizedFee" type="number" min="0">
           </div>
@@ -703,19 +843,13 @@ th{background:#f1f4f8}
         <div class="grid">
 
           <div class="full">
-
             <label>Lesson</label>
-
             <select id="mcqLesson"></select>
-
           </div>
 
           <div class="full">
-
             <label>Question</label>
-
             <textarea id="mcqQuestion" required></textarea>
-
           </div>
 
           <div>
@@ -754,10 +888,8 @@ th{background:#f1f4f8}
           </div>
 
           <div class="full">
-
             <label>Explanation</label>
             <textarea id="mcqExplanation"></textarea>
-
           </div>
 
         </div>
@@ -865,7 +997,6 @@ th{background:#f1f4f8}
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="config.js"></script>
 
 <script>
@@ -914,8 +1045,13 @@ function escapeHtml(value){
 
 function money(value){
 
-  if(value === null || value === undefined || value === "")
+  if(
+    value === null ||
+    value === undefined ||
+    value === ""
+  ){
     return "Not set";
+  }
 
   return "₹" +
     Number(value).toLocaleString("en-IN");
@@ -999,17 +1135,19 @@ $("loginForm").addEventListener(
 
     event.preventDefault();
 
-    showMessage("Signing in...");
+    showMessage("Logging in...");
+
+    const email =
+      $("email").value.trim();
+
+    const password =
+      $("password").value;
 
     const result =
       await supabaseClient.auth.signInWithPassword({
-
-        email:$("email").value.trim(),
-
-        password:$("password").value
-
+        email,
+        password
       });
-
 
     if(result.error){
 
@@ -1022,11 +1160,10 @@ $("loginForm").addEventListener(
 
     }
 
-
-    const admin =
+    const allowed =
       await checkAdmin();
 
-    if(!admin){
+    if(!allowed){
 
       await supabaseClient.auth.signOut();
 
@@ -1034,8 +1171,18 @@ $("loginForm").addEventListener(
 
     }
 
+    $("loginBox")
+      .classList.add("hidden");
 
-    await startDashboard();
+    $("dashboard")
+      .classList.remove("hidden");
+
+    $("logoutBtn")
+      .classList.remove("hidden");
+
+    showMessage("Admin login successful.");
+
+    await loadAll();
 
   }
 );
@@ -1049,31 +1196,10 @@ $("logoutBtn").addEventListener(
 
     await supabaseClient.auth.signOut();
 
-    $("dashboard").classList.add("hidden");
-
-    $("loginBox").classList.remove("hidden");
-
-    $("logoutBtn").classList.add("hidden");
-
-    showMessage("Logged out.");
+    location.reload();
 
   }
 );
-
-
-/* START */
-
-async function startDashboard(){
-
-  $("loginBox").classList.add("hidden");
-
-  $("dashboard").classList.remove("hidden");
-
-  $("logoutBtn").classList.remove("hidden");
-
-  await loadAll();
-
-}
 
 
 /* COURSES */
@@ -1098,45 +1224,15 @@ async function loadCourses(){
 
   }
 
-  courses = result.data || [];
+  courses =
+    result.data || [];
 
   $("courseCount").textContent =
     courses.length;
 
-
-  $("subjectCourse").innerHTML =
-    courses.map(course =>
-
-      `<option value="${course.id}">
-        ${escapeHtml(course.title)}
-      </option>`
-
-    ).join("");
-
-
-  $("lessonCourse").innerHTML =
-    `<option value="">Select Course</option>` +
-    courses.map(course =>
-
-      `<option value="${course.id}">
-        ${escapeHtml(course.title)}
-      </option>`
-
-    ).join("");
-
-
-  $("subjectFilter").innerHTML =
-    `<option value="">All Courses</option>` +
-    courses.map(course =>
-
-      `<option value="${course.id}">
-        ${escapeHtml(course.title)}
-      </option>`
-
-    ).join("");
-
-
   renderCourses();
+
+  populateCourseSelects();
 
   renderCoursePricing();
 
@@ -1145,11 +1241,9 @@ async function loadCourses(){
 
 function renderCourses(){
 
-  const box = $("courseList");
-
   if(!courses.length){
 
-    box.innerHTML =
+    $("courseList").innerHTML =
       `<div class="item">
         No courses found.
       </div>`;
@@ -1159,7 +1253,7 @@ function renderCourses(){
   }
 
 
-  box.innerHTML =
+  $("courseList").innerHTML =
     courses.map(course => `
 
       <div class="item">
@@ -1169,19 +1263,31 @@ function renderCourses(){
         </h3>
 
         <p>
-          ${escapeHtml(course.description || "No description")}
+          ${escapeHtml(course.description || "")}
         </p>
 
-        <span class="badge ${course.published ? "green" : "red"}">
-          ${course.published ? "Enabled" : "Disabled"}
+        <span class="badge">
+          ${money(course.course_fee)}
         </span>
 
         <span class="badge">
-          ${money(course.current_fee ?? course.course_fee)}
+          Current: ${money(course.current_fee)}
         </span>
 
         <span class="badge">
-          ${course.validity_years} years
+          Validity: ${course.validity_years || 2} years
+        </span>
+
+        <span class="badge ${
+          course.published
+            ? "green"
+            : "red"
+        }">
+          ${
+            course.published
+              ? "Published"
+              : "Unpublished"
+          }
         </span>
 
         <div class="actions">
@@ -1193,13 +1299,6 @@ function renderCourses(){
             Edit
           </button>
 
-          <button
-            class="${course.published ? "danger" : "success"}"
-            onclick="toggleCourse(${course.id},${course.published})"
-          >
-            ${course.published ? "Disable" : "Enable"}
-          </button>
-
         </div>
 
       </div>
@@ -1209,80 +1308,31 @@ function renderCourses(){
 }
 
 
-window.editCourse = function(id){
+function populateCourseSelects(){
 
-  const course =
-    courses.find(x => x.id === id);
+  const options =
+    courses.map(course => `
 
-  if(!course) return;
+      <option value="${course.id}">
+        ${escapeHtml(course.title)}
+      </option>
 
-
-  $("courseId").value = course.id;
-
-  $("courseTitle").value =
-    course.title || "";
-
-  $("courseSlug").value =
-    course.slug || "";
-
-  $("courseDescription").value =
-    course.description || "";
-
-  $("courseLanguage").value =
-    course.language || "Telugu + English";
-
-  $("courseValidity").value =
-    course.validity_years || 2;
-
-  $("courseOriginalFee").value =
-    course.original_fee ?? "";
-
-  $("courseCurrentFee").value =
-    course.current_fee ??
-    course.course_fee ??
-    "";
-
-  $("coursePublished").checked =
-    !!course.published;
-
-  $("courseSaveBtn").textContent =
-    "Save Course Changes";
-
-};
+    `).join("");
 
 
-window.toggleCourse = async function(id,published){
+  $("subjectCourse").innerHTML =
+    `<option value="">Select Course</option>` +
+    options;
 
-  const result =
-    await supabaseClient
-      .from("courses")
-      .update({
-        published:!published
-      })
-      .eq("id",id);
+  $("subjectFilter").innerHTML =
+    `<option value="">All Courses</option>` +
+    options;
 
+  $("lessonCourse").innerHTML =
+    `<option value="">Select Course</option>` +
+    options;
 
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      true
-    );
-
-    return;
-
-  }
-
-
-  showMessage(
-    published
-      ? "Course disabled."
-      : "Course enabled."
-  );
-
-  await loadCourses();
-
-};
+}
 
 
 $("courseTitle").addEventListener(
@@ -1308,28 +1358,17 @@ $("courseForm").addEventListener(
 
     showMessage("Saving course...");
 
-
     const id =
       $("courseId").value;
 
 
-    const currentFee =
-      $("courseCurrentFee").value === ""
-        ? null
-        : Number($("courseCurrentFee").value);
-
-
-    const originalFee =
-      $("courseOriginalFee").value === ""
-        ? null
-        : Number($("courseOriginalFee").value);
-
-
     const data = {
 
-      title:$("courseTitle").value.trim(),
+      title:
+        $("courseTitle").value.trim(),
 
-      slug:$("courseSlug").value.trim(),
+      slug:
+        $("courseSlug").value.trim(),
 
       description:
         $("courseDescription").value.trim() || null,
@@ -1341,11 +1380,20 @@ $("courseForm").addEventListener(
       validity_years:
         Number($("courseValidity").value) || 2,
 
-      original_fee:originalFee,
+      original_fee:
+        $("courseOriginalFee").value === ""
+          ? null
+          : Number($("courseOriginalFee").value),
 
-      current_fee:currentFee,
+      current_fee:
+        $("courseCurrentFee").value === ""
+          ? null
+          : Number($("courseCurrentFee").value),
 
-      course_fee:currentFee,
+      course_fee:
+        $("courseCurrentFee").value === ""
+          ? null
+          : Number($("courseCurrentFee").value),
 
       published:
         $("coursePublished").checked
@@ -1392,13 +1440,55 @@ $("courseForm").addEventListener(
         : "Course created successfully."
     );
 
-
     resetCourse();
 
     await loadCourses();
 
   }
 );
+
+
+window.editCourse = function(id){
+
+  const course =
+    courses.find(x => x.id === id);
+
+  if(!course) return;
+
+
+  $("courseId").value =
+    course.id;
+
+  $("courseTitle").value =
+    course.title || "";
+
+  $("courseSlug").value =
+    course.slug || "";
+
+  $("courseDescription").value =
+    course.description || "";
+
+  $("courseLanguage").value =
+    course.language || "Telugu + English";
+
+  $("courseValidity").value =
+    course.validity_years || 2;
+
+  $("courseOriginalFee").value =
+    course.original_fee ?? "";
+
+  $("courseCurrentFee").value =
+    course.current_fee ??
+    course.course_fee ??
+    "";
+
+  $("coursePublished").checked =
+    course.published !== false;
+
+  $("courseSaveBtn").textContent =
+    "Save Course Changes";
+
+};
 
 
 $("courseCancelBtn").addEventListener(
@@ -1437,7 +1527,6 @@ async function loadSubjects(){
       .order("course_id")
       .order("sort_order");
 
-
   if(result.error){
 
     showMessage(
@@ -1450,39 +1539,44 @@ async function loadSubjects(){
 
   }
 
-
   subjects =
     result.data || [];
-
 
   $("subjectCount").textContent =
     subjects.length;
 
-
-  $("topicSubject").innerHTML =
-    subjects.map(subject => `
-
-      <option value="${subject.id}">
-        ${escapeHtml(subject.title)}
-      </option>
-
-    `).join("");
-
-
-  $("topicFilter").innerHTML =
-    `<option value="">All Subjects</option>` +
-    subjects.map(subject => `
-
-      <option value="${subject.id}">
-        ${escapeHtml(subject.title)}
-      </option>
-
-    `).join("");
-
+  populateSubjectSelects();
 
   renderSubjects();
 
   renderSubjectPricing();
+
+}
+
+
+function populateSubjectSelects(){
+
+  const options =
+    subjects.map(subject => `
+
+      <option value="${subject.id}">
+        ${escapeHtml(subject.title)}
+      </option>
+
+    `).join("");
+
+
+  $("topicSubject").innerHTML =
+    `<option value="">Select Subject</option>` +
+    options;
+
+  $("topicFilter").innerHTML =
+    `<option value="">All Subjects</option>` +
+    options;
+
+  $("lessonSubject").innerHTML =
+    `<option value="">Select Subject</option>` +
+    options;
 
 }
 
@@ -1493,7 +1587,7 @@ function renderSubjects(){
     $("subjectFilter").value;
 
 
-  let list =
+  const list =
     selected
       ? subjects.filter(
           x => String(x.course_id) === selected
@@ -1535,16 +1629,24 @@ function renderSubjects(){
             ${escapeHtml(course?.title || "Unknown")}
           </p>
 
-          <span class="badge ${subject.published ? "green" : "red"}">
-            ${subject.published ? "Published" : "Disabled"}
+          <span class="badge">
+            ${money(subject.subject_fee)}
           </span>
 
           <span class="badge">
             Order ${subject.sort_order}
           </span>
 
-          <span class="badge">
-            ${money(subject.subject_fee)}
+          <span class="badge ${
+            subject.published
+              ? "green"
+              : "red"
+          }">
+            ${
+              subject.published
+                ? "Published"
+                : "Unpublished"
+            }
           </span>
 
           <div class="actions">
@@ -1554,13 +1656,6 @@ function renderSubjects(){
               onclick="editSubject(${subject.id})"
             >
               Edit
-            </button>
-
-            <button
-              class="${subject.published ? "danger" : "success"}"
-              onclick="toggleSubject(${subject.id},${subject.published})"
-            >
-              ${subject.published ? "Disable" : "Enable"}
             </button>
 
           </div>
@@ -1580,79 +1675,13 @@ $("subjectFilter").addEventListener(
 );
 
 
-window.editSubject = function(id){
-
-  const subject =
-    subjects.find(x => x.id === id);
-
-  if(!subject) return;
-
-
-  $("subjectId").value =
-    subject.id;
-
-  $("subjectCourse").value =
-    subject.course_id;
-
-  $("subjectTitle").value =
-    subject.title || "";
-
-  $("subjectSlug").value =
-    subject.slug || "";
-
-  $("subjectDescription").value =
-    subject.description || "";
-
-  $("subjectOrder").value =
-    subject.sort_order || 1;
-
-  $("subjectFee").value =
-    subject.subject_fee ?? "";
-
-  $("subjectPublished").checked =
-    !!subject.published;
-
-  $("subjectTrial").checked =
-    !!subject.is_trial;
-
-  $("subjectSaveBtn").textContent =
-    "Save Subject Changes";
-
-};
-
-
-window.toggleSubject = async function(id,published){
-
-  const result =
-    await supabaseClient
-      .from("course_subjects")
-      .update({
-        published:!published
-      })
-      .eq("id",id);
-
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      true
-    );
-
-    return;
-
+$("subjectCourse").addEventListener(
+  "change",
+  ()=>{
+    $("lessonCourse").value =
+      $("subjectCourse").value;
   }
-
-
-  showMessage(
-    published
-      ? "Subject disabled."
-      : "Subject enabled."
-  );
-
-  await loadSubjects();
-
-};
+);
 
 
 $("subjectTitle").addEventListener(
@@ -1677,7 +1706,6 @@ $("subjectForm").addEventListener(
     event.preventDefault();
 
     showMessage("Saving subject...");
-
 
     const id =
       $("subjectId").value;
@@ -1753,13 +1781,53 @@ $("subjectForm").addEventListener(
         : "Subject created successfully."
     );
 
-
     resetSubject();
 
     await loadSubjects();
 
   }
 );
+
+
+window.editSubject = function(id){
+
+  const subject =
+    subjects.find(x => x.id === id);
+
+  if(!subject) return;
+
+
+  $("subjectId").value =
+    subject.id;
+
+  $("subjectCourse").value =
+    subject.course_id;
+
+  $("subjectTitle").value =
+    subject.title || "";
+
+  $("subjectSlug").value =
+    subject.slug || "";
+
+  $("subjectDescription").value =
+    subject.description || "";
+
+  $("subjectOrder").value =
+    subject.sort_order || 1;
+
+  $("subjectFee").value =
+    subject.subject_fee ?? "";
+
+  $("subjectPublished").checked =
+    subject.published !== false;
+
+  $("subjectTrial").checked =
+    subject.is_trial === true;
+
+  $("subjectSaveBtn").textContent =
+    "Save Subject Changes";
+
+};
 
 
 $("subjectCancelBtn").addEventListener(
@@ -1893,6 +1961,14 @@ function renderTopics(){
             Order ${topic.sort_order}
           </span>
 
+          <span class="badge">
+            Price: ${money(topic.topic_fee)}
+          </span>
+
+          <span class="badge">
+            ${Number(topic.video_count || 0)} videos
+          </span>
+
           <div class="actions">
 
             <button
@@ -1945,6 +2021,12 @@ window.editTopic = function(id){
   $("topicOrder").value =
     topic.sort_order || 1;
 
+  $("topicFee").value =
+    topic.topic_fee ?? "";
+
+  $("topicVideoCount").value =
+    topic.video_count ?? 0;
+
   $("topicSaveBtn").textContent =
     "Save Topic Changes";
 
@@ -1994,7 +2076,15 @@ $("topicForm").addEventListener(
         $("topicDescription").value.trim() || null,
 
       sort_order:
-        Number($("topicOrder").value) || 1
+        Number($("topicOrder").value) || 1,
+
+      topic_fee:
+        $("topicFee").value === ""
+          ? null
+          : Number($("topicFee").value),
+
+      video_count:
+        Number($("topicVideoCount").value) || 0
 
     };
 
@@ -2059,6 +2149,8 @@ function resetTopic(){
 
   $("topicId").value = "";
 
+  $("topicVideoCount").value = 0;
+
   $("topicSaveBtn").textContent =
     "Create Topic";
 
@@ -2073,6 +2165,7 @@ async function loadLessons(){
     await supabaseClient
       .from("lessons")
       .select("*")
+      .order("course_id")
       .order("sort_order");
 
 
@@ -2098,6 +2191,7 @@ async function loadLessons(){
 
 
   $("mcqLesson").innerHTML =
+    `<option value="">Select Lesson</option>` +
     lessons.map(lesson => `
 
       <option value="${lesson.id}">
@@ -2108,7 +2202,6 @@ async function loadLessons(){
 
 
   renderLessons();
-
 
 }
 
@@ -2158,15 +2251,23 @@ function renderLessons(){
 
           <p>
             Topic:
-            ${escapeHtml(topic?.title || "Unassigned")}
+            ${escapeHtml(topic?.title || "Unknown")}
           </p>
 
-          <span class="badge ${lesson.published ? "green" : "red"}">
-            ${lesson.published ? "Published" : "Draft"}
+          <span class="badge">
+            Order ${lesson.sort_order || 1}
           </span>
 
           <span class="badge">
-            ${lesson.is_trial ? "Free Trial" : "Paid"}
+            ${Number(lesson.video_count || 0)} videos
+          </span>
+
+          <span class="badge">
+            Visualized: ${money(lesson.visualized_fee)}
+          </span>
+
+          <span class="badge">
+            PPT: ${money(lesson.ppt_fee)}
           </span>
 
           <div class="actions">
@@ -2195,95 +2296,10 @@ $("lessonFilter").addEventListener(
 );
 
 
-$("lessonTopic").addEventListener(
-  "change",
-  ()=>{
-
-    const topic =
-      topics.find(
-        x => x.id === Number($("lessonTopic").value)
-      );
-
-
-    if(!topic) return;
-
-
-    const subject =
-      subjects.find(
-        x => x.id === topic.course_subject_id
-      );
-
-
-    if(!subject) return;
-
-
-    $("lessonSubject").value =
-      subject.id;
-
-    $("lessonCourse").value =
-      subject.course_id;
-
-  }
+$("lessonTitle").addEventListener(
+  "input",
+  ()=>{}
 );
-
-
-window.editLesson = function(id){
-
-  const lesson =
-    lessons.find(x => x.id === id);
-
-  if(!lesson) return;
-
-
-  $("lessonId").value =
-    lesson.id;
-
-  $("lessonTopic").value =
-    lesson.topic_id || "";
-
-  $("lessonCourse").value =
-    lesson.course_id || "";
-
-  $("lessonSubject").value =
-    lesson.subject_id || "";
-
-  $("lessonTitle").value =
-    lesson.title || "";
-
-  $("lessonDescription").value =
-    lesson.description || "";
-
-  $("lessonVideoUrl").value =
-    lesson.video_url || "";
-
-  $("lessonPdfUrl").value =
-    lesson.pdf_url || "";
-
-  $("lessonOrder").value =
-    lesson.sort_order || 1;
-
-  $("lessonVisualizedFee").value =
-    lesson.visualized_fee ?? "";
-
-  $("lessonPptFee").value =
-    lesson.ppt_fee ?? "";
-
-  $("lessonVisualizedUrl").value =
-    lesson.visualized_video_url || "";
-
-  $("lessonPptUrl").value =
-    lesson.ppt_video_url || "";
-
-  $("lessonPublished").checked =
-    !!lesson.published;
-
-  $("lessonTrial").checked =
-    !!lesson.is_trial;
-
-  $("lessonSaveBtn").textContent =
-    "Save Lesson Changes";
-
-};
 
 
 $("lessonForm").addEventListener(
@@ -2301,11 +2317,6 @@ $("lessonForm").addEventListener(
 
     const data = {
 
-      topic_id:
-        $("lessonTopic").value
-          ? Number($("lessonTopic").value)
-          : null,
-
       course_id:
         $("lessonCourse").value
           ? Number($("lessonCourse").value)
@@ -2314,6 +2325,11 @@ $("lessonForm").addEventListener(
       subject_id:
         $("lessonSubject").value
           ? Number($("lessonSubject").value)
+          : null,
+
+      topic_id:
+        $("lessonTopic").value
+          ? Number($("lessonTopic").value)
           : null,
 
       title:
@@ -2330,6 +2346,9 @@ $("lessonForm").addEventListener(
 
       sort_order:
         Number($("lessonOrder").value) || 1,
+
+      video_count:
+        Number($("lessonVideoCount").value) || 0,
 
       visualized_fee:
         $("lessonVisualizedFee").value === ""
@@ -2404,6 +2423,68 @@ $("lessonForm").addEventListener(
 );
 
 
+window.editLesson = function(id){
+
+  const lesson =
+    lessons.find(x => x.id === id);
+
+  if(!lesson) return;
+
+
+  $("lessonId").value =
+    lesson.id;
+
+  $("lessonTopic").value =
+    lesson.topic_id ?? "";
+
+  $("lessonCourse").value =
+    lesson.course_id ?? "";
+
+  $("lessonSubject").value =
+    lesson.subject_id ?? "";
+
+  $("lessonTitle").value =
+    lesson.title || "";
+
+  $("lessonDescription").value =
+    lesson.description || "";
+
+  $("lessonVideoUrl").value =
+    lesson.video_url || "";
+
+  $("lessonPdfUrl").value =
+    lesson.pdf_url || "";
+
+  $("lessonOrder").value =
+    lesson.sort_order || 1;
+
+  $("lessonVideoCount").value =
+    lesson.video_count ?? 0;
+
+  $("lessonVisualizedFee").value =
+    lesson.visualized_fee ?? "";
+
+  $("lessonPptFee").value =
+    lesson.ppt_fee ?? "";
+
+  $("lessonVisualizedUrl").value =
+    lesson.visualized_video_url || "";
+
+  $("lessonPptUrl").value =
+    lesson.ppt_video_url || "";
+
+  $("lessonPublished").checked =
+    lesson.published !== false;
+
+  $("lessonTrial").checked =
+    lesson.is_trial === true;
+
+  $("lessonSaveBtn").textContent =
+    "Save Lesson Changes";
+
+};
+
+
 $("lessonCancelBtn").addEventListener(
   "click",
   resetLesson
@@ -2416,8 +2497,9 @@ function resetLesson(){
 
   $("lessonId").value = "";
 
-  $("lessonPublished").checked =
-    true;
+  $("lessonPublished").checked = true;
+
+  $("lessonVideoCount").value = 0;
 
   $("lessonSaveBtn").textContent =
     "Create Lesson";
@@ -2477,83 +2559,49 @@ function renderMcqs(){
 
 
   $("mcqList").innerHTML =
-    mcqs.map(mcq => `
+    mcqs.map(mcq => {
 
-      <div class="item">
+      const lesson =
+        lessons.find(
+          x => x.id === mcq.lesson_id
+        );
 
-        <h3>
-          ${escapeHtml(mcq.question)}
-        </h3>
 
-        <p>
-          A. ${escapeHtml(mcq.option_a || "")}<br>
-          B. ${escapeHtml(mcq.option_b || "")}<br>
-          C. ${escapeHtml(mcq.option_c || "")}<br>
-          D. ${escapeHtml(mcq.option_d || "")}
-        </p>
+      return `
 
-        <span class="badge green">
-          Correct:
-          ${escapeHtml(mcq.correct_option || "Not set")}
-        </span>
+        <div class="item">
 
-        <div class="actions">
+          <h3>
+            ${escapeHtml(mcq.question)}
+          </h3>
 
-          <button
-            class="primary"
-            onclick="editMcq(${mcq.id})"
-          >
-            Edit
-          </button>
+          <p>
+            Lesson:
+            ${escapeHtml(lesson?.title || "Unknown")}
+          </p>
+
+          <span class="badge">
+            Correct: ${escapeHtml(mcq.correct_option || "Not set")}
+          </span>
+
+          <div class="actions">
+
+            <button
+              class="primary"
+              onclick="editMcq(${mcq.id})"
+            >
+              Edit
+            </button>
+
+          </div>
 
         </div>
 
-      </div>
+      `;
 
-    `).join("");
+    }).join("");
 
 }
-
-
-window.editMcq = function(id){
-
-  const mcq =
-    mcqs.find(x => x.id === id);
-
-  if(!mcq) return;
-
-
-  $("mcqId").value =
-    mcq.id;
-
-  $("mcqLesson").value =
-    mcq.lesson_id || "";
-
-  $("mcqQuestion").value =
-    mcq.question || "";
-
-  $("mcqA").value =
-    mcq.option_a || "";
-
-  $("mcqB").value =
-    mcq.option_b || "";
-
-  $("mcqC").value =
-    mcq.option_c || "";
-
-  $("mcqD").value =
-    mcq.option_d || "";
-
-  $("mcqCorrect").value =
-    mcq.correct_option || "";
-
-  $("mcqExplanation").value =
-    mcq.explanation || "";
-
-  $("mcqSaveBtn").textContent =
-    "Save MCQ Changes";
-
-};
 
 
 $("mcqForm").addEventListener(
@@ -2648,6 +2696,47 @@ $("mcqForm").addEventListener(
 );
 
 
+window.editMcq = function(id){
+
+  const mcq =
+    mcqs.find(x => x.id === id);
+
+  if(!mcq) return;
+
+
+  $("mcqId").value =
+    mcq.id;
+
+  $("mcqLesson").value =
+    mcq.lesson_id ?? "";
+
+  $("mcqQuestion").value =
+    mcq.question || "";
+
+  $("mcqA").value =
+    mcq.option_a || "";
+
+  $("mcqB").value =
+    mcq.option_b || "";
+
+  $("mcqC").value =
+    mcq.option_c || "";
+
+  $("mcqD").value =
+    mcq.option_d || "";
+
+  $("mcqCorrect").value =
+    mcq.correct_option || "";
+
+  $("mcqExplanation").value =
+    mcq.explanation || "";
+
+  $("mcqSaveBtn").textContent =
+    "Save MCQ Changes";
+
+};
+
+
 $("mcqCancelBtn").addEventListener(
   "click",
   resetMcq
@@ -2684,24 +2773,19 @@ function renderCoursePricing(){
         </td>
 
         <td>
-
-          <input
-            class="small-input"
-            type="number"
-            min="0"
-            id="courseFee_${course.id}"
-            value="${course.current_fee ?? course.course_fee ?? ""}"
-          >
-
+          ${money(
+            course.current_fee ??
+            course.course_fee
+          )}
         </td>
 
         <td>
 
           <button
             class="primary"
-            onclick="saveCoursePrice(${course.id})"
+            onclick="editCourse(${course.id})"
           >
-            Save
+            Edit
           </button>
 
         </td>
@@ -2711,59 +2795,6 @@ function renderCoursePricing(){
     `).join("");
 
 }
-
-
-window.saveCoursePrice = async function(id){
-
-  const value =
-    $("courseFee_" + id).value;
-
-
-  if(value === "" || Number(value) < 0){
-
-    showMessage(
-      "Enter a valid course price.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  const result =
-    await supabaseClient
-      .from("courses")
-      .update({
-
-        current_fee:Number(value),
-
-        course_fee:Number(value)
-
-      })
-      .eq("id",id);
-
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      true
-    );
-
-    return;
-
-  }
-
-
-  showMessage(
-    "Course price updated."
-  );
-
-
-  await loadCourses();
-
-};
 
 
 function renderSubjectPricing(){
@@ -2786,28 +2817,20 @@ function renderSubjectPricing(){
           </td>
 
           <td>
-            ${escapeHtml(course?.title || "")}
+            ${escapeHtml(course?.title || "Unknown")}
           </td>
 
           <td>
-
-            <input
-              class="small-input"
-              type="number"
-              min="0"
-              id="subjectFee_${subject.id}"
-              value="${subject.subject_fee ?? ""}"
-            >
-
+            ${money(subject.subject_fee)}
           </td>
 
           <td>
 
             <button
               class="primary"
-              onclick="saveSubjectPrice(${subject.id})"
+              onclick="editSubject(${subject.id})"
             >
-              Save
+              Edit
             </button>
 
           </td>
@@ -2821,61 +2844,7 @@ function renderSubjectPricing(){
 }
 
 
-window.saveSubjectPrice =
-  async function(id){
-
-    const input =
-      $("subjectFee_" + id);
-
-
-    const value =
-      input.value;
-
-
-    if(value === "" || Number(value) < 0){
-
-      showMessage(
-        "Enter a valid subject price.",
-        true
-      );
-
-      return;
-
-    }
-
-
-    const result =
-      await supabaseClient
-        .from("course_subjects")
-        .update({
-          subject_fee:Number(value)
-        })
-        .eq("id",id);
-
-
-    if(result.error){
-
-      showMessage(
-        result.error.message,
-        true
-      );
-
-      return;
-
-    }
-
-
-    showMessage(
-      "Subject price updated."
-    );
-
-
-    await loadSubjects();
-
-  };
-
-
-/* LOAD EVERYTHING */
+/* LOAD ALL */
 
 async function loadAll(){
 
@@ -2892,32 +2861,61 @@ async function loadAll(){
 }
 
 
-/* EXISTING SESSION */
+/* AUTH STATE */
 
-async function initialize(){
+supabaseClient.auth.onAuthStateChange(
+  async (event,session)=>{
 
-  const sessionResult =
-    await supabaseClient.auth.getSession();
+    if(
+      session &&
+      event === "SIGNED_IN"
+    ){
 
+      const allowed =
+        await checkAdmin();
 
-  const session =
-    sessionResult.data?.session;
+      if(!allowed){
 
+        await supabaseClient.auth.signOut();
 
-  if(!session){
+        return;
 
-    $("loginBox").classList.remove("hidden");
+      }
 
-    return;
+      $("loginBox")
+        .classList.add("hidden");
+
+      $("dashboard")
+        .classList.remove("hidden");
+
+      $("logoutBtn")
+        .classList.remove("hidden");
+
+      await loadAll();
+
+    }
 
   }
+);
 
 
-  const admin =
+/* EXISTING SESSION */
+
+(async function(){
+
+  const result =
+    await supabaseClient.auth.getSession();
+
+  const session =
+    result.data?.session;
+
+  if(!session) return;
+
+
+  const allowed =
     await checkAdmin();
 
-
-  if(!admin){
+  if(!allowed){
 
     await supabaseClient.auth.signOut();
 
@@ -2926,32 +2924,19 @@ async function initialize(){
   }
 
 
-  await startDashboard();
+  $("loginBox")
+    .classList.add("hidden");
 
-}
+  $("dashboard")
+    .classList.remove("hidden");
 
-
-supabaseClient.auth.onAuthStateChange(
-  async event => {
-
-    if(event === "SIGNED_OUT"){
-
-      $("dashboard")
-        .classList.add("hidden");
-
-      $("loginBox")
-        .classList.remove("hidden");
-
-      $("logoutBtn")
-        .classList.add("hidden");
-
-    }
-
-  }
-);
+  $("logoutBtn")
+    .classList.remove("hidden");
 
 
-initialize();
+  await loadAll();
+
+})();
 
 </script>
 

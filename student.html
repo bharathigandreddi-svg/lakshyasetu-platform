@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,149 +11,200 @@
 
   <style>
     .page-header {
-      padding: 30px 0 10px;
+      margin-bottom: 24px;
     }
 
     .page-header h1 {
-      margin: 0 0 8px;
-      color: #10233f;
-    }
-
-    .course-meta {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 15px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 11px;
-      border-radius: 999px;
-      background: #e8f6f5;
-      color: #087477;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .subject-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 20px;
-    }
-
-    .subject-card {
-      display: block;
-      background: #fff;
-      border: 1px solid #e4e8ef;
-      border-radius: 16px;
-      padding: 22px;
-      text-decoration: none;
-      color: inherit;
-      box-shadow: 0 5px 18px rgba(16,35,63,.05);
-      transition: .2s;
-    }
-
-    .subject-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(16,35,63,.10);
-    }
-
-    .subject-number {
-      color: #0f8b8d;
-      font-size: 13px;
-      font-weight: 700;
       margin-bottom: 8px;
     }
 
-    .subject-card h3 {
-      margin: 0 0 10px;
-      color: #10233f;
-      font-size: 19px;
+    .breadcrumb {
+      margin-bottom: 18px;
     }
 
-    .topic-list,
-    .video-list {
+    .breadcrumb a {
+      text-decoration: none;
+    }
+
+    .course-grid {
       display: grid;
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
       margin-top: 20px;
     }
 
-    .topic-card,
-    .video-card {
-      background: #fff;
-      border: 1px solid #e4e8ef;
+    .course-card {
+      display: block;
+      padding: 22px;
+      border: 1px solid #dfe5ee;
       border-radius: 14px;
-      padding: 18px;
+      background: #fff;
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
     }
 
-    .topic-card h3,
-    .video-card h3 {
+    .course-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .course-card h3 {
       margin: 0 0 8px;
       color: #10233f;
     }
 
-    .topic-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      align-items: flex-start;
+    .course-card p {
+      margin: 0;
     }
 
-    .topic-left {
+    .count-badge {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #eef4ff;
+      color: #2457a6;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .section-title {
+      margin-top: 32px;
+      margin-bottom: 14px;
+    }
+
+    .info-card {
+      padding: 22px;
+      border: 1px solid #dfe5ee;
+      border-radius: 14px;
+      background: #fff;
+      margin-top: 16px;
+    }
+
+    .subject-header {
+      padding: 22px;
+      border-radius: 14px;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
+      margin-bottom: 24px;
+    }
+
+    .topic-card {
+      border: 1px solid #dfe5ee;
+      border-radius: 14px;
+      background: #fff;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .topic-header {
+      padding: 18px 20px;
+      cursor: pointer;
       display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .topic-header:hover {
+      background: #f8fafc;
+    }
+
+    .topic-title {
+      margin: 0;
+      color: #10233f;
+      font-size: 18px;
     }
 
     .topic-number {
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 50%;
-      background: #e8f6f5;
-      color: #087477;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
+      color: #667085;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+
+    .topic-arrow {
+      font-size: 18px;
+      color: #667085;
+    }
+
+    .topic-content {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid #edf0f4;
+    }
+
+    .topic-content.open {
+      display: block;
+    }
+
+    .video-card {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fafbfc;
+    }
+
+    .video-title {
       font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .video-meta {
+      font-size: 13px;
+      color: #667085;
+      margin-bottom: 12px;
+    }
+
+    .video-player {
+      width: 100%;
+      max-height: 600px;
+      border-radius: 10px;
+      background: #000;
     }
 
     .trial-badge {
       display: inline-block;
-      margin-left: 7px;
+      margin-left: 8px;
       padding: 4px 8px;
-      border-radius: 999px;
-      background: #fff4d6;
-      color: #8a5a00;
-      font-size: 11px;
+      border-radius: 12px;
+      background: #eaf7ee;
+      color: #187a3d;
+      font-size: 12px;
       font-weight: 700;
     }
 
-    .empty-card {
-      background: #fff;
-      border: 1px dashed #cbd3df;
-      border-radius: 14px;
-      padding: 25px;
-      text-align: center;
-      margin-top: 18px;
-    }
-
-    .error-card {
-      padding: 24px;
-      border-radius: 14px;
-      background: #fff;
-      border: 1px solid #f1c4c4;
-      color: #b42318;
-      margin-top: 20px;
-    }
-
-    .loading {
-      padding: 30px;
-      text-align: center;
+    .locked-badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 12px;
+      background: #f1f3f5;
       color: #667085;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-message {
+      padding: 18px;
+      border-radius: 12px;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
+      margin-top: 16px;
+    }
+
+    .error-message {
+      padding: 18px;
+      border-radius: 12px;
+      background: #fff5f5;
+      border: 1px solid #f3caca;
+      color: #a61b1b;
+      margin-top: 16px;
+    }
+
+    .back-btn {
+      margin-bottom: 18px;
+      display: inline-block;
     }
 
     .fee-card {
@@ -163,48 +215,43 @@
       border: 1px solid #dfe5ee;
     }
 
+    .fee-label {
+      font-size: 14px;
+      color: #667085;
+      margin-bottom: 6px;
+    }
+
     .old-fee {
       text-decoration: line-through;
       color: #777;
-      margin-right: 10px;
+      margin-right: 12px;
     }
 
     .current-fee {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 700;
-      color: #10233f;
     }
 
-    .section-title {
-      margin-top: 30px;
-      color: #10233f;
-    }
-
-    .video-card video {
-      width: 100%;
-      max-height: 560px;
-      border-radius: 10px;
-      background: #000;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 900px) {
-      .subject-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .logout-btn {
+      cursor: pointer;
     }
 
     @media (max-width: 600px) {
-      .subject-grid {
-        grid-template-columns: 1fr;
+      .topic-header {
+        padding: 15px;
       }
 
-      .topic-top {
-        flex-direction: column;
+      .topic-title {
+        font-size: 16px;
+      }
+
+      .topic-content {
+        padding: 0 15px 15px;
       }
     }
   </style>
 </head>
+
 
 <body>
 
@@ -215,7 +262,7 @@
     <small>Student Dashboard</small>
   </div>
 
-  <button id="logout" class="btn alt">
+  <button id="logout" class="btn alt logout-btn">
     Logout
   </button>
 
@@ -228,13 +275,22 @@
 
     <div id="backArea"></div>
 
-    <div id="pageArea">
+    <div class="page-header">
 
-      <div class="loading">
+      <h1 id="courseTitle">
         Loading...
-      </div>
+      </h1>
+
+      <p id="courseDesc" class="muted"></p>
 
     </div>
+
+
+    <div id="feeArea"></div>
+
+    <div id="subjectArea"></div>
+
+    <div id="topicArea"></div>
 
   </section>
 
@@ -242,7 +298,9 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="config.js"></script>
+
 
 <script>
 
@@ -251,214 +309,110 @@ const sb = window.supabase.createClient(
   LAKSHYASETU_CONFIG.supabasePublishableKey
 );
 
-const pageArea = document.getElementById("pageArea");
-const backArea = document.getElementById("backArea");
 
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const courseTitle =
+  document.getElementById("courseTitle");
+
+const courseDesc =
+  document.getElementById("courseDesc");
+
+const subjectArea =
+  document.getElementById("subjectArea");
+
+const topicArea =
+  document.getElementById("topicArea");
+
+const backArea =
+  document.getElementById("backArea");
+
+const feeArea =
+  document.getElementById("feeArea");
+
+const logout =
+  document.getElementById("logout");
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function escapeHtml(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-}
 
-
-function getParams() {
-
-  const params =
-    new URLSearchParams(window.location.search);
-
-  return {
-    course: params.get("course"),
-    subject: params.get("subject"),
-    topic: params.get("topic")
-  };
-}
-
-
-async function checkLogin() {
-
-  const { data } =
-    await sb.auth.getUser();
-
-  if (!data.user) {
-
-    window.location.href = "login.html";
-
-    return false;
-  }
-
-  return true;
-}
-
-
-async function getCourse(slug) {
-
-  let query = sb
-    .from("courses")
-    .select("*")
-    .eq("published", true);
-
-  if (slug) {
-    query = query.eq("slug", slug);
-  }
-
-  const { data, error } =
-    await query.limit(1).single();
-
-  if (error) {
-
-    console.error("Course error:", error);
-
-    return null;
-  }
-
-  return data;
-}
-
-
-async function getSubjects(courseId) {
-
-  const { data, error } =
-    await sb
-      .from("course_subjects")
-      .select(
-        "id,course_id,title,sort_order,published"
-      )
-      .eq("course_id", courseId)
-      .eq("published", true)
-      .order("sort_order")
-      .order("id");
-
-  if (error) {
-
-    console.error("Subject error:", error);
-
-    return [];
-  }
-
-  return data || [];
-}
-
-
-async function getSubject(courseId, subjectId) {
-
-  const { data, error } =
-    await sb
-      .from("course_subjects")
-      .select(
-        "id,course_id,title,sort_order,published"
-      )
-      .eq("id", subjectId)
-      .eq("course_id", courseId)
-      .eq("published", true)
-      .single();
-
-  if (error) {
-
-    console.error("Subject error:", error);
-
-    return null;
-  }
-
-  return data;
-}
-
-
-async function getTopics(subjectId) {
-
-  const { data, error } =
-    await sb
-      .from("subject_topics")
-      .select(
-        "id,subject_id,title,slug,sort_order"
-      )
-      .eq("subject_id", subjectId)
-      .order("sort_order")
-      .order("id");
-
-  if (error) {
-
-    console.error("Topic error:", error);
-
-    return [];
-  }
-
-  return data || [];
-}
-
-
-async function getVideos(topicIds) {
-
-  if (!topicIds.length) {
-    return [];
-  }
-
-  const { data, error } =
-    await sb
-      .from("topic_videos")
-      .select(`
-        id,
-        topic_id,
-        title,
-        video_url,
-        thumbnail_url,
-        duration_seconds,
-        sort_order,
-        published,
-        is_trial
-      `)
-      .in("topic_id", topicIds)
-      .eq("published", true)
-      .order("sort_order")
-      .order("id");
-
-  if (error) {
-
-    console.error("Video error:", error);
-
-    return [];
-  }
-
-  return data || [];
 }
 
 
 function formatDuration(seconds) {
 
-  seconds = Number(seconds || 0);
+  const total = Number(seconds || 0);
 
-  if (!seconds) {
+  if (!total) {
     return "";
   }
 
   const minutes =
-    Math.floor(seconds / 60);
+    Math.floor(total / 60);
 
-  const remaining =
-    seconds % 60;
+  const secs =
+    total % 60;
 
-  return (
-    minutes +
-    ":" +
-    String(remaining).padStart(2, "0")
-  );
+  if (minutes >= 60) {
+
+    const hours =
+      Math.floor(minutes / 60);
+
+    const mins =
+      minutes % 60;
+
+    return `${hours}h ${mins}m`;
+
+  }
+
+  return `${minutes}m ${secs}s`;
+
 }
 
 
-function renderFee(course) {
+/* =====================================================
+   COURSE FEE
+===================================================== */
 
-  const current =
-    Number(course.current_fee || 0);
+function renderCourseFee(course) {
 
   const original =
     Number(course.original_fee || 0);
 
-  if (!current && !original) {
-    return "";
+  const current =
+    Number(course.current_fee || 0);
+
+
+  if (!original && !current) {
+
+    feeArea.innerHTML = "";
+
+    return;
+
   }
+
+
+  let html = `
+    <div class="fee-card">
+
+      <div class="fee-label">
+        Course Fee
+      </div>
+  `;
+
 
   if (
     original &&
@@ -466,656 +420,790 @@ function renderFee(course) {
     original !== current
   ) {
 
-    return `
-      <div class="fee-card">
+    html += `
+      <div>
 
-        <div>Course Fee</div>
+        <span class="old-fee">
+          ₹${original.toLocaleString("en-IN")}
+        </span>
 
-        <div style="margin-top:6px">
-
-          <span class="old-fee">
-            ₹${original.toLocaleString("en-IN")}
-          </span>
-
-          <span class="current-fee">
-            ₹${current.toLocaleString("en-IN")}
-          </span>
-
-        </div>
+        <span class="current-fee">
+          ₹${current.toLocaleString("en-IN")}
+        </span>
 
       </div>
     `;
+
   }
 
-  return `
-    <div class="fee-card">
+  else if (current) {
 
-      <div>Course Fee</div>
-
+    html += `
       <div class="current-fee">
-        ₹${(current || original)
-          .toLocaleString("en-IN")}
+        ₹${current.toLocaleString("en-IN")}
       </div>
+    `;
 
+  }
+
+  else {
+
+    html += `
+      <div class="current-fee">
+        ₹${original.toLocaleString("en-IN")}
+      </div>
+    `;
+
+  }
+
+
+  html += `
     </div>
   `;
+
+
+  feeArea.innerHTML = html;
+
 }
 
 
-async function renderCourse(course) {
+/* =====================================================
+   GET COURSE
+===================================================== */
 
-  backArea.innerHTML = "";
+async function getCourse(slug) {
 
-  const subjects =
-    await getSubjects(course.id);
+  const result =
+    await sb
+      .from("courses")
+      .select("*")
+      .eq("slug", slug)
+      .eq("published", true)
+      .single();
 
-  pageArea.innerHTML = `
 
-    <div class="page-header">
+  if (result.error) {
 
-      <h1>
-        ${escapeHtml(course.title)}
-      </h1>
+    throw new Error(
+      result.error.message
+    );
 
-      <p class="muted">
-        ${escapeHtml(course.description || "")}
-      </p>
+  }
 
-      <div class="course-meta">
 
-        <span class="badge">
-          ${subjects.length} Subjects
-        </span>
+  return result.data;
 
-        <span class="badge">
-          Student Course
-        </span>
+}
 
-      </div>
 
-    </div>
+/* =====================================================
+   LOAD COURSE SUBJECTS
+===================================================== */
 
-    ${renderFee(course)}
+async function loadSubjects(courseId) {
 
+  subjectArea.innerHTML = `
     <h2 class="section-title">
-      Course Subjects
+      Subjects
     </h2>
 
-    ${
-      subjects.length
-      ?
-      `
-        <div class="subject-grid">
+    <div class="status-message">
+      Loading subjects...
+    </div>
+  `;
 
-          ${subjects.map((subject, index) => `
 
-            <a
-              class="subject-card"
-              href="student.html?course=${encodeURIComponent(course.slug || "")}&subject=${subject.id}"
-            >
+  const result =
+    await sb
+      .from("course_subjects")
+      .select("*")
+      .eq("course_id", courseId)
+      .eq("published", true)
+      .order("sort_order", {
+        ascending: true
+      });
 
-              <div class="subject-number">
-                Subject ${index + 1}
-              </div>
 
-              <h3>
-                ${escapeHtml(subject.title)}
-              </h3>
+  if (result.error) {
 
-              <p class="muted">
-                View topics and lessons
-              </p>
+    subjectArea.innerHTML = `
+      <div class="error-message">
+        Unable to load subjects.
+        <br>
+        ${escapeHtml(result.error.message)}
+      </div>
+    `;
 
-              <span class="status">
-                Open Subject
-              </span>
+    return;
 
-            </a>
+  }
 
-          `).join("")}
 
-        </div>
-      `
-      :
-      `
-        <div class="empty-card">
+  const subjects =
+    result.data || [];
+
+
+  if (!subjects.length) {
+
+    subjectArea.innerHTML = `
+      <h2 class="section-title">
+        Subjects
+      </h2>
+
+      <div class="status-message">
+        No published subjects are available yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  subjectArea.innerHTML = `
+
+    <h2 class="section-title">
+      Subjects
+    </h2>
+
+    <div class="course-grid">
+
+      ${subjects.map(subject => `
+
+        <a
+          class="course-card"
+          href="student.html?course=appsc-group-1&subject=${subject.subject_id}"
+        >
 
           <h3>
-            No subjects available
+            ${escapeHtml(subject.title)}
           </h3>
 
           <p class="muted">
-            Subjects will appear here after publishing.
+            Open subject
           </p>
 
-        </div>
-      `
-    }
+          <span class="count-badge">
+            View Topics
+          </span>
 
+        </a>
+
+      `).join("")}
+
+    </div>
   `;
+
 }
 
 
-async function renderSubject(course, subject) {
+/* =====================================================
+   GET COURSE SUBJECT
+===================================================== */
 
-  backArea.innerHTML = `
+async function getCourseSubject(
+  courseId,
+  subjectId
+) {
 
-    <a
-      class="btn alt"
-      href="student.html?course=${encodeURIComponent(course.slug || "")}"
-    >
-      Back to Course
-    </a>
+  const result =
+    await sb
+      .from("course_subjects")
+      .select("*")
+      .eq("course_id", courseId)
+      .eq("subject_id", subjectId)
+      .eq("published", true)
+      .single();
 
+
+  if (result.error) {
+
+    throw new Error(
+      result.error.message
+    );
+
+  }
+
+
+  return result.data;
+
+}
+
+
+/* =====================================================
+   LOAD TOPICS
+===================================================== */
+
+async function loadTopics(subjectId) {
+
+  topicArea.innerHTML = `
+    <h2 class="section-title">
+      Topics
+    </h2>
+
+    <div class="status-message">
+      Loading topics...
+    </div>
   `;
 
-  const topics =
-    await getTopics(subject.id);
 
-  const topicIds =
-    topics.map(topic => topic.id);
-
-  const videos =
-    await getVideos(topicIds);
-
-  const videoMap = {};
-
-  videos.forEach(video => {
-
-    if (!videoMap[video.topic_id]) {
-      videoMap[video.topic_id] = [];
-    }
-
-    videoMap[video.topic_id].push(video);
-
-  });
+  const result =
+    await sb
+      .from("subject_topics")
+      .select("*")
+      .eq("subject_id", subjectId)
+      .order("sort_order", {
+        ascending: true
+      });
 
 
-  pageArea.innerHTML = `
+  if (result.error) {
 
-    <div class="page-header">
-
-      <p class="muted">
-        ${escapeHtml(course.title)}
-      </p>
-
-      <h1>
-        ${escapeHtml(subject.title)}
-      </h1>
-
-      <div class="course-meta">
-
-        <span class="badge">
-          ${topics.length} Topics
-        </span>
-
+    topicArea.innerHTML = `
+      <div class="error-message">
+        Unable to load topics.
+        <br>
+        ${escapeHtml(result.error.message)}
       </div>
+    `;
 
-    </div>
+    return;
 
+  }
+
+
+  const topics =
+    result.data || [];
+
+
+  if (!topics.length) {
+
+    topicArea.innerHTML = `
+      <h2 class="section-title">
+        Topics
+      </h2>
+
+      <div class="status-message">
+        No topics have been added yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  topicArea.innerHTML = `
 
     <h2 class="section-title">
       Topics
     </h2>
 
-
-    ${
-      topics.length
-      ?
-      `
-        <div class="topic-list">
-
-          ${topics.map((topic, index) => {
-
-            const topicVideos =
-              videoMap[topic.id] || [];
-
-            return `
-
-              <div class="topic-card">
-
-                <div class="topic-top">
-
-                  <div class="topic-left">
-
-                    <div class="topic-number">
-                      ${index + 1}
-                    </div>
-
-                    <div>
-
-                      <h3>
-                        ${escapeHtml(topic.title)}
-                      </h3>
-
-                      <p class="muted">
-                        ${topicVideos.length}
-                        published video${topicVideos.length === 1 ? "" : "s"}
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                  ${
-                    topicVideos.length
-                    ?
-                    `
-                      <span class="status">
-                        Available
-                      </span>
-                    `
-                    :
-                    `
-                      <span class="locked-badge">
-                        Coming Soon
-                      </span>
-                    `
-                  }
-
-                </div>
-
-
-                ${
-                  topicVideos.length
-                  ?
-                  `
-                    <div class="video-list">
-
-                      ${topicVideos.map(video => `
-
-                        <div class="video-card">
-
-                          <h3>
-
-                            ${escapeHtml(video.title)}
-
-                            ${
-                              video.is_trial
-                              ?
-                              `
-                                <span class="trial-badge">
-                                  Free Trial
-                                </span>
-                              `
-                              :
-                              ""
-                            }
-
-                          </h3>
-
-                          ${
-                            video.video_url
-                            ?
-                            `
-                              <video
-                                controls
-                                preload="metadata"
-                                ${
-                                  video.thumbnail_url
-                                  ?
-                                  `poster="${escapeHtml(video.thumbnail_url)}"`
-                                  :
-                                  ""
-                                }
-                                src="${escapeHtml(video.video_url)}"
-                              ></video>
-                            `
-                            :
-                            `
-                              <div class="empty-card">
-
-                                <strong>
-                                  Video URL not added yet
-                                </strong>
-
-                                <p class="muted">
-                                  Video link will appear here after it is added.
-                                </p>
-
-                              </div>
-                            `
-                          }
-
-                          ${
-                            video.duration_seconds
-                            ?
-                            `
-                              <p class="muted">
-                                Duration:
-                                ${formatDuration(video.duration_seconds)}
-                              </p>
-                            `
-                            :
-                            ""
-                          }
-
-                        </div>
-
-                      `).join("")}
-
-                    </div>
-                  `
-                  :
-                  ""
-                }
-
-              </div>
-
-            `;
-
-          }).join("")}
-
-        </div>
-      `
-      :
-      `
-        <div class="empty-card">
-
-          <h3>
-            No topics available yet
-          </h3>
-
-        </div>
-      `
-    }
-
-  `;
-}
-
-
-async function renderTopic(course, subject, topicId) {
-
-  backArea.innerHTML = `
-
-    <a
-      class="btn alt"
-      href="student.html?course=${encodeURIComponent(course.slug || "")}&subject=${subject.id}"
-    >
-      Back to ${escapeHtml(subject.title)}
-    </a>
-
+    <div id="topicsList"></div>
   `;
 
 
-  const { data: topic, error } =
-    await sb
-      .from("subject_topics")
-      .select(
-        "id,subject_id,title,slug,sort_order"
-      )
-      .eq("id", topicId)
-      .eq("subject_id", subject.id)
-      .single();
+  const topicsList =
+    document.getElementById("topicsList");
 
 
-  if (error || !topic) {
+  topicsList.innerHTML =
+    topics.map((topic, index) => `
 
-    pageArea.innerHTML = `
+      <div class="topic-card">
 
-      <div class="error-card">
+        <div
+          class="topic-header"
+          onclick="toggleTopic(${topic.id})"
+        >
 
-        <h2>
-          Topic not found
-        </h2>
+          <div>
+
+            <span class="topic-number">
+              ${index + 1}.
+            </span>
+
+            <span class="topic-title">
+              ${escapeHtml(topic.title)}
+            </span>
+
+          </div>
+
+          <span
+            id="arrow-${topic.id}"
+            class="topic-arrow"
+          >
+            +
+          </span>
+
+        </div>
+
+
+        <div
+          id="topic-${topic.id}"
+          class="topic-content"
+        >
+
+          <div id="videos-${topic.id}">
+
+            <div class="status-message">
+              Loading videos...
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
-    `;
+    `).join("");
 
+}
+
+
+/* =====================================================
+   TOGGLE TOPIC
+===================================================== */
+
+async function toggleTopic(topicId) {
+
+  const content =
+    document.getElementById(
+      "topic-" + topicId
+    );
+
+  const arrow =
+    document.getElementById(
+      "arrow-" + topicId
+    );
+
+
+  if (!content) {
     return;
   }
 
 
-  const videos =
-    await getVideos([topic.id]);
+  const isOpen =
+    content.classList.contains("open");
 
 
-  pageArea.innerHTML = `
+  if (isOpen) {
 
-    <div class="page-header">
+    content.classList.remove("open");
 
-      <p class="muted">
-        ${escapeHtml(subject.title)}
-      </p>
+    arrow.textContent = "+";
 
-      <h1>
-        ${escapeHtml(topic.title)}
-      </h1>
+    return;
 
-    </div>
+  }
 
 
-    ${
-      videos.length
-      ?
-      `
-        <div class="video-list">
+  content.classList.add("open");
 
-          ${videos.map(video => `
-
-            <div class="video-card">
-
-              <h3>
-
-                ${escapeHtml(video.title)}
-
-                ${
-                  video.is_trial
-                  ?
-                  `
-                    <span class="trial-badge">
-                      Free Trial
-                    </span>
-                  `
-                  :
-                  ""
-                }
-
-              </h3>
+  arrow.textContent = "−";
 
 
-              ${
-                video.video_url
-                ?
-                `
-                  <video
-                    controls
-                    preload="metadata"
-                    ${
-                      video.thumbnail_url
-                      ?
-                      `poster="${escapeHtml(video.thumbnail_url)}"`
-                      :
-                      ""
-                    }
-                    src="${escapeHtml(video.video_url)}"
-                  ></video>
-                `
-                :
-                `
-                  <div class="empty-card">
+  await loadVideos(topicId);
 
-                    <strong>
-                      Video URL not added yet
-                    </strong>
-
-                  </div>
-                `
-              }
-
-
-              ${
-                video.duration_seconds
-                ?
-                `
-                  <p class="muted">
-                    Duration:
-                    ${formatDuration(video.duration_seconds)}
-                  </p>
-                `
-                :
-                ""
-              }
-
-            </div>
-
-          `).join("")}
-
-        </div>
-      `
-      :
-      `
-        <div class="empty-card">
-
-          <h3>
-            No published videos yet
-          </h3>
-
-          <p class="muted">
-            Videos will appear here after publishing.
-          </p>
-
-        </div>
-      `
-    }
-
-  `;
 }
 
 
-async function boot() {
+/* =====================================================
+   LOAD VIDEOS
+===================================================== */
+
+async function loadVideos(topicId) {
+
+  const container =
+    document.getElementById(
+      "videos-" + topicId
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  container.innerHTML = `
+    <div class="status-message">
+      Loading videos...
+    </div>
+  `;
+
+
+  const result =
+    await sb
+      .from("topic_videos")
+      .select("*")
+      .eq("topic_id", topicId)
+      .eq("published", true)
+      .order("sort_order", {
+        ascending: true
+      });
+
+
+  if (result.error) {
+
+    container.innerHTML = `
+      <div class="error-message">
+        Unable to load videos.
+        <br>
+        ${escapeHtml(result.error.message)}
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  const videos =
+    result.data || [];
+
+
+  if (!videos.length) {
+
+    container.innerHTML = `
+      <div class="status-message">
+        No published videos are available for this topic yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    videos.map((video, index) => {
+
+      const duration =
+        formatDuration(
+          video.duration_seconds
+        );
+
+
+      const trialBadge =
+        video.is_trial
+          ? `
+            <span class="trial-badge">
+              Free Preview
+            </span>
+          `
+          : "";
+
+
+      let videoContent = "";
+
+
+      if (video.video_url) {
+
+        videoContent = `
+          <video
+            class="video-player"
+            controls
+            preload="metadata"
+            src="${escapeHtml(video.video_url)}"
+          >
+          </video>
+        `;
+
+      }
+
+      else {
+
+        videoContent = `
+          <div class="status-message">
+            Video will be available soon.
+          </div>
+        `;
+
+      }
+
+
+      return `
+
+        <div class="video-card">
+
+          <div class="video-title">
+
+            ${index + 1}.
+            ${escapeHtml(video.title)}
+
+            ${trialBadge}
+
+          </div>
+
+
+          ${
+            duration
+              ? `
+                <div class="video-meta">
+                  Duration: ${duration}
+                </div>
+              `
+              : ""
+          }
+
+
+          ${videoContent}
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+function showBackButton(type) {
+
+  if (type === "subject") {
+
+    backArea.innerHTML = `
+
+      <a
+        class="btn alt back-btn"
+        href="student.html?course=appsc-group-1"
+      >
+        ← Back to Subjects
+      </a>
+
+    `;
+
+  }
+
+  else {
+
+    backArea.innerHTML = "";
+
+  }
+
+}
+
+
+/* =====================================================
+   SUBJECT PAGE
+===================================================== */
+
+async function openSubject(
+  course,
+  subjectId
+) {
+
+  showBackButton("subject");
+
+
+  subjectArea.innerHTML = "";
+
 
   try {
 
-    const loggedIn =
-      await checkLogin();
-
-    if (!loggedIn) {
-      return;
-    }
-
-
-    const params =
-      getParams();
-
-
-    const course =
-      await getCourse(params.course);
-
-
-    if (!course) {
-
-      pageArea.innerHTML = `
-
-        <div class="error-card">
-
-          <h2>
-            Course not found
-          </h2>
-
-          <p>
-            Please check the course link.
-          </p>
-
-        </div>
-
-      `;
-
-      return;
-    }
-
-
-    if (!params.subject) {
-
-      await renderCourse(course);
-
-      return;
-    }
-
-
     const subject =
-      await getSubject(
+      await getCourseSubject(
         course.id,
-        params.subject
+        subjectId
       );
 
 
-    if (!subject) {
-
-      pageArea.innerHTML = `
-
-        <div class="error-card">
-
-          <h2>
-            Subject not found
-          </h2>
-
-        </div>
-
-      `;
-
-      return;
-    }
+    courseTitle.textContent =
+      subject.title;
 
 
-    if (params.topic) {
-
-      await renderTopic(
-        course,
-        subject,
-        params.topic
-      );
-
-      return;
-    }
+    courseDesc.textContent =
+      "Topics and video lessons";
 
 
-    await renderSubject(
-      course,
-      subject
+    feeArea.innerHTML = "";
+
+
+    topicArea.innerHTML = `
+
+      <div class="subject-header">
+
+        <h2>
+          ${escapeHtml(subject.title)}
+        </h2>
+
+        <p class="muted">
+          Select a topic to view its available video lessons.
+        </p>
+
+      </div>
+    `;
+
+
+    await loadTopics(
+      subject.subject_id
     );
 
   }
 
   catch (error) {
 
-    console.error(error);
+    topicArea.innerHTML = `
+      <div class="error-message">
+        Subject could not be loaded.
+        <br>
+        ${escapeHtml(error.message)}
+      </div>
+    `;
 
-    pageArea.innerHTML = `
+  }
 
-      <div class="error-card">
+}
 
-        <h2>
-          Something went wrong
-        </h2>
 
-        <p>
-          Please refresh the page.
-        </p>
+/* =====================================================
+   COURSE PAGE
+===================================================== */
+
+async function openCourse(course) {
+
+  showBackButton("course");
+
+
+  courseTitle.textContent =
+    course.title;
+
+
+  courseDesc.textContent =
+    course.description || "";
+
+
+  renderCourseFee(course);
+
+
+  topicArea.innerHTML = "";
+
+
+  await loadSubjects(course.id);
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+logout.onclick =
+  async function() {
+
+    await sb.auth.signOut();
+
+    location.href =
+      "login.html";
+
+  };
+
+
+/* =====================================================
+   BOOT
+===================================================== */
+
+async function boot() {
+
+  try {
+
+    const userResult =
+      await sb.auth.getUser();
+
+
+    if (
+      !userResult.data ||
+      !userResult.data.user
+    ) {
+
+      location.href =
+        "login.html";
+
+      return;
+
+    }
+
+
+    const params =
+      new URLSearchParams(
+        location.search
+      );
+
+
+    const courseSlug =
+      params.get("course") ||
+      "appsc-group-1";
+
+
+    const subjectId =
+      params.get("subject");
+
+
+    const course =
+      await getCourse(
+        courseSlug
+      );
+
+
+    if (subjectId) {
+
+      await openSubject(
+        course,
+        Number(subjectId)
+      );
+
+    }
+
+    else {
+
+      await openCourse(
+        course
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    courseTitle.textContent =
+      "Unable to load page";
+
+
+    courseDesc.textContent =
+      error.message || "";
+
+
+    feeArea.innerHTML = "";
+
+
+    subjectArea.innerHTML = `
+
+      <div class="error-message">
+
+        Something went wrong while
+        loading the course.
+
+        <br><br>
+
+        ${escapeHtml(error.message)}
 
       </div>
 
     `;
 
   }
+
 }
 
 
-document
-  .getElementById("logout")
-  .addEventListener(
-    "click",
-    async () => {
-
-      await sb.auth.signOut();
-
-      window.location.href =
-        "login.html";
-
-    }
-  );
-
+/* =====================================================
+   START
+===================================================== */
 
 boot();
 

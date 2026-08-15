@@ -1,74 +1,75 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Admin | LakshyaSetu</title>
+  <title>Admin | LakshyaSetu</title>
 
-<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
 
-<style>
-.fee-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
+  <style>
+    .fee-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
 
-.fee-table th,
-.fee-table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
+    .fee-table th,
+    .fee-table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
 
-.fee-table th {
-  font-weight: 700;
-}
+    .fee-table th {
+      font-weight: 700;
+    }
 
-.fee-input {
-  width: 140px;
-  padding: 9px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-}
+    .fee-input {
+      width: 140px;
+      padding: 9px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
 
-.small-btn {
-  padding: 9px 14px;
-  border: 0;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
+    .small-btn {
+      padding: 9px 14px;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-.save-fee {
-  background: #111;
-  color: white;
-}
+    .save-fee {
+      background: #111;
+      color: white;
+    }
 
-.save-fee:hover {
-  opacity: 0.85;
-}
+    .save-fee:hover {
+      opacity: 0.85;
+    }
 
-.course-name {
-  font-weight: 700;
-}
+    .course-name {
+      font-weight: 700;
+    }
 
-.old-fee {
-  color: #777;
-}
+    .old-fee {
+      color: #777;
+    }
 
-.current-fee {
-  font-weight: 700;
-}
+    .current-fee {
+      font-weight: 700;
+    }
 
-.fee-note {
-  margin-top: 8px;
-  color: #666;
-  font-size: 14px;
-}
-</style>
+    .fee-note {
+      margin-top: 8px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 
 </head>
 
@@ -90,164 +91,39 @@
 
 <main class="wrap">
 
-<div id="msg" class="message"></div>
+  <div id="msg" class="message"></div>
 
 
-<!-- ADMIN LOGIN -->
+  <!-- ADMIN LOGIN -->
 
-<section id="adminLogin" class="auth panel" style="display:none">
+  <section id="adminLogin" class="auth panel" style="display:none">
 
-  <h1>Admin Login</h1>
-
-  <p class="muted">
-    Sign in with your Admin account to manage courses, fees and lessons.
-  </p>
-
-  <form id="adminLoginForm" class="form">
-
-    <label>Email</label>
-
-    <input
-      id="adminEmail"
-      type="email"
-      required
-    >
-
-    <label>Password</label>
-
-    <input
-      id="adminPassword"
-      type="password"
-      required
-    >
-
-    <button class="btn">
-      Login
-    </button>
-
-  </form>
-
-</section>
-
-
-
-<!-- ADMIN DASHBOARD -->
-
-<div id="adminDashboard" style="display:none">
-
-
-  <!-- STATISTICS -->
-
-  <div class="stats">
-
-    <div class="stat">
-      <strong id="courseCount">0</strong>
-      Courses
-    </div>
-
-    <div class="stat">
-      <strong id="lessonCount">0</strong>
-      Lessons
-    </div>
-
-    <div class="stat">
-      <strong id="mcqCount">0</strong>
-      MCQs
-    </div>
-
-    <div class="stat">
-      <strong>Admin</strong>
-      Role
-    </div>
-
-  </div>
-
-
-
-  <!-- COURSE FEE MANAGEMENT -->
-
-  <section class="panel">
-
-    <h2>Course Fee Management</h2>
+    <h1>Admin Login</h1>
 
     <p class="muted">
-      Change the current course fee here. The updated fee will be displayed
-      on the student portal and home page.
+      Sign in with your Admin account to manage courses, fees and lessons.
     </p>
 
-    <p class="fee-note">
-      Original fee is kept for reference. You can increase or decrease the
-      current fee whenever required.
-    </p>
+    <form id="adminLoginForm" class="form">
 
-
-    <div id="feeManagement">
-
-      <div class="item">
-        Loading courses...
-      </div>
-
-    </div>
-
-  </section>
-
-
-
-  <!-- ADD GEOGRAPHY LESSON -->
-
-  <section class="panel">
-
-    <h2>Add Geography Lesson</h2>
-
-    <form id="lessonForm" class="form">
-
-      <label>Course</label>
-
-      <select id="courseSelect" required></select>
-
-
-      <label>Lesson title</label>
+      <label>Email</label>
 
       <input
-        id="lessonTitle"
-        value="Latitude and Longitude"
+        id="adminEmail"
+        type="email"
         required
       >
 
-
-      <label>Description</label>
-
-      <textarea id="lessonDescription">Understand latitude, longitude, important parallels and meridians, time calculation and Indian Standard Time.</textarea>
-
-
-      <label>Video URL</label>
+      <label>Password</label>
 
       <input
-        id="videoUrl"
-        placeholder="Temporary video URL"
+        id="adminPassword"
+        type="password"
+        required
       >
-
-
-      <label>PDF URL</label>
-
-      <input
-        id="pdfUrl"
-        placeholder="Temporary PDF URL"
-      >
-
-
-      <label>
-        <input
-          id="published"
-          type="checkbox"
-          checked
-        >
-        Publish lesson
-      </label>
-
 
       <button class="btn">
-        Save Lesson to Database
+        Login
       </button>
 
     </form>
@@ -255,22 +131,144 @@
   </section>
 
 
+  <!-- ADMIN DASHBOARD -->
 
-  <!-- EXISTING LESSONS -->
-
-  <section class="panel">
-
-    <h2>Existing Lessons</h2>
-
-    <div id="lessons" class="list"></div>
-
-  </section>
+  <div id="adminDashboard" style="display:none">
 
 
-</div>
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+      <div class="stat">
+        <strong id="courseCount">0</strong>
+        Courses
+      </div>
+
+      <div class="stat">
+        <strong id="lessonCount">0</strong>
+        Lessons
+      </div>
+
+      <div class="stat">
+        <strong id="mcqCount">0</strong>
+        MCQs
+      </div>
+
+      <div class="stat">
+        <strong>Admin</strong>
+        Role
+      </div>
+
+    </div>
+
+
+    <!-- COURSE FEE MANAGEMENT -->
+
+    <section class="panel">
+
+      <h2>Course Fee Management</h2>
+
+      <p class="muted">
+        Change the current course fee here. The updated fee will be displayed
+        on the student portal and home page.
+      </p>
+
+      <p class="fee-note">
+        Original fee is kept for reference. You can increase or decrease the
+        current fee whenever required.
+      </p>
+
+      <div id="feeManagement">
+
+        <div class="item">
+          Loading courses...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADD GEOGRAPHY LESSON -->
+
+    <section class="panel">
+
+      <h2>Add Geography Lesson</h2>
+
+      <form id="lessonForm" class="form">
+
+        <label>Course</label>
+
+        <select id="courseSelect" required></select>
+
+
+        <label>Lesson title</label>
+
+        <input
+          id="lessonTitle"
+          value="Latitude and Longitude"
+          required
+        >
+
+
+        <label>Description</label>
+
+        <textarea id="lessonDescription">Understand latitude, longitude, important parallels and meridians, time calculation and Indian Standard Time.</textarea>
+
+
+        <label>Video URL</label>
+
+        <input
+          id="videoUrl"
+          placeholder="Temporary video URL"
+        >
+
+
+        <label>PDF URL</label>
+
+        <input
+          id="pdfUrl"
+          placeholder="Temporary PDF URL"
+        >
+
+
+        <label>
+
+          <input
+            id="published"
+            type="checkbox"
+            checked
+          >
+
+          Publish lesson
+
+        </label>
+
+
+        <button class="btn">
+          Save Lesson to Database
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- EXISTING LESSONS -->
+
+    <section class="panel">
+
+      <h2>Existing Lessons</h2>
+
+      <div id="lessons" class="list"></div>
+
+    </section>
+
+
+  </div>
 
 </main>
-
 
 
 <!-- SUPABASE -->
@@ -303,7 +301,6 @@ function show(text, error = false) {
 }
 
 
-
 /* --------------------------------------------------
    LOGIN SCREEN
 -------------------------------------------------- */
@@ -311,11 +308,12 @@ function show(text, error = false) {
 function showLogin() {
 
   adminLogin.style.display = "";
+
   adminDashboard.style.display = "none";
+
   logout.style.display = "none";
 
 }
-
 
 
 /* --------------------------------------------------
@@ -325,11 +323,12 @@ function showLogin() {
 function showDashboard() {
 
   adminLogin.style.display = "none";
+
   adminDashboard.style.display = "";
+
   logout.style.display = "";
 
 }
-
 
 
 /* --------------------------------------------------
@@ -346,7 +345,16 @@ async function loadCourses() {
 
   if (result.error) {
 
-    show(result.error.message, true);
+    show(
+      "Could not load courses: " +
+      result.error.message,
+      true
+    );
+
+    console.error(
+      "COURSES ERROR:",
+      result.error
+    );
 
     return;
 
@@ -356,7 +364,8 @@ async function loadCourses() {
   const courses = result.data || [];
 
 
-  courseCount.textContent = courses.length;
+  courseCount.textContent =
+    courses.length;
 
 
   /* Course dropdown */
@@ -380,7 +389,9 @@ async function loadCourses() {
   if (courses.length === 0) {
 
     feeManagement.innerHTML =
-      `<div class="item">No courses found.</div>`;
+      `<div class="item">
+        No courses found.
+      </div>`;
 
     return;
 
@@ -423,7 +434,10 @@ async function loadCourses() {
               ${
                 course.original_fee !== null &&
                 course.original_fee !== undefined
-                  ? "₹" + Number(course.original_fee).toLocaleString("en-IN")
+                  ? "₹" +
+                    Number(
+                      course.original_fee
+                    ).toLocaleString("en-IN")
                   : "Not set"
               }
 
@@ -474,7 +488,6 @@ async function loadCourses() {
 }
 
 
-
 /* --------------------------------------------------
    UPDATE COURSE FEE
 -------------------------------------------------- */
@@ -482,43 +495,61 @@ async function loadCourses() {
 async function updateCourseFee(courseId) {
 
   const input =
-    document.getElementById("fee-" + courseId);
+    document.getElementById(
+      "fee-" + courseId
+    );
 
 
   if (!input) {
 
-    show("Fee field not found.", true);
+    show(
+      "Fee field not found.",
+      true
+    );
 
     return;
 
   }
 
 
-  const value = input.value.trim();
+  const value =
+    input.value.trim();
 
 
   if (value === "") {
 
-    show("Please enter a course fee.", true);
+    show(
+      "Please enter a course fee.",
+      true
+    );
 
     return;
 
   }
 
 
-  const fee = Number(value);
+  const fee =
+    Number(value);
 
 
-  if (!Number.isFinite(fee) || fee < 0) {
+  if (
+    !Number.isFinite(fee) ||
+    fee < 0
+  ) {
 
-    show("Please enter a valid fee.", true);
+    show(
+      "Please enter a valid fee.",
+      true
+    );
 
     return;
 
   }
 
 
-  show("Updating course fee...");
+  show(
+    "Updating course fee..."
+  );
 
 
   const result = await sb
@@ -537,18 +568,24 @@ async function updateCourseFee(courseId) {
       true
     );
 
+    console.error(
+      "UPDATE COURSE FEE ERROR:",
+      result.error
+    );
+
     return;
 
   }
 
 
-  show("Course fee updated successfully.");
+  show(
+    "Course fee updated successfully."
+  );
 
 
   await loadCourses();
 
 }
-
 
 
 /* --------------------------------------------------
@@ -565,17 +602,28 @@ async function loadLessons() {
 
   if (result.error) {
 
-    show(result.error.message, true);
+    show(
+      "Could not load lessons: " +
+      result.error.message,
+      true
+    );
+
+    console.error(
+      "LESSONS ERROR:",
+      result.error
+    );
 
     return;
 
   }
 
 
-  const data = result.data || [];
+  const data =
+    result.data || [];
 
 
-  lessonCount.textContent = data.length;
+  lessonCount.textContent =
+    data.length;
 
 
   lessons.innerHTML =
@@ -593,11 +641,13 @@ async function loadLessons() {
         </p>
 
         <span class="status">
+
           ${
             x.published
               ? "Published"
               : "Draft"
           }
+
         </span>
 
       </div>
@@ -613,7 +663,6 @@ async function loadLessons() {
 }
 
 
-
 /* --------------------------------------------------
    LOAD EVERYTHING
 -------------------------------------------------- */
@@ -627,125 +676,142 @@ async function load() {
 }
 
 
-
 /* --------------------------------------------------
    ADMIN LOGIN
 -------------------------------------------------- */
 
-adminLoginForm.onsubmit = async function(e) {
+adminLoginForm.onsubmit =
+  async function(e) {
 
-  e.preventDefault();
+    e.preventDefault();
 
-
-  show("Signing in...");
-
-
-  const result =
-    await sb.auth.signInWithPassword({
-
-      email:
-        adminEmail.value.trim(),
-
-      password:
-        adminPassword.value
-
-    });
-
-
-  if (result.error) {
 
     show(
-      result.error.message,
-      true
+      "Signing in..."
     );
 
-    return;
 
-  }
+    const result =
+      await sb.auth.signInWithPassword({
+
+        email:
+          adminEmail.value.trim(),
+
+        password:
+          adminPassword.value
+
+      });
 
 
-  await boot();
+    if (result.error) {
 
-};
+      show(
+        result.error.message,
+        true
+      );
 
+      console.error(
+        "LOGIN ERROR:",
+        result.error
+      );
+
+      return;
+
+    }
+
+
+    await boot();
+
+  };
 
 
 /* --------------------------------------------------
    ADD LESSON
 -------------------------------------------------- */
 
-lessonForm.onsubmit = async function(e) {
+lessonForm.onsubmit =
+  async function(e) {
 
-  e.preventDefault();
+    e.preventDefault();
 
-
-  show("Saving lesson...");
-
-
-  const result =
-    await sb
-      .from("lessons")
-      .insert({
-
-        course_id:
-          Number(courseSelect.value),
-
-        title:
-          lessonTitle.value.trim(),
-
-        description:
-          lessonDescription.value.trim(),
-
-        video_url:
-          videoUrl.value.trim() || null,
-
-        pdf_url:
-          pdfUrl.value.trim() || null,
-
-        sort_order:
-          1,
-
-        published:
-          published.checked
-
-      });
-
-
-  if (result.error) {
 
     show(
-      result.error.message,
-      true
+      "Saving lesson..."
     );
 
-    return;
 
-  }
+    const result =
+      await sb
+        .from("lessons")
+        .insert({
+
+          course_id:
+            Number(
+              courseSelect.value
+            ),
+
+          title:
+            lessonTitle.value.trim(),
+
+          description:
+            lessonDescription.value.trim(),
+
+          video_url:
+            videoUrl.value.trim() ||
+            null,
+
+          pdf_url:
+            pdfUrl.value.trim() ||
+            null,
+
+          sort_order:
+            1,
+
+          published:
+            published.checked
+
+        });
 
 
-  show(
-    "Lesson saved successfully."
-  );
+    if (result.error) {
+
+      show(
+        result.error.message,
+        true
+      );
+
+      console.error(
+        "ADD LESSON ERROR:",
+        result.error
+      );
+
+      return;
+
+    }
 
 
-  await loadLessons();
+    show(
+      "Lesson saved successfully."
+    );
 
-};
 
+    await loadLessons();
+
+  };
 
 
 /* --------------------------------------------------
    LOGOUT
 -------------------------------------------------- */
 
-logout.onclick = async function() {
+logout.onclick =
+  async function() {
 
-  await sb.auth.signOut();
+    await sb.auth.signOut();
 
-  showLogin();
+    showLogin();
 
-};
-
+  };
 
 
 /* --------------------------------------------------
@@ -755,7 +821,10 @@ logout.onclick = async function() {
 sb.auth.onAuthStateChange(
   function(event) {
 
-    if (event === "SIGNED_OUT") {
+    if (
+      event ===
+      "SIGNED_OUT"
+    ) {
 
       showLogin();
 
@@ -765,15 +834,41 @@ sb.auth.onAuthStateChange(
 );
 
 
-
 /* --------------------------------------------------
    BOOT
 -------------------------------------------------- */
 
 async function boot() {
 
+  console.log(
+    "LakshyaSetu Admin boot started..."
+  );
+
+
+  /* Get current session */
+
   const sessionResult =
     await sb.auth.getSession();
+
+
+  if (sessionResult.error) {
+
+    show(
+      "Session error: " +
+      sessionResult.error.message,
+      true
+    );
+
+    console.error(
+      "SESSION ERROR:",
+      sessionResult.error
+    );
+
+    showLogin();
+
+    return;
+
+  }
 
 
   const session =
@@ -786,7 +881,17 @@ async function boot() {
     session.user;
 
 
+  console.log(
+    "Current user:",
+    user
+  );
+
+
   if (!user) {
+
+    console.log(
+      "No authenticated user."
+    );
 
     showLogin();
 
@@ -797,6 +902,11 @@ async function boot() {
 
   /* Verify profile */
 
+  console.log(
+    "Checking admin profile..."
+  );
+
+
   const profile =
     await sb
       .from("profiles")
@@ -805,25 +915,91 @@ async function boot() {
       .single();
 
 
+  console.log(
+    "Profile result:",
+    profile
+  );
+
+
+  /*
+     IMPORTANT:
+     Show the REAL Supabase error.
+  */
+
   if (profile.error) {
 
     show(
-      "Could not verify admin access. Please refresh and try again.",
+      "Admin verification failed: " +
+      profile.error.message +
+      " | Code: " +
+      (
+        profile.error.code ||
+        "unknown"
+      ),
       true
     );
 
+
+    console.error(
+      "ADMIN PROFILE ERROR:",
+      profile.error
+    );
+
+
+    return;
+
+  }
+
+
+  console.log(
+    "Profile data:",
+    profile.data
+  );
+
+
+  if (
+    !profile.data ||
+    profile.data.role !== "admin"
+  ) {
+
+    show(
+      "This account is not an admin account.",
+      true
+    );
+
+
+    console.warn(
+      "User role is not admin:",
+      profile.data
+    );
+
+
+    setTimeout(
+      function() {
+
+        location.href =
+          "student.html";
+
+      },
+      2000
+    );
+
+
     return;
 
   }
 
 
-  if (profile.data.role !== "admin") {
+  /* Admin verified */
 
-    location.href = "student.html";
+  console.log(
+    "ADMIN VERIFIED SUCCESSFULLY"
+  );
 
-    return;
 
-  }
+  show(
+    "Admin access verified."
+  );
 
 
   showDashboard();
@@ -832,7 +1008,6 @@ async function boot() {
   await load();
 
 }
-
 
 
 /* --------------------------------------------------
@@ -844,4 +1019,5 @@ boot();
 </script>
 
 </body>
+
 </html>

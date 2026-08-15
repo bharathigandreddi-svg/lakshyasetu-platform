@@ -2,14 +2,20 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
   <title>Student | LakshyaSetu</title>
 
   <link rel="stylesheet" href="styles.css">
 
   <style>
+
     .page-header {
       margin-bottom: 24px;
     }
@@ -28,7 +34,10 @@
 
     .course-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(240px, 1fr)
+      );
       gap: 16px;
       margin-top: 20px;
     }
@@ -46,7 +55,8 @@
 
     .course-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.08);
     }
 
     .course-card h3 {
@@ -236,7 +246,52 @@
       cursor: pointer;
     }
 
+    .purchase-card {
+      padding: 24px;
+      border-radius: 14px;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
+      margin-top: 20px;
+    }
+
+    .purchase-card h2 {
+      margin-top: 0;
+      color: #10233f;
+    }
+
+    .purchase-card p {
+      color: #667085;
+      line-height: 1.6;
+    }
+
+    .purchase-btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 11px 18px;
+      border-radius: 8px;
+      background: #2457a6;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .purchase-btn:hover {
+      background: #1d4789;
+    }
+
+    .access-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 20px;
+      background: #eaf7ee;
+      color: #187a3d;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     @media (max-width: 600px) {
+
       .topic-header {
         padding: 15px;
       }
@@ -248,12 +303,16 @@
       .topic-content {
         padding: 0 15px 15px;
       }
+
     }
+
   </style>
+
 </head>
 
 
 <body>
+
 
 <header class="top">
 
@@ -262,7 +321,10 @@
     <small>Student Dashboard</small>
   </div>
 
-  <button id="logout" class="btn alt logout-btn">
+  <button
+    id="logout"
+    class="btn alt logout-btn"
+  >
     Logout
   </button>
 
@@ -281,7 +343,10 @@
         Loading...
       </h1>
 
-      <p id="courseDesc" class="muted"></p>
+      <p
+        id="courseDesc"
+        class="muted"
+      ></p>
 
     </div>
 
@@ -304,10 +369,16 @@
 
 <script>
 
-const sb = window.supabase.createClient(
-  LAKSHYASETU_CONFIG.supabaseUrl,
-  LAKSHYASETU_CONFIG.supabasePublishableKey
-);
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const sb =
+  window.supabase.createClient(
+    LAKSHYASETU_CONFIG.supabaseUrl,
+    LAKSHYASETU_CONFIG.supabasePublishableKey
+  );
 
 
 /* =====================================================
@@ -337,6 +408,17 @@ const logout =
 
 
 /* =====================================================
+   GLOBAL USER
+===================================================== */
+
+let currentUser = null;
+
+let currentCourse = null;
+
+let courseAccess = false;
+
+
+/* =====================================================
    HELPERS
 ===================================================== */
 
@@ -354,7 +436,8 @@ function escapeHtml(value) {
 
 function formatDuration(seconds) {
 
-  const total = Number(seconds || 0);
+  const total =
+    Number(seconds || 0);
 
   if (!total) {
     return "";
@@ -395,7 +478,6 @@ function renderCourseFee(course) {
   const current =
     Number(course.current_fee || 0);
 
-
   if (!original && !current) {
 
     feeArea.innerHTML = "";
@@ -403,7 +485,6 @@ function renderCourseFee(course) {
     return;
 
   }
-
 
   let html = `
     <div class="fee-card">
@@ -458,7 +539,7 @@ function renderCourseFee(course) {
 
 
   html += `
-    </div>
+      </div>
   `;
 
 
@@ -497,12 +578,151 @@ async function getCourse(slug) {
 
 
 /* =====================================================
+   CHECK COURSE PURCHASE
+===================================================== */
+
+async function checkCourseAccess(
+  userId,
+  courseId
+) {
+
+  const result =
+    await sb
+      .from("memberships")
+      .select(
+        "id,user_id,course_id,status,payment_status,expires_at,paid_at"
+      )
+      .eq("user_id", userId)
+      .eq("course_id", courseId)
+      .eq("payment_status", "paid")
+      .order("created_at", {
+        ascending: false
+      });
+
+
+  if (result.error) {
+
+    throw new Error(
+      result.error.message
+    );
+
+  }
+
+
+  const memberships =
+    result.data || [];
+
+
+  const now =
+    new Date();
+
+
+  const validMembership =
+    memberships.find(membership => {
+
+      if (
+        membership.payment_status !== "paid"
+      ) {
+        return false;
+      }
+
+
+      if (
+        membership.status &&
+        membership.status !== "active"
+      ) {
+        return false;
+      }
+
+
+      if (
+        membership.expires_at
+      ) {
+
+        const expiry =
+          new Date(
+            membership.expires_at
+          );
+
+        if (
+          expiry <= now
+        ) {
+          return false;
+        }
+
+      }
+
+
+      return true;
+
+    });
+
+
+  return !!validMembership;
+
+}
+
+
+/* =====================================================
+   PURCHASE REQUIRED SCREEN
+===================================================== */
+
+function showPurchaseRequired(course) {
+
+  courseAccess = false;
+
+  subjectArea.innerHTML = "";
+
+  topicArea.innerHTML = "";
+
+
+  renderCourseFee(course);
+
+
+  subjectArea.innerHTML = `
+
+    <div class="purchase-card">
+
+      <h2>
+        Course Access Required
+      </h2>
+
+      <p>
+        You have not purchased this course yet.
+        Please purchase the course from the
+        LakshyaSetu Home page to access its
+        subjects, topics and video lessons.
+      </p>
+
+      <p>
+        After successful payment, login again
+        with your student account and the
+        purchased course subjects will appear
+        here.
+      </p>
+
+      <a
+        class="purchase-btn"
+        href="index.html"
+      >
+        Go to LakshyaSetu Home
+      </a>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
    LOAD COURSE SUBJECTS
 ===================================================== */
 
 async function loadSubjects(courseId) {
 
   subjectArea.innerHTML = `
+
     <h2 class="section-title">
       Subjects
     </h2>
@@ -510,6 +730,7 @@ async function loadSubjects(courseId) {
     <div class="status-message">
       Loading subjects...
     </div>
+
   `;
 
 
@@ -527,11 +748,19 @@ async function loadSubjects(courseId) {
   if (result.error) {
 
     subjectArea.innerHTML = `
+
       <div class="error-message">
+
         Unable to load subjects.
+
         <br>
-        ${escapeHtml(result.error.message)}
+
+        ${escapeHtml(
+          result.error.message
+        )}
+
       </div>
+
     `;
 
     return;
@@ -546,6 +775,7 @@ async function loadSubjects(courseId) {
   if (!subjects.length) {
 
     subjectArea.innerHTML = `
+
       <h2 class="section-title">
         Subjects
       </h2>
@@ -553,6 +783,7 @@ async function loadSubjects(courseId) {
       <div class="status-message">
         No published subjects are available yet.
       </div>
+
     `;
 
     return;
@@ -566,13 +797,19 @@ async function loadSubjects(courseId) {
       Subjects
     </h2>
 
+    <div class="access-badge">
+      Course Access Active
+    </div>
+
     <div class="course-grid">
 
       ${subjects.map(subject => `
 
         <a
           class="course-card"
-          href="student.html?course=appsc-group-1&subject=${subject.subject_id}"
+          href="student.html?course=${encodeURIComponent(
+            currentCourse.slug
+          )}&subject=${subject.id}"
         >
 
           <h3>
@@ -592,6 +829,7 @@ async function loadSubjects(courseId) {
       `).join("")}
 
     </div>
+
   `;
 
 }
@@ -603,7 +841,7 @@ async function loadSubjects(courseId) {
 
 async function getCourseSubject(
   courseId,
-  subjectId
+  courseSubjectId
 ) {
 
   const result =
@@ -611,7 +849,7 @@ async function getCourseSubject(
       .from("course_subjects")
       .select("*")
       .eq("course_id", courseId)
-      .eq("subject_id", subjectId)
+      .eq("id", courseSubjectId)
       .eq("published", true)
       .single();
 
@@ -634,9 +872,12 @@ async function getCourseSubject(
    LOAD TOPICS
 ===================================================== */
 
-async function loadTopics(subjectId) {
+async function loadTopics(
+  courseSubjectId
+) {
 
   topicArea.innerHTML = `
+
     <h2 class="section-title">
       Topics
     </h2>
@@ -644,14 +885,37 @@ async function loadTopics(subjectId) {
     <div class="status-message">
       Loading topics...
     </div>
+
   `;
+
+
+  /*
+     IMPORTANT
+
+     In your current database:
+
+     subject_topics.subject_id
+     points to
+     course_subjects.id
+
+     Example:
+
+     course_subjects.id = 27
+     subject_topics.subject_id = 27
+
+     Therefore we use courseSubjectId here.
+  */
 
 
   const result =
     await sb
       .from("subject_topics")
       .select("*")
-      .eq("subject_id", subjectId)
+      .eq(
+        "subject_id",
+        courseSubjectId
+      )
+      .eq("published", true)
       .order("sort_order", {
         ascending: true
       });
@@ -660,11 +924,19 @@ async function loadTopics(subjectId) {
   if (result.error) {
 
     topicArea.innerHTML = `
+
       <div class="error-message">
+
         Unable to load topics.
+
         <br>
-        ${escapeHtml(result.error.message)}
+
+        ${escapeHtml(
+          result.error.message
+        )}
+
       </div>
+
     `;
 
     return;
@@ -679,6 +951,7 @@ async function loadTopics(subjectId) {
   if (!topics.length) {
 
     topicArea.innerHTML = `
+
       <h2 class="section-title">
         Topics
       </h2>
@@ -686,6 +959,7 @@ async function loadTopics(subjectId) {
       <div class="status-message">
         No topics have been added yet.
       </div>
+
     `;
 
     return;
@@ -700,11 +974,14 @@ async function loadTopics(subjectId) {
     </h2>
 
     <div id="topicsList"></div>
+
   `;
 
 
   const topicsList =
-    document.getElementById("topicsList");
+    document.getElementById(
+      "topicsList"
+    );
 
 
   topicsList.innerHTML =
@@ -724,7 +1001,9 @@ async function loadTopics(subjectId) {
             </span>
 
             <span class="topic-title">
-              ${escapeHtml(topic.title)}
+              ${escapeHtml(
+                topic.title
+              )}
             </span>
 
           </div>
@@ -744,7 +1023,9 @@ async function loadTopics(subjectId) {
           class="topic-content"
         >
 
-          <div id="videos-${topic.id}">
+          <div
+            id="videos-${topic.id}"
+          >
 
             <div class="status-message">
               Loading videos...
@@ -772,6 +1053,7 @@ async function toggleTopic(topicId) {
       "topic-" + topicId
     );
 
+
   const arrow =
     document.getElementById(
       "arrow-" + topicId
@@ -784,12 +1066,16 @@ async function toggleTopic(topicId) {
 
 
   const isOpen =
-    content.classList.contains("open");
+    content.classList.contains(
+      "open"
+    );
 
 
   if (isOpen) {
 
-    content.classList.remove("open");
+    content.classList.remove(
+      "open"
+    );
 
     arrow.textContent = "+";
 
@@ -798,7 +1084,9 @@ async function toggleTopic(topicId) {
   }
 
 
-  content.classList.add("open");
+  content.classList.add(
+    "open"
+  );
 
   arrow.textContent = "−";
 
@@ -826,9 +1114,11 @@ async function loadVideos(topicId) {
 
 
   container.innerHTML = `
+
     <div class="status-message">
       Loading videos...
     </div>
+
   `;
 
 
@@ -846,11 +1136,19 @@ async function loadVideos(topicId) {
   if (result.error) {
 
     container.innerHTML = `
+
       <div class="error-message">
+
         Unable to load videos.
+
         <br>
-        ${escapeHtml(result.error.message)}
+
+        ${escapeHtml(
+          result.error.message
+        )}
+
       </div>
+
     `;
 
     return;
@@ -865,9 +1163,12 @@ async function loadVideos(topicId) {
   if (!videos.length) {
 
     container.innerHTML = `
+
       <div class="status-message">
-        No published videos are available for this topic yet.
+        No published videos are available
+        for this topic yet.
       </div>
+
     `;
 
     return;
@@ -900,13 +1201,17 @@ async function loadVideos(topicId) {
       if (video.video_url) {
 
         videoContent = `
+
           <video
             class="video-player"
             controls
             preload="metadata"
-            src="${escapeHtml(video.video_url)}"
+            src="${escapeHtml(
+              video.video_url
+            )}"
           >
           </video>
+
         `;
 
       }
@@ -914,9 +1219,11 @@ async function loadVideos(topicId) {
       else {
 
         videoContent = `
+
           <div class="status-message">
             Video will be available soon.
           </div>
+
         `;
 
       }
@@ -929,7 +1236,9 @@ async function loadVideos(topicId) {
           <div class="video-title">
 
             ${index + 1}.
-            ${escapeHtml(video.title)}
+            ${escapeHtml(
+              video.title
+            )}
 
             ${trialBadge}
 
@@ -970,7 +1279,9 @@ function showBackButton(type) {
 
       <a
         class="btn alt back-btn"
-        href="student.html?course=appsc-group-1"
+        href="student.html?course=${encodeURIComponent(
+          currentCourse.slug
+        )}"
       >
         ← Back to Subjects
       </a>
@@ -994,7 +1305,7 @@ function showBackButton(type) {
 
 async function openSubject(
   course,
-  subjectId
+  courseSubjectId
 ) {
 
   showBackButton("subject");
@@ -1005,10 +1316,29 @@ async function openSubject(
 
   try {
 
+    /*
+       SECURITY / ACCESS CHECK
+
+       Even if somebody manually changes
+       the URL, subjects should not open
+       unless the course is purchased.
+    */
+
+    if (!courseAccess) {
+
+      showPurchaseRequired(
+        course
+      );
+
+      return;
+
+    }
+
+
     const subject =
       await getCourseSubject(
         course.id,
-        subjectId
+        courseSubjectId
       );
 
 
@@ -1028,19 +1358,33 @@ async function openSubject(
       <div class="subject-header">
 
         <h2>
-          ${escapeHtml(subject.title)}
+          ${escapeHtml(
+            subject.title
+          )}
         </h2>
 
         <p class="muted">
-          Select a topic to view its available video lessons.
+          Select a topic to view its
+          available video lessons.
         </p>
 
       </div>
+
     `;
 
 
+    /*
+       IMPORTANT:
+
+       subject_topics.subject_id
+       = course_subjects.id
+
+       So pass subject.id,
+       NOT subject.subject_id.
+    */
+
     await loadTopics(
-      subject.subject_id
+      subject.id
     );
 
   }
@@ -1048,11 +1392,19 @@ async function openSubject(
   catch (error) {
 
     topicArea.innerHTML = `
+
       <div class="error-message">
+
         Subject could not be loaded.
+
         <br>
-        ${escapeHtml(error.message)}
+
+        ${escapeHtml(
+          error.message
+        )}
+
       </div>
+
     `;
 
   }
@@ -1077,13 +1429,75 @@ async function openCourse(course) {
     course.description || "";
 
 
-  renderCourseFee(course);
+  /*
+     FIRST CHECK PAYMENT
+  */
+
+  subjectArea.innerHTML = `
+
+    <div class="status-message">
+      Checking your course access...
+    </div>
+
+  `;
 
 
   topicArea.innerHTML = "";
 
 
-  await loadSubjects(course.id);
+  try {
+
+    courseAccess =
+      await checkCourseAccess(
+        currentUser.id,
+        course.id
+      );
+
+
+    if (!courseAccess) {
+
+      showPurchaseRequired(
+        course
+      );
+
+      return;
+
+    }
+
+
+    /*
+       Student has purchased the course.
+       Now subjects can be displayed.
+    */
+
+    feeArea.innerHTML = "";
+
+
+    await loadSubjects(
+      course.id
+    );
+
+  }
+
+  catch (error) {
+
+    subjectArea.innerHTML = `
+
+      <div class="error-message">
+
+        Unable to verify course access.
+
+        <br>
+
+        ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  }
 
 }
 
@@ -1111,6 +1525,10 @@ async function boot() {
 
   try {
 
+    /*
+       CHECK LOGIN
+    */
+
     const userResult =
       await sb.auth.getUser();
 
@@ -1128,6 +1546,14 @@ async function boot() {
     }
 
 
+    currentUser =
+      userResult.data.user;
+
+
+    /*
+       READ URL
+    */
+
     const params =
       new URLSearchParams(
         location.search
@@ -1143,13 +1569,56 @@ async function boot() {
       params.get("subject");
 
 
+    /*
+       GET COURSE
+    */
+
     const course =
       await getCourse(
         courseSlug
       );
 
 
+    currentCourse =
+      course;
+
+
+    /*
+       IF SUBJECT IS SELECTED
+    */
+
     if (subjectId) {
+
+      /*
+         Check purchase before opening
+         the subject directly.
+      */
+
+      courseAccess =
+        await checkCourseAccess(
+          currentUser.id,
+          course.id
+        );
+
+
+      if (!courseAccess) {
+
+        showBackButton("course");
+
+        courseTitle.textContent =
+          course.title;
+
+        courseDesc.textContent =
+          course.description || "";
+
+        showPurchaseRequired(
+          course
+        );
+
+        return;
+
+      }
+
 
       await openSubject(
         course,
@@ -1157,6 +1626,10 @@ async function boot() {
       );
 
     }
+
+    /*
+       OTHERWISE OPEN COURSE
+    */
 
     else {
 
@@ -1190,7 +1663,9 @@ async function boot() {
 
         <br><br>
 
-        ${escapeHtml(error.message)}
+        ${escapeHtml(
+          error.message
+        )}
 
       </div>
 
@@ -1207,7 +1682,10 @@ async function boot() {
 
 boot();
 
+
 </script>
 
+
 </body>
+
 </html>

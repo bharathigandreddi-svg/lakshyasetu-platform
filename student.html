@@ -1,3 +1,304 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Student | LakshyaSetu</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .page-header {
+      padding: 34px 0 10px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      color: #10233f;
+    }
+
+    .breadcrumb {
+      margin-bottom: 18px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .breadcrumb a {
+      text-decoration: none;
+    }
+
+    .course-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: #e8f6f5;
+      color: #087477;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .subject-card {
+      background: #fff;
+      border: 1px solid #e4e8ef;
+      border-radius: 16px;
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s;
+      box-shadow: 0 5px 18px rgba(16, 35, 63, 0.04);
+    }
+
+    .subject-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(16, 35, 63, 0.09);
+    }
+
+    .subject-number {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f8b8d;
+      margin-bottom: 8px;
+    }
+
+    .subject-card h3 {
+      margin: 0 0 10px;
+      color: #10233f;
+      font-size: 19px;
+    }
+
+    .subject-card p {
+      margin: 0 0 14px;
+      line-height: 1.5;
+    }
+
+    .topic-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .topic-card {
+      background: #fff;
+      border: 1px solid #e4e8ef;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(16, 35, 63, 0.03);
+    }
+
+    .topic-card h3 {
+      margin: 0 0 7px;
+      color: #10233f;
+    }
+
+    .topic-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .topic-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .topic-number {
+      min-width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e8f6f5;
+      color: #087477;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .topic-left {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+    }
+
+    .video-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .video-card {
+      background: #fff;
+      border: 1px solid #e4e8ef;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .video-card h3 {
+      margin: 0 0 10px;
+      color: #10233f;
+    }
+
+    .video-card video {
+      width: 100%;
+      max-height: 560px;
+      border-radius: 10px;
+      background: #000;
+      margin-top: 12px;
+    }
+
+    .trial-badge {
+      display: inline-block;
+      margin-left: 7px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #fff4d6;
+      color: #8a5a00;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .locked-badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #f2f4f7;
+      color: #667085;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .empty-card {
+      background: #fff;
+      border: 1px dashed #cbd3df;
+      border-radius: 14px;
+      padding: 25px;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .fee-card {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 14px;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
+    }
+
+    .fee-label {
+      font-size: 14px;
+      color: #667085;
+      margin-bottom: 6px;
+    }
+
+    .old-fee {
+      text-decoration: line-through;
+      color: #777;
+      margin-right: 12px;
+    }
+
+    .current-fee {
+      font-size: 28px;
+      font-weight: 700;
+      color: #10233f;
+    }
+
+    .section-title {
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: #10233f;
+    }
+
+    .error-card {
+      padding: 24px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #f1c4c4;
+      color: #b42318;
+      margin-top: 20px;
+    }
+
+    .loading {
+      padding: 30px;
+      text-align: center;
+      color: #667085;
+    }
+
+    @media (max-width: 900px) {
+      .subject-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .subject-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topic-top {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="top">
+
+  <div class="brand">
+    LakshyaSetu
+    <small>Student Dashboard</small>
+  </div>
+
+  <button id="logout" class="btn alt">
+    Logout
+  </button>
+
+</header>
+
+
+<main class="wrap">
+
+  <section class="panel">
+
+    <div id="backArea"></div>
+
+    <div id="pageArea">
+
+      <div class="loading">
+        Loading course...
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+
 <script>
 
 const sb = window.supabase.createClient(
@@ -5,98 +306,173 @@ const sb = window.supabase.createClient(
   LAKSHYASETU_CONFIG.supabasePublishableKey
 );
 
-const courseTitle = document.getElementById("courseTitle");
-const courseDesc = document.getElementById("courseDesc");
-const subjectArea = document.getElementById("subjectArea");
-const lessonArea = document.getElementById("lessonArea");
-const faqArea = document.getElementById("faqArea");
-const backArea = document.getElementById("backArea");
-const feeArea = document.getElementById("feeArea");
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+const pageArea =
+  document.getElementById("pageArea");
+
+const backArea =
+  document.getElementById("backArea");
+
 
 function escapeHtml(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
-async function boot() {
 
-  const userResult = await sb.auth.getUser();
+function getParams() {
 
-  if (!userResult.data.user) {
-    location.href = "login.html";
-    return;
+  const params =
+    new URLSearchParams(window.location.search);
+
+  return {
+    course: params.get("course") || "appsc-group-1",
+    subject: params.get("subject"),
+    topic: params.get("topic")
+  };
+
+}
+
+
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
+
+async function checkLogin() {
+
+  const result =
+    await sb.auth.getUser();
+
+  if (!result.data.user) {
+
+    window.location.href =
+      "login.html";
+
+    return false;
+
   }
 
-  const params = new URLSearchParams(location.search);
+  return true;
 
-  const courseSlug =
-    params.get("course") || "appsc-group-1";
+}
 
-  const subjectId =
-    params.get("subject");
 
-  const courseResult = await sb
+/* =====================================================
+   GET COURSE
+===================================================== */
+
+async function getCourse(slug) {
+
+  const result = await sb
     .from("courses")
     .select("*")
-    .eq("slug", courseSlug)
+    .eq("slug", slug)
     .eq("published", true)
     .single();
 
-  if (courseResult.error) {
+  if (result.error) {
 
-    courseTitle.textContent = "Course not found";
-
-    courseDesc.textContent =
-      "The requested course is not currently available.";
-
-    console.error(courseResult.error);
-
-    return;
-  }
-
-  const course = courseResult.data;
-
-  courseTitle.textContent =
-    course.title;
-
-  courseDesc.textContent =
-    course.description || "";
-
-  if (subjectId) {
-
-    await loadSubjectPage(
-      course.id,
-      Number(subjectId)
+    console.error(
+      "Course error:",
+      result.error
     );
 
-    renderBackButton();
+    return null;
+
+  }
+
+  return result.data;
+
+}
+
+
+/* =====================================================
+   COURSE FEE
+===================================================== */
+
+function renderFee(course) {
+
+  const original =
+    Number(course.original_fee || 0);
+
+  const current =
+    Number(course.current_fee || 0);
+
+  if (!original && !current) {
+
+    return "";
+
+  }
+
+  let html = `
+    <div class="fee-card">
+
+      <div class="fee-label">
+        Course Fee
+      </div>
+  `;
+
+  if (
+    original &&
+    current &&
+    original !== current
+  ) {
+
+    html += `
+      <div>
+
+        <span class="old-fee">
+          ₹${original.toLocaleString("en-IN")}
+        </span>
+
+        <span class="current-fee">
+          ₹${current.toLocaleString("en-IN")}
+        </span>
+
+      </div>
+    `;
 
   } else {
 
-    await loadSubjects(course.id);
+    const amount =
+      current || original;
 
-    renderFAQs();
+    html += `
+      <div class="current-fee">
+        ₹${amount.toLocaleString("en-IN")}
+      </div>
+    `;
 
   }
+
+  html += `
+    </div>
+  `;
+
+  return html;
+
 }
+
+
+/* =====================================================
+   LOAD SUBJECTS
+===================================================== */
 
 async function loadSubjects(courseId) {
 
   const result = await sb
     .from("course_subjects")
-    .select(`
-      id,
-      title,
-      slug,
-      description,
-      sort_order,
-      published,
-      subject_fee
-    `)
+    .select("id,title,sort_order,published")
     .eq("course_id", courseId)
     .eq("published", true)
     .order("sort_order")
@@ -104,160 +480,267 @@ async function loadSubjects(courseId) {
 
   if (result.error) {
 
-    subjectArea.innerHTML = `
-      <div class="error-card">
-        Unable to load subjects.
-      </div>
-    `;
+    console.error(
+      "Subjects error:",
+      result.error
+    );
 
-    console.error(result.error);
+    return [];
 
-    return;
   }
 
+  return result.data || [];
+
+}
+
+
+/* =====================================================
+   LOAD TOPIC COUNTS
+===================================================== */
+
+async function loadTopicCounts(subjectIds) {
+
+  if (!subjectIds.length) {
+
+    return {};
+
+  }
+
+  const result = await sb
+    .from("subject_topics")
+    .select("id,subject_id")
+    .in("subject_id", subjectIds);
+
+  if (result.error) {
+
+    console.error(
+      "Topic count error:",
+      result.error
+    );
+
+    return {};
+
+  }
+
+  const counts = {};
+
+  (result.data || []).forEach(topic => {
+
+    counts[topic.subject_id] =
+      (counts[topic.subject_id] || 0) + 1;
+
+  });
+
+  return counts;
+
+}
+
+
+/* =====================================================
+   COURSE PAGE
+===================================================== */
+
+async function renderCoursePage(course) {
+
+  backArea.innerHTML = "";
+
   const subjects =
-    result.data || [];
+    await loadSubjects(course.id);
+
+  const subjectIds =
+    subjects.map(x => x.id);
+
+  const topicCounts =
+    await loadTopicCounts(subjectIds);
+
+
+  let subjectHtml = "";
 
   if (!subjects.length) {
 
-    subjectArea.innerHTML = `
-      <div class="info-card">
-        <h3>No published subjects yet.</h3>
+    subjectHtml = `
+      <div class="empty-card">
+
+        <h3>No subjects available yet</h3>
+
         <p class="muted">
           Subjects will appear here once they are published.
         </p>
+
       </div>
     `;
 
-    return;
+  } else {
+
+    subjectHtml = `
+      <div class="subject-grid">
+
+        ${subjects.map((subject, index) => {
+
+          const count =
+            topicCounts[subject.id] || 0;
+
+          return `
+
+            <a
+              class="subject-card"
+              href="student.html?course=${encodeURIComponent(course.slug)}&subject=${subject.id}"
+            >
+
+              <div class="subject-number">
+                Subject ${index + 1}
+              </div>
+
+              <h3>
+                ${escapeHtml(subject.title)}
+              </h3>
+
+              <p class="muted">
+                ${count} topic${count === 1 ? "" : "s"}
+              </p>
+
+              <span class="status">
+                Open Subject
+              </span>
+
+            </a>
+
+          `;
+
+        }).join("")}
+
+      </div>
+    `;
+
   }
 
-  subjectArea.innerHTML = `
 
-    <h2 class="section-title">
-      APPSC Group 1 Subjects
-    </h2>
+  pageArea.innerHTML = `
 
-    <div class="course-grid">
+    <div class="page-header">
 
-      ${subjects.map(subject => `
+      <h1>
+        ${escapeHtml(course.title)}
+      </h1>
 
-        <a
-          class="course-card"
-          href="student.html?course=appsc-group-1&subject=${subject.id}"
-        >
+      <p class="muted">
+        ${escapeHtml(course.description || "")}
+      </p>
 
-          <h3>
-            ${escapeHtml(subject.title)}
-          </h3>
+      <div class="course-meta">
 
-          <p class="muted">
-            ${escapeHtml(
-              subject.description || "Open subject"
-            )}
-          </p>
+        <span class="badge">
+          ${subjects.length} Subjects
+        </span>
 
-        </a>
+        <span class="badge">
+          APPSC Group 1
+        </span>
 
-      `).join("")}
+      </div>
 
     </div>
+
+
+    ${renderFee(course)}
+
+
+    <h2 class="section-title">
+      Course Subjects
+    </h2>
+
+    ${subjectHtml}
+
+
+    <div class="info-card">
+
+      <h3>
+        LakshyaSetu Learning
+      </h3>
+
+      <p class="muted">
+        Select a subject to view its topics and available video lessons.
+      </p>
+
+    </div>
+
   `;
+
 }
 
-async function loadSubjectPage(
-  courseId,
-  subjectId
-) {
 
-  const subjectResult = await sb
+/* =====================================================
+   LOAD SUBJECT
+===================================================== */
+
+async function getSubject(courseId, subjectId) {
+
+  const result = await sb
     .from("course_subjects")
-    .select(`
-      id,
-      course_id,
-      title,
-      description,
-      sort_order,
-      published
-    `)
+    .select("id,course_id,title,sort_order,published")
     .eq("id", subjectId)
     .eq("course_id", courseId)
     .eq("published", true)
     .single();
 
-  if (subjectResult.error) {
+  if (result.error) {
 
-    subjectArea.innerHTML = `
-      <div class="error-card">
-        Subject not found.
-      </div>
-    `;
+    console.error(
+      "Subject error:",
+      result.error
+    );
 
-    console.error(subjectResult.error);
+    return null;
 
-    return;
   }
 
-  const subject =
-    subjectResult.data;
+  return result.data;
 
-  courseTitle.textContent =
-    subject.title;
+}
 
-  courseDesc.textContent =
-    subject.description || "";
 
-  const topicsResult = await sb
+/* =====================================================
+   LOAD TOPICS
+===================================================== */
+
+async function loadTopics(subjectId) {
+
+  const result = await sb
     .from("subject_topics")
-    .select(`
-      id,
-      title,
-      slug,
-      sort_order
-    `)
+    .select("id,subject_id,title,slug,sort_order")
     .eq("subject_id", subjectId)
     .order("sort_order")
     .order("id");
 
-  if (topicsResult.error) {
+  if (result.error) {
 
-    subjectArea.innerHTML = `
-      <div class="error-card">
-        Unable to load topics.
-      </div>
-    `;
+    console.error(
+      "Topics error:",
+      result.error
+    );
 
-    console.error(topicsResult.error);
+    return [];
 
-    return;
   }
 
-  const topics =
-    topicsResult.data || [];
+  return result.data || [];
 
-  if (!topics.length) {
+}
 
-    subjectArea.innerHTML = `
-      <div class="info-card">
 
-        <h3>
-          No topics available yet.
-        </h3>
+/* =====================================================
+   LOAD PUBLISHED VIDEOS
+===================================================== */
 
-        <p class="muted">
-          Topics will appear here once they are added.
-        </p>
+async function loadVideos(topicIds) {
 
-      </div>
-    `;
+  if (!topicIds.length) {
 
-    return;
+    return [];
+
   }
 
-  const topicIds =
-    topics.map(topic => topic.id);
-
-  const videosResult = await sb
+  const result = await sb
     .from("topic_videos")
     .select(`
       id,
@@ -275,210 +758,691 @@ async function loadSubjectPage(
     .order("sort_order")
     .order("id");
 
-  if (videosResult.error) {
-    console.error(videosResult.error);
+  if (result.error) {
+
+    console.error(
+      "Videos error:",
+      result.error
+    );
+
+    return [];
+
   }
 
-  const videos =
-    videosResult.data || [];
+  return result.data || [];
 
-  const videosByTopic = {};
+}
+
+
+/* =====================================================
+   SUBJECT PAGE
+===================================================== */
+
+async function renderSubjectPage(course, subject) {
+
+  backArea.innerHTML = `
+
+    <a
+      class="btn alt"
+      href="student.html?course=${encodeURIComponent(course.slug)}"
+    >
+      Back to ${escapeHtml(course.title)}
+    </a>
+
+  `;
+
+
+  const topics =
+    await loadTopics(subject.id);
+
+  const topicIds =
+    topics.map(x => x.id);
+
+  const videos =
+    await loadVideos(topicIds);
+
+
+  const videoMap = {};
 
   videos.forEach(video => {
 
-    if (!videosByTopic[video.topic_id]) {
-      videosByTopic[video.topic_id] = [];
+    if (!videoMap[video.topic_id]) {
+
+      videoMap[video.topic_id] = [];
+
     }
 
-    videosByTopic[video.topic_id].push(video);
+    videoMap[video.topic_id].push(video);
 
   });
 
-  subjectArea.innerHTML = `
+
+  let topicHtml = "";
+
+
+  if (!topics.length) {
+
+    topicHtml = `
+
+      <div class="empty-card">
+
+        <h3>
+          No topics available yet
+        </h3>
+
+        <p class="muted">
+          Topics will appear here once they are added.
+        </p>
+
+      </div>
+
+    `;
+
+  } else {
+
+    topicHtml = `
+
+      <div class="topic-list">
+
+        ${topics.map((topic, index) => {
+
+          const topicVideos =
+            videoMap[topic.id] || [];
+
+          return `
+
+            <div class="topic-card">
+
+              <div class="topic-top">
+
+                <div class="topic-left">
+
+                  <div class="topic-number">
+                    ${index + 1}
+                  </div>
+
+                  <div>
+
+                    <h3>
+                      ${escapeHtml(topic.title)}
+                    </h3>
+
+                    <p class="muted">
+                      ${topicVideos.length}
+                      published video${topicVideos.length === 1 ? "" : "s"}
+                    </p>
+
+                  </div>
+
+                </div>
+
+
+                ${
+                  topicVideos.length
+                  ?
+                  `
+                    <span class="status">
+                      Available
+                    </span>
+                  `
+                  :
+                  `
+                    <span class="locked-badge">
+                      Coming Soon
+                    </span>
+                  `
+                }
+
+              </div>
+
+
+              ${
+                topicVideos.length
+                ?
+                `
+                  <div class="video-list">
+
+                    ${topicVideos.map(video => `
+
+                      <div class="video-card">
+
+                        <h3>
+
+                          ${escapeHtml(video.title)}
+
+                          ${
+                            video.is_trial
+                            ?
+                            `
+                              <span class="trial-badge">
+                                Free Trial
+                              </span>
+                            `
+                            :
+                            ""
+                          }
+
+                        </h3>
+
+
+                        ${
+                          video.video_url
+                          ?
+                          `
+                            <video
+                              controls
+                              preload="metadata"
+                              ${
+                                video.thumbnail_url
+                                ?
+                                `poster="${escapeHtml(video.thumbnail_url)}"`
+                                :
+                                ""
+                              }
+                              src="${escapeHtml(video.video_url)}"
+                            >
+                            </video>
+                          `
+                          :
+                          `
+                            <div class="empty-card">
+
+                              <strong>
+                                Video URL not added yet
+                              </strong>
+
+                              <p class="muted">
+                                This lesson is published, but the video file/link is pending.
+                              </p>
+
+                            </div>
+                          `
+                        }
+
+
+                        ${
+                          video.duration_seconds
+                          ?
+                          `
+                            <p class="muted">
+                              Duration:
+                              ${formatDuration(video.duration_seconds)}
+                            </p>
+                          `
+                          :
+                          ""
+                        }
+
+                      </div>
+
+                    `).join("")}
+
+                  </div>
+                `
+                :
+                ""
+              }
+
+            </div>
+
+          `;
+
+        }).join("")}
+
+      </div>
+
+    `;
+
+  }
+
+
+  pageArea.innerHTML = `
+
+    <div class="page-header">
+
+      <div class="breadcrumb">
+
+        <a
+          class="btn alt"
+          href="student.html?course=${encodeURIComponent(course.slug)}"
+        >
+          ${escapeHtml(course.title)}
+        </a>
+
+      </div>
+
+
+      <h1>
+        ${escapeHtml(subject.title)}
+      </h1>
+
+
+      <div class="course-meta">
+
+        <span class="badge">
+          ${topics.length} Topics
+        </span>
+
+        <span class="badge">
+          Student Course
+        </span>
+
+      </div>
+
+    </div>
+
 
     <h2 class="section-title">
       Topics
     </h2>
 
-    <div class="course-grid">
-
-      ${topics.map(topic => {
-
-        const topicVideos =
-          videosByTopic[topic.id] || [];
-
-        return `
-
-          <div class="course-card">
-
-            <h3>
-              ${escapeHtml(topic.title)}
-            </h3>
-
-            <p class="muted">
-
-              ${
-                topicVideos.length
-                  ? `${topicVideos.length} published video${topicVideos.length > 1 ? "s" : ""}`
-                  : "Video content coming soon"
-              }
-
-            </p>
-
-            ${
-              topicVideos.length
-                ?
-                `
-                <div style="margin-top:16px">
-
-                  ${topicVideos.map(video => `
-
-                    <div
-                      class="info-card"
-                      style="margin-top:12px"
-                    >
-
-                      <h4>
-                        ${escapeHtml(video.title)}
-                      </h4>
-
-                      ${
-                        video.video_url
-                          ?
-                          `
-                          <video
-                            controls
-                            preload="metadata"
-                            style="
-                              width:100%;
-                              max-height:400px;
-                              margin-top:10px;
-                            "
-                            ${
-                              video.thumbnail_url
-                                ? `poster="${escapeHtml(video.thumbnail_url)}"`
-                                : ""
-                            }
-                            src="${escapeHtml(video.video_url)}"
-                          ></video>
-                          `
-                          :
-                          `
-                          <p class="muted">
-                            Video URL pending.
-                          </p>
-                          `
-                      }
-
-                      ${
-                        video.is_trial
-                          ?
-                          `
-                          <p class="status">
-                            Free Trial
-                          </p>
-                          `
-                          :
-                          ""
-                      }
-
-                    </div>
-
-                  `).join("")}
-
-                </div>
-                `
-                :
-                ""
-            }
-
-          </div>
-
-        `;
-
-      }).join("")}
-
-    </div>
+    ${topicHtml}
 
   `;
+
 }
 
-function renderBackButton() {
+
+/* =====================================================
+   FORMAT VIDEO DURATION
+===================================================== */
+
+function formatDuration(seconds) {
+
+  seconds =
+    Number(seconds || 0);
+
+  if (!seconds) {
+
+    return "";
+
+  }
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  const remaining =
+    seconds % 60;
+
+  if (minutes < 60) {
+
+    return `${minutes}:${String(remaining).padStart(2, "0")}`;
+
+  }
+
+  const hours =
+    Math.floor(minutes / 60);
+
+  const mins =
+    minutes % 60;
+
+  return `${hours}:${String(mins).padStart(2, "0")}:${String(remaining).padStart(2, "0")}`;
+
+}
+
+
+/* =====================================================
+   TOPIC PAGE
+===================================================== */
+
+async function renderTopicPage(course, subject, topicId) {
 
   backArea.innerHTML = `
 
     <a
-      class="btn alt back-btn"
-      href="student.html?course=appsc-group-1"
+      class="btn alt"
+      href="student.html?course=${encodeURIComponent(course.slug)}&subject=${subject.id}"
     >
-      Back to APPSC Group 1
+      Back to ${escapeHtml(subject.title)}
     </a>
 
   `;
-}
 
-function renderFAQs() {
 
-  faqArea.innerHTML = `
+  const result = await sb
+    .from("subject_topics")
+    .select("id,subject_id,title,slug,sort_order")
+    .eq("id", topicId)
+    .eq("subject_id", subject.id)
+    .single();
 
-    <h2 class="section-title">
-      Frequently Asked Questions
-    </h2>
 
-    <div class="info-card">
+  if (result.error || !result.data) {
 
-      <h3>
-        How do I access a subject?
-      </h3>
+    pageArea.innerHTML = `
+
+      <div class="error-card">
+
+        <h2>
+          Topic not found
+        </h2>
+
+        <p>
+          The requested topic is not available.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const topic =
+    result.data;
+
+
+  const videos =
+    await loadVideos([topic.id]);
+
+
+  pageArea.innerHTML = `
+
+    <div class="page-header">
 
       <p class="muted">
-        Select a subject from the APPSC Group 1 course page.
+        ${escapeHtml(subject.title)}
       </p>
+
+      <h1>
+        ${escapeHtml(topic.title)}
+      </h1>
+
+      <div class="course-meta">
+
+        <span class="badge">
+          ${videos.length} Published Video${videos.length === 1 ? "" : "s"}
+        </span>
+
+      </div>
 
     </div>
 
-    <div class="info-card">
 
-      <h3>
-        Where will the topics appear?
-      </h3>
+    ${
+      videos.length
+      ?
+      `
+        <div class="video-list">
 
-      <p class="muted">
-        Topics and published videos will appear inside the selected subject.
-      </p>
+          ${videos.map(video => `
 
-    </div>
+            <div class="video-card">
 
-    <div class="info-card">
+              <h3>
 
-      <h3>
-        When will videos become available?
-      </h3>
+                ${escapeHtml(video.title)}
 
-      <p class="muted">
-        Videos will appear automatically after they are published by the admin.
-      </p>
+                ${
+                  video.is_trial
+                  ?
+                  `
+                    <span class="trial-badge">
+                      Free Trial
+                    </span>
+                  `
+                  :
+                  ""
+                }
 
-    </div>
+              </h3>
+
+
+              ${
+                video.video_url
+                ?
+                `
+                  <video
+                    controls
+                    preload="metadata"
+                    ${
+                      video.thumbnail_url
+                      ?
+                      `poster="${escapeHtml(video.thumbnail_url)}"`
+                      :
+                      ""
+                    }
+                    src="${escapeHtml(video.video_url)}"
+                  >
+                  </video>
+                `
+                :
+                `
+                  <div class="empty-card">
+
+                    <strong>
+                      Video URL not added yet
+                    </strong>
+
+                    <p class="muted">
+                      The video has been published, but the video URL is still pending.
+                    </p>
+
+                  </div>
+                `
+              }
+
+
+              ${
+                video.duration_seconds
+                ?
+                `
+                  <p class="muted">
+                    Duration:
+                    ${formatDuration(video.duration_seconds)}
+                  </p>
+                `
+                :
+                ""
+              }
+
+            </div>
+
+          `).join("")}
+
+        </div>
+      `
+      :
+      `
+        <div class="empty-card">
+
+          <h3>
+            No published videos yet
+          </h3>
+
+          <p class="muted">
+            Videos will appear here after they are published from the admin side.
+          </p>
+
+        </div>
+      `
+    }
 
   `;
+
 }
 
-const logoutButton =
-  document.getElementById("logout");
 
-if (logoutButton) {
+/* =====================================================
+   MAIN BOOT
+===================================================== */
 
-  logoutButton.onclick = async () => {
+async function boot() {
+
+  try {
+
+    const loggedIn =
+      await checkLogin();
+
+    if (!loggedIn) {
+
+      return;
+
+    }
+
+
+    const params =
+      getParams();
+
+
+    const course =
+      await getCourse(params.course);
+
+
+    if (!course) {
+
+      pageArea.innerHTML = `
+
+        <div class="error-card">
+
+          <h2>
+            Course not found
+          </h2>
+
+          <p>
+            The requested course is not published or does not exist.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /*
+      PAGE 1
+      Course
+    */
+
+    if (!params.subject) {
+
+      await renderCoursePage(course);
+
+      return;
+
+    }
+
+
+    /*
+      PAGE 2
+      Subject
+    */
+
+    const subject =
+      await getSubject(
+        course.id,
+        params.subject
+      );
+
+
+    if (!subject) {
+
+      pageArea.innerHTML = `
+
+        <div class="error-card">
+
+          <h2>
+            Subject not found
+          </h2>
+
+          <p>
+            The requested subject is not available.
+          </p>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /*
+      PAGE 3
+      Topic
+    */
+
+    if (params.topic) {
+
+      await renderTopicPage(
+        course,
+        subject,
+        params.topic
+      );
+
+      return;
+
+    }
+
+
+    /*
+      SUBJECT PAGE
+    */
+
+    await renderSubjectPage(
+      course,
+      subject
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Student page error:",
+      error
+    );
+
+    pageArea.innerHTML = `
+
+      <div class="error-card">
+
+        <h2>
+          Something went wrong
+        </h2>
+
+        <p>
+          Please refresh the page and try again.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+document
+  .getElementById("logout")
+  .addEventListener("click", async () => {
 
     await sb.auth.signOut();
 
-    location.href = "login.html";
+    window.location.href =
+      "login.html";
 
-  };
+  });
 
-}
+
+/* =====================================================
+   START
+===================================================== */
 
 boot();
 
 </script>
+
+</body>
+</html>

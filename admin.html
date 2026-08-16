@@ -7,208 +7,42 @@
 
 <style>
 *{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,Helvetica,sans-serif;
-background:#f4f7fb;
-color:#172033
-}
-
-header{
-background:#17365d;
-color:white;
-padding:16px 24px;
-display:flex;
-justify-content:space-between;
-align-items:center
-}
-
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#17365d;color:white;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
 header h1{margin:0;font-size:22px}
-
-.container{
-max-width:1250px;
-margin:25px auto;
-padding:0 18px
-}
-
-.login-box,.card{
-background:white;
-border-radius:12px;
-padding:22px;
-box-shadow:0 2px 10px rgba(0,0,0,.06);
-margin-bottom:20px
-}
-
-input,select,textarea{
-width:100%;
-padding:11px;
-border:1px solid #ccd4df;
-border-radius:7px;
-margin-top:6px;
-margin-bottom:14px;
-font-size:14px
-}
-
-textarea{
-min-height:90px;
-resize:vertical
-}
-
-button{
-border:0;
-border-radius:7px;
-padding:10px 15px;
-cursor:pointer;
-font-weight:600
-}
-
-.primary{
-background:#17365d;
-color:white
-}
-
-.secondary{
-background:#e8eef7;
-color:#17365d
-}
-
-.danger{
-background:#ffe9e9;
-color:#a40000
-}
-
+.container{max-width:1250px;margin:25px auto;padding:0 18px}
+.login-box,.card{background:white;border-radius:12px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:7px;margin-top:6px;margin-bottom:14px;font-size:14px}
+textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:7px;padding:10px 15px;cursor:pointer;font-weight:600}
+.primary{background:#17365d;color:white}
+.secondary{background:#e8eef7;color:#17365d}
 .hidden{display:none!important}
-
-.nav{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-bottom:20px
-}
-
-.nav button.active{
-background:#17365d;
-color:white
-}
-
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.nav button.active{background:#17365d;color:white}
 .section{display:none}
 .section.active{display:block}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px
-}
-
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
 .full{grid-column:1/-1}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:15px;
-margin-bottom:20px
-}
-
-.stat{
-background:white;
-padding:20px;
-border-radius:10px;
-text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,.05)
-}
-
-.stat strong{
-display:block;
-font-size:28px;
-color:#17365d;
-margin-bottom:5px
-}
-
-.item{
-border:1px solid #dde3ec;
-border-radius:9px;
-padding:15px;
-margin-bottom:12px;
-background:#fff
-}
-
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;margin-bottom:20px}
+.stat{background:white;padding:20px;border-radius:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.stat strong{display:block;font-size:28px;color:#17365d;margin-bottom:5px}
+.item{border:1px solid #dde3ec;border-radius:9px;padding:15px;margin-bottom:12px;background:#fff}
 .item h3{margin:0 0 8px}
-
-.badge{
-display:inline-block;
-padding:4px 8px;
-border-radius:20px;
-font-size:12px;
-margin-right:5px;
-background:#edf1f6
-}
-
-.badge.green{
-background:#e7f7ed;
-color:#176c35
-}
-
-.badge.red{
-background:#ffeaea;
-color:#a00000
-}
-
-.actions{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:12px
-}
-
-.message{
-padding:12px;
-border-radius:7px;
-margin-bottom:15px;
-display:none
-}
-
-.message.show{
-display:block;
-background:#eaf4ff;
-color:#174a7c
-}
-
-.message.error{
-display:block;
-background:#ffeaea;
-color:#9c0000
-}
-
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:12px;margin-right:5px;background:#edf1f6}
+.badge.green{background:#e7f7ed;color:#176c35}
+.badge.red{background:#ffeaea;color:#a00000}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.message{padding:12px;border-radius:7px;margin-bottom:15px;display:none}
+.message.show{display:block;background:#eaf4ff;color:#174a7c}
+.message.error{display:block;background:#ffeaea;color:#9c0000}
 .table-wrap{overflow:auto}
-
-table{
-width:100%;
-border-collapse:collapse
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #e1e5eb;
-text-align:left
-}
-
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #e1e5eb;text-align:left}
 th{background:#f1f4f8}
 
-/* SEARCHABLE TOPIC CONTROL */
-.topic-picker{
-position:relative;
-width:100%;
-margin-bottom:14px
-}
-
-.topic-search{
-margin:0;
-width:100%;
-padding:12px 42px 12px 12px;
-background:white
-}
-
+.topic-picker{position:relative;width:100%;margin-bottom:14px}
+.topic-search{margin:0;width:100%;padding:12px 42px 12px 12px;background:white}
 .topic-dropdown{
 position:absolute;
 top:100%;
@@ -223,45 +57,18 @@ overflow-y:auto;
 box-shadow:0 5px 15px rgba(0,0,0,.12);
 display:none
 }
-
-.topic-dropdown.show{
-display:block
-}
-
-.topic-option{
-padding:11px 13px;
-cursor:pointer;
-border-bottom:1px solid #edf0f4;
-font-size:14px
-}
-
-.topic-option:hover{
-background:#edf4ff
-}
-
-.topic-option:last-child{
-border-bottom:0
-}
-
-.topic-no-result{
-padding:12px;
-color:#777;
-font-size:14px
-}
-
-.topic-selected{
-background:#f8fbff
-}
+.topic-dropdown.show{display:block}
+.topic-option{padding:11px 13px;cursor:pointer;border-bottom:1px solid #edf0f4;font-size:14px}
+.topic-option:hover{background:#edf4ff}
+.topic-no-result{padding:12px;color:#777;font-size:14px}
+.topic-selected{background:#f8fbff}
 
 @media(max-width:800px){
 .grid{grid-template-columns:1fr}
 .full{grid-column:auto}
 .stats{grid-template-columns:repeat(2,1fr)}
 }
-
-@media(max-width:500px){
-.stats{grid-template-columns:1fr}
-}
+@media(max-width:500px){.stats{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -278,9 +85,7 @@ background:#f8fbff
 
 <div id="loginBox" class="login-box">
 <h2>Admin Login</h2>
-
 <form id="loginForm">
-
 <label>Email</label>
 <input id="email" type="email" required>
 
@@ -288,7 +93,6 @@ background:#f8fbff
 <input id="password" type="password" required>
 
 <button type="submit" class="primary">Login</button>
-
 </form>
 </div>
 
@@ -304,8 +108,6 @@ background:#f8fbff
 <button class="secondary" data-section="pricingSection">Pricing</button>
 </div>
 
-<!-- DASHBOARD -->
-
 <section id="dashboardSection" class="section active">
 
 <div class="card">
@@ -314,46 +116,21 @@ background:#f8fbff
 </div>
 
 <div class="stats">
-
-<div class="stat">
-<strong id="courseCount">0</strong>
-Courses
-</div>
-
-<div class="stat">
-<strong id="subjectCount">0</strong>
-Subjects
-</div>
-
-<div class="stat">
-<strong id="topicCount">0</strong>
-Topics
-</div>
-
-<div class="stat">
-<strong id="lessonCount">0</strong>
-Lessons
-</div>
-
-<div class="stat">
-<strong id="mcqCount">0</strong>
-MCQs
-</div>
-
+<div class="stat"><strong id="courseCount">0</strong>Courses</div>
+<div class="stat"><strong id="subjectCount">0</strong>Subjects</div>
+<div class="stat"><strong id="topicCount">0</strong>Topics</div>
+<div class="stat"><strong id="lessonCount">0</strong>Lessons</div>
+<div class="stat"><strong id="mcqCount">0</strong>MCQs</div>
 </div>
 
 </section>
 
-<!-- COURSES -->
-
 <section id="coursesSection" class="section">
 
 <div class="card">
-
 <h2>Course Management</h2>
 
 <form id="courseForm">
-
 <input type="hidden" id="courseId">
 
 <div class="grid">
@@ -394,24 +171,17 @@ MCQs
 </div>
 
 <div class="full">
-
 <label>
 <input id="coursePublished" type="checkbox" style="width:auto" checked>
 Enable Course
 </label>
-
 </div>
 
 </div>
 
 <div class="actions">
-<button type="submit" class="primary" id="courseSaveBtn">
-Create Course
-</button>
-
-<button type="button" class="secondary" id="courseCancelBtn">
-Cancel
-</button>
+<button type="submit" class="primary" id="courseSaveBtn">Create Course</button>
+<button type="button" class="secondary" id="courseCancelBtn">Cancel</button>
 </div>
 
 </form>
@@ -424,16 +194,12 @@ Cancel
 
 </section>
 
-<!-- SUBJECTS -->
-
 <section id="subjectsSection" class="section">
 
 <div class="card">
-
 <h2>Subject Management</h2>
 
 <form id="subjectForm">
-
 <input type="hidden" id="subjectId">
 
 <div class="grid">
@@ -469,7 +235,6 @@ Cancel
 </div>
 
 <div class="full">
-
 <label>
 <input id="subjectPublished" type="checkbox" style="width:auto" checked>
 Published
@@ -481,62 +246,44 @@ Published
 <input id="subjectTrial" type="checkbox" style="width:auto">
 Trial Subject
 </label>
-
 </div>
 
 </div>
 
 <div class="actions">
-
-<button type="submit" class="primary" id="subjectSaveBtn">
-Create Subject
-</button>
-
-<button type="button" class="secondary" id="subjectCancelBtn">
-Cancel
-</button>
-
+<button type="submit" class="primary" id="subjectSaveBtn">Create Subject</button>
+<button type="button" class="secondary" id="subjectCancelBtn">Cancel</button>
 </div>
 
 </form>
 </div>
 
 <div class="card">
-
 <h2>Subjects</h2>
 
 <label>Filter Course</label>
-
 <select id="subjectFilter">
 <option value="">All Courses</option>
 </select>
 
 <div id="subjectList"></div>
-
 </div>
 
 </section>
 
-<!-- TOPICS -->
-
 <section id="topicsSection" class="section">
 
 <div class="card">
-
 <h2>Topic Management</h2>
 
 <form id="topicForm">
-
 <input type="hidden" id="topicId">
 
 <div class="grid">
 
 <div class="full">
-
 <label>Subject</label>
-
 <select id="topicSubject" required></select>
-
 </div>
 
 <div>
@@ -572,51 +319,35 @@ Cancel
 </div>
 
 <div class="actions">
-
-<button type="submit" class="primary" id="topicSaveBtn">
-Create Topic
-</button>
-
-<button type="button" class="secondary" id="topicCancelBtn">
-Cancel
-</button>
-
+<button type="submit" class="primary" id="topicSaveBtn">Create Topic</button>
+<button type="button" class="secondary" id="topicCancelBtn">Cancel</button>
 </div>
 
 </form>
 </div>
 
 <div class="card">
-
 <h2>Topics</h2>
 
 <label>Filter Subject</label>
-
 <select id="topicFilter">
 <option value="">All Subjects</option>
 </select>
 
 <div id="topicList"></div>
-
 </div>
 
 </section>
 
-<!-- LESSONS -->
-
 <section id="lessonsSection" class="section">
 
 <div class="card">
-
 <h2>Lesson Management</h2>
 
 <form id="lessonForm">
-
 <input type="hidden" id="lessonId">
 
 <div class="grid">
-
-<!-- ONE SEARCHABLE TOPIC CONTROL -->
 
 <div class="full">
 
@@ -633,10 +364,7 @@ autocomplete="off"
 required
 >
 
-<input
-id="lessonTopic"
-type="hidden"
->
+<input id="lessonTopic" type="hidden">
 
 <div id="lessonTopicDropdown" class="topic-dropdown"></div>
 
@@ -645,89 +373,63 @@ type="hidden"
 </div>
 
 <div>
-
 <label>Course</label>
-
 <select id="lessonCourse" required></select>
-
 </div>
 
 <div>
-
 <label>Subject</label>
-
 <select id="lessonSubject" required></select>
-
 </div>
 
 <div class="full">
-
 <label>Lesson Title</label>
 <input id="lessonTitle" required>
-
 </div>
 
 <div class="full">
-
 <label>Description</label>
 <textarea id="lessonDescription"></textarea>
-
 </div>
 
 <div>
-
 <label>Video URL</label>
 <input id="lessonVideoUrl">
-
 </div>
 
 <div>
-
 <label>PDF URL</label>
 <input id="lessonPdfUrl">
-
 </div>
 
 <div>
-
 <label>Order</label>
 <input id="lessonOrder" type="number" value="1">
-
 </div>
 
 <div>
-
 <label>Number of Videos</label>
 <input id="lessonVideoCount" type="number" min="0" value="0">
-
 </div>
 
 <div>
-
 <label>Visualized Fee</label>
 <input id="lessonVisualizedFee" type="number" min="0">
-
 </div>
 
 <div>
-
 <label>PPT Fee</label>
 <input id="lessonPptFee" type="number" min="0">
-
 </div>
 
 <div>
-
 <label>Visualized Video URL</label>
 <input id="lessonVisualizedUrl">
-
 </div>
 
 <div>
-
 <label>PPT Video URL</label>
 <input id="lessonPptUrl">
-
 </div>
 
 <div class="full">
@@ -749,63 +451,44 @@ Free Trial
 </div>
 
 <div class="actions">
-
-<button type="submit" class="primary" id="lessonSaveBtn">
-Create Lesson
-</button>
-
-<button type="button" class="secondary" id="lessonCancelBtn">
-Cancel
-</button>
-
+<button type="submit" class="primary" id="lessonSaveBtn">Create Lesson</button>
+<button type="button" class="secondary" id="lessonCancelBtn">Cancel</button>
 </div>
 
 </form>
-
 </div>
 
 <div class="card">
-
 <h2>Lessons</h2>
 
 <label>Filter Topic</label>
-
 <select id="lessonFilter">
 <option value="">All Topics</option>
 </select>
 
 <div id="lessonList"></div>
-
 </div>
 
 </section>
 
-<!-- MCQS -->
-
 <section id="mcqsSection" class="section">
 
 <div class="card">
-
 <h2>MCQ Management</h2>
 
 <form id="mcqForm">
-
 <input type="hidden" id="mcqId">
 
 <div class="grid">
 
 <div class="full">
-
 <label>Lesson</label>
 <select id="mcqLesson"></select>
-
 </div>
 
 <div class="full">
-
 <label>Question</label>
 <textarea id="mcqQuestion" required></textarea>
-
 </div>
 
 <div>
@@ -829,110 +512,76 @@ Cancel
 </div>
 
 <div>
-
 <label>Correct Option</label>
-
 <select id="mcqCorrect">
-
 <option value="">Select</option>
 <option value="A">A</option>
 <option value="B">B</option>
 <option value="C">C</option>
 <option value="D">D</option>
-
 </select>
-
 </div>
 
 <div class="full">
-
 <label>Explanation</label>
 <textarea id="mcqExplanation"></textarea>
-
 </div>
 
 </div>
 
 <div class="actions">
-
-<button type="submit" class="primary" id="mcqSaveBtn">
-Create MCQ
-</button>
-
-<button type="button" class="secondary" id="mcqCancelBtn">
-Cancel
-</button>
-
+<button type="submit" class="primary" id="mcqSaveBtn">Create MCQ</button>
+<button type="button" class="secondary" id="mcqCancelBtn">Cancel</button>
 </div>
 
 </form>
-
 </div>
 
 <div class="card">
-
 <h2>Existing MCQs</h2>
-
 <div id="mcqList"></div>
-
 </div>
 
 </section>
 
-<!-- PRICING -->
-
 <section id="pricingSection" class="section">
 
 <div class="card">
-
 <h2>Course Pricing</h2>
 
 <div class="table-wrap">
-
 <table>
-
 <thead>
-
 <tr>
 <th>Course</th>
 <th>Original Fee</th>
 <th>Current Fee</th>
 <th>Action</th>
 </tr>
-
 </thead>
 
 <tbody id="coursePricingList"></tbody>
-
 </table>
-
 </div>
 
 </div>
 
 <div class="card">
-
 <h2>Subject Pricing</h2>
 
 <div class="table-wrap">
-
 <table>
-
 <thead>
-
 <tr>
 <th>Subject</th>
 <th>Course</th>
 <th>Subject Fee</th>
 <th>Action</th>
 </tr>
-
 </thead>
 
 <tbody id="subjectPricingList"></tbody>
-
 </table>
-
 </div>
 
 </div>
@@ -958,6 +607,7 @@ LAKSHYASETU_CONFIG.supabasePublishableKey
 
 let courses=[];
 let subjects=[];
+let courseSubjects=[];
 let topics=[];
 let lessons=[];
 let mcqs=[];
@@ -965,51 +615,37 @@ let mcqs=[];
 const $=id=>document.getElementById(id);
 
 function showMessage(text,error=false){
-
 const box=$("message");
-
 box.textContent=text;
-
 box.className="message show"+(error?" error":"");
-
 }
 
 function escapeHtml(value){
-
 return String(value??"")
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
-
 }
 
 function money(value){
-
-if(value===null||value===undefined||value==="")
-return"Not set";
-
+if(value===null||value===undefined||value==="")return"Not set";
 return"₹"+Number(value).toLocaleString("en-IN");
-
 }
 
 function slugify(text){
-
 return String(text||"")
 .toLowerCase()
 .trim()
 .replace(/[^a-z0-9]+/g,"-")
 .replace(/^-+|-+$/g,"");
-
 }
 
 /* NAVIGATION */
 
 document.querySelectorAll(".nav button").forEach(button=>{
-
 button.addEventListener("click",()=>{
-
 document.querySelectorAll(".nav button")
 .forEach(x=>x.classList.remove("active"));
 
@@ -1017,11 +653,8 @@ document.querySelectorAll(".section")
 .forEach(x=>x.classList.remove("active"));
 
 button.classList.add("active");
-
 $(button.dataset.section).classList.add("active");
-
 });
-
 });
 
 /* ADMIN */
@@ -1031,29 +664,22 @@ async function checkAdmin(){
 const result=await supabaseClient.rpc("is_admin");
 
 if(result.error){
-
 showMessage(
 "Admin verification failed: "+result.error.message,
 true
 );
-
 return false;
-
 }
 
 if(result.data!==true){
-
 showMessage(
 "This account does not have Admin access.",
 true
 );
-
 return false;
-
 }
 
 return true;
-
 }
 
 /* LOGIN */
@@ -1065,29 +691,20 @@ e.preventDefault();
 showMessage("Logging in...");
 
 const result=await supabaseClient.auth.signInWithPassword({
-
 email:$("email").value.trim(),
-
 password:$("password").value
-
 });
 
 if(result.error){
-
 showMessage(result.error.message,true);
-
 return;
-
 }
 
 const allowed=await checkAdmin();
 
 if(!allowed){
-
 await supabaseClient.auth.signOut();
-
 return;
-
 }
 
 $("loginBox").classList.add("hidden");
@@ -1100,14 +717,9 @@ await loadAll();
 
 });
 
-/* LOGOUT */
-
 $("logoutBtn").addEventListener("click",async()=>{
-
 await supabaseClient.auth.signOut();
-
 location.reload();
-
 });
 
 /* COURSES */
@@ -1120,14 +732,11 @@ const result=await supabaseClient
 .order("id");
 
 if(result.error){
-
 showMessage(
 "Course loading failed: "+result.error.message,
 true
 );
-
 return;
-
 }
 
 courses=result.data||[];
@@ -1135,9 +744,7 @@ courses=result.data||[];
 $("courseCount").textContent=courses.length;
 
 renderCourses();
-
 populateCourseSelects();
-
 renderCoursePricing();
 
 }
@@ -1171,13 +778,10 @@ ${course.published?"Published":"Unpublished"}
 </span>
 
 <div class="actions">
-
-<button
-class="primary"
+<button class="primary"
 onclick="editCourse(${course.id})">
 Edit
 </button>
-
 </div>
 
 </div>
@@ -1210,12 +814,8 @@ $("lessonCourse").innerHTML=
 }
 
 $("courseTitle").addEventListener("input",()=>{
-
 if(!$("courseId").value)
-
-$("courseSlug").value=
-slugify($("courseTitle").value);
-
+$("courseSlug").value=slugify($("courseTitle").value);
 });
 
 $("courseForm").addEventListener("submit",async e=>{
@@ -1227,31 +827,21 @@ showMessage("Saving course...");
 const id=$("courseId").value;
 
 const data={
-
 title:$("courseTitle").value.trim(),
-
 slug:$("courseSlug").value.trim(),
-
 description:$("courseDescription").value.trim()||null,
-
 language:$("courseLanguage").value.trim()||"Telugu + English",
-
 validity_years:Number($("courseValidity").value)||2,
-
 original_fee:$("courseOriginalFee").value===""
 ?null
 :Number($("courseOriginalFee").value),
-
 current_fee:$("courseCurrentFee").value===""
 ?null
 :Number($("courseCurrentFee").value),
-
 course_fee:$("courseCurrentFee").value===""
 ?null
 :Number($("courseCurrentFee").value),
-
 published:$("coursePublished").checked
-
 };
 
 const result=id
@@ -1266,11 +856,8 @@ const result=id
 .insert(data);
 
 if(result.error){
-
 showMessage(result.error.message,true);
-
 return;
-
 }
 
 showMessage(
@@ -1280,7 +867,6 @@ id
 );
 
 resetCourse();
-
 await loadCourses();
 
 });
@@ -1292,26 +878,14 @@ const course=courses.find(x=>x.id===id);
 if(!course)return;
 
 $("courseId").value=course.id;
-
 $("courseTitle").value=course.title||"";
-
 $("courseSlug").value=course.slug||"";
-
-$("courseDescription").value=
-course.description||"";
-
-$("courseLanguage").value=
-course.language||"Telugu + English";
-
-$("courseValidity").value=
-course.validity_years||2;
-
-$("courseOriginalFee").value=
-course.original_fee??"";
-
+$("courseDescription").value=course.description||"";
+$("courseLanguage").value=course.language||"Telugu + English";
+$("courseValidity").value=course.validity_years||2;
+$("courseOriginalFee").value=course.original_fee??"";
 $("courseCurrentFee").value=
 course.current_fee??course.course_fee??"";
-
 $("coursePublished").checked=
 course.published!==false;
 
@@ -1328,18 +902,11 @@ resetCourse
 function resetCourse(){
 
 $("courseForm").reset();
-
 $("courseId").value="";
-
-$("courseLanguage").value=
-"Telugu + English";
-
+$("courseLanguage").value="Telugu + English";
 $("courseValidity").value=2;
-
 $("coursePublished").checked=true;
-
-$("courseSaveBtn").textContent=
-"Create Course";
+$("courseSaveBtn").textContent="Create Course";
 
 }
 
@@ -1354,32 +921,49 @@ const result=await supabaseClient
 .order("sort_order");
 
 if(result.error){
-
 showMessage(
-"Subject loading failed: "+result.error.message,
+"Course subject loading failed: "+
+result.error.message,
 true
 );
-
 return;
-
 }
 
-subjects=result.data||[];
+courseSubjects=result.data||[];
+
+/*
+Load the actual subjects table separately.
+Lessons.subject_id points here.
+*/
+
+const subjectResult=await supabaseClient
+.from("subjects")
+.select("*")
+.order("title");
+
+if(subjectResult.error){
+showMessage(
+"Actual subject loading failed: "+
+subjectResult.error.message,
+true
+);
+return;
+}
+
+subjects=subjectResult.data||[];
 
 $("subjectCount").textContent=
-subjects.length;
+courseSubjects.length;
 
 populateSubjectSelects();
-
 renderSubjects();
-
 renderSubjectPricing();
 
 }
 
 function populateSubjectSelects(){
 
-const options=subjects.map(subject=>`
+const options=courseSubjects.map(subject=>`
 
 <option value="${subject.id}">
 ${escapeHtml(subject.title)}
@@ -1395,24 +979,19 @@ $("topicFilter").innerHTML=
 `<option value="">All Subjects</option>`+
 options;
 
-$("lessonSubject").innerHTML=
-`<option value="">Select Subject</option>`+
-options;
-
 }
 
 function renderSubjects(){
 
-const selected=
-$("subjectFilter").value;
+const selected=$("subjectFilter").value;
 
 const list=selected
 
-?subjects.filter(
+?courseSubjects.filter(
 x=>String(x.course_id)===selected
 )
 
-:subjects;
+:courseSubjects;
 
 $("subjectList").innerHTML=list.length
 
@@ -1427,9 +1006,7 @@ return`
 
 <div class="item">
 
-<h3>
-${escapeHtml(subject.title)}
-</h3>
+<h3>${escapeHtml(subject.title)}</h3>
 
 <p>
 Course:
@@ -1444,14 +1021,15 @@ ${money(subject.subject_fee)}
 Order ${subject.sort_order}
 </span>
 
-<span class="badge ${subject.published?"green":"red"}">
+<span class="badge ${
+subject.published?"green":"red"
+}">
 ${subject.published?"Published":"Unpublished"}
 </span>
 
 <div class="actions">
 
-<button
-class="primary"
+<button class="primary"
 onclick="editSubject(${subject.id})">
 Edit
 </button>
@@ -1473,21 +1051,11 @@ $("subjectFilter").addEventListener(
 renderSubjects
 );
 
-$("subjectCourse").addEventListener(
-"change",
-()=>{
-
-$("lessonCourse").value=
-$("subjectCourse").value;
-
-});
-
 $("subjectTitle").addEventListener(
 "input",
 ()=>{
 
 if(!$("subjectId").value)
-
 $("subjectSlug").value=
 slugify($("subjectTitle").value);
 
@@ -1504,33 +1072,16 @@ showMessage("Saving subject...");
 const id=$("subjectId").value;
 
 const data={
-
-course_id:
-Number($("subjectCourse").value),
-
-title:
-$("subjectTitle").value.trim(),
-
-slug:
-$("subjectSlug").value.trim(),
-
-description:
-$("subjectDescription").value.trim()||null,
-
-sort_order:
-Number($("subjectOrder").value)||1,
-
-subject_fee:
-$("subjectFee").value===""
+course_id:Number($("subjectCourse").value),
+title:$("subjectTitle").value.trim(),
+slug:$("subjectSlug").value.trim(),
+description:$("subjectDescription").value.trim()||null,
+sort_order:Number($("subjectOrder").value)||1,
+subject_fee:$("subjectFee").value===""
 ?null
 :Number($("subjectFee").value),
-
-published:
-$("subjectPublished").checked,
-
-is_trial:
-$("subjectTrial").checked
-
+published:$("subjectPublished").checked,
+is_trial:$("subjectTrial").checked
 };
 
 const result=id
@@ -1545,14 +1096,8 @@ const result=id
 .insert(data);
 
 if(result.error){
-
-showMessage(
-result.error.message,
-true
-);
-
+showMessage(result.error.message,true);
 return;
-
 }
 
 showMessage(
@@ -1562,7 +1107,6 @@ id
 );
 
 resetSubject();
-
 await loadSubjects();
 
 });
@@ -1570,34 +1114,22 @@ await loadSubjects();
 window.editSubject=id=>{
 
 const subject=
-subjects.find(x=>x.id===id);
+courseSubjects.find(x=>x.id===id);
 
 if(!subject)return;
 
-$("subjectId").value=
-subject.id;
-
-$("subjectCourse").value=
-subject.course_id;
-
-$("subjectTitle").value=
-subject.title||"";
-
-$("subjectSlug").value=
-subject.slug||"";
-
+$("subjectId").value=subject.id;
+$("subjectCourse").value=subject.course_id;
+$("subjectTitle").value=subject.title||"";
+$("subjectSlug").value=subject.slug||"";
 $("subjectDescription").value=
 subject.description||"";
-
 $("subjectOrder").value=
 subject.sort_order||1;
-
 $("subjectFee").value=
 subject.subject_fee??"";
-
 $("subjectPublished").checked=
 subject.published!==false;
-
 $("subjectTrial").checked=
 subject.is_trial===true;
 
@@ -1614,11 +1146,8 @@ resetSubject
 function resetSubject(){
 
 $("subjectForm").reset();
-
 $("subjectId").value="";
-
 $("subjectPublished").checked=true;
-
 $("subjectSaveBtn").textContent=
 "Create Subject";
 
@@ -1655,11 +1184,6 @@ result.error.message,
 true
 );
 
-console.error(
-"Topic loading error:",
-result.error
-);
-
 return;
 
 }
@@ -1668,10 +1192,6 @@ topics=result.data||[];
 
 $("topicCount").textContent=
 topics.length;
-
-/*
-Populate the Topic filter
-*/
 
 const topicOptions=topics
 
@@ -1696,24 +1216,19 @@ topicOptions;
 
 renderTopics();
 
-/*
-Populate the new searchable topic control
-*/
-
 renderLessonTopicOptions("");
 
 showMessage(
 topics.length
 ?`${topics.length} topic(s) loaded successfully.`
-:"No topics found. Create a topic first."
+:"No topics found."
 );
 
 }
 
 function renderTopics(){
 
-const selected=
-$("topicFilter").value;
+const selected=$("topicFilter").value;
 
 const list=selected
 
@@ -1729,23 +1244,20 @@ $("topicList").innerHTML=list.length
 
 ?list.map(topic=>{
 
-const subject=
-subjects.find(
-x=>x.id===
-topic.course_subject_id
+const cs=
+courseSubjects.find(
+x=>x.id===topic.course_subject_id
 );
 
 return`
 
 <div class="item">
 
-<h3>
-${escapeHtml(topic.title)}
-</h3>
+<h3>${escapeHtml(topic.title)}</h3>
 
 <p>
 Subject:
-${escapeHtml(subject?.title||"Unknown")}
+${escapeHtml(cs?.title||"Unknown")}
 </p>
 
 <span class="badge">
@@ -1774,8 +1286,7 @@ topic.published===false
 
 <div class="actions">
 
-<button
-class="primary"
+<button class="primary"
 onclick="editTopic(${topic.id})">
 Edit
 </button>
@@ -1802,7 +1313,6 @@ $("topicTitle").addEventListener(
 ()=>{
 
 if(!$("topicId").value)
-
 $("topicSlug").value=
 slugify($("topicTitle").value);
 
@@ -1819,30 +1329,20 @@ showMessage("Saving topic...");
 const id=$("topicId").value;
 
 const data={
-
 course_subject_id:
 Number($("topicSubject").value),
-
-title:
-$("topicTitle").value.trim(),
-
-slug:
-$("topicSlug").value.trim(),
-
+title:$("topicTitle").value.trim(),
+slug:$("topicSlug").value.trim(),
 description:
 $("topicDescription").value.trim()||null,
-
 sort_order:
 Number($("topicOrder").value)||1,
-
 topic_fee:
 $("topicFee").value===""
 ?null
 :Number($("topicFee").value),
-
 video_count:
 Number($("topicVideoCount").value)||0
-
 };
 
 const result=id
@@ -1857,14 +1357,8 @@ const result=id
 .insert(data);
 
 if(result.error){
-
-showMessage(
-result.error.message,
-true
-);
-
+showMessage(result.error.message,true);
 return;
-
 }
 
 showMessage(
@@ -1874,7 +1368,6 @@ id
 );
 
 resetTopic();
-
 await loadTopics();
 
 });
@@ -1886,27 +1379,19 @@ topics.find(x=>x.id===id);
 
 if(!topic)return;
 
-$("topicId").value=
-topic.id;
-
+$("topicId").value=topic.id;
 $("topicSubject").value=
 topic.course_subject_id;
-
 $("topicTitle").value=
 topic.title||"";
-
 $("topicSlug").value=
 topic.slug||"";
-
 $("topicDescription").value=
 topic.description||"";
-
 $("topicOrder").value=
 topic.sort_order||1;
-
 $("topicFee").value=
 topic.topic_fee??"";
-
 $("topicVideoCount").value=
 topic.video_count??0;
 
@@ -1923,19 +1408,15 @@ resetTopic
 function resetTopic(){
 
 $("topicForm").reset();
-
 $("topicId").value="";
-
 $("topicVideoCount").value=0;
-
 $("topicSaveBtn").textContent=
 "Create Topic";
 
 }
 
 /* =====================================================
-   SEARCHABLE TOPIC CONTROL
-   SEARCH AND TOPIC ARE ONE CONTROL
+   SEARCHABLE TOPIC
    ===================================================== */
 
 function renderLessonTopicOptions(searchText){
@@ -1950,25 +1431,25 @@ String(searchText||"")
 
 const filtered=
 topics
-.filter(topic=>
+.filter(
+topic=>
 topic &&
 topic.id!=null &&
 topic.title
 )
-.filter(topic=>
+.filter(
+topic=>
 !query ||
 String(topic.title)
 .toLowerCase()
 .includes(query)
 )
-.sort((a,b)=>
-String(a.title)
-.localeCompare(
+.sort(
+(a,b)=>
+String(a.title).localeCompare(
 String(b.title),
 undefined,
-{
-sensitivity:"base"
-}
+{sensitivity:"base"}
 )
 );
 
@@ -2007,15 +1488,135 @@ option.addEventListener(
 "click",
 ()=>{
 
-const topicId=
-Number(option.dataset.topicId);
-
-selectLessonTopic(topicId);
+selectLessonTopic(
+Number(option.dataset.topicId)
+);
 
 }
 );
 
 });
+
+}
+
+function normalizeTitle(text){
+
+return String(text||"")
+.toLowerCase()
+.replace(/&/g," and ")
+.replace(/[^a-z0-9\s]/g," ")
+.replace(/\s+/g," ")
+.trim();
+
+}
+
+/*
+Find the real subjects.id.
+
+course_topics.course_subject_id points to
+course_subjects.id.
+
+lessons.subject_id points to
+subjects.id.
+
+If course_subjects.subject_id exists,
+use it directly.
+
+If it is NULL, match the course subject
+title against the real subjects table.
+*/
+
+function resolveActualSubjectId(courseSubject){
+
+if(!courseSubject)return null;
+
+/* Best case: explicit mapping */
+
+if(courseSubject.subject_id){
+
+const direct=subjects.find(
+s=>Number(s.id)===
+Number(courseSubject.subject_id)
+);
+
+if(direct)return direct.id;
+
+}
+
+/* Exact title match */
+
+const wanted=
+normalizeTitle(courseSubject.title);
+
+let match=subjects.find(
+s=>
+normalizeTitle(s.title)===wanted
+);
+
+if(match)return match.id;
+
+/*
+Indian Polity & Constitution
+should map to Indian Polity.
+*/
+
+const wantedWords=
+wanted
+.split(" ")
+.filter(
+x=>
+x.length>2 &&
+!["and","the","of"].includes(x)
+);
+
+let best=null;
+let bestScore=0;
+
+subjects.forEach(subject=>{
+
+const candidate=
+normalizeTitle(subject.title);
+
+const words=
+candidate
+.split(" ")
+.filter(
+x=>
+x.length>2 &&
+!["and","the","of"].includes(x)
+);
+
+let score=0;
+
+wantedWords.forEach(word=>{
+
+if(words.includes(word))
+score+=2;
+
+else if(
+words.some(
+w=>
+w.includes(word)||
+word.includes(w)
+)
+)
+score+=1;
+
+});
+
+if(score>bestScore){
+
+bestScore=score;
+best=subject;
+
+}
+
+});
+
+if(best && bestScore>0)
+return best.id;
+
+return null;
 
 }
 
@@ -2029,72 +1630,76 @@ Number(topicId)
 
 if(!topic)return;
 
-/*
-Store topic ID in hidden field
-*/
-
 $("lessonTopic").value=
 topic.id;
-
-/*
-Show selected topic title
-*/
 
 $("lessonTopicSearch").value=
 topic.title;
 
+$("lessonTopicSearch")
+.classList.add("topic-selected");
+
 /*
-Find the subject attached to this topic
+Find course_subjects row.
 */
 
-const subject=
-subjects.find(
+const courseSubject=
+courseSubjects.find(
 x=>
 Number(x.id)===
 Number(topic.course_subject_id)
 );
 
-if(subject){
+if(!courseSubject){
 
-$("lessonSubject").value=
-subject.id;
-
-/*
-Automatically set the correct course.
-This prevents the foreign-key mismatch
-that occurred earlier.
-*/
-
-const course=
-courses.find(
-x=>
-Number(x.id)===
-Number(subject.course_id)
+showMessage(
+"Course Subject mapping not found for this topic.",
+true
 );
 
-if(course){
-
-$("lessonCourse").value=
-course.id;
-
-}
+return;
 
 }
 
 /*
-Close dropdown
+Course comes directly from course_subjects.
 */
+
+$("lessonCourse").value=
+courseSubject.course_id||"";
+
+/*
+Subject MUST come from public.subjects.id,
+not course_subjects.id.
+*/
+
+const actualSubjectId=
+resolveActualSubjectId(
+courseSubject
+);
+
+if(!actualSubjectId){
+
+$("lessonSubject").value="";
+
+showMessage(
+"Could not map this Topic to an actual Subject.",
+true
+);
+
+return;
+
+}
+
+$("lessonSubject").value=
+actualSubjectId;
 
 $("lessonTopicDropdown")
 .classList.remove("show");
 
-$("lessonTopicSearch")
-.classList.add("topic-selected");
-
 }
 
-$("lessonTopicSearch")
-.addEventListener(
+$("lessonTopicSearch").addEventListener(
 "focus",
 ()=>{
 
@@ -2104,16 +1709,9 @@ $("lessonTopicSearch").value
 
 });
 
-$("lessonTopicSearch")
-.addEventListener(
+$("lessonTopicSearch").addEventListener(
 "input",
 ()=>{
-
-/*
-When user changes the text,
-clear the previous selected ID.
-A topic must be selected again.
-*/
 
 $("lessonTopic").value="";
 
@@ -2178,9 +1776,7 @@ $("lessonCount").textContent=
 lessons.length;
 
 $("mcqLesson").innerHTML=
-`<option value="">
-Select Lesson
-</option>`+
+`<option value="">Select Lesson</option>`+
 
 lessons.map(lesson=>`
 
@@ -2202,9 +1798,7 @@ $("lessonFilter").value;
 const list=selected
 
 ?lessons.filter(
-x=>
-String(x.topic_id)===
-selected
+x=>String(x.topic_id)===selected
 )
 
 :lessons;
@@ -2215,8 +1809,7 @@ $("lessonList").innerHTML=list.length
 
 const topic=
 topics.find(
-x=>
-Number(x.id)===
+x=>Number(x.id)===
 Number(lesson.topic_id)
 );
 
@@ -2253,8 +1846,7 @@ ${money(lesson.ppt_fee)}
 
 <div class="actions">
 
-<button
-class="primary"
+<button class="primary"
 onclick="editLesson(${lesson.id})">
 Edit
 </button>
@@ -2288,8 +1880,6 @@ showMessage(
 "Please search and select a Topic.",
 true
 );
-
-$("lessonTopicSearch").focus();
 
 return;
 
@@ -2404,7 +1994,6 @@ id
 );
 
 resetLesson();
-
 await loadLessons();
 
 });
@@ -2420,12 +2009,6 @@ if(!lesson)return;
 
 $("lessonId").value=
 lesson.id;
-
-/*
-Set topic first.
-This automatically sets
-course and subject.
-*/
 
 selectLessonTopic(
 lesson.topic_id
@@ -2472,8 +2055,7 @@ $("lessonSaveBtn").textContent=
 
 };
 
-$("lessonCancelBtn")
-.addEventListener(
+$("lessonCancelBtn").addEventListener(
 "click",
 resetLesson
 );
@@ -2488,14 +2070,11 @@ $("lessonTopic").value="";
 
 $("lessonTopicSearch").value="";
 
-$("lessonTopicDropdown").classList.remove(
-"show"
-);
-
 $("lessonTopicSearch")
-.classList.remove(
-"topic-selected"
-);
+.classList.remove("topic-selected");
+
+$("lessonTopicDropdown")
+.classList.remove("show");
 
 $("lessonPublished").checked=true;
 
@@ -2558,9 +2137,7 @@ ${escapeHtml(mcq.question)}
 
 <p>
 Lesson:
-${escapeHtml(
-lesson?.title||"Unknown"
-)}
+${escapeHtml(lesson?.title||"Unknown")}
 </p>
 
 <span class="badge">
@@ -2572,8 +2149,7 @@ mcq.correct_option||"Not set"
 
 <div class="actions">
 
-<button
-class="primary"
+<button class="primary"
 onclick="editMcq(${mcq.id})">
 Edit
 </button>
@@ -2660,7 +2236,6 @@ id
 );
 
 resetMcq();
-
 await loadMcqs();
 
 });
@@ -2674,40 +2249,22 @@ x=>x.id===id
 
 if(!mcq)return;
 
-$("mcqId").value=
-mcq.id;
-
-$("mcqLesson").value=
-mcq.lesson_id??"";
-
-$("mcqQuestion").value=
-mcq.question||"";
-
-$("mcqA").value=
-mcq.option_a||"";
-
-$("mcqB").value=
-mcq.option_b||"";
-
-$("mcqC").value=
-mcq.option_c||"";
-
-$("mcqD").value=
-mcq.option_d||"";
-
-$("mcqCorrect").value=
-mcq.correct_option||"";
-
-$("mcqExplanation").value=
-mcq.explanation||"";
+$("mcqId").value=mcq.id;
+$("mcqLesson").value=mcq.lesson_id??"";
+$("mcqQuestion").value=mcq.question||"";
+$("mcqA").value=mcq.option_a||"";
+$("mcqB").value=mcq.option_b||"";
+$("mcqC").value=mcq.option_c||"";
+$("mcqD").value=mcq.option_d||"";
+$("mcqCorrect").value=mcq.correct_option||"";
+$("mcqExplanation").value=mcq.explanation||"";
 
 $("mcqSaveBtn").textContent=
 "Save MCQ Changes";
 
 };
 
-$("mcqCancelBtn")
-.addEventListener(
+$("mcqCancelBtn").addEventListener(
 "click",
 resetMcq
 );
@@ -2749,8 +2306,7 @@ course.course_fee
 
 <td>
 
-<button
-class="primary"
+<button class="primary"
 onclick="editCourse(${course.id})">
 Edit
 </button>
@@ -2766,12 +2322,11 @@ Edit
 function renderSubjectPricing(){
 
 $("subjectPricingList").innerHTML=
-subjects.map(subject=>{
+courseSubjects.map(subject=>{
 
 const course=
 courses.find(
-x=>x.id===
-subject.course_id
+x=>x.id===subject.course_id
 );
 
 return`
@@ -2794,8 +2349,7 @@ ${money(subject.subject_fee)}
 
 <td>
 
-<button
-class="primary"
+<button class="primary"
 onclick="editSubject(${subject.id})">
 Edit
 </button>
@@ -2826,7 +2380,7 @@ await loadMcqs();
 
 }
 
-/* AUTH STATE */
+/* AUTH */
 
 supabaseClient.auth.onAuthStateChange(
 async(event,session)=>{
@@ -2842,27 +2396,19 @@ await checkAdmin();
 if(!allowed){
 
 await supabaseClient.auth.signOut();
-
 return;
 
 }
 
-$("loginBox")
-.classList.add("hidden");
-
-$("dashboard")
-.classList.remove("hidden");
-
-$("logoutBtn")
-.classList.remove("hidden");
+$("loginBox").classList.add("hidden");
+$("dashboard").classList.remove("hidden");
+$("logoutBtn").classList.remove("hidden");
 
 await loadAll();
 
 }
 
 });
-
-/* EXISTING SESSION */
 
 (async function(){
 
@@ -2880,19 +2426,13 @@ await checkAdmin();
 if(!allowed){
 
 await supabaseClient.auth.signOut();
-
 return;
 
 }
 
-$("loginBox")
-.classList.add("hidden");
-
-$("dashboard")
-.classList.remove("hidden");
-
-$("logoutBtn")
-.classList.remove("hidden");
+$("loginBox").classList.add("hidden");
+$("dashboard").classList.remove("hidden");
+$("logoutBtn").classList.remove("hidden");
 
 await loadAll();
 

@@ -2,127 +2,265 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LakshyaSetu Admin</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LakshyaSetu Admin Dashboard</title>
 
 <style>
 *{box-sizing:border-box}
+
 body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#102a43;
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:#f4f7fb;
+color:#172033
 }
+
 header{
-    background:#173b68;
-    color:white;
-    padding:18px 24px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+background:#17365d;
+color:white;
+padding:16px 24px;
+display:flex;
+justify-content:space-between;
+align-items:center
 }
-header h1{margin:0;font-size:24px}
-button{
-    border:0;
-    border-radius:7px;
-    padding:11px 18px;
-    cursor:pointer;
-    font-weight:600;
-}
-.logout{background:white;color:#173b68}
+
+header h1{margin:0;font-size:22px}
+
 .container{
-    max-width:1180px;
-    margin:25px auto;
-    padding:0 16px;
+max-width:1250px;
+margin:25px auto;
+padding:0 18px
 }
-.message{
-    padding:14px 16px;
-    background:#eaf3ff;
-    border-radius:7px;
-    margin-bottom:15px;
+
+.login-box,.card{
+background:white;
+border-radius:12px;
+padding:22px;
+box-shadow:0 2px 10px rgba(0,0,0,.06);
+margin-bottom:20px
 }
-.error{
-    background:#ffe8e8;
-    color:#b42318;
-}
-.tabs{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:20px;
-}
-.tab{
-    background:#e8eef7;
-    color:#173b68;
-}
-.tab.active{
-    background:#173b68;
-    color:white;
-}
-.card{
-    background:white;
-    border-radius:12px;
-    padding:24px;
-    box-shadow:0 3px 12px rgba(0,0,0,.07);
-    margin-bottom:20px;
-}
-h2{margin-top:0}
-label{
-    display:block;
-    font-weight:600;
-    margin:15px 0 7px;
-}
+
 input,select,textarea{
-    width:100%;
-    padding:12px;
-    border:1px solid #ccd6e0;
-    border-radius:7px;
-    font-size:15px;
+width:100%;
+padding:11px;
+border:1px solid #ccd4df;
+border-radius:7px;
+margin-top:6px;
+margin-bottom:14px;
+font-size:14px
 }
-textarea{min-height:110px;resize:vertical}
-.grid2{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
+
+textarea{
+min-height:90px;
+resize:vertical
 }
+
+button{
+border:0;
+border-radius:7px;
+padding:10px 15px;
+cursor:pointer;
+font-weight:600
+}
+
 .primary{
-    background:#173b68;
-    color:white;
-    margin-top:18px;
+background:#17365d;
+color:white
 }
+
 .secondary{
-    background:#e8eef7;
-    color:#173b68;
+background:#e8eef7;
+color:#17365d
 }
+
+.danger{
+background:#ffe9e9;
+color:#a40000
+}
+
+.hidden{display:none!important}
+
+.nav{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-bottom:20px
+}
+
+.nav button.active{
+background:#17365d;
+color:white
+}
+
+.section{display:none}
+.section.active{display:block}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px
+}
+
+.full{grid-column:1/-1}
+
 .stats{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:14px;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:15px;
+margin-bottom:20px
 }
+
 .stat{
-    background:white;
-    padding:25px 15px;
-    text-align:center;
-    border-radius:10px;
-    box-shadow:0 3px 10px rgba(0,0,0,.06);
+background:white;
+padding:20px;
+border-radius:10px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.05)
 }
+
 .stat strong{
-    display:block;
-    font-size:30px;
-    margin-bottom:5px;
+display:block;
+font-size:28px;
+color:#17365d;
+margin-bottom:5px
 }
-.searchbox{
-    margin-bottom:10px;
+
+.item{
+border:1px solid #dde3ec;
+border-radius:9px;
+padding:15px;
+margin-bottom:12px;
+background:#fff
 }
-.small{
-    font-size:13px;
-    color:#60758a;
+
+.item h3{margin:0 0 8px}
+
+.badge{
+display:inline-block;
+padding:4px 8px;
+border-radius:20px;
+font-size:12px;
+margin-right:5px;
+background:#edf1f6
 }
-.hidden{display:none}
+
+.badge.green{
+background:#e7f7ed;
+color:#176c35
+}
+
+.badge.red{
+background:#ffeaea;
+color:#a00000
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px
+}
+
+.message{
+padding:12px;
+border-radius:7px;
+margin-bottom:15px;
+display:none
+}
+
+.message.show{
+display:block;
+background:#eaf4ff;
+color:#174a7c
+}
+
+.message.error{
+display:block;
+background:#ffeaea;
+color:#9c0000
+}
+
+.table-wrap{overflow:auto}
+
+table{
+width:100%;
+border-collapse:collapse
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #e1e5eb;
+text-align:left
+}
+
+th{background:#f1f4f8}
+
+/* SEARCHABLE TOPIC CONTROL */
+.topic-picker{
+position:relative;
+width:100%;
+margin-bottom:14px
+}
+
+.topic-search{
+margin:0;
+width:100%;
+padding:12px 42px 12px 12px;
+background:white
+}
+
+.topic-dropdown{
+position:absolute;
+top:100%;
+left:0;
+right:0;
+z-index:1000;
+background:white;
+border:1px solid #ccd4df;
+border-radius:0 0 7px 7px;
+max-height:320px;
+overflow-y:auto;
+box-shadow:0 5px 15px rgba(0,0,0,.12);
+display:none
+}
+
+.topic-dropdown.show{
+display:block
+}
+
+.topic-option{
+padding:11px 13px;
+cursor:pointer;
+border-bottom:1px solid #edf0f4;
+font-size:14px
+}
+
+.topic-option:hover{
+background:#edf4ff
+}
+
+.topic-option:last-child{
+border-bottom:0
+}
+
+.topic-no-result{
+padding:12px;
+color:#777;
+font-size:14px
+}
+
+.topic-selected{
+background:#f8fbff
+}
+
 @media(max-width:800px){
-    .grid2,.stats{grid-template-columns:1fr}
+.grid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.stats{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:500px){
+.stats{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -130,94 +268,287 @@ textarea{min-height:110px;resize:vertical}
 <body>
 
 <header>
-    <h1>LakshyaSetu Admin</h1>
-    <button class="logout" onclick="logout()">Logout</button>
+<h1>LakshyaSetu Admin</h1>
+<button id="logoutBtn" class="secondary hidden">Logout</button>
 </header>
 
 <div class="container">
 
-<div id="message" class="message hidden"></div>
+<div id="message" class="message"></div>
 
-<div class="tabs">
-    <button class="tab active" onclick="showSection('dashboard',this)">Dashboard</button>
-    <button class="tab" onclick="showSection('courses',this)">Courses</button>
-    <button class="tab" onclick="showSection('subjects',this)">Subjects</button>
-    <button class="tab" onclick="showSection('topics',this)">Topics</button>
-    <button class="tab" onclick="showSection('lessons',this)">Lessons</button>
-    <button class="tab" onclick="showSection('mcqs',this)">MCQs</button>
-    <button class="tab" onclick="showSection('pricing',this)">Pricing</button>
+<div id="loginBox" class="login-box">
+<h2>Admin Login</h2>
+
+<form id="loginForm">
+
+<label>Email</label>
+<input id="email" type="email" required>
+
+<label>Password</label>
+<input id="password" type="password" required>
+
+<button type="submit" class="primary">Login</button>
+
+</form>
+</div>
+
+<div id="dashboard" class="hidden">
+
+<div class="nav">
+<button class="primary active" data-section="dashboardSection">Dashboard</button>
+<button class="secondary" data-section="coursesSection">Courses</button>
+<button class="secondary" data-section="subjectsSection">Subjects</button>
+<button class="secondary" data-section="topicsSection">Topics</button>
+<button class="secondary" data-section="lessonsSection">Lessons</button>
+<button class="secondary" data-section="mcqsSection">MCQs</button>
+<button class="secondary" data-section="pricingSection">Pricing</button>
 </div>
 
 <!-- DASHBOARD -->
-<section id="dashboard" class="section">
+
+<section id="dashboardSection" class="section active">
+
 <div class="card">
 <h2>Admin Dashboard</h2>
 <p>Manage LakshyaSetu courses, subjects, topics, lessons and MCQs.</p>
 </div>
 
 <div class="stats">
-<div class="stat"><strong id="courseCount">0</strong>Courses</div>
-<div class="stat"><strong id="subjectCount">0</strong>Subjects</div>
-<div class="stat"><strong id="topicCount">0</strong>Topics</div>
-<div class="stat"><strong id="lessonCount">0</strong>Lessons</div>
-<div class="stat"><strong id="mcqCount">0</strong>MCQs</div>
+
+<div class="stat">
+<strong id="courseCount">0</strong>
+Courses
 </div>
+
+<div class="stat">
+<strong id="subjectCount">0</strong>
+Subjects
+</div>
+
+<div class="stat">
+<strong id="topicCount">0</strong>
+Topics
+</div>
+
+<div class="stat">
+<strong id="lessonCount">0</strong>
+Lessons
+</div>
+
+<div class="stat">
+<strong id="mcqCount">0</strong>
+MCQs
+</div>
+
+</div>
+
 </section>
 
 <!-- COURSES -->
-<section id="courses" class="section hidden">
+
+<section id="coursesSection" class="section">
+
 <div class="card">
+
 <h2>Course Management</h2>
 
-<label>Course Name</label>
-<input id="courseName" placeholder="Enter course name">
+<form id="courseForm">
 
+<input type="hidden" id="courseId">
+
+<div class="grid">
+
+<div>
+<label>Course Title</label>
+<input id="courseTitle" required>
+</div>
+
+<div>
 <label>Slug</label>
-<input id="courseSlug" placeholder="course-slug">
+<input id="courseSlug" required>
+</div>
 
+<div class="full">
 <label>Description</label>
 <textarea id="courseDescription"></textarea>
-
-<label>Price</label>
-<input id="coursePrice" type="number" value="0">
-
-<button class="primary" onclick="createCourse()">Create Course</button>
 </div>
+
+<div>
+<label>Language</label>
+<input id="courseLanguage" value="Telugu + English">
+</div>
+
+<div>
+<label>Validity Years</label>
+<input id="courseValidity" type="number" value="2" min="1">
+</div>
+
+<div>
+<label>Original Fee</label>
+<input id="courseOriginalFee" type="number" min="0">
+</div>
+
+<div>
+<label>Current Fee</label>
+<input id="courseCurrentFee" type="number" min="0">
+</div>
+
+<div class="full">
+
+<label>
+<input id="coursePublished" type="checkbox" style="width:auto" checked>
+Enable Course
+</label>
+
+</div>
+
+</div>
+
+<div class="actions">
+<button type="submit" class="primary" id="courseSaveBtn">
+Create Course
+</button>
+
+<button type="button" class="secondary" id="courseCancelBtn">
+Cancel
+</button>
+</div>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Courses</h2>
+<div id="courseList"></div>
+</div>
+
 </section>
 
 <!-- SUBJECTS -->
-<section id="subjects" class="section hidden">
+
+<section id="subjectsSection" class="section">
+
 <div class="card">
+
 <h2>Subject Management</h2>
 
+<form id="subjectForm">
+
+<input type="hidden" id="subjectId">
+
+<div class="grid">
+
+<div>
 <label>Course</label>
-<select id="subjectCourse"></select>
+<select id="subjectCourse" required></select>
+</div>
 
-<label>Subject Name</label>
-<input id="subjectName" placeholder="Enter subject name">
+<div>
+<label>Subject Title</label>
+<input id="subjectTitle" required>
+</div>
 
+<div>
+<label>Slug</label>
+<input id="subjectSlug" required>
+</div>
+
+<div>
+<label>Order</label>
+<input id="subjectOrder" type="number" value="1">
+</div>
+
+<div>
+<label>Subject Price</label>
+<input id="subjectFee" type="number" min="0">
+</div>
+
+<div class="full">
 <label>Description</label>
 <textarea id="subjectDescription"></textarea>
-
-<button class="primary" onclick="createSubject()">Create Subject</button>
 </div>
+
+<div class="full">
+
+<label>
+<input id="subjectPublished" type="checkbox" style="width:auto" checked>
+Published
+</label>
+
+<br>
+
+<label>
+<input id="subjectTrial" type="checkbox" style="width:auto">
+Trial Subject
+</label>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button type="submit" class="primary" id="subjectSaveBtn">
+Create Subject
+</button>
+
+<button type="button" class="secondary" id="subjectCancelBtn">
+Cancel
+</button>
+
+</div>
+
+</form>
+</div>
+
+<div class="card">
+
+<h2>Subjects</h2>
+
+<label>Filter Course</label>
+
+<select id="subjectFilter">
+<option value="">All Courses</option>
+</select>
+
+<div id="subjectList"></div>
+
+</div>
+
 </section>
 
 <!-- TOPICS -->
-<section id="topics" class="section hidden">
+
+<section id="topicsSection" class="section">
+
 <div class="card">
+
 <h2>Topic Management</h2>
 
-<label>Course Subject</label>
-<select id="topicCourseSubject"></select>
+<form id="topicForm">
 
+<input type="hidden" id="topicId">
+
+<div class="grid">
+
+<div class="full">
+
+<label>Subject</label>
+
+<select id="topicSubject" required></select>
+
+</div>
+
+<div>
 <label>Topic Title</label>
-<input id="topicTitle">
+<input id="topicTitle" required>
+</div>
 
+<div>
 <label>Slug</label>
-<input id="topicSlug">
+<input id="topicSlug" required>
+</div>
 
-<div class="grid2">
 <div>
 <label>Order</label>
 <input id="topicOrder" type="number" value="1">
@@ -225,1252 +556,2347 @@ textarea{min-height:110px;resize:vertical}
 
 <div>
 <label>Topic Price</label>
-<input id="topicFee" type="number" value="0">
-</div>
+<input id="topicFee" type="number" min="0" step="0.01">
 </div>
 
+<div>
 <label>Number of Videos</label>
-<input id="topicVideoCount" type="number" value="0">
+<input id="topicVideoCount" type="number" min="0" value="0">
+</div>
 
+<div class="full">
 <label>Description</label>
 <textarea id="topicDescription"></textarea>
-
-<button class="primary" onclick="createTopic()">Create Topic</button>
 </div>
+
+</div>
+
+<div class="actions">
+
+<button type="submit" class="primary" id="topicSaveBtn">
+Create Topic
+</button>
+
+<button type="button" class="secondary" id="topicCancelBtn">
+Cancel
+</button>
+
+</div>
+
+</form>
+</div>
+
+<div class="card">
+
+<h2>Topics</h2>
+
+<label>Filter Subject</label>
+
+<select id="topicFilter">
+<option value="">All Subjects</option>
+</select>
+
+<div id="topicList"></div>
+
+</div>
+
 </section>
 
 <!-- LESSONS -->
-<section id="lessons" class="section hidden">
+
+<section id="lessonsSection" class="section">
+
 <div class="card">
 
 <h2>Lesson Management</h2>
 
-<label>Search Topic</label>
-<input
-    id="lessonTopicSearch"
-    class="searchbox"
-    placeholder="Type topic name to search..."
-    oninput="filterLessonTopics()"
->
+<form id="lessonForm">
+
+<input type="hidden" id="lessonId">
+
+<div class="grid">
+
+<!-- ONE SEARCHABLE TOPIC CONTROL -->
+
+<div class="full">
 
 <label>Topic</label>
-<select id="lessonTopic" onchange="topicChanged()">
-    <option value="">Select Topic</option>
-</select>
 
-<div class="grid2">
+<div class="topic-picker">
+
+<input
+id="lessonTopicSearch"
+class="topic-search"
+type="text"
+placeholder="Search and select topic..."
+autocomplete="off"
+required
+>
+
+<input
+id="lessonTopic"
+type="hidden"
+>
+
+<div id="lessonTopicDropdown" class="topic-dropdown"></div>
+
+</div>
+
+</div>
 
 <div>
+
 <label>Course</label>
-<select id="lessonCourse">
-    <option value="">Select Course</option>
-</select>
+
+<select id="lessonCourse" required></select>
+
 </div>
 
 <div>
+
 <label>Subject</label>
-<select id="lessonSubject">
-    <option value="">Select Subject</option>
-</select>
-</div>
+
+<select id="lessonSubject" required></select>
 
 </div>
+
+<div class="full">
 
 <label>Lesson Title</label>
-<input id="lessonTitle">
+<input id="lessonTitle" required>
+
+</div>
+
+<div class="full">
 
 <label>Description</label>
 <textarea id="lessonDescription"></textarea>
 
-<div class="grid2">
+</div>
 
 <div>
+
 <label>Video URL</label>
-<input id="lessonVideoUrl" placeholder="https://...">
+<input id="lessonVideoUrl">
+
 </div>
 
 <div>
+
 <label>PDF URL</label>
-<input id="lessonPdfUrl" placeholder="https://...">
-</div>
+<input id="lessonPdfUrl">
 
 </div>
-
-<div class="grid2">
 
 <div>
+
 <label>Order</label>
 <input id="lessonOrder" type="number" value="1">
+
 </div>
 
 <div>
+
 <label>Number of Videos</label>
-<input id="lessonVideoCount" type="number" value="0">
-</div>
+<input id="lessonVideoCount" type="number" min="0" value="0">
 
 </div>
-
-<div class="grid2">
 
 <div>
+
 <label>Visualized Fee</label>
-<input id="visualizedFee" type="number" value="0">
+<input id="lessonVisualizedFee" type="number" min="0">
+
 </div>
 
 <div>
+
 <label>PPT Fee</label>
-<input id="pptFee" type="number" value="0">
-</div>
+<input id="lessonPptFee" type="number" min="0">
 
 </div>
-
-<div class="grid2">
 
 <div>
+
 <label>Visualized Video URL</label>
-<input id="visualizedVideoUrl">
+<input id="lessonVisualizedUrl">
+
 </div>
 
 <div>
+
 <label>PPT Video URL</label>
-<input id="pptVideoUrl">
+<input id="lessonPptUrl">
+
+</div>
+
+<div class="full">
+
+<label>
+<input id="lessonPublished" type="checkbox" style="width:auto" checked>
+Published
+</label>
+
+<br>
+
+<label>
+<input id="lessonTrial" type="checkbox" style="width:auto">
+Free Trial
+</label>
+
 </div>
 
 </div>
 
-<div class="grid2">
+<div class="actions">
 
-<div>
-<label>Published</label>
-<select id="lessonPublished">
-<option value="true">Yes</option>
-<option value="false">No</option>
+<button type="submit" class="primary" id="lessonSaveBtn">
+Create Lesson
+</button>
+
+<button type="button" class="secondary" id="lessonCancelBtn">
+Cancel
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Lessons</h2>
+
+<label>Filter Topic</label>
+
+<select id="lessonFilter">
+<option value="">All Topics</option>
 </select>
-</div>
 
-<div>
-<label>Free Trial</label>
-<select id="lessonTrial">
-<option value="false">No</option>
-<option value="true">Yes</option>
-</select>
-</div>
+<div id="lessonList"></div>
 
 </div>
 
-<button class="primary" onclick="createLesson()">Create Lesson</button>
-
-</div>
 </section>
 
 <!-- MCQS -->
-<section id="mcqs" class="section hidden">
+
+<section id="mcqsSection" class="section">
+
 <div class="card">
+
 <h2>MCQ Management</h2>
-<p>MCQ management will be populated after the lesson workflow is completed.</p>
+
+<form id="mcqForm">
+
+<input type="hidden" id="mcqId">
+
+<div class="grid">
+
+<div class="full">
+
+<label>Lesson</label>
+<select id="mcqLesson"></select>
+
 </div>
+
+<div class="full">
+
+<label>Question</label>
+<textarea id="mcqQuestion" required></textarea>
+
+</div>
+
+<div>
+<label>Option A</label>
+<input id="mcqA">
+</div>
+
+<div>
+<label>Option B</label>
+<input id="mcqB">
+</div>
+
+<div>
+<label>Option C</label>
+<input id="mcqC">
+</div>
+
+<div>
+<label>Option D</label>
+<input id="mcqD">
+</div>
+
+<div>
+
+<label>Correct Option</label>
+
+<select id="mcqCorrect">
+
+<option value="">Select</option>
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="C">C</option>
+<option value="D">D</option>
+
+</select>
+
+</div>
+
+<div class="full">
+
+<label>Explanation</label>
+<textarea id="mcqExplanation"></textarea>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button type="submit" class="primary" id="mcqSaveBtn">
+Create MCQ
+</button>
+
+<button type="button" class="secondary" id="mcqCancelBtn">
+Cancel
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Existing MCQs</h2>
+
+<div id="mcqList"></div>
+
+</div>
+
 </section>
 
 <!-- PRICING -->
-<section id="pricing" class="section hidden">
+
+<section id="pricingSection" class="section">
+
 <div class="card">
-<h2>Pricing Management</h2>
-<p>Pricing configuration.</p>
+
+<h2>Course Pricing</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Course</th>
+<th>Original Fee</th>
+<th>Current Fee</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="coursePricingList"></tbody>
+
+</table>
+
 </div>
+
+</div>
+
+<div class="card">
+
+<h2>Subject Pricing</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Subject</th>
+<th>Course</th>
+<th>Subject Fee</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="subjectPricingList"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </section>
 
 </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+const LAKSHYASETU_CONFIG={
+supabaseUrl:"https://byounbmdyuytoqqyhgos.supabase.co",
+supabasePublishableKey:"sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa"
+};
 
-const SUPABASE_URL =
-"https://byounbmdyuytoqyyhgos.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa";
-
-const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+const supabaseClient=window.supabase.createClient(
+LAKSHYASETU_CONFIG.supabaseUrl,
+LAKSHYASETU_CONFIG.supabasePublishableKey
 );
 
+let courses=[];
+let subjects=[];
+let topics=[];
+let lessons=[];
+let mcqs=[];
 
-/* =========================================================
-   GLOBAL DATA
-========================================================= */
+const $=id=>document.getElementById(id);
 
-let allTopics = [];
-let allCourses = [];
-let allSubjects = [];
-let allCourseSubjects = [];
+function showMessage(text,error=false){
 
+const box=$("message");
 
-/* =========================================================
-   MESSAGE
-========================================================= */
+box.textContent=text;
 
-function showMessage(text, error=false){
+box.className="message show"+(error?" error":"");
 
-    const box = document.getElementById("message");
-
-    box.textContent = text;
-    box.classList.remove("hidden");
-
-    if(error){
-        box.classList.add("error");
-    }else{
-        box.classList.remove("error");
-    }
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
 }
 
+function escapeHtml(value){
 
-/* =========================================================
-   SECTION NAVIGATION
-========================================================= */
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-function showSection(section,button){
-
-    document.querySelectorAll(".section")
-        .forEach(s=>s.classList.add("hidden"));
-
-    document.getElementById(section)
-        .classList.remove("hidden");
-
-    document.querySelectorAll(".tab")
-        .forEach(b=>b.classList.remove("active"));
-
-    button.classList.add("active");
-
-    if(section==="dashboard"){
-        loadDashboard();
-    }
-
-    if(section==="courses"){
-        loadCourses();
-    }
-
-    if(section==="subjects"){
-        loadCoursesForSubject();
-    }
-
-    if(section==="topics"){
-        loadCourseSubjectsForTopics();
-    }
-
-    if(section==="lessons"){
-        loadLessonData();
-    }
 }
 
+function money(value){
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+if(value===null||value===undefined||value==="")
+return"Not set";
 
-async function loadDashboard(){
+return"₹"+Number(value).toLocaleString("en-IN");
 
-    try{
-
-        const [
-            courses,
-            subjects,
-            topics,
-            lessons,
-            mcqs
-        ] = await Promise.all([
-
-            supabaseClient
-                .from("courses")
-                .select("id",{count:"exact",head:true}),
-
-            supabaseClient
-                .from("subjects")
-                .select("id",{count:"exact",head:true}),
-
-            supabaseClient
-                .from("course_topics")
-                .select("id",{count:"exact",head:true}),
-
-            supabaseClient
-                .from("lessons")
-                .select("id",{count:"exact",head:true}),
-
-            supabaseClient
-                .from("mcqs")
-                .select("id",{count:"exact",head:true})
-        ]);
-
-        document.getElementById("courseCount").textContent =
-            courses.count || 0;
-
-        document.getElementById("subjectCount").textContent =
-            subjects.count || 0;
-
-        document.getElementById("topicCount").textContent =
-            topics.count || 0;
-
-        document.getElementById("lessonCount").textContent =
-            lessons.count || 0;
-
-        document.getElementById("mcqCount").textContent =
-            mcqs.count || 0;
-
-    }catch(error){
-
-        console.error(error);
-
-    }
 }
 
+function slugify(text){
 
-/* =========================================================
-   COURSES
-========================================================= */
+return String(text||"")
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9]+/g,"-")
+.replace(/^-+|-+$/g,"");
+
+}
+
+/* NAVIGATION */
+
+document.querySelectorAll(".nav button").forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+document.querySelectorAll(".nav button")
+.forEach(x=>x.classList.remove("active"));
+
+document.querySelectorAll(".section")
+.forEach(x=>x.classList.remove("active"));
+
+button.classList.add("active");
+
+$(button.dataset.section).classList.add("active");
+
+});
+
+});
+
+/* ADMIN */
+
+async function checkAdmin(){
+
+const result=await supabaseClient.rpc("is_admin");
+
+if(result.error){
+
+showMessage(
+"Admin verification failed: "+result.error.message,
+true
+);
+
+return false;
+
+}
+
+if(result.data!==true){
+
+showMessage(
+"This account does not have Admin access.",
+true
+);
+
+return false;
+
+}
+
+return true;
+
+}
+
+/* LOGIN */
+
+$("loginForm").addEventListener("submit",async e=>{
+
+e.preventDefault();
+
+showMessage("Logging in...");
+
+const result=await supabaseClient.auth.signInWithPassword({
+
+email:$("email").value.trim(),
+
+password:$("password").value
+
+});
+
+if(result.error){
+
+showMessage(result.error.message,true);
+
+return;
+
+}
+
+const allowed=await checkAdmin();
+
+if(!allowed){
+
+await supabaseClient.auth.signOut();
+
+return;
+
+}
+
+$("loginBox").classList.add("hidden");
+$("dashboard").classList.remove("hidden");
+$("logoutBtn").classList.remove("hidden");
+
+showMessage("Admin login successful.");
+
+await loadAll();
+
+});
+
+/* LOGOUT */
+
+$("logoutBtn").addEventListener("click",async()=>{
+
+await supabaseClient.auth.signOut();
+
+location.reload();
+
+});
+
+/* COURSES */
 
 async function loadCourses(){
 
-    const {data,error} =
-        await supabaseClient
-        .from("courses")
-        .select("*")
-        .order("name",{ascending:true});
+const result=await supabaseClient
+.from("courses")
+.select("*")
+.order("id");
 
-    if(error){
-        console.error(error);
-        return;
-    }
+if(result.error){
 
-    allCourses = data || [];
+showMessage(
+"Course loading failed: "+result.error.message,
+true
+);
 
-    populateSelect(
-        "subjectCourse",
-        allCourses,
-        "id",
-        "name",
-        "Select Course"
-    );
-}
-
-
-async function loadCoursesForSubject(){
-
-    await loadCourses();
+return;
 
 }
 
+courses=result.data||[];
 
-async function createCourse(){
+$("courseCount").textContent=courses.length;
 
-    const name =
-        document.getElementById("courseName").value.trim();
+renderCourses();
 
-    const slug =
-        document.getElementById("courseSlug").value.trim();
+populateCourseSelects();
 
-    const description =
-        document.getElementById("courseDescription").value.trim();
-
-    const price =
-        Number(document.getElementById("coursePrice").value || 0);
-
-    if(!name){
-        showMessage("Enter course name.",true);
-        return;
-    }
-
-    const {error} =
-        await supabaseClient
-        .from("courses")
-        .insert([{
-            name,
-            slug,
-            description,
-            price
-        }]);
-
-    if(error){
-        showMessage(error.message,true);
-        return;
-    }
-
-    showMessage("Course created successfully.");
-
-    document.getElementById("courseName").value="";
-    document.getElementById("courseSlug").value="";
-    document.getElementById("courseDescription").value="";
-    document.getElementById("coursePrice").value="0";
-
-    loadDashboard();
-}
-
-
-/* =========================================================
-   SUBJECTS
-========================================================= */
-
-async function createSubject(){
-
-    const courseId =
-        document.getElementById("subjectCourse").value;
-
-    const name =
-        document.getElementById("subjectName").value.trim();
-
-    const description =
-        document.getElementById("subjectDescription").value.trim();
-
-    if(!courseId){
-        showMessage("Select course.",true);
-        return;
-    }
-
-    if(!name){
-        showMessage("Enter subject name.",true);
-        return;
-    }
-
-    const {data:subject,error:subjectError} =
-        await supabaseClient
-        .from("subjects")
-        .insert([{
-            name,
-            description
-        }])
-        .select()
-        .single();
-
-    if(subjectError){
-        showMessage(subjectError.message,true);
-        return;
-    }
-
-    const {error:relationError} =
-        await supabaseClient
-        .from("course_subjects")
-        .insert([{
-            course_id:courseId,
-            subject_id:subject.id
-        }]);
-
-    if(relationError){
-        showMessage(relationError.message,true);
-        return;
-    }
-
-    showMessage("Subject created successfully.");
-
-    document.getElementById("subjectName").value="";
-    document.getElementById("subjectDescription").value="";
-
-    loadDashboard();
-}
-
-
-/* =========================================================
-   COURSE SUBJECTS
-========================================================= */
-
-async function loadCourseSubjectsForTopics(){
-
-    const {data,error} =
-        await supabaseClient
-        .from("course_subjects")
-        .select(`
-            id,
-            course_id,
-            subject_id,
-            courses(name),
-            subjects(name)
-        `);
-
-    if(error){
-        console.error(error);
-        showMessage(error.message,true);
-        return;
-    }
-
-    allCourseSubjects = data || [];
-
-    const select =
-        document.getElementById("topicCourseSubject");
-
-    select.innerHTML =
-        `<option value="">Select Course / Subject</option>`;
-
-    allCourseSubjects
-        .sort((a,b)=>{
-
-            const aa =
-                `${a.courses?.name || ""} ${a.subjects?.name || ""}`;
-
-            const bb =
-                `${b.courses?.name || ""} ${b.subjects?.name || ""}`;
-
-            return aa.localeCompare(bb);
-
-        })
-        .forEach(row=>{
-
-            const option =
-                document.createElement("option");
-
-            option.value = row.id;
-
-            option.textContent =
-                `${row.courses?.name || "Course"} — ${row.subjects?.name || "Subject"}`;
-
-            select.appendChild(option);
-
-        });
-}
-
-
-/* =========================================================
-   TOPICS
-========================================================= */
-
-async function createTopic(){
-
-    const courseSubjectId =
-        document.getElementById("topicCourseSubject").value;
-
-    const title =
-        document.getElementById("topicTitle").value.trim();
-
-    const slug =
-        document.getElementById("topicSlug").value.trim();
-
-    const order =
-        Number(document.getElementById("topicOrder").value || 1);
-
-    const fee =
-        Number(document.getElementById("topicFee").value || 0);
-
-    const videoCount =
-        Number(document.getElementById("topicVideoCount").value || 0);
-
-    const description =
-        document.getElementById("topicDescription").value.trim();
-
-    if(!courseSubjectId){
-        showMessage("Select course and subject.",true);
-        return;
-    }
-
-    if(!title){
-        showMessage("Enter topic title.",true);
-        return;
-    }
-
-    const {error} =
-        await supabaseClient
-        .from("course_topics")
-        .insert([{
-            course_subject_id:courseSubjectId,
-            title,
-            slug,
-            sort_order:order,
-            topic_fee:fee,
-            video_count:videoCount,
-            description,
-            published:true,
-            is_trial:false
-        }]);
-
-    if(error){
-        showMessage(error.message,true);
-        return;
-    }
-
-    showMessage("Topic created successfully.");
-
-    document.getElementById("topicTitle").value="";
-    document.getElementById("topicSlug").value="";
-    document.getElementById("topicOrder").value="1";
-    document.getElementById("topicFee").value="0";
-    document.getElementById("topicVideoCount").value="0";
-    document.getElementById("topicDescription").value="";
-
-    loadDashboard();
-}
-
-
-/* =========================================================
-   LESSON DATA
-========================================================= */
-
-async function loadLessonData(){
-
-    await Promise.all([
-        loadLessonTopics(),
-        loadLessonCourses(),
-        loadLessonSubjects()
-    ]);
+renderCoursePricing();
 
 }
 
+function renderCourses(){
 
-/* =========================================================
-   LESSON TOPICS
-   308 TOPICS
-   ALPHABETICAL ORDER
-========================================================= */
+$("courseList").innerHTML=courses.length
 
-async function loadLessonTopics(){
+?courses.map(course=>`
 
-    const {data,error} =
-        await supabaseClient
-        .from("course_topics")
-        .select(`
-            id,
-            course_subject_id,
-            title,
-            slug,
-            description,
-            sort_order,
-            topic_fee,
-            video_count
-        `);
+<div class="item">
 
-    if(error){
+<h3>${escapeHtml(course.title)}</h3>
 
-        console.error(error);
+<p>${escapeHtml(course.description||"")}</p>
 
-        showMessage(error.message,true);
+<span class="badge">
+${money(course.course_fee)}
+</span>
 
-        return;
-    }
+<span class="badge">
+Current: ${money(course.current_fee)}
+</span>
 
-    allTopics = data || [];
+<span class="badge">
+Validity: ${course.validity_years||2} years
+</span>
 
-    allTopics.sort((a,b)=>
-        (a.title || "").localeCompare(
-            b.title || "",
-            undefined,
-            {sensitivity:"base"}
-        )
-    );
+<span class="badge ${course.published?"green":"red"}">
+${course.published?"Published":"Unpublished"}
+</span>
 
-    renderLessonTopics(allTopics);
+<div class="actions">
 
-}
+<button
+class="primary"
+onclick="editCourse(${course.id})">
+Edit
+</button>
 
+</div>
 
-/* =========================================================
-   RENDER TOPICS
-========================================================= */
+</div>
 
-function renderLessonTopics(topics){
+`).join("")
 
-    const select =
-        document.getElementById("lessonTopic");
-
-    const current =
-        select.value;
-
-    select.innerHTML =
-        `<option value="">Select Topic</option>`;
-
-    topics.forEach(topic=>{
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            topic.id;
-
-        option.textContent =
-            topic.title;
-
-        option.dataset.courseSubjectId =
-            topic.course_subject_id;
-
-        select.appendChild(option);
-
-    });
-
-    if(
-        current &&
-        topics.some(t=>String(t.id)===String(current))
-    ){
-        select.value=current;
-    }
+:`<div class="item">No courses found.</div>`;
 
 }
 
+function populateCourseSelects(){
 
-/* =========================================================
-   TOPIC SEARCH
-========================================================= */
+const options=courses.map(course=>`
 
-function filterLessonTopics(){
+<option value="${course.id}">
+${escapeHtml(course.title)}
+</option>
 
-    const search =
-        document.getElementById("lessonTopicSearch")
-        .value
-        .trim()
-        .toLowerCase();
+`).join("");
 
-    if(!search){
+$("subjectCourse").innerHTML=
+`<option value="">Select Course</option>`+options;
 
-        renderLessonTopics(allTopics);
+$("subjectFilter").innerHTML=
+`<option value="">All Courses</option>`+options;
 
-        return;
-    }
-
-    const filtered =
-        allTopics.filter(topic=>
-            (topic.title || "")
-            .toLowerCase()
-            .includes(search)
-        );
-
-    renderLessonTopics(filtered);
+$("lessonCourse").innerHTML=
+`<option value="">Select Course</option>`+options;
 
 }
 
+$("courseTitle").addEventListener("input",()=>{
 
-/* =========================================================
-   LESSON COURSES
-========================================================= */
+if(!$("courseId").value)
 
-async function loadLessonCourses(){
+$("courseSlug").value=
+slugify($("courseTitle").value);
 
-    const {data,error} =
-        await supabaseClient
-        .from("courses")
-        .select("id,name")
-        .order("name",{ascending:true});
+});
 
-    if(error){
+$("courseForm").addEventListener("submit",async e=>{
 
-        console.error(error);
+e.preventDefault();
 
-        showMessage(error.message,true);
+showMessage("Saving course...");
 
-        return;
-    }
+const id=$("courseId").value;
 
-    populateSelect(
-        "lessonCourse",
-        data || [],
-        "id",
-        "name",
-        "Select Course"
-    );
+const data={
 
-}
+title:$("courseTitle").value.trim(),
 
+slug:$("courseSlug").value.trim(),
 
-/* =========================================================
-   LESSON SUBJECTS
-========================================================= */
+description:$("courseDescription").value.trim()||null,
 
-async function loadLessonSubjects(){
+language:$("courseLanguage").value.trim()||"Telugu + English",
 
-    const {data,error} =
-        await supabaseClient
-        .from("subjects")
-        .select("id,name")
-        .order("name",{ascending:true});
+validity_years:Number($("courseValidity").value)||2,
 
-    if(error){
+original_fee:$("courseOriginalFee").value===""
+?null
+:Number($("courseOriginalFee").value),
 
-        console.error(error);
+current_fee:$("courseCurrentFee").value===""
+?null
+:Number($("courseCurrentFee").value),
 
-        showMessage(error.message,true);
+course_fee:$("courseCurrentFee").value===""
+?null
+:Number($("courseCurrentFee").value),
 
-        return;
-    }
+published:$("coursePublished").checked
 
-    allSubjects = data || [];
+};
 
-    populateSelect(
-        "lessonSubject",
-        allSubjects,
-        "id",
-        "name",
-        "Select Subject"
-    );
+const result=id
+
+?await supabaseClient
+.from("courses")
+.update(data)
+.eq("id",id)
+
+:await supabaseClient
+.from("courses")
+.insert(data);
+
+if(result.error){
+
+showMessage(result.error.message,true);
+
+return;
 
 }
 
+showMessage(
+id
+?"Course updated successfully."
+:"Course created successfully."
+);
 
-/* =========================================================
-   GENERIC SELECT
-========================================================= */
+resetCourse();
 
-function populateSelect(
-    elementId,
-    data,
-    valueKey,
-    labelKey,
-    placeholder
-){
+await loadCourses();
 
-    const select =
-        document.getElementById(elementId);
+});
 
-    if(!select) return;
+window.editCourse=id=>{
 
-    select.innerHTML =
-        `<option value="">${placeholder}</option>`;
+const course=courses.find(x=>x.id===id);
 
-    (data || []).forEach(item=>{
+if(!course)return;
 
-        const option =
-            document.createElement("option");
+$("courseId").value=course.id;
 
-        option.value =
-            item[valueKey];
+$("courseTitle").value=course.title||"";
 
-        option.textContent =
-            item[labelKey];
+$("courseSlug").value=course.slug||"";
 
-        select.appendChild(option);
+$("courseDescription").value=
+course.description||"";
 
-    });
+$("courseLanguage").value=
+course.language||"Telugu + English";
 
-}
+$("courseValidity").value=
+course.validity_years||2;
 
+$("courseOriginalFee").value=
+course.original_fee??"";
 
-/* =========================================================
-   TOPIC CHANGED
-   IMPORTANT FIX:
-   topic.course_subject_id is NOT the same as subject.id
-========================================================= */
+$("courseCurrentFee").value=
+course.current_fee??course.course_fee??"";
 
-async function topicChanged(){
+$("coursePublished").checked=
+course.published!==false;
 
-    const topicId =
-        document.getElementById("lessonTopic").value;
+$("courseSaveBtn").textContent=
+"Save Course Changes";
 
-    if(!topicId){
-        return;
-    }
+};
 
-    const topic =
-        allTopics.find(
-            t=>String(t.id)===String(topicId)
-        );
+$("courseCancelBtn").addEventListener(
+"click",
+resetCourse
+);
 
-    if(!topic){
-        return;
-    }
+function resetCourse(){
 
-    const courseSubjectId =
-        topic.course_subject_id;
+$("courseForm").reset();
 
-    /*
-       Get the actual course_subject relation.
+$("courseId").value="";
 
-       course_subjects.id
-              |
-              +---- course_id
-              |
-              +---- subject_id
+$("courseLanguage").value=
+"Telugu + English";
 
-       lessons.subject_id MUST receive subject_id,
-       NOT course_subjects.id.
-    */
+$("courseValidity").value=2;
 
-    const {data,error} =
-        await supabaseClient
-        .from("course_subjects")
-        .select(`
-            id,
-            course_id,
-            subject_id
-        `)
-        .eq("id",courseSubjectId)
-        .maybeSingle();
+$("coursePublished").checked=true;
 
-    if(error){
-
-        console.error(error);
-
-        showMessage(
-            "Unable to load course/subject for this topic: "
-            + error.message,
-            true
-        );
-
-        return;
-    }
-
-    if(!data){
-
-        showMessage(
-            "Course Subject relation not found for this topic.",
-            true
-        );
-
-        return;
-    }
-
-    /*
-       Set ACTUAL course id
-    */
-
-    const courseSelect =
-        document.getElementById("lessonCourse");
-
-    courseSelect.value =
-        String(data.course_id);
-
-    /*
-       Set ACTUAL subject id
-
-       This fixes:
-       lessons_subject_id_fkey
-    */
-
-    const subjectSelect =
-        document.getElementById("lessonSubject");
-
-    subjectSelect.value =
-        String(data.subject_id);
-
-    /*
-       If the subject does not exist in the current
-       dropdown, reload subjects once.
-    */
-
-    if(subjectSelect.value !== String(data.subject_id)){
-
-        await loadLessonSubjects();
-
-        subjectSelect.value =
-            String(data.subject_id);
-    }
+$("courseSaveBtn").textContent=
+"Create Course";
 
 }
 
+/* SUBJECTS */
 
-/* =========================================================
-   CREATE LESSON
-========================================================= */
+async function loadSubjects(){
 
-async function createLesson(){
+const result=await supabaseClient
+.from("course_subjects")
+.select("*")
+.order("course_id")
+.order("sort_order");
 
-    const topicId =
-        document.getElementById("lessonTopic").value;
+if(result.error){
 
-    const courseId =
-        document.getElementById("lessonCourse").value;
+showMessage(
+"Subject loading failed: "+result.error.message,
+true
+);
 
-    const subjectId =
-        document.getElementById("lessonSubject").value;
-
-    const title =
-        document.getElementById("lessonTitle").value.trim();
-
-    const description =
-        document.getElementById("lessonDescription").value.trim();
-
-    const videoUrl =
-        document.getElementById("lessonVideoUrl").value.trim();
-
-    const pdfUrl =
-        document.getElementById("lessonPdfUrl").value.trim();
-
-    const order =
-        Number(document.getElementById("lessonOrder").value || 1);
-
-    const videoCount =
-        Number(document.getElementById("lessonVideoCount").value || 0);
-
-    const visualizedFee =
-        Number(document.getElementById("visualizedFee").value || 0);
-
-    const pptFee =
-        Number(document.getElementById("pptFee").value || 0);
-
-    const visualizedVideoUrl =
-        document.getElementById("visualizedVideoUrl").value.trim();
-
-    const pptVideoUrl =
-        document.getElementById("pptVideoUrl").value.trim();
-
-    const published =
-        document.getElementById("lessonPublished").value==="true";
-
-    const isTrial =
-        document.getElementById("lessonTrial").value==="true";
-
-
-    if(!topicId){
-
-        showMessage(
-            "Select a topic.",
-            true
-        );
-
-        return;
-    }
-
-
-    if(!courseId){
-
-        showMessage(
-            "Select a course.",
-            true
-        );
-
-        return;
-    }
-
-
-    if(!subjectId){
-
-        showMessage(
-            "Select a subject.",
-            true
-        );
-
-        return;
-    }
-
-
-    if(!title){
-
-        showMessage(
-            "Enter lesson title.",
-            true
-        );
-
-        return;
-    }
-
-
-    /*
-       FINAL SAFETY CHECK
-
-       Get topic's course_subject relation again.
-       This prevents accidentally inserting
-       course_subjects.id into lessons.subject_id.
-    */
-
-    const topic =
-        allTopics.find(
-            t=>String(t.id)===String(topicId)
-        );
-
-    if(!topic){
-
-        showMessage(
-            "Selected topic could not be found.",
-            true
-        );
-
-        return;
-    }
-
-
-    const {data:relation,error:relationError} =
-        await supabaseClient
-        .from("course_subjects")
-        .select(`
-            id,
-            course_id,
-            subject_id
-        `)
-        .eq("id",topic.course_subject_id)
-        .maybeSingle();
-
-
-    if(relationError){
-
-        showMessage(
-            relationError.message,
-            true
-        );
-
-        return;
-    }
-
-
-    if(!relation){
-
-        showMessage(
-            "Course Subject relation not found.",
-            true
-        );
-
-        return;
-    }
-
-
-    /*
-       Use DATABASE RELATION values.
-       Do NOT use course_subject_id as subject_id.
-    */
-
-    const actualCourseId =
-        relation.course_id;
-
-    const actualSubjectId =
-        relation.subject_id;
-
-
-    /*
-       Verify selected course and subject.
-    */
-
-    if(String(courseId)!==String(actualCourseId)){
-
-        showMessage(
-            "Selected course does not match the topic.",
-            true
-        );
-
-        return;
-    }
-
-
-    if(String(subjectId)!==String(actualSubjectId)){
-
-        showMessage(
-            "Selected subject does not match the topic.",
-            true
-        );
-
-        return;
-    }
-
-
-    /*
-       Insert lesson.
-    */
-
-    const lessonData = {
-
-        topic_id:topicId,
-
-        course_id:actualCourseId,
-
-        subject_id:actualSubjectId,
-
-        title:title,
-
-        description:description,
-
-        video_url:videoUrl || null,
-
-        pdf_url:pdfUrl || null,
-
-        sort_order:order,
-
-        video_count:videoCount,
-
-        visualized_fee:visualizedFee,
-
-        ppt_fee:pptFee,
-
-        visualized_video_url:
-            visualizedVideoUrl || null,
-
-        ppt_video_url:
-            pptVideoUrl || null,
-
-        published:published,
-
-        is_trial:isTrial
-    };
-
-
-    console.log(
-        "LESSON INSERT DATA:",
-        lessonData
-    );
-
-
-    const {error} =
-        await supabaseClient
-        .from("lessons")
-        .insert([lessonData]);
-
-
-    if(error){
-
-        console.error(error);
-
-        showMessage(
-            error.message,
-            true
-        );
-
-        return;
-    }
-
-
-    showMessage(
-        "Lesson created successfully."
-    );
-
-
-    /*
-       Clear lesson form.
-    */
-
-    document.getElementById("lessonTitle").value="";
-    document.getElementById("lessonDescription").value="";
-    document.getElementById("lessonVideoUrl").value="";
-    document.getElementById("lessonPdfUrl").value="";
-    document.getElementById("lessonOrder").value="1";
-    document.getElementById("lessonVideoCount").value="0";
-    document.getElementById("visualizedFee").value="0";
-    document.getElementById("pptFee").value="0";
-    document.getElementById("visualizedVideoUrl").value="";
-    document.getElementById("pptVideoUrl").value="";
-
-    loadDashboard();
+return;
 
 }
 
+subjects=result.data||[];
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+$("subjectCount").textContent=
+subjects.length;
 
-async function logout(){
+populateSubjectSelects();
 
-    await supabaseClient.auth.signOut();
+renderSubjects();
 
-    window.location.href="index.html";
+renderSubjectPricing();
 
 }
 
+function populateSubjectSelects(){
 
-/* =========================================================
-   INITIAL LOAD
-========================================================= */
+const options=subjects.map(subject=>`
+
+<option value="${subject.id}">
+${escapeHtml(subject.title)}
+</option>
+
+`).join("");
+
+$("topicSubject").innerHTML=
+`<option value="">Select Subject</option>`+
+options;
+
+$("topicFilter").innerHTML=
+`<option value="">All Subjects</option>`+
+options;
+
+$("lessonSubject").innerHTML=
+`<option value="">Select Subject</option>`+
+options;
+
+}
+
+function renderSubjects(){
+
+const selected=
+$("subjectFilter").value;
+
+const list=selected
+
+?subjects.filter(
+x=>String(x.course_id)===selected
+)
+
+:subjects;
+
+$("subjectList").innerHTML=list.length
+
+?list.map(subject=>{
+
+const course=
+courses.find(
+x=>x.id===subject.course_id
+);
+
+return`
+
+<div class="item">
+
+<h3>
+${escapeHtml(subject.title)}
+</h3>
+
+<p>
+Course:
+${escapeHtml(course?.title||"Unknown")}
+</p>
+
+<span class="badge">
+${money(subject.subject_fee)}
+</span>
+
+<span class="badge">
+Order ${subject.sort_order}
+</span>
+
+<span class="badge ${subject.published?"green":"red"}">
+${subject.published?"Published":"Unpublished"}
+</span>
+
+<div class="actions">
+
+<button
+class="primary"
+onclick="editSubject(${subject.id})">
+Edit
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join("")
+
+:`<div class="item">No subjects found.</div>`;
+
+}
+
+$("subjectFilter").addEventListener(
+"change",
+renderSubjects
+);
+
+$("subjectCourse").addEventListener(
+"change",
+()=>{
+
+$("lessonCourse").value=
+$("subjectCourse").value;
+
+});
+
+$("subjectTitle").addEventListener(
+"input",
+()=>{
+
+if(!$("subjectId").value)
+
+$("subjectSlug").value=
+slugify($("subjectTitle").value);
+
+});
+
+$("subjectForm").addEventListener(
+"submit",
+async e=>{
+
+e.preventDefault();
+
+showMessage("Saving subject...");
+
+const id=$("subjectId").value;
+
+const data={
+
+course_id:
+Number($("subjectCourse").value),
+
+title:
+$("subjectTitle").value.trim(),
+
+slug:
+$("subjectSlug").value.trim(),
+
+description:
+$("subjectDescription").value.trim()||null,
+
+sort_order:
+Number($("subjectOrder").value)||1,
+
+subject_fee:
+$("subjectFee").value===""
+?null
+:Number($("subjectFee").value),
+
+published:
+$("subjectPublished").checked,
+
+is_trial:
+$("subjectTrial").checked
+
+};
+
+const result=id
+
+?await supabaseClient
+.from("course_subjects")
+.update(data)
+.eq("id",id)
+
+:await supabaseClient
+.from("course_subjects")
+.insert(data);
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+
+}
+
+showMessage(
+id
+?"Subject updated successfully."
+:"Subject created successfully."
+);
+
+resetSubject();
+
+await loadSubjects();
+
+});
+
+window.editSubject=id=>{
+
+const subject=
+subjects.find(x=>x.id===id);
+
+if(!subject)return;
+
+$("subjectId").value=
+subject.id;
+
+$("subjectCourse").value=
+subject.course_id;
+
+$("subjectTitle").value=
+subject.title||"";
+
+$("subjectSlug").value=
+subject.slug||"";
+
+$("subjectDescription").value=
+subject.description||"";
+
+$("subjectOrder").value=
+subject.sort_order||1;
+
+$("subjectFee").value=
+subject.subject_fee??"";
+
+$("subjectPublished").checked=
+subject.published!==false;
+
+$("subjectTrial").checked=
+subject.is_trial===true;
+
+$("subjectSaveBtn").textContent=
+"Save Subject Changes";
+
+};
+
+$("subjectCancelBtn").addEventListener(
+"click",
+resetSubject
+);
+
+function resetSubject(){
+
+$("subjectForm").reset();
+
+$("subjectId").value="";
+
+$("subjectPublished").checked=true;
+
+$("subjectSaveBtn").textContent=
+"Create Subject";
+
+}
+
+/* TOPICS */
+
+async function loadTopics(){
+
+showMessage("Loading topics...");
+
+const result=await supabaseClient
+.from("course_topics")
+.select(`
+id,
+course_subject_id,
+title,
+slug,
+description,
+sort_order,
+created_at,
+topic_fee,
+published,
+is_trial,
+video_count
+`)
+.order("title",{ascending:true});
+
+if(result.error){
+
+showMessage(
+"Topic loading failed: "+
+result.error.message,
+true
+);
+
+console.error(
+"Topic loading error:",
+result.error
+);
+
+return;
+
+}
+
+topics=result.data||[];
+
+$("topicCount").textContent=
+topics.length;
+
+/*
+Populate the Topic filter
+*/
+
+const topicOptions=topics
+
+.filter(
+topic=>
+topic &&
+topic.id!=null &&
+topic.title
+)
+
+.map(topic=>`
+
+<option value="${topic.id}">
+${escapeHtml(topic.title)}
+</option>
+
+`).join("");
+
+$("lessonFilter").innerHTML=
+`<option value="">All Topics</option>`+
+topicOptions;
+
+renderTopics();
+
+/*
+Populate the new searchable topic control
+*/
+
+renderLessonTopicOptions("");
+
+showMessage(
+topics.length
+?`${topics.length} topic(s) loaded successfully.`
+:"No topics found. Create a topic first."
+);
+
+}
+
+function renderTopics(){
+
+const selected=
+$("topicFilter").value;
+
+const list=selected
+
+?topics.filter(
+x=>
+String(x.course_subject_id)===
+selected
+)
+
+:topics;
+
+$("topicList").innerHTML=list.length
+
+?list.map(topic=>{
+
+const subject=
+subjects.find(
+x=>x.id===
+topic.course_subject_id
+);
+
+return`
+
+<div class="item">
+
+<h3>
+${escapeHtml(topic.title)}
+</h3>
+
+<p>
+Subject:
+${escapeHtml(subject?.title||"Unknown")}
+</p>
+
+<span class="badge">
+Order ${topic.sort_order||1}
+</span>
+
+<span class="badge">
+Price: ${money(topic.topic_fee)}
+</span>
+
+<span class="badge">
+${Number(topic.video_count||0)} videos
+</span>
+
+<span class="badge ${
+topic.published===false
+?"red"
+:"green"
+}">
+${
+topic.published===false
+?"Unpublished"
+:"Published"
+}
+</span>
+
+<div class="actions">
+
+<button
+class="primary"
+onclick="editTopic(${topic.id})">
+Edit
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join("")
+
+:`<div class="item">No topics found.</div>`;
+
+}
+
+$("topicFilter").addEventListener(
+"change",
+renderTopics
+);
+
+$("topicTitle").addEventListener(
+"input",
+()=>{
+
+if(!$("topicId").value)
+
+$("topicSlug").value=
+slugify($("topicTitle").value);
+
+});
+
+$("topicForm").addEventListener(
+"submit",
+async e=>{
+
+e.preventDefault();
+
+showMessage("Saving topic...");
+
+const id=$("topicId").value;
+
+const data={
+
+course_subject_id:
+Number($("topicSubject").value),
+
+title:
+$("topicTitle").value.trim(),
+
+slug:
+$("topicSlug").value.trim(),
+
+description:
+$("topicDescription").value.trim()||null,
+
+sort_order:
+Number($("topicOrder").value)||1,
+
+topic_fee:
+$("topicFee").value===""
+?null
+:Number($("topicFee").value),
+
+video_count:
+Number($("topicVideoCount").value)||0
+
+};
+
+const result=id
+
+?await supabaseClient
+.from("course_topics")
+.update(data)
+.eq("id",id)
+
+:await supabaseClient
+.from("course_topics")
+.insert(data);
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+
+}
+
+showMessage(
+id
+?"Topic updated successfully."
+:"Topic created successfully."
+);
+
+resetTopic();
+
+await loadTopics();
+
+});
+
+window.editTopic=id=>{
+
+const topic=
+topics.find(x=>x.id===id);
+
+if(!topic)return;
+
+$("topicId").value=
+topic.id;
+
+$("topicSubject").value=
+topic.course_subject_id;
+
+$("topicTitle").value=
+topic.title||"";
+
+$("topicSlug").value=
+topic.slug||"";
+
+$("topicDescription").value=
+topic.description||"";
+
+$("topicOrder").value=
+topic.sort_order||1;
+
+$("topicFee").value=
+topic.topic_fee??"";
+
+$("topicVideoCount").value=
+topic.video_count??0;
+
+$("topicSaveBtn").textContent=
+"Save Topic Changes";
+
+};
+
+$("topicCancelBtn").addEventListener(
+"click",
+resetTopic
+);
+
+function resetTopic(){
+
+$("topicForm").reset();
+
+$("topicId").value="";
+
+$("topicVideoCount").value=0;
+
+$("topicSaveBtn").textContent=
+"Create Topic";
+
+}
+
+/* =====================================================
+   SEARCHABLE TOPIC CONTROL
+   SEARCH AND TOPIC ARE ONE CONTROL
+   ===================================================== */
+
+function renderLessonTopicOptions(searchText){
+
+const dropdown=
+$("lessonTopicDropdown");
+
+const query=
+String(searchText||"")
+.trim()
+.toLowerCase();
+
+const filtered=
+topics
+.filter(topic=>
+topic &&
+topic.id!=null &&
+topic.title
+)
+.filter(topic=>
+!query ||
+String(topic.title)
+.toLowerCase()
+.includes(query)
+)
+.sort((a,b)=>
+String(a.title)
+.localeCompare(
+String(b.title),
+undefined,
+{
+sensitivity:"base"
+}
+)
+);
+
+if(!filtered.length){
+
+dropdown.innerHTML=
+`<div class="topic-no-result">
+No topics found
+</div>`;
+
+dropdown.classList.add("show");
+
+return;
+
+}
+
+dropdown.innerHTML=
+filtered.map(topic=>`
+
+<div
+class="topic-option"
+data-topic-id="${topic.id}"
+>
+${escapeHtml(topic.title)}
+</div>
+
+`).join("");
+
+dropdown.classList.add("show");
+
+dropdown
+.querySelectorAll(".topic-option")
+.forEach(option=>{
+
+option.addEventListener(
+"click",
+()=>{
+
+const topicId=
+Number(option.dataset.topicId);
+
+selectLessonTopic(topicId);
+
+}
+);
+
+});
+
+}
+
+function selectLessonTopic(topicId){
+
+const topic=
+topics.find(
+x=>Number(x.id)===
+Number(topicId)
+);
+
+if(!topic)return;
+
+/*
+Store topic ID in hidden field
+*/
+
+$("lessonTopic").value=
+topic.id;
+
+/*
+Show selected topic title
+*/
+
+$("lessonTopicSearch").value=
+topic.title;
+
+/*
+Find the subject attached to this topic
+*/
+
+const subject=
+subjects.find(
+x=>
+Number(x.id)===
+Number(topic.course_subject_id)
+);
+
+if(subject){
+
+$("lessonSubject").value=
+subject.id;
+
+/*
+Automatically set the correct course.
+This prevents the foreign-key mismatch
+that occurred earlier.
+*/
+
+const course=
+courses.find(
+x=>
+Number(x.id)===
+Number(subject.course_id)
+);
+
+if(course){
+
+$("lessonCourse").value=
+course.id;
+
+}
+
+}
+
+/*
+Close dropdown
+*/
+
+$("lessonTopicDropdown")
+.classList.remove("show");
+
+$("lessonTopicSearch")
+.classList.add("topic-selected");
+
+}
+
+$("lessonTopicSearch")
+.addEventListener(
+"focus",
+()=>{
+
+renderLessonTopicOptions(
+$("lessonTopicSearch").value
+);
+
+});
+
+$("lessonTopicSearch")
+.addEventListener(
+"input",
+()=>{
+
+/*
+When user changes the text,
+clear the previous selected ID.
+A topic must be selected again.
+*/
+
+$("lessonTopic").value="";
+
+$("lessonCourse").value="";
+
+$("lessonSubject").value="";
+
+$("lessonTopicSearch")
+.classList.remove("topic-selected");
+
+renderLessonTopicOptions(
+$("lessonTopicSearch").value
+);
+
+});
 
 document.addEventListener(
-    "DOMContentLoaded",
-    async function(){
+"click",
+event=>{
 
-        await loadDashboard();
+const picker=
+document.querySelector(".topic-picker");
 
-        /*
-           Preload lesson data so the Topic dropdown
-           is ready immediately.
-        */
+if(
+picker &&
+!picker.contains(event.target)
+){
 
-        await loadLessonData();
+$("lessonTopicDropdown")
+.classList.remove("show");
 
-    }
+}
+
+});
+
+/* LESSONS */
+
+async function loadLessons(){
+
+const result=await supabaseClient
+.from("lessons")
+.select("*")
+.order("course_id")
+.order("sort_order")
+.order("id");
+
+if(result.error){
+
+showMessage(
+"Lesson loading failed: "+
+result.error.message,
+true
 );
+
+return;
+
+}
+
+lessons=result.data||[];
+
+$("lessonCount").textContent=
+lessons.length;
+
+$("mcqLesson").innerHTML=
+`<option value="">
+Select Lesson
+</option>`+
+
+lessons.map(lesson=>`
+
+<option value="${lesson.id}">
+${escapeHtml(lesson.title)}
+</option>
+
+`).join("");
+
+renderLessons();
+
+}
+
+function renderLessons(){
+
+const selected=
+$("lessonFilter").value;
+
+const list=selected
+
+?lessons.filter(
+x=>
+String(x.topic_id)===
+selected
+)
+
+:lessons;
+
+$("lessonList").innerHTML=list.length
+
+?list.map(lesson=>{
+
+const topic=
+topics.find(
+x=>
+Number(x.id)===
+Number(lesson.topic_id)
+);
+
+return`
+
+<div class="item">
+
+<h3>
+${escapeHtml(lesson.title)}
+</h3>
+
+<p>
+Topic:
+${escapeHtml(topic?.title||"Unknown")}
+</p>
+
+<span class="badge">
+Order ${lesson.sort_order||1}
+</span>
+
+<span class="badge">
+${Number(lesson.video_count||0)} videos
+</span>
+
+<span class="badge">
+Visualized:
+${money(lesson.visualized_fee)}
+</span>
+
+<span class="badge">
+PPT:
+${money(lesson.ppt_fee)}
+</span>
+
+<div class="actions">
+
+<button
+class="primary"
+onclick="editLesson(${lesson.id})">
+Edit
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join("")
+
+:`<div class="item">No lessons found.</div>`;
+
+}
+
+$("lessonFilter").addEventListener(
+"change",
+renderLessons
+);
+
+$("lessonForm").addEventListener(
+"submit",
+async e=>{
+
+e.preventDefault();
+
+if(!$("lessonTopic").value){
+
+showMessage(
+"Please search and select a Topic.",
+true
+);
+
+$("lessonTopicSearch").focus();
+
+return;
+
+}
+
+if(!$("lessonCourse").value){
+
+showMessage(
+"Please select a Course.",
+true
+);
+
+return;
+
+}
+
+if(!$("lessonSubject").value){
+
+showMessage(
+"Please select a Subject.",
+true
+);
+
+return;
+
+}
+
+showMessage("Saving lesson...");
+
+const id=
+$("lessonId").value;
+
+const data={
+
+course_id:
+Number($("lessonCourse").value),
+
+subject_id:
+Number($("lessonSubject").value),
+
+topic_id:
+Number($("lessonTopic").value),
+
+title:
+$("lessonTitle").value.trim(),
+
+description:
+$("lessonDescription").value.trim()||null,
+
+video_url:
+$("lessonVideoUrl").value.trim()||null,
+
+pdf_url:
+$("lessonPdfUrl").value.trim()||null,
+
+sort_order:
+Number($("lessonOrder").value)||1,
+
+video_count:
+Number($("lessonVideoCount").value)||0,
+
+visualized_fee:
+$("lessonVisualizedFee").value===""
+?null
+:Number($("lessonVisualizedFee").value),
+
+ppt_fee:
+$("lessonPptFee").value===""
+?null
+:Number($("lessonPptFee").value),
+
+visualized_video_url:
+$("lessonVisualizedUrl").value.trim()||null,
+
+ppt_video_url:
+$("lessonPptUrl").value.trim()||null,
+
+published:
+$("lessonPublished").checked,
+
+is_trial:
+$("lessonTrial").checked
+
+};
+
+const result=id
+
+?await supabaseClient
+.from("lessons")
+.update(data)
+.eq("id",id)
+
+:await supabaseClient
+.from("lessons")
+.insert(data);
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+
+}
+
+showMessage(
+id
+?"Lesson updated successfully."
+:"Lesson created successfully."
+);
+
+resetLesson();
+
+await loadLessons();
+
+});
+
+window.editLesson=id=>{
+
+const lesson=
+lessons.find(
+x=>x.id===id
+);
+
+if(!lesson)return;
+
+$("lessonId").value=
+lesson.id;
+
+/*
+Set topic first.
+This automatically sets
+course and subject.
+*/
+
+selectLessonTopic(
+lesson.topic_id
+);
+
+$("lessonTitle").value=
+lesson.title||"";
+
+$("lessonDescription").value=
+lesson.description||"";
+
+$("lessonVideoUrl").value=
+lesson.video_url||"";
+
+$("lessonPdfUrl").value=
+lesson.pdf_url||"";
+
+$("lessonOrder").value=
+lesson.sort_order||1;
+
+$("lessonVideoCount").value=
+lesson.video_count??0;
+
+$("lessonVisualizedFee").value=
+lesson.visualized_fee??"";
+
+$("lessonPptFee").value=
+lesson.ppt_fee??"";
+
+$("lessonVisualizedUrl").value=
+lesson.visualized_video_url||"";
+
+$("lessonPptUrl").value=
+lesson.ppt_video_url||"";
+
+$("lessonPublished").checked=
+lesson.published!==false;
+
+$("lessonTrial").checked=
+lesson.is_trial===true;
+
+$("lessonSaveBtn").textContent=
+"Save Lesson Changes";
+
+};
+
+$("lessonCancelBtn")
+.addEventListener(
+"click",
+resetLesson
+);
+
+function resetLesson(){
+
+$("lessonForm").reset();
+
+$("lessonId").value="";
+
+$("lessonTopic").value="";
+
+$("lessonTopicSearch").value="";
+
+$("lessonTopicDropdown").classList.remove(
+"show"
+);
+
+$("lessonTopicSearch")
+.classList.remove(
+"topic-selected"
+);
+
+$("lessonPublished").checked=true;
+
+$("lessonVideoCount").value=0;
+
+$("lessonSaveBtn").textContent=
+"Create Lesson";
+
+}
+
+/* MCQS */
+
+async function loadMcqs(){
+
+const result=await supabaseClient
+.from("mcqs")
+.select("*")
+.order("id");
+
+if(result.error){
+
+showMessage(
+"MCQ loading failed: "+
+result.error.message,
+true
+);
+
+return;
+
+}
+
+mcqs=result.data||[];
+
+$("mcqCount").textContent=
+mcqs.length;
+
+renderMcqs();
+
+}
+
+function renderMcqs(){
+
+$("mcqList").innerHTML=
+mcqs.length
+
+?mcqs.map(mcq=>{
+
+const lesson=
+lessons.find(
+x=>x.id===mcq.lesson_id
+);
+
+return`
+
+<div class="item">
+
+<h3>
+${escapeHtml(mcq.question)}
+</h3>
+
+<p>
+Lesson:
+${escapeHtml(
+lesson?.title||"Unknown"
+)}
+</p>
+
+<span class="badge">
+Correct:
+${escapeHtml(
+mcq.correct_option||"Not set"
+)}
+</span>
+
+<div class="actions">
+
+<button
+class="primary"
+onclick="editMcq(${mcq.id})">
+Edit
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}).join("")
+
+:`<div class="item">No MCQs found.</div>`;
+
+}
+
+$("mcqForm").addEventListener(
+"submit",
+async e=>{
+
+e.preventDefault();
+
+showMessage("Saving MCQ...");
+
+const id=
+$("mcqId").value;
+
+const data={
+
+lesson_id:
+$("mcqLesson").value
+?Number($("mcqLesson").value)
+:null,
+
+question:
+$("mcqQuestion").value.trim(),
+
+option_a:
+$("mcqA").value.trim()||null,
+
+option_b:
+$("mcqB").value.trim()||null,
+
+option_c:
+$("mcqC").value.trim()||null,
+
+option_d:
+$("mcqD").value.trim()||null,
+
+correct_option:
+$("mcqCorrect").value||null,
+
+explanation:
+$("mcqExplanation").value.trim()||null
+
+};
+
+const result=id
+
+?await supabaseClient
+.from("mcqs")
+.update(data)
+.eq("id",id)
+
+:await supabaseClient
+.from("mcqs")
+.insert(data);
+
+if(result.error){
+
+showMessage(
+result.error.message,
+true
+);
+
+return;
+
+}
+
+showMessage(
+id
+?"MCQ updated successfully."
+:"MCQ created successfully."
+);
+
+resetMcq();
+
+await loadMcqs();
+
+});
+
+window.editMcq=id=>{
+
+const mcq=
+mcqs.find(
+x=>x.id===id
+);
+
+if(!mcq)return;
+
+$("mcqId").value=
+mcq.id;
+
+$("mcqLesson").value=
+mcq.lesson_id??"";
+
+$("mcqQuestion").value=
+mcq.question||"";
+
+$("mcqA").value=
+mcq.option_a||"";
+
+$("mcqB").value=
+mcq.option_b||"";
+
+$("mcqC").value=
+mcq.option_c||"";
+
+$("mcqD").value=
+mcq.option_d||"";
+
+$("mcqCorrect").value=
+mcq.correct_option||"";
+
+$("mcqExplanation").value=
+mcq.explanation||"";
+
+$("mcqSaveBtn").textContent=
+"Save MCQ Changes";
+
+};
+
+$("mcqCancelBtn")
+.addEventListener(
+"click",
+resetMcq
+);
+
+function resetMcq(){
+
+$("mcqForm").reset();
+
+$("mcqId").value="";
+
+$("mcqSaveBtn").textContent=
+"Create MCQ";
+
+}
+
+/* PRICING */
+
+function renderCoursePricing(){
+
+$("coursePricingList").innerHTML=
+courses.map(course=>`
+
+<tr>
+
+<td>
+${escapeHtml(course.title)}
+</td>
+
+<td>
+${money(course.original_fee)}
+</td>
+
+<td>
+${money(
+course.current_fee??
+course.course_fee
+)}
+</td>
+
+<td>
+
+<button
+class="primary"
+onclick="editCourse(${course.id})">
+Edit
+</button>
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+function renderSubjectPricing(){
+
+$("subjectPricingList").innerHTML=
+subjects.map(subject=>{
+
+const course=
+courses.find(
+x=>x.id===
+subject.course_id
+);
+
+return`
+
+<tr>
+
+<td>
+${escapeHtml(subject.title)}
+</td>
+
+<td>
+${escapeHtml(
+course?.title||"Unknown"
+)}
+</td>
+
+<td>
+${money(subject.subject_fee)}
+</td>
+
+<td>
+
+<button
+class="primary"
+onclick="editSubject(${subject.id})">
+Edit
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+}).join("");
+
+}
+
+/* LOAD ALL */
+
+async function loadAll(){
+
+await loadCourses();
+
+await loadSubjects();
+
+await loadTopics();
+
+await loadLessons();
+
+await loadMcqs();
+
+}
+
+/* AUTH STATE */
+
+supabaseClient.auth.onAuthStateChange(
+async(event,session)=>{
+
+if(
+session &&
+event==="SIGNED_IN"
+){
+
+const allowed=
+await checkAdmin();
+
+if(!allowed){
+
+await supabaseClient.auth.signOut();
+
+return;
+
+}
+
+$("loginBox")
+.classList.add("hidden");
+
+$("dashboard")
+.classList.remove("hidden");
+
+$("logoutBtn")
+.classList.remove("hidden");
+
+await loadAll();
+
+}
+
+});
+
+/* EXISTING SESSION */
+
+(async function(){
+
+const result=
+await supabaseClient.auth.getSession();
+
+const session=
+result.data?.session;
+
+if(!session)return;
+
+const allowed=
+await checkAdmin();
+
+if(!allowed){
+
+await supabaseClient.auth.signOut();
+
+return;
+
+}
+
+$("loginBox")
+.classList.add("hidden");
+
+$("dashboard")
+.classList.remove("hidden");
+
+$("logoutBtn")
+.classList.remove("hidden");
+
+await loadAll();
+
+})();
 
 </script>
 

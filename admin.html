@@ -1,2442 +1,2846 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LakshyaSetu Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LakshyaSetu Admin</title>
 
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#172033}
-header{background:#17365d;color:white;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
-header h1{margin:0;font-size:22px}
-.container{max-width:1250px;margin:25px auto;padding:0 18px}
-.login-box,.card{background:white;border-radius:12px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:7px;margin-top:6px;margin-bottom:14px;font-size:14px}
-textarea{min-height:90px;resize:vertical}
-button{border:0;border-radius:7px;padding:10px 15px;cursor:pointer;font-weight:600}
-.primary{background:#17365d;color:white}
-.secondary{background:#e8eef7;color:#17365d}
-.hidden{display:none!important}
-.nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-.nav button.active{background:#17365d;color:white}
-.section{display:none}
-.section.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
-.full{grid-column:1/-1}
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;margin-bottom:20px}
-.stat{background:white;padding:20px;border-radius:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.stat strong{display:block;font-size:28px;color:#17365d;margin-bottom:5px}
-.item{border:1px solid #dde3ec;border-radius:9px;padding:15px;margin-bottom:12px;background:#fff}
-.item h3{margin:0 0 8px}
-.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:12px;margin-right:5px;background:#edf1f6}
-.badge.green{background:#e7f7ed;color:#176c35}
-.badge.red{background:#ffeaea;color:#a00000}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.message{padding:12px;border-radius:7px;margin-bottom:15px;display:none}
-.message.show{display:block;background:#eaf4ff;color:#174a7c}
-.message.error{display:block;background:#ffeaea;color:#9c0000}
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px;border-bottom:1px solid #e1e5eb;text-align:left}
-th{background:#f1f4f8}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
 
-.topic-picker{position:relative;width:100%;margin-bottom:14px}
-.topic-search{margin:0;width:100%;padding:12px 42px 12px 12px;background:white}
-.topic-dropdown{
-position:absolute;
-top:100%;
-left:0;
-right:0;
-z-index:1000;
-background:white;
-border:1px solid #ccd4df;
-border-radius:0 0 7px 7px;
-max-height:320px;
-overflow-y:auto;
-box-shadow:0 5px 15px rgba(0,0,0,.12);
-display:none
-}
-.topic-dropdown.show{display:block}
-.topic-option{padding:11px 13px;cursor:pointer;border-bottom:1px solid #edf0f4;font-size:14px}
-.topic-option:hover{background:#edf4ff}
-.topic-no-result{padding:12px;color:#777;font-size:14px}
-.topic-selected{background:#f8fbff}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-@media(max-width:800px){
-.grid{grid-template-columns:1fr}
-.full{grid-column:auto}
-.stats{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:500px){.stats{grid-template-columns:1fr}}
-</style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f6fa;
+      color: #172b4d;
+    }
+
+    header {
+      background: #173b67;
+      color: white;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: #173b67;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e7edf5;
+      color: #173b67;
+    }
+
+    .btn-danger {
+      background: #c62828;
+      color: white;
+    }
+
+    .btn-success {
+      background: #238636;
+      color: white;
+    }
+
+    .logout {
+      background: white;
+      color: #173b67;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+
+    .message {
+      padding: 13px 16px;
+      border-radius: 6px;
+      margin-bottom: 18px;
+      background: #eaf3ff;
+      color: #174a7c;
+      display: none;
+    }
+
+    .message.error {
+      background: #ffecec;
+      color: #a32121;
+    }
+
+    .message.success {
+      background: #eaf8ed;
+      color: #176b2c;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      background: #e7edf5;
+      color: #173b67;
+    }
+
+    .tab.active {
+      background: #173b67;
+      color: white;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 10px;
+      padding: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      margin-bottom: 20px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .stat {
+      background: white;
+      border-radius: 10px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    .stat .number {
+      font-size: 30px;
+      font-weight: bold;
+      color: #173b67;
+    }
+
+    .stat .label {
+      margin-top: 6px;
+      color: #5b6b7f;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccd6e2;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .checkbox {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox input {
+      width: auto;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e4e9ef;
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f5f7fa;
+      font-size: 13px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .published {
+      background: #e2f5e8;
+      color: #176b2c;
+    }
+
+    .unpublished {
+      background: #fff0d9;
+      color: #8a5700;
+    }
+
+    .archived {
+      background: #eee;
+      color: #666;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .loading {
+      padding: 20px;
+      text-align: center;
+      color: #65758b;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #65758b;
+    }
+
+    @media (max-width: 800px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      header {
+        padding: 14px 16px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      .container {
+        padding: 0 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-<h1>LakshyaSetu Admin</h1>
-<button id="logoutBtn" class="secondary hidden">Logout</button>
+  <h1>LakshyaSetu Admin</h1>
+  <button class="logout" onclick="logout()">Logout</button>
 </header>
 
 <div class="container">
 
-<div id="message" class="message"></div>
-
-<div id="loginBox" class="login-box">
-<h2>Admin Login</h2>
-<form id="loginForm">
-<label>Email</label>
-<input id="email" type="email" required>
-
-<label>Password</label>
-<input id="password" type="password" required>
-
-<button type="submit" class="primary">Login</button>
-</form>
-</div>
-
-<div id="dashboard" class="hidden">
-
-<div class="nav">
-<button class="primary active" data-section="dashboardSection">Dashboard</button>
-<button class="secondary" data-section="coursesSection">Courses</button>
-<button class="secondary" data-section="subjectsSection">Subjects</button>
-<button class="secondary" data-section="topicsSection">Topics</button>
-<button class="secondary" data-section="lessonsSection">Lessons</button>
-<button class="secondary" data-section="mcqsSection">MCQs</button>
-<button class="secondary" data-section="pricingSection">Pricing</button>
-</div>
-
-<section id="dashboardSection" class="section active">
-
-<div class="card">
-<h2>Admin Dashboard</h2>
-<p>Manage LakshyaSetu courses, subjects, topics, lessons and MCQs.</p>
-</div>
-
-<div class="stats">
-<div class="stat"><strong id="courseCount">0</strong>Courses</div>
-<div class="stat"><strong id="subjectCount">0</strong>Subjects</div>
-<div class="stat"><strong id="topicCount">0</strong>Topics</div>
-<div class="stat"><strong id="lessonCount">0</strong>Lessons</div>
-<div class="stat"><strong id="mcqCount">0</strong>MCQs</div>
-</div>
-
-</section>
-
-<section id="coursesSection" class="section">
-
-<div class="card">
-<h2>Course Management</h2>
-
-<form id="courseForm">
-<input type="hidden" id="courseId">
-
-<div class="grid">
-
-<div>
-<label>Course Title</label>
-<input id="courseTitle" required>
-</div>
-
-<div>
-<label>Slug</label>
-<input id="courseSlug" required>
-</div>
-
-<div class="full">
-<label>Description</label>
-<textarea id="courseDescription"></textarea>
-</div>
-
-<div>
-<label>Language</label>
-<input id="courseLanguage" value="Telugu + English">
-</div>
-
-<div>
-<label>Validity Years</label>
-<input id="courseValidity" type="number" value="2" min="1">
-</div>
-
-<div>
-<label>Original Fee</label>
-<input id="courseOriginalFee" type="number" min="0">
-</div>
-
-<div>
-<label>Current Fee</label>
-<input id="courseCurrentFee" type="number" min="0">
-</div>
-
-<div class="full">
-<label>
-<input id="coursePublished" type="checkbox" style="width:auto" checked>
-Enable Course
-</label>
-</div>
-
-</div>
-
-<div class="actions">
-<button type="submit" class="primary" id="courseSaveBtn">Create Course</button>
-<button type="button" class="secondary" id="courseCancelBtn">Cancel</button>
-</div>
-
-</form>
-</div>
-
-<div class="card">
-<h2>Courses</h2>
-<div id="courseList"></div>
-</div>
-
-</section>
-
-<section id="subjectsSection" class="section">
-
-<div class="card">
-<h2>Subject Management</h2>
-
-<form id="subjectForm">
-<input type="hidden" id="subjectId">
-
-<div class="grid">
-
-<div>
-<label>Course</label>
-<select id="subjectCourse" required></select>
-</div>
-
-<div>
-<label>Subject Title</label>
-<input id="subjectTitle" required>
-</div>
-
-<div>
-<label>Slug</label>
-<input id="subjectSlug" required>
-</div>
-
-<div>
-<label>Order</label>
-<input id="subjectOrder" type="number" value="1">
-</div>
-
-<div>
-<label>Subject Price</label>
-<input id="subjectFee" type="number" min="0">
-</div>
-
-<div class="full">
-<label>Description</label>
-<textarea id="subjectDescription"></textarea>
-</div>
-
-<div class="full">
-<label>
-<input id="subjectPublished" type="checkbox" style="width:auto" checked>
-Published
-</label>
-
-<br>
-
-<label>
-<input id="subjectTrial" type="checkbox" style="width:auto">
-Trial Subject
-</label>
-</div>
-
-</div>
-
-<div class="actions">
-<button type="submit" class="primary" id="subjectSaveBtn">Create Subject</button>
-<button type="button" class="secondary" id="subjectCancelBtn">Cancel</button>
-</div>
-
-</form>
-</div>
-
-<div class="card">
-<h2>Subjects</h2>
-
-<label>Filter Course</label>
-<select id="subjectFilter">
-<option value="">All Courses</option>
-</select>
-
-<div id="subjectList"></div>
-</div>
-
-</section>
-
-<section id="topicsSection" class="section">
-
-<div class="card">
-<h2>Topic Management</h2>
-
-<form id="topicForm">
-<input type="hidden" id="topicId">
-
-<div class="grid">
-
-<div class="full">
-<label>Subject</label>
-<select id="topicSubject" required></select>
-</div>
-
-<div>
-<label>Topic Title</label>
-<input id="topicTitle" required>
-</div>
-
-<div>
-<label>Slug</label>
-<input id="topicSlug" required>
-</div>
-
-<div>
-<label>Order</label>
-<input id="topicOrder" type="number" value="1">
-</div>
-
-<div>
-<label>Topic Price</label>
-<input id="topicFee" type="number" min="0" step="0.01">
-</div>
-
-<div>
-<label>Number of Videos</label>
-<input id="topicVideoCount" type="number" min="0" value="0">
-</div>
-
-<div class="full">
-<label>Description</label>
-<textarea id="topicDescription"></textarea>
-</div>
-
-</div>
-
-<div class="actions">
-<button type="submit" class="primary" id="topicSaveBtn">Create Topic</button>
-<button type="button" class="secondary" id="topicCancelBtn">Cancel</button>
-</div>
-
-</form>
-</div>
-
-<div class="card">
-<h2>Topics</h2>
-
-<label>Filter Subject</label>
-<select id="topicFilter">
-<option value="">All Subjects</option>
-</select>
-
-<div id="topicList"></div>
-</div>
+  <div id="message" class="message"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="courses">Courses</button>
+    <button class="tab" data-tab="subjects">Subjects</button>
+    <button class="tab" data-tab="course-subjects">Course Subjects</button>
+    <button class="tab" data-tab="topics">Topics</button>
+    <button class="tab" data-tab="lessons">Lessons</button>
+    <button class="tab" data-tab="notes">Notes</button>
+    <button class="tab" data-tab="mcqs">Practice MCQs</button>
+    <button class="tab" data-tab="series">Test Series</button>
+    <button class="tab" data-tab="packages">Test Packages</button>
+    <button class="tab" data-tab="tests">Tests</button>
+    <button class="tab" data-tab="questions">Test Questions</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="tab-section">
+    <div class="panel">
+      <h2>Admin Dashboard</h2>
+      <p>Manage the complete LakshyaSetu learning platform.</p>
+    </div>
+
+    <div id="dashboardStats" class="dashboard">
+      <div class="stat"><div class="number" id="countCourses">0</div><div class="label">Courses</div></div>
+      <div class="stat"><div class="number" id="countSubjects">0</div><div class="label">Subjects</div></div>
+      <div class="stat"><div class="number" id="countCourseSubjects">0</div><div class="label">Course Subjects</div></div>
+      <div class="stat"><div class="number" id="countTopics">0</div><div class="label">Topics</div></div>
+      <div class="stat"><div class="number" id="countLessons">0</div><div class="label">Lessons</div></div>
+      <div class="stat"><div class="number" id="countNotes">0</div><div class="label">Notes</div></div>
+      <div class="stat"><div class="number" id="countMcqs">0</div><div class="label">Practice MCQs</div></div>
+      <div class="stat"><div class="number" id="countSeries">0</div><div class="label">Test Series</div></div>
+      <div class="stat"><div class="number" id="countPackages">0</div><div class="label">Test Packages</div></div>
+      <div class="stat"><div class="number" id="countTests">0</div><div class="label">Tests</div></div>
+      <div class="stat"><div class="number" id="countQuestions">0</div><div class="label">Test Questions</div></div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section id="courses" class="tab-section hidden">
+    <div class="panel">
+      <h2>Course Management</h2>
+
+      <form id="courseForm">
+        <input type="hidden" id="courseId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Course Title</label>
+            <input id="courseTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Slug</label>
+            <input id="courseSlug" required>
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="courseDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Exam Code</label>
+            <input id="courseExamCode" placeholder="UPSC / APPSC-G1 / APPSC-G2">
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="courseDisplayOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="coursePublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="courseArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit" id="courseSubmit">
+            Create Course
+          </button>
+          <button class="btn-secondary" type="button" onclick="resetCourseForm()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Courses</h2>
+      <div id="coursesTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- SUBJECTS -->
+  <section id="subjects" class="tab-section hidden">
+    <div class="panel">
+      <h2>Subject Management</h2>
+
+      <form id="subjectForm">
+        <input type="hidden" id="subjectId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Subject Title</label>
+            <input id="subjectTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Slug</label>
+            <input id="subjectSlug" required>
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="subjectDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="subjectDisplayOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="subjectPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="subjectArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Subject</button>
+          <button class="btn-secondary" type="button" onclick="resetSubjectForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Subjects</h2>
+      <div id="subjectsTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- COURSE SUBJECTS -->
+  <section id="course-subjects" class="tab-section hidden">
+    <div class="panel">
+      <h2>Course Subject Mapping</h2>
+
+      <form id="courseSubjectForm">
+
+        <input type="hidden" id="courseSubjectId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Course</label>
+            <select id="csCourse" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Subject</label>
+            <select id="csSubject" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="csDisplayOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group">
+            <label>Subject Fee</label>
+            <input id="csFee" type="number" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Validity Days</label>
+            <input id="csValidity" type="number">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="csPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="csArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Mapping</button>
+          <button class="btn-secondary" type="button" onclick="resetCourseSubjectForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Course Subjects</h2>
+      <div id="courseSubjectsTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- TOPICS -->
+  <section id="topics" class="tab-section hidden">
+    <div class="panel">
+      <h2>Topic Management</h2>
+
+      <form id="topicForm">
+
+        <input type="hidden" id="topicId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Subject</label>
+            <select id="topicSubject" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Topic Title</label>
+            <input id="topicTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Slug</label>
+            <input id="topicSlug" required>
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="topicDisplayOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="topicDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="topicPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="topicArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Topic</button>
+          <button class="btn-secondary" type="button" onclick="resetTopicForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Topics</h2>
+      <div id="topicsTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- LESSONS -->
+  <section id="lessons" class="tab-section hidden">
+    <div class="panel">
+      <h2>Lesson Management</h2>
+
+      <form id="lessonForm">
+
+        <input type="hidden" id="lessonId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Topic</label>
+            <select id="lessonTopic" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Lesson Title</label>
+            <input id="lessonTitle" required>
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="lessonDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Video URL</label>
+            <input id="lessonVideoUrl">
+          </div>
+
+          <div class="form-group">
+            <label>PDF URL</label>
+            <input id="lessonPdfUrl">
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="lessonDisplayOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group">
+            <label>Video Fee</label>
+            <input id="lessonVideoFee" type="number" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Validity Days</label>
+            <input id="lessonValidity" type="number">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="lessonTrial" type="checkbox">
+              Trial Lesson
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="lessonPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Lesson</button>
+          <button class="btn-secondary" type="button" onclick="resetLessonForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Lessons</h2>
+      <div id="lessonsTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section id="notes" class="tab-section hidden">
+    <div class="panel">
+      <h2>Notes Management</h2>
+
+      <form id="noteForm">
+
+        <input type="hidden" id="noteId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Topic</label>
+            <select id="noteTopic" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Title</label>
+            <input id="noteTitle" required>
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="noteDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>File URL</label>
+            <input id="noteFileUrl">
+          </div>
+
+          <div class="form-group">
+            <label>Fee</label>
+            <input id="noteFee" type="number" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Validity Days</label>
+            <input id="noteValidity" type="number">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="notePublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Note</button>
+          <button class="btn-secondary" type="button" onclick="resetNoteForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Notes</h2>
+      <div id="notesTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- MCQS -->
+  <section id="mcqs" class="tab-section hidden">
+    <div class="panel">
+      <h2>Practice MCQ Management</h2>
+
+      <form id="mcqForm">
+
+        <input type="hidden" id="mcqId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Topic</label>
+            <select id="mcqTopic" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="mcqOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group full">
+            <label>Question</label>
+            <textarea id="mcqQuestion" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Option A</label>
+            <input id="mcqA" required>
+          </div>
+
+          <div class="form-group">
+            <label>Option B</label>
+            <input id="mcqB" required>
+          </div>
+
+          <div class="form-group">
+            <label>Option C</label>
+            <input id="mcqC" required>
+          </div>
+
+          <div class="form-group">
+            <label>Option D</label>
+            <input id="mcqD" required>
+          </div>
+
+          <div class="form-group">
+            <label>Correct Option</label>
+            <select id="mcqCorrect">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label>Explanation</label>
+            <textarea id="mcqExplanation"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="mcqPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save MCQ</button>
+          <button class="btn-secondary" type="button" onclick="resetMcqForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Practice MCQs</h2>
+      <div id="mcqsTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- TEST SERIES -->
+  <section id="series" class="tab-section hidden">
+    <div class="panel">
+      <h2>Test Series Management</h2>
+
+      <form id="seriesForm">
+
+        <input type="hidden" id="seriesId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Course</label>
+            <select id="seriesCourse"></select>
+          </div>
+
+          <div class="form-group">
+            <label>Title</label>
+            <input id="seriesTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Slug</label>
+            <input id="seriesSlug" required>
+          </div>
+
+          <div class="form-group">
+            <label>Series Type</label>
+            <input id="seriesType" placeholder="Prelims / Mains / Subject">
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="seriesDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Price</label>
+            <input id="seriesPrice" type="number" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Validity Days</label>
+            <input id="seriesValidity" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Start At</label>
+            <input id="seriesStart" type="datetime-local">
+          </div>
+
+          <div class="form-group">
+            <label>Expiry At</label>
+            <input id="seriesExpiry" type="datetime-local">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="seriesPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="seriesArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Test Series</button>
+          <button class="btn-secondary" type="button" onclick="resetSeriesForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Test Series</h2>
+      <div id="seriesTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section id="packages" class="tab-section hidden">
+    <div class="panel">
+      <h2>Test Package Management</h2>
+
+      <form id="packageForm">
+
+        <input type="hidden" id="packageId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Test Series</label>
+            <select id="packageSeries" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Package Type</label>
+            <input id="packageType" required placeholder="Course / Subject / Topic">
+          </div>
+
+          <div class="form-group">
+            <label>Course Subject ID</label>
+            <input id="packageCourseSubjectId" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Topic ID</label>
+            <input id="packageTopicId" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Title</label>
+            <input id="packageTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Price</label>
+            <input id="packagePrice" type="number" step="0.01">
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="packageDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Validity Days</label>
+            <input id="packageValidity" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Expiry At</label>
+            <input id="packageExpiry" type="datetime-local">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="packagePublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="packageArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Package</button>
+          <button class="btn-secondary" type="button" onclick="resetPackageForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Test Packages</h2>
+      <div id="packagesTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- TESTS -->
+  <section id="tests" class="tab-section hidden">
+    <div class="panel">
+      <h2>Test Management</h2>
+
+      <form id="testForm">
+
+        <input type="hidden" id="testId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Test Series</label>
+            <select id="testSeries"></select>
+          </div>
+
+          <div class="form-group">
+            <label>Package ID</label>
+            <input id="testPackageId" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Course Subject ID</label>
+            <input id="testCourseSubjectId" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Topic ID</label>
+            <input id="testTopicId" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Test Title</label>
+            <input id="testTitle" required>
+          </div>
+
+          <div class="form-group">
+            <label>Duration Minutes</label>
+            <input id="testDuration" type="number">
+          </div>
+
+          <div class="form-group">
+            <label>Total Marks</label>
+            <input id="testTotalMarks" type="number" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label>Price</label>
+            <input id="testPrice" type="number" step="0.01">
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="testDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Start At</label>
+            <input id="testStart" type="datetime-local">
+          </div>
+
+          <div class="form-group">
+            <label>Expiry At</label>
+            <input id="testExpiry" type="datetime-local">
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="testPublished" type="checkbox">
+              Published
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="testArchived" type="checkbox">
+              Archived
+            </label>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Test</button>
+          <button class="btn-secondary" type="button" onclick="resetTestForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Tests</h2>
+      <div id="testsTable" class="loading">Loading...</div>
+    </div>
+  </section>
+
+  <!-- TEST QUESTIONS -->
+  <section id="questions" class="tab-section hidden">
+    <div class="panel">
+      <h2>Test Question Management</h2>
+
+      <form id="questionForm">
+
+        <input type="hidden" id="questionId">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Test</label>
+            <select id="questionTest" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Display Order</label>
+            <input id="questionOrder" type="number" value="0">
+          </div>
+
+          <div class="form-group full">
+            <label>Question</label>
+            <textarea id="questionText" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Option A</label>
+            <input id="questionA">
+          </div>
+
+          <div class="form-group">
+            <label>Option B</label>
+            <input id="questionB">
+          </div>
+
+          <div class="form-group">
+            <label>Option C</label>
+            <input id="questionC">
+          </div>
+
+          <div class="form-group">
+            <label>Option D</label>
+            <input id="questionD">
+          </div>
+
+          <div class="form-group">
+            <label>Correct Option</label>
+            <select id="questionCorrect">
+              <option value="">Not set</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Marks</label>
+            <input id="questionMarks" type="number" step="0.01" value="1">
+          </div>
+
+          <div class="form-group">
+            <label>Negative Marks</label>
+            <input id="questionNegative" type="number" step="0.01" value="0">
+          </div>
+
+          <div class="form-group full">
+            <label>Explanation</label>
+            <textarea id="questionExplanation"></textarea>
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Save Question</button>
+          <button class="btn-secondary" type="button" onclick="resetQuestionForm()">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Test Questions</h2>
+      <div id="questionsTable" class="loading">Loading...</div>
+    </div>
+  </section>
 
-</section>
-
-<section id="lessonsSection" class="section">
-
-<div class="card">
-<h2>Lesson Management</h2>
-
-<form id="lessonForm">
-<input type="hidden" id="lessonId">
-
-<div class="grid">
-
-<div class="full">
-
-<label>Topic</label>
-
-<div class="topic-picker">
-
-<input
-id="lessonTopicSearch"
-class="topic-search"
-type="text"
-placeholder="Search and select topic..."
-autocomplete="off"
-required
->
-
-<input id="lessonTopic" type="hidden">
-
-<div id="lessonTopicDropdown" class="topic-dropdown"></div>
-
-</div>
-
-</div>
-
-<div>
-<label>Course</label>
-<select id="lessonCourse" required></select>
-</div>
-
-<div>
-<label>Subject</label>
-<select id="lessonSubject" required></select>
-</div>
-
-<div class="full">
-<label>Lesson Title</label>
-<input id="lessonTitle" required>
-</div>
-
-<div class="full">
-<label>Description</label>
-<textarea id="lessonDescription"></textarea>
-</div>
-
-<div>
-<label>Video URL</label>
-<input id="lessonVideoUrl">
-</div>
-
-<div>
-<label>PDF URL</label>
-<input id="lessonPdfUrl">
-</div>
-
-<div>
-<label>Order</label>
-<input id="lessonOrder" type="number" value="1">
-</div>
-
-<div>
-<label>Number of Videos</label>
-<input id="lessonVideoCount" type="number" min="0" value="0">
-</div>
-
-<div>
-<label>Visualized Fee</label>
-<input id="lessonVisualizedFee" type="number" min="0">
-</div>
-
-<div>
-<label>PPT Fee</label>
-<input id="lessonPptFee" type="number" min="0">
-</div>
-
-<div>
-<label>Visualized Video URL</label>
-<input id="lessonVisualizedUrl">
-</div>
-
-<div>
-<label>PPT Video URL</label>
-<input id="lessonPptUrl">
-</div>
-
-<div class="full">
-
-<label>
-<input id="lessonPublished" type="checkbox" style="width:auto" checked>
-Published
-</label>
-
-<br>
-
-<label>
-<input id="lessonTrial" type="checkbox" style="width:auto">
-Free Trial
-</label>
-
-</div>
-
-</div>
-
-<div class="actions">
-<button type="submit" class="primary" id="lessonSaveBtn">Create Lesson</button>
-<button type="button" class="secondary" id="lessonCancelBtn">Cancel</button>
 </div>
-
-</form>
-</div>
-
-<div class="card">
-<h2>Lessons</h2>
-
-<label>Filter Topic</label>
-<select id="lessonFilter">
-<option value="">All Topics</option>
-</select>
-
-<div id="lessonList"></div>
-</div>
-
-</section>
-
-<section id="mcqsSection" class="section">
-
-<div class="card">
-<h2>MCQ Management</h2>
-
-<form id="mcqForm">
-<input type="hidden" id="mcqId">
-
-<div class="grid">
-
-<div class="full">
-<label>Lesson</label>
-<select id="mcqLesson"></select>
-</div>
-
-<div class="full">
-<label>Question</label>
-<textarea id="mcqQuestion" required></textarea>
-</div>
-
-<div>
-<label>Option A</label>
-<input id="mcqA">
-</div>
-
-<div>
-<label>Option B</label>
-<input id="mcqB">
-</div>
-
-<div>
-<label>Option C</label>
-<input id="mcqC">
-</div>
-
-<div>
-<label>Option D</label>
-<input id="mcqD">
-</div>
-
-<div>
-<label>Correct Option</label>
-<select id="mcqCorrect">
-<option value="">Select</option>
-<option value="A">A</option>
-<option value="B">B</option>
-<option value="C">C</option>
-<option value="D">D</option>
-</select>
-</div>
-
-<div class="full">
-<label>Explanation</label>
-<textarea id="mcqExplanation"></textarea>
-</div>
-
-</div>
-
-<div class="actions">
-<button type="submit" class="primary" id="mcqSaveBtn">Create MCQ</button>
-<button type="button" class="secondary" id="mcqCancelBtn">Cancel</button>
-</div>
-
-</form>
-</div>
-
-<div class="card">
-<h2>Existing MCQs</h2>
-<div id="mcqList"></div>
-</div>
-
-</section>
-
-<section id="pricingSection" class="section">
-
-<div class="card">
-<h2>Course Pricing</h2>
-
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Course</th>
-<th>Original Fee</th>
-<th>Current Fee</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="coursePricingList"></tbody>
-</table>
-</div>
-
-</div>
-
-<div class="card">
-<h2>Subject Pricing</h2>
-
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Subject</th>
-<th>Course</th>
-<th>Subject Fee</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="subjectPricingList"></tbody>
-</table>
-</div>
-
-</div>
-
-</section>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
-const LAKSHYASETU_CONFIG={
-supabaseUrl:"https://byounbmdyuytoqqyhgos.supabase.co",
-supabasePublishableKey:"sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa"
-};
-
-const supabaseClient=window.supabase.createClient(
-LAKSHYASETU_CONFIG.supabaseUrl,
-LAKSHYASETU_CONFIG.supabasePublishableKey
-);
-
-let courses=[];
-let subjects=[];
-let courseSubjects=[];
-let topics=[];
-let lessons=[];
-let mcqs=[];
-
-const $=id=>document.getElementById(id);
-
-function showMessage(text,error=false){
-const box=$("message");
-box.textContent=text;
-box.className="message show"+(error?" error":"");
-}
-
-function escapeHtml(value){
-return String(value??"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-}
-
-function money(value){
-if(value===null||value===undefined||value==="")return"Not set";
-return"₹"+Number(value).toLocaleString("en-IN");
-}
-
-function slugify(text){
-return String(text||"")
-.toLowerCase()
-.trim()
-.replace(/[^a-z0-9]+/g,"-")
-.replace(/^-+|-+$/g,"");
-}
-
-/* NAVIGATION */
-
-document.querySelectorAll(".nav button").forEach(button=>{
-button.addEventListener("click",()=>{
-document.querySelectorAll(".nav button")
-.forEach(x=>x.classList.remove("active"));
-
-document.querySelectorAll(".section")
-.forEach(x=>x.classList.remove("active"));
-
-button.classList.add("active");
-$(button.dataset.section).classList.add("active");
-});
-});
-
-/* ADMIN */
-
-async function checkAdmin(){
-
-const result=await supabaseClient.rpc("is_admin");
-
-if(result.error){
-showMessage(
-"Admin verification failed: "+result.error.message,
-true
-);
-return false;
-}
-
-if(result.data!==true){
-showMessage(
-"This account does not have Admin access.",
-true
-);
-return false;
-}
-
-return true;
-}
-
-/* LOGIN */
-
-$("loginForm").addEventListener("submit",async e=>{
-
-e.preventDefault();
-
-showMessage("Logging in...");
-
-const result=await supabaseClient.auth.signInWithPassword({
-email:$("email").value.trim(),
-password:$("password").value
-});
-
-if(result.error){
-showMessage(result.error.message,true);
-return;
-}
-
-const allowed=await checkAdmin();
-
-if(!allowed){
-await supabaseClient.auth.signOut();
-return;
-}
-
-$("loginBox").classList.add("hidden");
-$("dashboard").classList.remove("hidden");
-$("logoutBtn").classList.remove("hidden");
-
-showMessage("Admin login successful.");
-
-await loadAll();
-
-});
-
-$("logoutBtn").addEventListener("click",async()=>{
-await supabaseClient.auth.signOut();
-location.reload();
-});
-
-/* COURSES */
-
-async function loadCourses(){
-
-const result=await supabaseClient
-.from("courses")
-.select("*")
-.order("id");
-
-if(result.error){
-showMessage(
-"Course loading failed: "+result.error.message,
-true
-);
-return;
-}
-
-courses=result.data||[];
-
-$("courseCount").textContent=courses.length;
-
-renderCourses();
-populateCourseSelects();
-renderCoursePricing();
-
-}
-
-function renderCourses(){
-
-$("courseList").innerHTML=courses.length
-
-?courses.map(course=>`
-
-<div class="item">
-
-<h3>${escapeHtml(course.title)}</h3>
-
-<p>${escapeHtml(course.description||"")}</p>
-
-<span class="badge">
-${money(course.course_fee)}
-</span>
-
-<span class="badge">
-Current: ${money(course.current_fee)}
-</span>
-
-<span class="badge">
-Validity: ${course.validity_years||2} years
-</span>
-
-<span class="badge ${course.published?"green":"red"}">
-${course.published?"Published":"Unpublished"}
-</span>
-
-<div class="actions">
-<button class="primary"
-onclick="editCourse(${course.id})">
-Edit
-</button>
-</div>
-
-</div>
-
-`).join("")
-
-:`<div class="item">No courses found.</div>`;
-
-}
-
-function populateCourseSelects(){
-
-const options=courses.map(course=>`
-
-<option value="${course.id}">
-${escapeHtml(course.title)}
-</option>
-
-`).join("");
-
-$("subjectCourse").innerHTML=
-`<option value="">Select Course</option>`+options;
-
-$("subjectFilter").innerHTML=
-`<option value="">All Courses</option>`+options;
-
-$("lessonCourse").innerHTML=
-`<option value="">Select Course</option>`+options;
-
-}
-
-$("courseTitle").addEventListener("input",()=>{
-if(!$("courseId").value)
-$("courseSlug").value=slugify($("courseTitle").value);
-});
-
-$("courseForm").addEventListener("submit",async e=>{
-
-e.preventDefault();
-
-showMessage("Saving course...");
-
-const id=$("courseId").value;
-
-const data={
-title:$("courseTitle").value.trim(),
-slug:$("courseSlug").value.trim(),
-description:$("courseDescription").value.trim()||null,
-language:$("courseLanguage").value.trim()||"Telugu + English",
-validity_years:Number($("courseValidity").value)||2,
-original_fee:$("courseOriginalFee").value===""
-?null
-:Number($("courseOriginalFee").value),
-current_fee:$("courseCurrentFee").value===""
-?null
-:Number($("courseCurrentFee").value),
-course_fee:$("courseCurrentFee").value===""
-?null
-:Number($("courseCurrentFee").value),
-published:$("coursePublished").checked
-};
-
-const result=id
-
-?await supabaseClient
-.from("courses")
-.update(data)
-.eq("id",id)
-
-:await supabaseClient
-.from("courses")
-.insert(data);
-
-if(result.error){
-showMessage(result.error.message,true);
-return;
-}
-
-showMessage(
-id
-?"Course updated successfully."
-:"Course created successfully."
-);
-
-resetCourse();
-await loadCourses();
-
-});
-
-window.editCourse=id=>{
-
-const course=courses.find(x=>x.id===id);
-
-if(!course)return;
-
-$("courseId").value=course.id;
-$("courseTitle").value=course.title||"";
-$("courseSlug").value=course.slug||"";
-$("courseDescription").value=course.description||"";
-$("courseLanguage").value=course.language||"Telugu + English";
-$("courseValidity").value=course.validity_years||2;
-$("courseOriginalFee").value=course.original_fee??"";
-$("courseCurrentFee").value=
-course.current_fee??course.course_fee??"";
-$("coursePublished").checked=
-course.published!==false;
-
-$("courseSaveBtn").textContent=
-"Save Course Changes";
-
-};
-
-$("courseCancelBtn").addEventListener(
-"click",
-resetCourse
-);
-
-function resetCourse(){
-
-$("courseForm").reset();
-$("courseId").value="";
-$("courseLanguage").value="Telugu + English";
-$("courseValidity").value=2;
-$("coursePublished").checked=true;
-$("courseSaveBtn").textContent="Create Course";
-
-}
-
-/* SUBJECTS */
-
-async function loadSubjects(){
-
-const result=await supabaseClient
-.from("course_subjects")
-.select("*")
-.order("course_id")
-.order("sort_order");
-
-if(result.error){
-showMessage(
-"Course subject loading failed: "+
-result.error.message,
-true
-);
-return;
-}
-
-courseSubjects=result.data||[];
-
-/*
-Load the actual subjects table separately.
-Lessons.subject_id points here.
-*/
-
-const subjectResult=await supabaseClient
-.from("subjects")
-.select("*")
-.order("title");
-
-if(subjectResult.error){
-showMessage(
-"Actual subject loading failed: "+
-subjectResult.error.message,
-true
-);
-return;
-}
-
-subjects=subjectResult.data||[];
-
-$("subjectCount").textContent=
-courseSubjects.length;
-
-populateSubjectSelects();
-renderSubjects();
-renderSubjectPricing();
-
-}
-
-function populateSubjectSelects(){
-
-const options=courseSubjects.map(subject=>`
-
-<option value="${subject.id}">
-${escapeHtml(subject.title)}
-</option>
-
-`).join("");
-
-$("topicSubject").innerHTML=
-`<option value="">Select Subject</option>`+
-options;
-
-$("topicFilter").innerHTML=
-`<option value="">All Subjects</option>`+
-options;
-
-}
-
-function renderSubjects(){
-
-const selected=$("subjectFilter").value;
-
-const list=selected
-
-?courseSubjects.filter(
-x=>String(x.course_id)===selected
-)
-
-:courseSubjects;
-
-$("subjectList").innerHTML=list.length
-
-?list.map(subject=>{
-
-const course=
-courses.find(
-x=>x.id===subject.course_id
-);
-
-return`
-
-<div class="item">
-
-<h3>${escapeHtml(subject.title)}</h3>
-
-<p>
-Course:
-${escapeHtml(course?.title||"Unknown")}
-</p>
-
-<span class="badge">
-${money(subject.subject_fee)}
-</span>
-
-<span class="badge">
-Order ${subject.sort_order}
-</span>
-
-<span class="badge ${
-subject.published?"green":"red"
-}">
-${subject.published?"Published":"Unpublished"}
-</span>
-
-<div class="actions">
-
-<button class="primary"
-onclick="editSubject(${subject.id})">
-Edit
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}).join("")
-
-:`<div class="item">No subjects found.</div>`;
-
-}
-
-$("subjectFilter").addEventListener(
-"change",
-renderSubjects
-);
-
-$("subjectTitle").addEventListener(
-"input",
-()=>{
-
-if(!$("subjectId").value)
-$("subjectSlug").value=
-slugify($("subjectTitle").value);
-
-});
-
-$("subjectForm").addEventListener(
-"submit",
-async e=>{
-
-e.preventDefault();
-
-showMessage("Saving subject...");
-
-const id=$("subjectId").value;
-
-const data={
-course_id:Number($("subjectCourse").value),
-title:$("subjectTitle").value.trim(),
-slug:$("subjectSlug").value.trim(),
-description:$("subjectDescription").value.trim()||null,
-sort_order:Number($("subjectOrder").value)||1,
-subject_fee:$("subjectFee").value===""
-?null
-:Number($("subjectFee").value),
-published:$("subjectPublished").checked,
-is_trial:$("subjectTrial").checked
-};
-
-const result=id
-
-?await supabaseClient
-.from("course_subjects")
-.update(data)
-.eq("id",id)
-
-:await supabaseClient
-.from("course_subjects")
-.insert(data);
-
-if(result.error){
-showMessage(result.error.message,true);
-return;
-}
-
-showMessage(
-id
-?"Subject updated successfully."
-:"Subject created successfully."
-);
-
-resetSubject();
-await loadSubjects();
-
-});
-
-window.editSubject=id=>{
-
-const subject=
-courseSubjects.find(x=>x.id===id);
-
-if(!subject)return;
-
-$("subjectId").value=subject.id;
-$("subjectCourse").value=subject.course_id;
-$("subjectTitle").value=subject.title||"";
-$("subjectSlug").value=subject.slug||"";
-$("subjectDescription").value=
-subject.description||"";
-$("subjectOrder").value=
-subject.sort_order||1;
-$("subjectFee").value=
-subject.subject_fee??"";
-$("subjectPublished").checked=
-subject.published!==false;
-$("subjectTrial").checked=
-subject.is_trial===true;
-
-$("subjectSaveBtn").textContent=
-"Save Subject Changes";
-
-};
-
-$("subjectCancelBtn").addEventListener(
-"click",
-resetSubject
-);
-
-function resetSubject(){
-
-$("subjectForm").reset();
-$("subjectId").value="";
-$("subjectPublished").checked=true;
-$("subjectSaveBtn").textContent=
-"Create Subject";
-
-}
-
-/* TOPICS */
-
-async function loadTopics(){
-
-showMessage("Loading topics...");
-
-const result=await supabaseClient
-.from("course_topics")
-.select(`
-id,
-course_subject_id,
-title,
-slug,
-description,
-sort_order,
-created_at,
-topic_fee,
-published,
-is_trial,
-video_count
-`)
-.order("title",{ascending:true});
-
-if(result.error){
-
-showMessage(
-"Topic loading failed: "+
-result.error.message,
-true
-);
-
-return;
-
-}
-
-topics=result.data||[];
-
-$("topicCount").textContent=
-topics.length;
-
-const topicOptions=topics
-
-.filter(
-topic=>
-topic &&
-topic.id!=null &&
-topic.title
-)
-
-.map(topic=>`
-
-<option value="${topic.id}">
-${escapeHtml(topic.title)}
-</option>
-
-`).join("");
-
-$("lessonFilter").innerHTML=
-`<option value="">All Topics</option>`+
-topicOptions;
-
-renderTopics();
-
-renderLessonTopicOptions("");
-
-showMessage(
-topics.length
-?`${topics.length} topic(s) loaded successfully.`
-:"No topics found."
-);
-
-}
-
-function renderTopics(){
-
-const selected=$("topicFilter").value;
-
-const list=selected
-
-?topics.filter(
-x=>
-String(x.course_subject_id)===
-selected
-)
-
-:topics;
-
-$("topicList").innerHTML=list.length
-
-?list.map(topic=>{
-
-const cs=
-courseSubjects.find(
-x=>x.id===topic.course_subject_id
-);
-
-return`
-
-<div class="item">
-
-<h3>${escapeHtml(topic.title)}</h3>
-
-<p>
-Subject:
-${escapeHtml(cs?.title||"Unknown")}
-</p>
-
-<span class="badge">
-Order ${topic.sort_order||1}
-</span>
-
-<span class="badge">
-Price: ${money(topic.topic_fee)}
-</span>
-
-<span class="badge">
-${Number(topic.video_count||0)} videos
-</span>
-
-<span class="badge ${
-topic.published===false
-?"red"
-:"green"
-}">
-${
-topic.published===false
-?"Unpublished"
-:"Published"
-}
-</span>
-
-<div class="actions">
-
-<button class="primary"
-onclick="editTopic(${topic.id})">
-Edit
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}).join("")
-
-:`<div class="item">No topics found.</div>`;
-
-}
-
-$("topicFilter").addEventListener(
-"change",
-renderTopics
-);
-
-$("topicTitle").addEventListener(
-"input",
-()=>{
-
-if(!$("topicId").value)
-$("topicSlug").value=
-slugify($("topicTitle").value);
-
-});
-
-$("topicForm").addEventListener(
-"submit",
-async e=>{
-
-e.preventDefault();
-
-showMessage("Saving topic...");
-
-const id=$("topicId").value;
-
-const data={
-course_subject_id:
-Number($("topicSubject").value),
-title:$("topicTitle").value.trim(),
-slug:$("topicSlug").value.trim(),
-description:
-$("topicDescription").value.trim()||null,
-sort_order:
-Number($("topicOrder").value)||1,
-topic_fee:
-$("topicFee").value===""
-?null
-:Number($("topicFee").value),
-video_count:
-Number($("topicVideoCount").value)||0
-};
-
-const result=id
-
-?await supabaseClient
-.from("course_topics")
-.update(data)
-.eq("id",id)
-
-:await supabaseClient
-.from("course_topics")
-.insert(data);
-
-if(result.error){
-showMessage(result.error.message,true);
-return;
-}
-
-showMessage(
-id
-?"Topic updated successfully."
-:"Topic created successfully."
-);
-
-resetTopic();
-await loadTopics();
-
-});
-
-window.editTopic=id=>{
-
-const topic=
-topics.find(x=>x.id===id);
-
-if(!topic)return;
-
-$("topicId").value=topic.id;
-$("topicSubject").value=
-topic.course_subject_id;
-$("topicTitle").value=
-topic.title||"";
-$("topicSlug").value=
-topic.slug||"";
-$("topicDescription").value=
-topic.description||"";
-$("topicOrder").value=
-topic.sort_order||1;
-$("topicFee").value=
-topic.topic_fee??"";
-$("topicVideoCount").value=
-topic.video_count??0;
-
-$("topicSaveBtn").textContent=
-"Save Topic Changes";
-
-};
-
-$("topicCancelBtn").addEventListener(
-"click",
-resetTopic
-);
-
-function resetTopic(){
-
-$("topicForm").reset();
-$("topicId").value="";
-$("topicVideoCount").value=0;
-$("topicSaveBtn").textContent=
-"Create Topic";
-
-}
-
-/* =====================================================
-   SEARCHABLE TOPIC
-   ===================================================== */
-
-function renderLessonTopicOptions(searchText){
-
-const dropdown=
-$("lessonTopicDropdown");
-
-const query=
-String(searchText||"")
-.trim()
-.toLowerCase();
-
-const filtered=
-topics
-.filter(
-topic=>
-topic &&
-topic.id!=null &&
-topic.title
-)
-.filter(
-topic=>
-!query ||
-String(topic.title)
-.toLowerCase()
-.includes(query)
-)
-.sort(
-(a,b)=>
-String(a.title).localeCompare(
-String(b.title),
-undefined,
-{sensitivity:"base"}
-)
-);
-
-if(!filtered.length){
-
-dropdown.innerHTML=
-`<div class="topic-no-result">
-No topics found
-</div>`;
-
-dropdown.classList.add("show");
-
-return;
-
-}
-
-dropdown.innerHTML=
-filtered.map(topic=>`
-
-<div
-class="topic-option"
-data-topic-id="${topic.id}"
->
-${escapeHtml(topic.title)}
-</div>
-
-`).join("");
-
-dropdown.classList.add("show");
-
-dropdown
-.querySelectorAll(".topic-option")
-.forEach(option=>{
-
-option.addEventListener(
-"click",
-()=>{
-
-selectLessonTopic(
-Number(option.dataset.topicId)
-);
-
-}
-);
-
-});
-
-}
-
-function normalizeTitle(text){
-
-return String(text||"")
-.toLowerCase()
-.replace(/&/g," and ")
-.replace(/[^a-z0-9\s]/g," ")
-.replace(/\s+/g," ")
-.trim();
-
-}
-
-/*
-Find the real subjects.id.
-
-course_topics.course_subject_id points to
-course_subjects.id.
-
-lessons.subject_id points to
-subjects.id.
-
-If course_subjects.subject_id exists,
-use it directly.
-
-If it is NULL, match the course subject
-title against the real subjects table.
-*/
-
-function resolveActualSubjectId(courseSubject){
-
-if(!courseSubject)return null;
-
-/* Best case: explicit mapping */
-
-if(courseSubject.subject_id){
-
-const direct=subjects.find(
-s=>Number(s.id)===
-Number(courseSubject.subject_id)
-);
-
-if(direct)return direct.id;
-
-}
-
-/* Exact title match */
-
-const wanted=
-normalizeTitle(courseSubject.title);
-
-let match=subjects.find(
-s=>
-normalizeTitle(s.title)===wanted
-);
-
-if(match)return match.id;
-
-/*
-Indian Polity & Constitution
-should map to Indian Polity.
-*/
-
-const wantedWords=
-wanted
-.split(" ")
-.filter(
-x=>
-x.length>2 &&
-!["and","the","of"].includes(x)
-);
-
-let best=null;
-let bestScore=0;
-
-subjects.forEach(subject=>{
-
-const candidate=
-normalizeTitle(subject.title);
-
-const words=
-candidate
-.split(" ")
-.filter(
-x=>
-x.length>2 &&
-!["and","the","of"].includes(x)
-);
-
-let score=0;
-
-wantedWords.forEach(word=>{
-
-if(words.includes(word))
-score+=2;
-
-else if(
-words.some(
-w=>
-w.includes(word)||
-word.includes(w)
-)
-)
-score+=1;
-
-});
-
-if(score>bestScore){
-
-bestScore=score;
-best=subject;
-
-}
-
-});
-
-if(best && bestScore>0)
-return best.id;
-
-return null;
-
-}
-
-function selectLessonTopic(topicId){
-
-const topic=
-topics.find(
-x=>Number(x.id)===
-Number(topicId)
-);
-
-if(!topic)return;
-
-$("lessonTopic").value=
-topic.id;
-
-$("lessonTopicSearch").value=
-topic.title;
-
-$("lessonTopicSearch")
-.classList.add("topic-selected");
-
-/*
-Find course_subjects row.
-*/
-
-const courseSubject=
-courseSubjects.find(
-x=>
-Number(x.id)===
-Number(topic.course_subject_id)
-);
-
-if(!courseSubject){
-
-showMessage(
-"Course Subject mapping not found for this topic.",
-true
-);
-
-return;
-
-}
-
-/*
-Course comes directly from course_subjects.
-*/
-
-$("lessonCourse").value=
-courseSubject.course_id||"";
-
-/*
-Subject MUST come from public.subjects.id,
-not course_subjects.id.
-*/
-
-const actualSubjectId=
-resolveActualSubjectId(
-courseSubject
-);
-
-if(!actualSubjectId){
-
-$("lessonSubject").value="";
-
-showMessage(
-"Could not map this Topic to an actual Subject.",
-true
-);
-
-return;
-
-}
-
-$("lessonSubject").value=
-actualSubjectId;
-
-$("lessonTopicDropdown")
-.classList.remove("show");
-
-}
-
-$("lessonTopicSearch").addEventListener(
-"focus",
-()=>{
-
-renderLessonTopicOptions(
-$("lessonTopicSearch").value
-);
-
-});
-
-$("lessonTopicSearch").addEventListener(
-"input",
-()=>{
-
-$("lessonTopic").value="";
-
-$("lessonCourse").value="";
-
-$("lessonSubject").value="";
-
-$("lessonTopicSearch")
-.classList.remove("topic-selected");
-
-renderLessonTopicOptions(
-$("lessonTopicSearch").value
-);
-
-});
-
-document.addEventListener(
-"click",
-event=>{
-
-const picker=
-document.querySelector(".topic-picker");
-
-if(
-picker &&
-!picker.contains(event.target)
-){
-
-$("lessonTopicDropdown")
-.classList.remove("show");
-
-}
-
-});
-
-/* LESSONS */
-
-async function loadLessons(){
-
-const result=await supabaseClient
-.from("lessons")
-.select("*")
-.order("course_id")
-.order("sort_order")
-.order("id");
-
-if(result.error){
-
-showMessage(
-"Lesson loading failed: "+
-result.error.message,
-true
-);
-
-return;
-
-}
-
-lessons=result.data||[];
-
-$("lessonCount").textContent=
-lessons.length;
-
-$("mcqLesson").innerHTML=
-`<option value="">Select Lesson</option>`+
-
-lessons.map(lesson=>`
-
-<option value="${lesson.id}">
-${escapeHtml(lesson.title)}
-</option>
-
-`).join("");
-
-renderLessons();
-
-}
-
-function renderLessons(){
-
-const selected=
-$("lessonFilter").value;
-
-const list=selected
-
-?lessons.filter(
-x=>String(x.topic_id)===selected
-)
-
-:lessons;
-
-$("lessonList").innerHTML=list.length
-
-?list.map(lesson=>{
-
-const topic=
-topics.find(
-x=>Number(x.id)===
-Number(lesson.topic_id)
-);
-
-return`
-
-<div class="item">
-
-<h3>
-${escapeHtml(lesson.title)}
-</h3>
-
-<p>
-Topic:
-${escapeHtml(topic?.title||"Unknown")}
-</p>
-
-<span class="badge">
-Order ${lesson.sort_order||1}
-</span>
-
-<span class="badge">
-${Number(lesson.video_count||0)} videos
-</span>
-
-<span class="badge">
-Visualized:
-${money(lesson.visualized_fee)}
-</span>
-
-<span class="badge">
-PPT:
-${money(lesson.ppt_fee)}
-</span>
-
-<div class="actions">
-
-<button class="primary"
-onclick="editLesson(${lesson.id})">
-Edit
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}).join("")
-
-:`<div class="item">No lessons found.</div>`;
-
-}
-
-$("lessonFilter").addEventListener(
-"change",
-renderLessons
-);
-
-$("lessonForm").addEventListener(
-"submit",
-async e=>{
-
-e.preventDefault();
-
-if(!$("lessonTopic").value){
-
-showMessage(
-"Please search and select a Topic.",
-true
-);
-
-return;
-
-}
-
-if(!$("lessonCourse").value){
-
-showMessage(
-"Please select a Course.",
-true
-);
-
-return;
-
-}
-
-if(!$("lessonSubject").value){
-
-showMessage(
-"Please select a Subject.",
-true
-);
-
-return;
-
-}
-
-showMessage("Saving lesson...");
-
-const id=
-$("lessonId").value;
-
-const data={
-
-course_id:
-Number($("lessonCourse").value),
-
-subject_id:
-Number($("lessonSubject").value),
-
-topic_id:
-Number($("lessonTopic").value),
-
-title:
-$("lessonTitle").value.trim(),
-
-description:
-$("lessonDescription").value.trim()||null,
-
-video_url:
-$("lessonVideoUrl").value.trim()||null,
-
-pdf_url:
-$("lessonPdfUrl").value.trim()||null,
-
-sort_order:
-Number($("lessonOrder").value)||1,
-
-video_count:
-Number($("lessonVideoCount").value)||0,
-
-visualized_fee:
-$("lessonVisualizedFee").value===""
-?null
-:Number($("lessonVisualizedFee").value),
-
-ppt_fee:
-$("lessonPptFee").value===""
-?null
-:Number($("lessonPptFee").value),
-
-visualized_video_url:
-$("lessonVisualizedUrl").value.trim()||null,
-
-ppt_video_url:
-$("lessonPptUrl").value.trim()||null,
-
-published:
-$("lessonPublished").checked,
-
-is_trial:
-$("lessonTrial").checked
-
-};
-
-const result=id
-
-?await supabaseClient
-.from("lessons")
-.update(data)
-.eq("id",id)
-
-:await supabaseClient
-.from("lessons")
-.insert(data);
-
-if(result.error){
-
-showMessage(
-result.error.message,
-true
-);
-
-return;
-
-}
-
-showMessage(
-id
-?"Lesson updated successfully."
-:"Lesson created successfully."
-);
-
-resetLesson();
-await loadLessons();
-
-});
-
-window.editLesson=id=>{
-
-const lesson=
-lessons.find(
-x=>x.id===id
-);
-
-if(!lesson)return;
-
-$("lessonId").value=
-lesson.id;
-
-selectLessonTopic(
-lesson.topic_id
-);
-
-$("lessonTitle").value=
-lesson.title||"";
-
-$("lessonDescription").value=
-lesson.description||"";
-
-$("lessonVideoUrl").value=
-lesson.video_url||"";
-
-$("lessonPdfUrl").value=
-lesson.pdf_url||"";
-
-$("lessonOrder").value=
-lesson.sort_order||1;
-
-$("lessonVideoCount").value=
-lesson.video_count??0;
-
-$("lessonVisualizedFee").value=
-lesson.visualized_fee??"";
-
-$("lessonPptFee").value=
-lesson.ppt_fee??"";
-
-$("lessonVisualizedUrl").value=
-lesson.visualized_video_url||"";
-
-$("lessonPptUrl").value=
-lesson.ppt_video_url||"";
-
-$("lessonPublished").checked=
-lesson.published!==false;
-
-$("lessonTrial").checked=
-lesson.is_trial===true;
-
-$("lessonSaveBtn").textContent=
-"Save Lesson Changes";
-
-};
-
-$("lessonCancelBtn").addEventListener(
-"click",
-resetLesson
-);
-
-function resetLesson(){
-
-$("lessonForm").reset();
-
-$("lessonId").value="";
-
-$("lessonTopic").value="";
-
-$("lessonTopicSearch").value="";
-
-$("lessonTopicSearch")
-.classList.remove("topic-selected");
-
-$("lessonTopicDropdown")
-.classList.remove("show");
-
-$("lessonPublished").checked=true;
-
-$("lessonVideoCount").value=0;
-
-$("lessonSaveBtn").textContent=
-"Create Lesson";
-
-}
-
-/* MCQS */
-
-async function loadMcqs(){
-
-const result=await supabaseClient
-.from("mcqs")
-.select("*")
-.order("id");
-
-if(result.error){
-
-showMessage(
-"MCQ loading failed: "+
-result.error.message,
-true
-);
-
-return;
-
-}
-
-mcqs=result.data||[];
-
-$("mcqCount").textContent=
-mcqs.length;
-
-renderMcqs();
-
-}
-
-function renderMcqs(){
-
-$("mcqList").innerHTML=
-mcqs.length
-
-?mcqs.map(mcq=>{
-
-const lesson=
-lessons.find(
-x=>x.id===mcq.lesson_id
-);
-
-return`
-
-<div class="item">
-
-<h3>
-${escapeHtml(mcq.question)}
-</h3>
-
-<p>
-Lesson:
-${escapeHtml(lesson?.title||"Unknown")}
-</p>
-
-<span class="badge">
-Correct:
-${escapeHtml(
-mcq.correct_option||"Not set"
-)}
-</span>
-
-<div class="actions">
-
-<button class="primary"
-onclick="editMcq(${mcq.id})">
-Edit
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}).join("")
-
-:`<div class="item">No MCQs found.</div>`;
-
-}
-
-$("mcqForm").addEventListener(
-"submit",
-async e=>{
-
-e.preventDefault();
-
-showMessage("Saving MCQ...");
-
-const id=
-$("mcqId").value;
-
-const data={
-
-lesson_id:
-$("mcqLesson").value
-?Number($("mcqLesson").value)
-:null,
-
-question:
-$("mcqQuestion").value.trim(),
-
-option_a:
-$("mcqA").value.trim()||null,
-
-option_b:
-$("mcqB").value.trim()||null,
-
-option_c:
-$("mcqC").value.trim()||null,
-
-option_d:
-$("mcqD").value.trim()||null,
-
-correct_option:
-$("mcqCorrect").value||null,
-
-explanation:
-$("mcqExplanation").value.trim()||null
-
-};
-
-const result=id
-
-?await supabaseClient
-.from("mcqs")
-.update(data)
-.eq("id",id)
-
-:await supabaseClient
-.from("mcqs")
-.insert(data);
-
-if(result.error){
-
-showMessage(
-result.error.message,
-true
-);
-
-return;
-
-}
-
-showMessage(
-id
-?"MCQ updated successfully."
-:"MCQ created successfully."
-);
-
-resetMcq();
-await loadMcqs();
-
-});
-
-window.editMcq=id=>{
-
-const mcq=
-mcqs.find(
-x=>x.id===id
-);
-
-if(!mcq)return;
-
-$("mcqId").value=mcq.id;
-$("mcqLesson").value=mcq.lesson_id??"";
-$("mcqQuestion").value=mcq.question||"";
-$("mcqA").value=mcq.option_a||"";
-$("mcqB").value=mcq.option_b||"";
-$("mcqC").value=mcq.option_c||"";
-$("mcqD").value=mcq.option_d||"";
-$("mcqCorrect").value=mcq.correct_option||"";
-$("mcqExplanation").value=mcq.explanation||"";
-
-$("mcqSaveBtn").textContent=
-"Save MCQ Changes";
-
-};
-
-$("mcqCancelBtn").addEventListener(
-"click",
-resetMcq
-);
-
-function resetMcq(){
-
-$("mcqForm").reset();
-
-$("mcqId").value="";
-
-$("mcqSaveBtn").textContent=
-"Create MCQ";
-
-}
-
-/* PRICING */
-
-function renderCoursePricing(){
-
-$("coursePricingList").innerHTML=
-courses.map(course=>`
-
-<tr>
-
-<td>
-${escapeHtml(course.title)}
-</td>
-
-<td>
-${money(course.original_fee)}
-</td>
-
-<td>
-${money(
-course.current_fee??
-course.course_fee
-)}
-</td>
-
-<td>
-
-<button class="primary"
-onclick="editCourse(${course.id})">
-Edit
-</button>
-
-</td>
-
-</tr>
-
-`).join("");
-
-}
-
-function renderSubjectPricing(){
-
-$("subjectPricingList").innerHTML=
-courseSubjects.map(subject=>{
-
-const course=
-courses.find(
-x=>x.id===subject.course_id
-);
-
-return`
-
-<tr>
-
-<td>
-${escapeHtml(subject.title)}
-</td>
-
-<td>
-${escapeHtml(
-course?.title||"Unknown"
-)}
-</td>
-
-<td>
-${money(subject.subject_fee)}
-</td>
-
-<td>
-
-<button class="primary"
-onclick="editSubject(${subject.id})">
-Edit
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-}).join("");
-
-}
-
-/* LOAD ALL */
-
-async function loadAll(){
-
-await loadCourses();
-
-await loadSubjects();
-
-await loadTopics();
-
-await loadLessons();
-
-await loadMcqs();
-
-}
-
-/* AUTH */
-
-supabaseClient.auth.onAuthStateChange(
-async(event,session)=>{
-
-if(
-session &&
-event==="SIGNED_IN"
-){
-
-const allowed=
-await checkAdmin();
-
-if(!allowed){
-
-await supabaseClient.auth.signOut();
-return;
-
-}
-
-$("loginBox").classList.add("hidden");
-$("dashboard").classList.remove("hidden");
-$("logoutBtn").classList.remove("hidden");
-
-await loadAll();
-
-}
-
-});
-
-(async function(){
-
-const result=
-await supabaseClient.auth.getSession();
-
-const session=
-result.data?.session;
-
-if(!session)return;
-
-const allowed=
-await checkAdmin();
-
-if(!allowed){
-
-await supabaseClient.auth.signOut();
-return;
-
-}
-
-$("loginBox").classList.add("hidden");
-$("dashboard").classList.remove("hidden");
-$("logoutBtn").classList.remove("hidden");
-
-await loadAll();
-
-})();
+  const config = window.LAKSHYASETU_CONFIG;
+
+  if (!config || !config.supabaseUrl || !config.supabasePublishableKey) {
+    alert("Supabase configuration not found.");
+    throw new Error("LAKSHYASETU_CONFIG missing");
+  }
+
+  const { createClient } = window.supabase;
+
+  const supabaseClient = createClient(
+    config.supabaseUrl,
+    config.supabasePublishableKey
+  );
+
+  const TABLES = {
+    courses: "ls_courses",
+    subjects: "ls_subjects",
+    courseSubjects: "ls_course_subjects",
+    topics: "ls_topics",
+    lessons: "ls_lessons",
+    notes: "ls_notes",
+    mcqs: "ls_practice_mcqs",
+    series: "ls_test_series",
+    packages: "ls_test_packages",
+    tests: "ls_tests",
+    questions: "ls_test_questions"
+  };
+
+  let cache = {
+    courses: [],
+    subjects: [],
+    courseSubjects: [],
+    topics: [],
+    lessons: [],
+    notes: [],
+    mcqs: [],
+    series: [],
+    packages: [],
+    tests: [],
+    questions: []
+  };
+
+  function showMessage(text, type = "") {
+    const el = document.getElementById("message");
+
+    el.textContent = text;
+    el.className = "message " + type;
+    el.style.display = "block";
+
+    setTimeout(() => {
+      el.style.display = "none";
+    }, 4000);
+  }
+
+  function esc(value) {
+    if (value === null || value === undefined) return "";
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function statusBadge(published, archived = false) {
+    if (archived) {
+      return '<span class="badge archived">Archived</span>';
+    }
+
+    if (published) {
+      return '<span class="badge published">Published</span>';
+    }
+
+    return '<span class="badge unpublished">Draft</span>';
+  }
+
+  async function getCount(table) {
+    const { count, error } = await supabaseClient
+      .from(table)
+      .select("*", { count: "exact", head: true });
+
+    if (error) {
+      console.error(table, error);
+      return 0;
+    }
+
+    return count || 0;
+  }
+
+  async function loadAll() {
+    await Promise.all([
+      loadCourses(),
+      loadSubjects(),
+      loadCourseSubjects(),
+      loadTopics(),
+      loadLessons(),
+      loadNotes(),
+      loadMcqs(),
+      loadSeries(),
+      loadPackages(),
+      loadTests(),
+      loadQuestions()
+    ]);
+
+    updateDashboard();
+    populateSelects();
+  }
+
+  async function fetchTable(table, order = "id") {
+    const { data, error } = await supabaseClient
+      .from(table)
+      .select("*")
+      .order(order, { ascending: true });
+
+    if (error) {
+      console.error(table, error);
+      showMessage("Error loading " + table + ": " + error.message, "error");
+      return [];
+    }
+
+    return data || [];
+  }
+
+  async function loadCourses() {
+    cache.courses = await fetchTable(TABLES.courses, "display_order");
+    renderCourses();
+  }
+
+  async function loadSubjects() {
+    cache.subjects = await fetchTable(TABLES.subjects, "display_order");
+    renderSubjects();
+  }
+
+  async function loadCourseSubjects() {
+    cache.courseSubjects = await fetchTable(TABLES.courseSubjects, "display_order");
+    renderCourseSubjects();
+  }
+
+  async function loadTopics() {
+    cache.topics = await fetchTable(TABLES.topics, "sort_order");
+    renderTopics();
+  }
+
+  async function loadLessons() {
+    cache.lessons = await fetchTable(TABLES.lessons, "display_order");
+    renderLessons();
+  }
+
+  async function loadNotes() {
+    cache.notes = await fetchTable(TABLES.notes, "id");
+    renderNotes();
+  }
+
+  async function loadMcqs() {
+    cache.mcqs = await fetchTable(TABLES.mcqs, "display_order");
+    renderMcqs();
+  }
+
+  async function loadSeries() {
+    cache.series = await fetchTable(TABLES.series, "id");
+    renderSeries();
+  }
+
+  async function loadPackages() {
+    cache.packages = await fetchTable(TABLES.packages, "id");
+    renderPackages();
+  }
+
+  async function loadTests() {
+    cache.tests = await fetchTable(TABLES.tests, "id");
+    renderTests();
+  }
+
+  async function loadQuestions() {
+    cache.questions = await fetchTable(TABLES.questions, "display_order");
+    renderQuestions();
+  }
+
+  function updateDashboard() {
+    document.getElementById("countCourses").textContent = cache.courses.length;
+    document.getElementById("countSubjects").textContent = cache.subjects.length;
+    document.getElementById("countCourseSubjects").textContent = cache.courseSubjects.length;
+    document.getElementById("countTopics").textContent = cache.topics.length;
+    document.getElementById("countLessons").textContent = cache.lessons.length;
+    document.getElementById("countNotes").textContent = cache.notes.length;
+    document.getElementById("countMcqs").textContent = cache.mcqs.length;
+    document.getElementById("countSeries").textContent = cache.series.length;
+    document.getElementById("countPackages").textContent = cache.packages.length;
+    document.getElementById("countTests").textContent = cache.tests.length;
+    document.getElementById("countQuestions").textContent = cache.questions.length;
+  }
+
+  function populateSelect(id, items, valueKey, labelFn, placeholder = "Select") {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.innerHTML =
+      '<option value="">' + placeholder + "</option>" +
+      items.map(item =>
+        '<option value="' + esc(item[valueKey]) + '">' +
+        esc(labelFn(item)) +
+        "</option>"
+      ).join("");
+  }
+
+  function populateSelects() {
+
+    populateSelect(
+      "csCourse",
+      cache.courses,
+      "id",
+      x => x.title,
+      "Select Course"
+    );
+
+    populateSelect(
+      "csSubject",
+      cache.subjects,
+      "id",
+      x => x.title,
+      "Select Subject"
+    );
+
+    populateSelect(
+      "topicSubject",
+      cache.subjects,
+      "id",
+      x => x.title,
+      "Select Subject"
+    );
+
+    populateSelect(
+      "lessonTopic",
+      cache.topics,
+      "id",
+      x => x.title,
+      "Select Topic"
+    );
+
+    populateSelect(
+      "noteTopic",
+      cache.topics,
+      "id",
+      x => x.title,
+      "Select Topic"
+    );
+
+    populateSelect(
+      "mcqTopic",
+      cache.topics,
+      "id",
+      x => x.title,
+      "Select Topic"
+    );
+
+    populateSelect(
+      "seriesCourse",
+      cache.courses,
+      "id",
+      x => x.title,
+      "Select Course"
+    );
+
+    populateSelect(
+      "packageSeries",
+      cache.series,
+      "id",
+      x => x.title,
+      "Select Test Series"
+    );
+
+    populateSelect(
+      "testSeries",
+      cache.series,
+      "id",
+      x => x.title,
+      "Select Test Series"
+    );
+
+    populateSelect(
+      "questionTest",
+      cache.tests,
+      "id",
+      x => x.title,
+      "Select Test"
+    );
+  }
+
+  function courseName(id) {
+    const x = cache.courses.find(v => String(v.id) === String(id));
+    return x ? x.title : "-";
+  }
+
+  function subjectName(id) {
+    const x = cache.subjects.find(v => String(v.id) === String(id));
+    return x ? x.title : "-";
+  }
+
+  function topicName(id) {
+    const x = cache.topics.find(v => String(v.id) === String(id));
+    return x ? x.title : "-";
+  }
+
+  function seriesName(id) {
+    const x = cache.series.find(v => String(v.id) === String(id));
+    return x ? x.title : "-";
+  }
+
+  function testName(id) {
+    const x = cache.tests.find(v => String(v.id) === String(id));
+    return x ? x.title : "-";
+  }
+
+  function renderCourses() {
+
+    const el = document.getElementById("coursesTable");
+
+    if (!cache.courses.length) {
+      el.innerHTML = "<p>No courses found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Course</th>
+              <th>Exam</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.courses.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>
+                  <strong>${esc(x.title)}</strong>
+                  <div class="small">${esc(x.slug)}</div>
+                </td>
+                <td>${esc(x.exam_code || "-")}</td>
+                <td>${esc(x.display_order)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editCourse(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.courses}', ${x.id}, loadCourses)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderSubjects() {
+
+    const el = document.getElementById("subjectsTable");
+
+    if (!cache.subjects.length) {
+      el.innerHTML = "<p>No subjects found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Subject</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.subjects.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>
+                  <strong>${esc(x.title)}</strong>
+                  <div class="small">${esc(x.slug || "")}</div>
+                </td>
+                <td>${esc(x.display_order)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editSubject(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.subjects}', ${x.id}, loadSubjects)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderCourseSubjects() {
+
+    const el = document.getElementById("courseSubjectsTable");
+
+    if (!cache.courseSubjects.length) {
+      el.innerHTML = "<p>No course-subject mappings found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Course</th>
+              <th>Subject</th>
+              <th>Order</th>
+              <th>Fee</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.courseSubjects.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(courseName(x.course_id))}</td>
+                <td>${esc(subjectName(x.subject_id))}</td>
+                <td>${esc(x.display_order)}</td>
+                <td>${x.subject_fee == null ? "-" : "₹" + esc(x.subject_fee)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editCourseSubject(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.courseSubjects}', ${x.id}, loadCourseSubjects)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderTopics() {
+
+    const el = document.getElementById("topicsTable");
+
+    if (!cache.topics.length) {
+      el.innerHTML = "<p>No topics found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Subject</th>
+              <th>Topic</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.topics.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(subjectName(x.subject_id))}</td>
+                <td>
+                  <strong>${esc(x.title)}</strong>
+                  <div class="small">${esc(x.slug || "")}</div>
+                </td>
+                <td>${esc(x.sort_order)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editTopic(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.topics}', ${x.id}, loadTopics)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderLessons() {
+
+    const el = document.getElementById("lessonsTable");
+
+    if (!cache.lessons.length) {
+      el.innerHTML = "<p>No lessons found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Topic</th>
+              <th>Lesson</th>
+              <th>Order</th>
+              <th>Trial</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.lessons.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(topicName(x.topic_id))}</td>
+                <td>${esc(x.title)}</td>
+                <td>${esc(x.display_order)}</td>
+                <td>${x.is_trial ? "Yes" : "No"}</td>
+                <td>${statusBadge(x.published)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editLesson(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.lessons}', ${x.id}, loadLessons)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderNotes() {
+
+    const el = document.getElementById("notesTable");
+
+    if (!cache.notes.length) {
+      el.innerHTML = "<p>No notes found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Topic</th>
+              <th>Title</th>
+              <th>Fee</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.notes.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(topicName(x.topic_id))}</td>
+                <td>${esc(x.title)}</td>
+                <td>${x.fee == null ? "-" : "₹" + esc(x.fee)}</td>
+                <td>${statusBadge(x.published)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editNote(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.notes}', ${x.id}, loadNotes)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderMcqs() {
+
+    const el = document.getElementById("mcqsTable");
+
+    if (!cache.mcqs.length) {
+      el.innerHTML = "<p>No practice MCQs found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Topic</th>
+              <th>Question</th>
+              <th>Correct</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.mcqs.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(topicName(x.topic_id))}</td>
+                <td>${esc(x.question)}</td>
+                <td>${esc(x.correct_option)}</td>
+                <td>${statusBadge(x.published)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editMcq(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.mcqs}', ${x.id}, loadMcqs)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderSeries() {
+
+    const el = document.getElementById("seriesTable");
+
+    if (!cache.series.length) {
+      el.innerHTML = "<p>No test series found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Course</th>
+              <th>Series</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.series.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(courseName(x.course_id))}</td>
+                <td>${esc(x.title)}</td>
+                <td>${esc(x.series_type || "-")}</td>
+                <td>${x.price == null ? "-" : "₹" + esc(x.price)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editSeries(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.series}', ${x.id}, loadSeries)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderPackages() {
+
+    const el = document.getElementById("packagesTable");
+
+    if (!cache.packages.length) {
+      el.innerHTML = "<p>No test packages found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Series</th>
+              <th>Type</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.packages.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(seriesName(x.test_series_id))}</td>
+                <td>${esc(x.package_type)}</td>
+                <td>${esc(x.title)}</td>
+                <td>${x.price == null ? "-" : "₹" + esc(x.price)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editPackage(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.packages}', ${x.id}, loadPackages)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderTests() {
+
+    const el = document.getElementById("testsTable");
+
+    if (!cache.tests.length) {
+      el.innerHTML = "<p>No tests found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Series</th>
+              <th>Test</th>
+              <th>Duration</th>
+              <th>Marks</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.tests.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(seriesName(x.test_series_id))}</td>
+                <td>${esc(x.title)}</td>
+                <td>${x.duration_minutes || "-"} min</td>
+                <td>${x.total_marks == null ? "-" : esc(x.total_marks)}</td>
+                <td>${statusBadge(x.published, x.archived)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editTest(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.tests}', ${x.id}, loadTests)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderQuestions() {
+
+    const el = document.getElementById("questionsTable");
+
+    if (!cache.questions.length) {
+      el.innerHTML = "<p>No test questions found.</p>";
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Test</th>
+              <th>Question</th>
+              <th>Marks</th>
+              <th>Negative</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${cache.questions.map(x => `
+              <tr>
+                <td>${esc(x.id)}</td>
+                <td>${esc(testName(x.test_id))}</td>
+                <td>${esc(x.question)}</td>
+                <td>${esc(x.marks)}</td>
+                <td>${esc(x.negative_marks)}</td>
+                <td>
+                  <button class="btn-secondary"
+                    onclick="editQuestion(${x.id})">Edit</button>
+                  <button class="btn-danger"
+                    onclick="deleteRow('${TABLES.questions}', ${x.id}, loadQuestions)">Delete</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  async function save(table, id, payload, reloadFunction, resetFunction) {
+
+    let result;
+
+    if (id) {
+      result = await supabaseClient
+        .from(table)
+        .update(payload)
+        .eq("id", id);
+    } else {
+      result = await supabaseClient
+        .from(table)
+        .insert(payload);
+    }
+
+    if (result.error) {
+      console.error(result.error);
+      showMessage(result.error.message, "error");
+      return false;
+    }
+
+    showMessage(
+      id ? "Updated successfully." : "Created successfully.",
+      "success"
+    );
+
+    resetFunction();
+    await reloadFunction();
+    updateDashboard();
+    populateSelects();
+
+    return true;
+  }
+
+  async function deleteRow(table, id, reloadFunction) {
+
+    if (!confirm("Are you sure you want to delete this record?")) {
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from(table)
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      showMessage(error.message, "error");
+      return;
+    }
+
+    showMessage("Deleted successfully.", "success");
+
+    await reloadFunction();
+
+    updateDashboard();
+    populateSelects();
+  }
+
+  // COURSE
+
+  document.getElementById("courseForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("courseId").value;
+
+    const payload = {
+      title: document.getElementById("courseTitle").value.trim(),
+      slug: document.getElementById("courseSlug").value.trim(),
+      description: document.getElementById("courseDescription").value.trim() || null,
+      exam_code: document.getElementById("courseExamCode").value.trim() || null,
+      display_order: Number(document.getElementById("courseDisplayOrder").value || 0),
+      published: document.getElementById("coursePublished").checked,
+      archived: document.getElementById("courseArchived").checked
+    };
+
+    await save(
+      TABLES.courses,
+      id,
+      payload,
+      loadCourses,
+      resetCourseForm
+    );
+  });
+
+  function editCourse(id) {
+
+    const x = cache.courses.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("courseId").value = x.id;
+    document.getElementById("courseTitle").value = x.title || "";
+    document.getElementById("courseSlug").value = x.slug || "";
+    document.getElementById("courseDescription").value = x.description || "";
+    document.getElementById("courseExamCode").value = x.exam_code || "";
+    document.getElementById("courseDisplayOrder").value = x.display_order ?? 0;
+    document.getElementById("coursePublished").checked = !!x.published;
+    document.getElementById("courseArchived").checked = !!x.archived;
+
+    document.getElementById("courseSubmit").textContent = "Save Course Changes";
+
+    switchTab("courses");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function resetCourseForm() {
+
+    document.getElementById("courseForm").reset();
+    document.getElementById("courseId").value = "";
+    document.getElementById("courseDisplayOrder").value = 0;
+    document.getElementById("courseSubmit").textContent = "Create Course";
+  }
+
+  // SUBJECT
+
+  document.getElementById("subjectForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("subjectId").value;
+
+    const payload = {
+      title: document.getElementById("subjectTitle").value.trim(),
+      slug: document.getElementById("subjectSlug").value.trim(),
+      description: document.getElementById("subjectDescription").value.trim() || null,
+      display_order: Number(document.getElementById("subjectDisplayOrder").value || 0),
+      published: document.getElementById("subjectPublished").checked,
+      archived: document.getElementById("subjectArchived").checked
+    };
+
+    await save(
+      TABLES.subjects,
+      id,
+      payload,
+      loadSubjects,
+      resetSubjectForm
+    );
+  });
+
+  function editSubject(id) {
+
+    const x = cache.subjects.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("subjectId").value = x.id;
+    document.getElementById("subjectTitle").value = x.title || "";
+    document.getElementById("subjectSlug").value = x.slug || "";
+    document.getElementById("subjectDescription").value = x.description || "";
+    document.getElementById("subjectDisplayOrder").value = x.display_order ?? 0;
+    document.getElementById("subjectPublished").checked = !!x.published;
+    document.getElementById("subjectArchived").checked = !!x.archived;
+
+    switchTab("subjects");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function resetSubjectForm() {
+    document.getElementById("subjectForm").reset();
+    document.getElementById("subjectId").value = "";
+    document.getElementById("subjectDisplayOrder").value = 0;
+  }
+
+  // COURSE SUBJECT
+
+  document.getElementById("courseSubjectForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("courseSubjectId").value;
+
+    const payload = {
+      course_id: Number(document.getElementById("csCourse").value),
+      subject_id: Number(document.getElementById("csSubject").value),
+      display_order: Number(document.getElementById("csDisplayOrder").value || 0),
+      subject_fee: document.getElementById("csFee").value === ""
+        ? null
+        : Number(document.getElementById("csFee").value),
+      validity_days: document.getElementById("csValidity").value === ""
+        ? null
+        : Number(document.getElementById("csValidity").value),
+      published: document.getElementById("csPublished").checked,
+      archived: document.getElementById("csArchived").checked
+    };
+
+    await save(
+      TABLES.courseSubjects,
+      id,
+      payload,
+      loadCourseSubjects,
+      resetCourseSubjectForm
+    );
+  });
+
+  function editCourseSubject(id) {
+
+    const x = cache.courseSubjects.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("courseSubjectId").value = x.id;
+    document.getElementById("csCourse").value = x.course_id;
+    document.getElementById("csSubject").value = x.subject_id;
+    document.getElementById("csDisplayOrder").value = x.display_order ?? 0;
+    document.getElementById("csFee").value = x.subject_fee ?? "";
+    document.getElementById("csValidity").value = x.validity_days ?? "";
+    document.getElementById("csPublished").checked = !!x.published;
+    document.getElementById("csArchived").checked = !!x.archived;
+
+    switchTab("course-subjects");
+  }
+
+  function resetCourseSubjectForm() {
+    document.getElementById("courseSubjectForm").reset();
+    document.getElementById("courseSubjectId").value = "";
+    document.getElementById("csDisplayOrder").value = 0;
+  }
+
+  // TOPIC
+
+  document.getElementById("topicForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("topicId").value;
+
+    const payload = {
+      subject_id: Number(document.getElementById("topicSubject").value),
+      title: document.getElementById("topicTitle").value.trim(),
+      slug: document.getElementById("topicSlug").value.trim(),
+      description: document.getElementById("topicDescription").value.trim() || null,
+      sort_order: Number(document.getElementById("topicDisplayOrder").value || 0),
+      published: document.getElementById("topicPublished").checked,
+      archived: document.getElementById("topicArchived").checked
+    };
+
+    await save(
+      TABLES.topics,
+      id,
+      payload,
+      loadTopics,
+      resetTopicForm
+    );
+  });
+
+  function editTopic(id) {
+
+    const x = cache.topics.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("topicId").value = x.id;
+    document.getElementById("topicSubject").value = x.subject_id;
+    document.getElementById("topicTitle").value = x.title || "";
+    document.getElementById("topicSlug").value = x.slug || "";
+    document.getElementById("topicDescription").value = x.description || "";
+    document.getElementById("topicDisplayOrder").value = x.sort_order ?? 0;
+    document.getElementById("topicPublished").checked = !!x.published;
+    document.getElementById("topicArchived").checked = !!x.archived;
+
+    switchTab("topics");
+  }
+
+  function resetTopicForm() {
+    document.getElementById("topicForm").reset();
+    document.getElementById("topicId").value = "";
+    document.getElementById("topicDisplayOrder").value = 0;
+  }
+
+  // LESSON
+
+  document.getElementById("lessonForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("lessonId").value;
+
+    const payload = {
+      topic_id: Number(document.getElementById("lessonTopic").value),
+      title: document.getElementById("lessonTitle").value.trim(),
+      description: document.getElementById("lessonDescription").value.trim() || null,
+      video_url: document.getElementById("lessonVideoUrl").value.trim() || null,
+      pdf_url: document.getElementById("lessonPdfUrl").value.trim() || null,
+      display_order: Number(document.getElementById("lessonDisplayOrder").value || 0),
+      video_fee: document.getElementById("lessonVideoFee").value === ""
+        ? null
+        : Number(document.getElementById("lessonVideoFee").value),
+      validity_days: document.getElementById("lessonValidity").value === ""
+        ? null
+        : Number(document.getElementById("lessonValidity").value),
+      is_trial: document.getElementById("lessonTrial").checked,
+      published: document.getElementById("lessonPublished").checked
+    };
+
+    await save(
+      TABLES.lessons,
+      id,
+      payload,
+      loadLessons,
+      resetLessonForm
+    );
+  });
+
+  function editLesson(id) {
+
+    const x = cache.lessons.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("lessonId").value = x.id;
+    document.getElementById("lessonTopic").value = x.topic_id;
+    document.getElementById("lessonTitle").value = x.title || "";
+    document.getElementById("lessonDescription").value = x.description || "";
+    document.getElementById("lessonVideoUrl").value = x.video_url || "";
+    document.getElementById("lessonPdfUrl").value = x.pdf_url || "";
+    document.getElementById("lessonDisplayOrder").value = x.display_order ?? 0;
+    document.getElementById("lessonVideoFee").value = x.video_fee ?? "";
+    document.getElementById("lessonValidity").value = x.validity_days ?? "";
+    document.getElementById("lessonTrial").checked = !!x.is_trial;
+    document.getElementById("lessonPublished").checked = !!x.published;
+
+    switchTab("lessons");
+  }
+
+  function resetLessonForm() {
+    document.getElementById("lessonForm").reset();
+    document.getElementById("lessonId").value = "";
+    document.getElementById("lessonDisplayOrder").value = 0;
+  }
+
+  // NOTES
+
+  document.getElementById("noteForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("noteId").value;
+
+    const payload = {
+      topic_id: Number(document.getElementById("noteTopic").value),
+      title: document.getElementById("noteTitle").value.trim(),
+      description: document.getElementById("noteDescription").value.trim() || null,
+      file_url: document.getElementById("noteFileUrl").value.trim() || null,
+      fee: document.getElementById("noteFee").value === ""
+        ? null
+        : Number(document.getElementById("noteFee").value),
+      validity_days: document.getElementById("noteValidity").value === ""
+        ? null
+        : Number(document.getElementById("noteValidity").value),
+      published: document.getElementById("notePublished").checked
+    };
+
+    await save(
+      TABLES.notes,
+      id,
+      payload,
+      loadNotes,
+      resetNoteForm
+    );
+  });
+
+  function editNote(id) {
+
+    const x = cache.notes.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("noteId").value = x.id;
+    document.getElementById("noteTopic").value = x.topic_id;
+    document.getElementById("noteTitle").value = x.title || "";
+    document.getElementById("noteDescription").value = x.description || "";
+    document.getElementById("noteFileUrl").value = x.file_url || "";
+    document.getElementById("noteFee").value = x.fee ?? "";
+    document.getElementById("noteValidity").value = x.validity_days ?? "";
+    document.getElementById("notePublished").checked = !!x.published;
+
+    switchTab("notes");
+  }
+
+  function resetNoteForm() {
+    document.getElementById("noteForm").reset();
+    document.getElementById("noteId").value = "";
+  }
+
+  // MCQ
+
+  document.getElementById("mcqForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("mcqId").value;
+
+    const payload = {
+      topic_id: Number(document.getElementById("mcqTopic").value),
+      question: document.getElementById("mcqQuestion").value.trim(),
+      option_a: document.getElementById("mcqA").value.trim(),
+      option_b: document.getElementById("mcqB").value.trim(),
+      option_c: document.getElementById("mcqC").value.trim(),
+      option_d: document.getElementById("mcqD").value.trim(),
+      correct_option: document.getElementById("mcqCorrect").value,
+      explanation: document.getElementById("mcqExplanation").value.trim() || null,
+      display_order: Number(document.getElementById("mcqOrder").value || 0),
+      published: document.getElementById("mcqPublished").checked
+    };
+
+    await save(
+      TABLES.mcqs,
+      id,
+      payload,
+      loadMcqs,
+      resetMcqForm
+    );
+  });
+
+  function editMcq(id) {
+
+    const x = cache.mcqs.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("mcqId").value = x.id;
+    document.getElementById("mcqTopic").value = x.topic_id;
+    document.getElementById("mcqQuestion").value = x.question || "";
+    document.getElementById("mcqA").value = x.option_a || "";
+    document.getElementById("mcqB").value = x.option_b || "";
+    document.getElementById("mcqC").value = x.option_c || "";
+    document.getElementById("mcqD").value = x.option_d || "";
+    document.getElementById("mcqCorrect").value = x.correct_option || "A";
+    document.getElementById("mcqExplanation").value = x.explanation || "";
+    document.getElementById("mcqOrder").value = x.display_order ?? 0;
+    document.getElementById("mcqPublished").checked = !!x.published;
+
+    switchTab("mcqs");
+  }
+
+  function resetMcqForm() {
+    document.getElementById("mcqForm").reset();
+    document.getElementById("mcqId").value = "";
+    document.getElementById("mcqOrder").value = 0;
+  }
+
+  // SERIES
+
+  document.getElementById("seriesForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("seriesId").value;
+
+    const payload = {
+      course_id: document.getElementById("seriesCourse").value
+        ? Number(document.getElementById("seriesCourse").value)
+        : null,
+      title: document.getElementById("seriesTitle").value.trim(),
+      slug: document.getElementById("seriesSlug").value.trim(),
+      description: document.getElementById("seriesDescription").value.trim() || null,
+      series_type: document.getElementById("seriesType").value.trim() || null,
+      price: document.getElementById("seriesPrice").value === ""
+        ? null
+        : Number(document.getElementById("seriesPrice").value),
+      validity_days: document.getElementById("seriesValidity").value === ""
+        ? null
+        : Number(document.getElementById("seriesValidity").value),
+      start_at: document.getElementById("seriesStart").value
+        ? new Date(document.getElementById("seriesStart").value).toISOString()
+        : null,
+      expiry_at: document.getElementById("seriesExpiry").value
+        ? new Date(document.getElementById("seriesExpiry").value).toISOString()
+        : null,
+      published: document.getElementById("seriesPublished").checked,
+      archived: document.getElementById("seriesArchived").checked
+    };
+
+    await save(
+      TABLES.series,
+      id,
+      payload,
+      loadSeries,
+      resetSeriesForm
+    );
+  });
+
+  function editSeries(id) {
+
+    const x = cache.series.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("seriesId").value = x.id;
+    document.getElementById("seriesCourse").value = x.course_id || "";
+    document.getElementById("seriesTitle").value = x.title || "";
+    document.getElementById("seriesSlug").value = x.slug || "";
+    document.getElementById("seriesDescription").value = x.description || "";
+    document.getElementById("seriesType").value = x.series_type || "";
+    document.getElementById("seriesPrice").value = x.price ?? "";
+    document.getElementById("seriesValidity").value = x.validity_days ?? "";
+
+    if (x.start_at) {
+      document.getElementById("seriesStart").value =
+        new Date(x.start_at).toISOString().slice(0,16);
+    }
+
+    if (x.expiry_at) {
+      document.getElementById("seriesExpiry").value =
+        new Date(x.expiry_at).toISOString().slice(0,16);
+    }
+
+    document.getElementById("seriesPublished").checked = !!x.published;
+    document.getElementById("seriesArchived").checked = !!x.archived;
+
+    switchTab("series");
+  }
+
+  function resetSeriesForm() {
+    document.getElementById("seriesForm").reset();
+    document.getElementById("seriesId").value = "";
+  }
+
+  // PACKAGE
+
+  document.getElementById("packageForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("packageId").value;
+
+    const payload = {
+      test_series_id: Number(document.getElementById("packageSeries").value),
+      package_type: document.getElementById("packageType").value.trim(),
+      course_subject_id: document.getElementById("packageCourseSubjectId").value
+        ? Number(document.getElementById("packageCourseSubjectId").value)
+        : null,
+      topic_id: document.getElementById("packageTopicId").value
+        ? Number(document.getElementById("packageTopicId").value)
+        : null,
+      title: document.getElementById("packageTitle").value.trim(),
+      description: document.getElementById("packageDescription").value.trim() || null,
+      price: document.getElementById("packagePrice").value === ""
+        ? null
+        : Number(document.getElementById("packagePrice").value),
+      validity_days: document.getElementById("packageValidity").value === ""
+        ? null
+        : Number(document.getElementById("packageValidity").value),
+      expiry_at: document.getElementById("packageExpiry").value
+        ? new Date(document.getElementById("packageExpiry").value).toISOString()
+        : null,
+      published: document.getElementById("packagePublished").checked,
+      archived: document.getElementById("packageArchived").checked
+    };
+
+    await save(
+      TABLES.packages,
+      id,
+      payload,
+      loadPackages,
+      resetPackageForm
+    );
+  });
+
+  function editPackage(id) {
+
+    const x = cache.packages.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("packageId").value = x.id;
+    document.getElementById("packageSeries").value = x.test_series_id;
+    document.getElementById("packageType").value = x.package_type || "";
+    document.getElementById("packageCourseSubjectId").value = x.course_subject_id ?? "";
+    document.getElementById("packageTopicId").value = x.topic_id ?? "";
+    document.getElementById("packageTitle").value = x.title || "";
+    document.getElementById("packageDescription").value = x.description || "";
+    document.getElementById("packagePrice").value = x.price ?? "";
+    document.getElementById("packageValidity").value = x.validity_days ?? "";
+
+    if (x.expiry_at) {
+      document.getElementById("packageExpiry").value =
+        new Date(x.expiry_at).toISOString().slice(0,16);
+    }
+
+    document.getElementById("packagePublished").checked = !!x.published;
+    document.getElementById("packageArchived").checked = !!x.archived;
+
+    switchTab("packages");
+  }
+
+  function resetPackageForm() {
+    document.getElementById("packageForm").reset();
+    document.getElementById("packageId").value = "";
+  }
+
+  // TEST
+
+  document.getElementById("testForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("testId").value;
+
+    const payload = {
+      test_series_id: document.getElementById("testSeries").value
+        ? Number(document.getElementById("testSeries").value)
+        : null,
+
+      package_id: document.getElementById("testPackageId").value
+        ? Number(document.getElementById("testPackageId").value)
+        : null,
+
+      course_subject_id: document.getElementById("testCourseSubjectId").value
+        ? Number(document.getElementById("testCourseSubjectId").value)
+        : null,
+
+      topic_id: document.getElementById("testTopicId").value
+        ? Number(document.getElementById("testTopicId").value)
+        : null,
+
+      title: document.getElementById("testTitle").value.trim(),
+
+      description: document.getElementById("testDescription").value.trim() || null,
+
+      duration_minutes: document.getElementById("testDuration").value
+        ? Number(document.getElementById("testDuration").value)
+        : null,
+
+      total_marks: document.getElementById("testTotalMarks").value === ""
+        ? null
+        : Number(document.getElementById("testTotalMarks").value),
+
+      price: document.getElementById("testPrice").value === ""
+        ? null
+        : Number(document.getElementById("testPrice").value),
+
+      start_at: document.getElementById("testStart").value
+        ? new Date(document.getElementById("testStart").value).toISOString()
+        : null,
+
+      expiry_at: document.getElementById("testExpiry").value
+        ? new Date(document.getElementById("testExpiry").value).toISOString()
+        : null,
+
+      published: document.getElementById("testPublished").checked,
+
+      archived: document.getElementById("testArchived").checked
+    };
+
+    await save(
+      TABLES.tests,
+      id,
+      payload,
+      loadTests,
+      resetTestForm
+    );
+  });
+
+  function editTest(id) {
+
+    const x = cache.tests.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("testId").value = x.id;
+    document.getElementById("testSeries").value = x.test_series_id || "";
+    document.getElementById("testPackageId").value = x.package_id ?? "";
+    document.getElementById("testCourseSubjectId").value = x.course_subject_id ?? "";
+    document.getElementById("testTopicId").value = x.topic_id ?? "";
+    document.getElementById("testTitle").value = x.title || "";
+    document.getElementById("testDescription").value = x.description || "";
+    document.getElementById("testDuration").value = x.duration_minutes ?? "";
+    document.getElementById("testTotalMarks").value = x.total_marks ?? "";
+    document.getElementById("testPrice").value = x.price ?? "";
+
+    if (x.start_at) {
+      document.getElementById("testStart").value =
+        new Date(x.start_at).toISOString().slice(0,16);
+    }
+
+    if (x.expiry_at) {
+      document.getElementById("testExpiry").value =
+        new Date(x.expiry_at).toISOString().slice(0,16);
+    }
+
+    document.getElementById("testPublished").checked = !!x.published;
+    document.getElementById("testArchived").checked = !!x.archived;
+
+    switchTab("tests");
+  }
+
+  function resetTestForm() {
+    document.getElementById("testForm").reset();
+    document.getElementById("testId").value = "";
+  }
+
+  // QUESTION
+
+  document.getElementById("questionForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("questionId").value;
+
+    const payload = {
+      test_id: Number(document.getElementById("questionTest").value),
+
+      question: document.getElementById("questionText").value.trim(),
+
+      option_a: document.getElementById("questionA").value.trim() || null,
+
+      option_b: document.getElementById("questionB").value.trim() || null,
+
+      option_c: document.getElementById("questionC").value.trim() || null,
+
+      option_d: document.getElementById("questionD").value.trim() || null,
+
+      correct_option: document.getElementById("questionCorrect").value || null,
+
+      explanation: document.getElementById("questionExplanation").value.trim() || null,
+
+      marks: Number(document.getElementById("questionMarks").value || 1),
+
+      negative_marks: Number(document.getElementById("questionNegative").value || 0),
+
+      display_order: Number(document.getElementById("questionOrder").value || 0)
+    };
+
+    await save(
+      TABLES.questions,
+      id,
+      payload,
+      loadQuestions,
+      resetQuestionForm
+    );
+  });
+
+  function editQuestion(id) {
+
+    const x = cache.questions.find(v => v.id == id);
+
+    if (!x) return;
+
+    document.getElementById("questionId").value = x.id;
+    document.getElementById("questionTest").value = x.test_id;
+    document.getElementById("questionText").value = x.question || "";
+    document.getElementById("questionA").value = x.option_a || "";
+    document.getElementById("questionB").value = x.option_b || "";
+    document.getElementById("questionC").value = x.option_c || "";
+    document.getElementById("questionD").value = x.option_d || "";
+    document.getElementById("questionCorrect").value = x.correct_option || "";
+    document.getElementById("questionExplanation").value = x.explanation || "";
+    document.getElementById("questionMarks").value = x.marks ?? 1;
+    document.getElementById("questionNegative").value = x.negative_marks ?? 0;
+    document.getElementById("questionOrder").value = x.display_order ?? 0;
+
+    switchTab("questions");
+  }
+
+  function resetQuestionForm() {
+    document.getElementById("questionForm").reset();
+    document.getElementById("questionId").value = "";
+    document.getElementById("questionMarks").value = 1;
+    document.getElementById("questionNegative").value = 0;
+    document.getElementById("questionOrder").value = 0;
+  }
+
+  // TABS
+
+  function switchTab(tabName) {
+
+    document.querySelectorAll(".tab-section").forEach(section => {
+      section.classList.add("hidden");
+    });
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.classList.remove("active");
+    });
+
+    const section = document.getElementById(tabName);
+
+    if (section) {
+      section.classList.remove("hidden");
+    }
+
+    const button = document.querySelector(
+      '.tab[data-tab="' + tabName + '"]'
+    );
+
+    if (button) {
+      button.classList.add("active");
+    }
+  }
+
+  document.querySelectorAll(".tab").forEach(button => {
+
+    button.addEventListener("click", () => {
+      switchTab(button.dataset.tab);
+    });
+
+  });
+
+  // AUTH
+
+  async function checkAdmin() {
+
+    const {
+      data: { session },
+      error
+    } = await supabaseClient.auth.getSession();
+
+    if (error) {
+      console.error(error);
+      showMessage(error.message, "error");
+      return;
+    }
+
+    if (!session) {
+      showMessage(
+        "No active login session. Please login first.",
+        "error"
+      );
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+
+      return;
+    }
+
+    await loadAll();
+  }
+
+  async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href = "login.html";
+  }
+
+  // START
+
+  checkAdmin();
 
 </script>
 

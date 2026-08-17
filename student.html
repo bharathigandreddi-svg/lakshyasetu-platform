@@ -2,20 +2,14 @@
 <html lang="en">
 
 <head>
-
   <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Student | LakshyaSetu</title>
 
   <link rel="stylesheet" href="styles.css">
 
   <style>
-
     .page-header {
       margin-bottom: 24px;
     }
@@ -24,20 +18,9 @@
       margin-bottom: 8px;
     }
 
-    .breadcrumb {
-      margin-bottom: 18px;
-    }
-
-    .breadcrumb a {
-      text-decoration: none;
-    }
-
     .course-grid {
       display: grid;
-      grid-template-columns: repeat(
-        auto-fit,
-        minmax(240px, 1fr)
-      );
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
       margin-top: 20px;
     }
@@ -55,8 +38,7 @@
 
     .course-card:hover {
       transform: translateY(-2px);
-      box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
 
     .course-card h3 {
@@ -82,14 +64,6 @@
     .section-title {
       margin-top: 32px;
       margin-bottom: 14px;
-    }
-
-    .info-card {
-      padding: 22px;
-      border: 1px solid #dfe5ee;
-      border-radius: 14px;
-      background: #fff;
-      margin-top: 16px;
     }
 
     .subject-header {
@@ -185,16 +159,6 @@
       font-weight: 700;
     }
 
-    .locked-badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 12px;
-      background: #f1f3f5;
-      color: #667085;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
     .status-message {
       padding: 18px;
       border-radius: 12px;
@@ -217,7 +181,8 @@
       display: inline-block;
     }
 
-    .fee-card {
+    .fee-card,
+    .purchase-card {
       margin-top: 20px;
       padding: 20px;
       border-radius: 14px;
@@ -242,18 +207,6 @@
       font-weight: 700;
     }
 
-    .logout-btn {
-      cursor: pointer;
-    }
-
-    .purchase-card {
-      padding: 24px;
-      border-radius: 14px;
-      background: #f7f9fc;
-      border: 1px solid #dfe5ee;
-      margin-top: 20px;
-    }
-
     .purchase-card h2 {
       margin-top: 0;
       color: #10233f;
@@ -275,10 +228,6 @@
       font-weight: 600;
     }
 
-    .purchase-btn:hover {
-      background: #1d4789;
-    }
-
     .access-badge {
       display: inline-block;
       margin-top: 10px;
@@ -291,7 +240,6 @@
     }
 
     @media (max-width: 600px) {
-
       .topic-header {
         padding: 15px;
       }
@@ -303,16 +251,11 @@
       .topic-content {
         padding: 0 15px 15px;
       }
-
     }
-
   </style>
-
 </head>
 
-
 <body>
-
 
 <header class="top">
 
@@ -321,15 +264,11 @@
     <small>Student Dashboard</small>
   </div>
 
-  <button
-    id="logout"
-    class="btn alt logout-btn"
-  >
+  <button id="logout" class="btn alt logout-btn">
     Logout
   </button>
 
 </header>
-
 
 <main class="wrap">
 
@@ -343,13 +282,9 @@
         Loading...
       </h1>
 
-      <p
-        id="courseDesc"
-        class="muted"
-      ></p>
+      <p id="courseDesc" class="muted"></p>
 
     </div>
-
 
     <div id="feeArea"></div>
 
@@ -361,149 +296,76 @@
 
 </main>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="config.js"></script>
-
 
 <script>
 
+const sb = window.supabase.createClient(
+  window.LAKSHYASETU_CONFIG.supabaseUrl,
+  window.LAKSHYASETU_CONFIG.supabasePublishableKey
+);
 
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const sb =
-  window.supabase.createClient(
-    LAKSHYASETU_CONFIG.supabaseUrl,
-    LAKSHYASETU_CONFIG.supabasePublishableKey
-  );
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const courseTitle =
-  document.getElementById("courseTitle");
-
-const courseDesc =
-  document.getElementById("courseDesc");
-
-const subjectArea =
-  document.getElementById("subjectArea");
-
-const topicArea =
-  document.getElementById("topicArea");
-
-const backArea =
-  document.getElementById("backArea");
-
-const feeArea =
-  document.getElementById("feeArea");
-
-const logout =
-  document.getElementById("logout");
-
-
-/* =====================================================
-   GLOBAL USER
-===================================================== */
+const courseTitle = document.getElementById("courseTitle");
+const courseDesc = document.getElementById("courseDesc");
+const subjectArea = document.getElementById("subjectArea");
+const topicArea = document.getElementById("topicArea");
+const backArea = document.getElementById("backArea");
+const feeArea = document.getElementById("feeArea");
+const logout = document.getElementById("logout");
 
 let currentUser = null;
-
 let currentCourse = null;
-
 let courseAccess = false;
 
-
-/* =====================================================
-   HELPERS
-===================================================== */
-
 function escapeHtml(value) {
-
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-
 }
-
 
 function formatDuration(seconds) {
 
-  const total =
-    Number(seconds || 0);
+  const total = Number(seconds || 0);
 
-  if (!total) {
-    return "";
-  }
+  if (!total) return "";
 
-  const minutes =
-    Math.floor(total / 60);
-
-  const secs =
-    total % 60;
+  const minutes = Math.floor(total / 60);
+  const secs = total % 60;
 
   if (minutes >= 60) {
 
-    const hours =
-      Math.floor(minutes / 60);
-
-    const mins =
-      minutes % 60;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
 
     return `${hours}h ${mins}m`;
-
   }
 
   return `${minutes}m ${secs}s`;
-
 }
-
-
-/* =====================================================
-   COURSE FEE
-===================================================== */
 
 function renderCourseFee(course) {
 
-  const original =
-    Number(course.original_fee || 0);
-
-  const current =
-    Number(course.current_fee || 0);
+  const original = Number(course.original_fee || 0);
+  const current = Number(course.current_fee || 0);
 
   if (!original && !current) {
-
     feeArea.innerHTML = "";
-
     return;
-
   }
 
   let html = `
     <div class="fee-card">
-
-      <div class="fee-label">
-        Course Fee
-      </div>
+      <div class="fee-label">Course Fee</div>
   `;
 
-
-  if (
-    original &&
-    current &&
-    original !== current
-  ) {
+  if (original && current && original !== current) {
 
     html += `
       <div>
-
         <span class="old-fee">
           ₹${original.toLocaleString("en-IN")}
         </span>
@@ -511,173 +373,100 @@ function renderCourseFee(course) {
         <span class="current-fee">
           ₹${current.toLocaleString("en-IN")}
         </span>
-
       </div>
     `;
 
-  }
+  } else {
 
-  else if (current) {
+    const amount = current || original;
 
     html += `
       <div class="current-fee">
-        ₹${current.toLocaleString("en-IN")}
+        ₹${amount.toLocaleString("en-IN")}
       </div>
     `;
-
   }
 
-  else {
-
-    html += `
-      <div class="current-fee">
-        ₹${original.toLocaleString("en-IN")}
-      </div>
-    `;
-
-  }
-
-
-  html += `
-      </div>
-  `;
-
+  html += `</div>`;
 
   feeArea.innerHTML = html;
-
 }
-
-
-/* =====================================================
-   GET COURSE
-===================================================== */
 
 async function getCourse(slug) {
 
-  const result =
-    await sb
-      .from("courses")
-      .select("*")
-      .eq("slug", slug)
-      .eq("published", true)
-      .single();
-
+  const result = await sb
+    .from("courses")
+    .select("*")
+    .eq("slug", slug)
+    .eq("published", true)
+    .single();
 
   if (result.error) {
-
-    throw new Error(
-      result.error.message
-    );
-
+    throw new Error(result.error.message);
   }
-
 
   return result.data;
-
 }
 
+async function checkCourseAccess(userId, courseId) {
 
-/* =====================================================
-   CHECK COURSE PURCHASE
-===================================================== */
-
-async function checkCourseAccess(
-  userId,
-  courseId
-) {
-
-  const result =
-    await sb
-      .from("memberships")
-      .select(
-        "id,user_id,course_id,status,payment_status,expires_at,paid_at"
-      )
-      .eq("user_id", userId)
-      .eq("course_id", courseId)
-      .eq("payment_status", "paid")
-      .order("created_at", {
-        ascending: false
-      });
-
-
-  if (result.error) {
-
-    throw new Error(
-      result.error.message
-    );
-
-  }
-
-
-  const memberships =
-    result.data || [];
-
-
-  const now =
-    new Date();
-
-
-  const validMembership =
-    memberships.find(membership => {
-
-      if (
-        membership.payment_status !== "paid"
-      ) {
-        return false;
-      }
-
-
-      if (
-        membership.status &&
-        membership.status !== "active"
-      ) {
-        return false;
-      }
-
-
-      if (
-        membership.expires_at
-      ) {
-
-        const expiry =
-          new Date(
-            membership.expires_at
-          );
-
-        if (
-          expiry <= now
-        ) {
-          return false;
-        }
-
-      }
-
-
-      return true;
-
+  const result = await sb
+    .from("memberships")
+    .select(
+      "id,user_id,course_id,status,payment_status,expires_at,paid_at"
+    )
+    .eq("user_id", userId)
+    .eq("course_id", courseId)
+    .eq("payment_status", "paid")
+    .order("created_at", {
+      ascending: false
     });
 
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  const memberships = result.data || [];
+  const now = new Date();
+
+  const validMembership = memberships.find(membership => {
+
+    if (membership.payment_status !== "paid") {
+      return false;
+    }
+
+    if (
+      membership.status &&
+      membership.status !== "active"
+    ) {
+      return false;
+    }
+
+    if (membership.expires_at) {
+
+      const expiry = new Date(
+        membership.expires_at
+      );
+
+      if (expiry <= now) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   return !!validMembership;
-
 }
-
-
-/* =====================================================
-   PURCHASE REQUIRED SCREEN
-===================================================== */
 
 function showPurchaseRequired(course) {
 
   courseAccess = false;
 
   subjectArea.innerHTML = "";
-
   topicArea.innerHTML = "";
 
-
   renderCourseFee(course);
-
 
   subjectArea.innerHTML = `
 
@@ -697,27 +486,16 @@ function showPurchaseRequired(course) {
       <p>
         After successful payment, login again
         with your student account and the
-        purchased course subjects will appear
-        here.
+        purchased course subjects will appear here.
       </p>
 
-      <a
-        class="purchase-btn"
-        href="index.html"
-      >
+      <a class="purchase-btn" href="index.html">
         Go to LakshyaSetu Home
       </a>
 
     </div>
-
   `;
-
 }
-
-
-/* =====================================================
-   LOAD COURSE SUBJECTS
-===================================================== */
 
 async function loadSubjects(courseId) {
 
@@ -730,20 +508,16 @@ async function loadSubjects(courseId) {
     <div class="status-message">
       Loading subjects...
     </div>
-
   `;
 
-
-  const result =
-    await sb
-      .from("course_subjects")
-      .select("*")
-      .eq("course_id", courseId)
-      .eq("published", true)
-      .order("sort_order", {
-        ascending: true
-      });
-
+  const result = await sb
+    .from("course_subjects")
+    .select("*")
+    .eq("course_id", courseId)
+    .eq("published", true)
+    .order("display_order", {
+      ascending: true
+    });
 
   if (result.error) {
 
@@ -755,22 +529,15 @@ async function loadSubjects(courseId) {
 
         <br>
 
-        ${escapeHtml(
-          result.error.message
-        )}
+        ${escapeHtml(result.error.message)}
 
       </div>
-
     `;
 
     return;
-
   }
 
-
-  const subjects =
-    result.data || [];
-
+  const subjects = result.data || [];
 
   if (!subjects.length) {
 
@@ -783,13 +550,10 @@ async function loadSubjects(courseId) {
       <div class="status-message">
         No published subjects are available yet.
       </div>
-
     `;
 
     return;
-
   }
-
 
   subjectArea.innerHTML = `
 
@@ -829,52 +593,30 @@ async function loadSubjects(courseId) {
       `).join("")}
 
     </div>
-
   `;
-
 }
-
-
-/* =====================================================
-   GET COURSE SUBJECT
-===================================================== */
 
 async function getCourseSubject(
   courseId,
   courseSubjectId
 ) {
 
-  const result =
-    await sb
-      .from("course_subjects")
-      .select("*")
-      .eq("course_id", courseId)
-      .eq("id", courseSubjectId)
-      .eq("published", true)
-      .single();
-
+  const result = await sb
+    .from("course_subjects")
+    .select("*")
+    .eq("course_id", courseId)
+    .eq("id", courseSubjectId)
+    .eq("published", true)
+    .single();
 
   if (result.error) {
-
-    throw new Error(
-      result.error.message
-    );
-
+    throw new Error(result.error.message);
   }
 
-
   return result.data;
-
 }
 
-
-/* =====================================================
-   LOAD TOPICS
-===================================================== */
-
-async function loadTopics(
-  courseSubjectId
-) {
+async function loadTopics(courseSubjectId) {
 
   topicArea.innerHTML = `
 
@@ -885,41 +627,27 @@ async function loadTopics(
     <div class="status-message">
       Loading topics...
     </div>
-
   `;
 
-
   /*
-     IMPORTANT
+    IMPORTANT
 
-     In your current database:
+    subject_topics.course_subject_id
+    points to
+    course_subjects.id.
 
-     subject_topics.subject_id
-     points to
-     course_subjects.id
-
-     Example:
-
-     course_subjects.id = 27
-     subject_topics.subject_id = 27
-
-     Therefore we use courseSubjectId here.
+    Therefore the query must use
+    course_subject_id.
   */
 
-
-  const result =
-    await sb
-      .from("subject_topics")
-      .select("*")
-      .eq(
-        "subject_id",
-        courseSubjectId
-      )
-      .eq("published", true)
-      .order("sort_order", {
-        ascending: true
-      });
-
+  const result = await sb
+    .from("subject_topics")
+    .select("*")
+    .eq("course_subject_id", courseSubjectId)
+    .eq("published", true)
+    .order("display_order", {
+      ascending: true
+    });
 
   if (result.error) {
 
@@ -931,22 +659,15 @@ async function loadTopics(
 
         <br>
 
-        ${escapeHtml(
-          result.error.message
-        )}
+        ${escapeHtml(result.error.message)}
 
       </div>
-
     `;
 
     return;
-
   }
 
-
-  const topics =
-    result.data || [];
-
+  const topics = result.data || [];
 
   if (!topics.length) {
 
@@ -959,13 +680,10 @@ async function loadTopics(
       <div class="status-message">
         No topics have been added yet.
       </div>
-
     `;
 
     return;
-
   }
-
 
   topicArea.innerHTML = `
 
@@ -974,15 +692,10 @@ async function loadTopics(
     </h2>
 
     <div id="topicsList"></div>
-
   `;
 
-
   const topicsList =
-    document.getElementById(
-      "topicsList"
-    );
-
+    document.getElementById("topicsList");
 
   topicsList.innerHTML =
     topics.map((topic, index) => `
@@ -1001,9 +714,7 @@ async function loadTopics(
             </span>
 
             <span class="topic-title">
-              ${escapeHtml(
-                topic.title
-              )}
+              ${escapeHtml(topic.title)}
             </span>
 
           </div>
@@ -1017,15 +728,12 @@ async function loadTopics(
 
         </div>
 
-
         <div
           id="topic-${topic.id}"
           class="topic-content"
         >
 
-          <div
-            id="videos-${topic.id}"
-          >
+          <div id="videos-${topic.id}">
 
             <div class="status-message">
               Loading videos...
@@ -1038,13 +746,7 @@ async function loadTopics(
       </div>
 
     `).join("");
-
 }
-
-
-/* =====================================================
-   TOGGLE TOPIC
-===================================================== */
 
 async function toggleTopic(topicId) {
 
@@ -1053,52 +755,35 @@ async function toggleTopic(topicId) {
       "topic-" + topicId
     );
 
-
   const arrow =
     document.getElementById(
       "arrow-" + topicId
     );
 
-
-  if (!content) {
-    return;
-  }
-
+  if (!content) return;
 
   const isOpen =
-    content.classList.contains(
-      "open"
-    );
-
+    content.classList.contains("open");
 
   if (isOpen) {
 
-    content.classList.remove(
-      "open"
-    );
+    content.classList.remove("open");
 
-    arrow.textContent = "+";
+    if (arrow) {
+      arrow.textContent = "+";
+    }
 
     return;
-
   }
 
+  content.classList.add("open");
 
-  content.classList.add(
-    "open"
-  );
-
-  arrow.textContent = "−";
-
+  if (arrow) {
+    arrow.textContent = "−";
+  }
 
   await loadVideos(topicId);
-
 }
-
-
-/* =====================================================
-   LOAD VIDEOS
-===================================================== */
 
 async function loadVideos(topicId) {
 
@@ -1107,31 +792,23 @@ async function loadVideos(topicId) {
       "videos-" + topicId
     );
 
-
-  if (!container) {
-    return;
-  }
-
+  if (!container) return;
 
   container.innerHTML = `
 
     <div class="status-message">
       Loading videos...
     </div>
-
   `;
 
-
-  const result =
-    await sb
-      .from("topic_videos")
-      .select("*")
-      .eq("topic_id", topicId)
-      .eq("published", true)
-      .order("sort_order", {
-        ascending: true
-      });
-
+  const result = await sb
+    .from("topic_videos")
+    .select("*")
+    .eq("topic_id", topicId)
+    .eq("published", true)
+    .order("display_order", {
+      ascending: true
+    });
 
   if (result.error) {
 
@@ -1143,22 +820,15 @@ async function loadVideos(topicId) {
 
         <br>
 
-        ${escapeHtml(
-          result.error.message
-        )}
+        ${escapeHtml(result.error.message)}
 
       </div>
-
     `;
 
     return;
-
   }
 
-
-  const videos =
-    result.data || [];
-
+  const videos = result.data || [];
 
   if (!videos.length) {
 
@@ -1168,13 +838,10 @@ async function loadVideos(topicId) {
         No published videos are available
         for this topic yet.
       </div>
-
     `;
 
     return;
-
   }
-
 
   container.innerHTML =
     videos.map((video, index) => {
@@ -1183,7 +850,6 @@ async function loadVideos(topicId) {
         formatDuration(
           video.duration_seconds
         );
-
 
       const trialBadge =
         video.is_trial
@@ -1194,9 +860,7 @@ async function loadVideos(topicId) {
           `
           : "";
 
-
       let videoContent = "";
-
 
       if (video.video_url) {
 
@@ -1209,14 +873,11 @@ async function loadVideos(topicId) {
             src="${escapeHtml(
               video.video_url
             )}"
-          >
-          </video>
+          ></video>
 
         `;
 
-      }
-
-      else {
+      } else {
 
         videoContent = `
 
@@ -1225,9 +886,7 @@ async function loadVideos(topicId) {
           </div>
 
         `;
-
       }
-
 
       return `
 
@@ -1236,14 +895,11 @@ async function loadVideos(topicId) {
           <div class="video-title">
 
             ${index + 1}.
-            ${escapeHtml(
-              video.title
-            )}
+            ${escapeHtml(video.title)}
 
             ${trialBadge}
 
           </div>
-
 
           ${
             duration
@@ -1255,7 +911,6 @@ async function loadVideos(topicId) {
               : ""
           }
 
-
           ${videoContent}
 
         </div>
@@ -1263,13 +918,7 @@ async function loadVideos(topicId) {
       `;
 
     }).join("");
-
 }
-
-
-/* =====================================================
-   BACK BUTTON
-===================================================== */
 
 function showBackButton(type) {
 
@@ -1288,20 +937,11 @@ function showBackButton(type) {
 
     `;
 
-  }
-
-  else {
+  } else {
 
     backArea.innerHTML = "";
-
   }
-
 }
-
-
-/* =====================================================
-   SUBJECT PAGE
-===================================================== */
 
 async function openSubject(
   course,
@@ -1310,30 +950,16 @@ async function openSubject(
 
   showBackButton("subject");
 
-
   subjectArea.innerHTML = "";
-
 
   try {
 
-    /*
-       SECURITY / ACCESS CHECK
-
-       Even if somebody manually changes
-       the URL, subjects should not open
-       unless the course is purchased.
-    */
-
     if (!courseAccess) {
 
-      showPurchaseRequired(
-        course
-      );
+      showPurchaseRequired(course);
 
       return;
-
     }
-
 
     const subject =
       await getCourseSubject(
@@ -1341,26 +967,20 @@ async function openSubject(
         courseSubjectId
       );
 
-
     courseTitle.textContent =
       subject.title;
-
 
     courseDesc.textContent =
       "Topics and video lessons";
 
-
     feeArea.innerHTML = "";
-
 
     topicArea.innerHTML = `
 
       <div class="subject-header">
 
         <h2>
-          ${escapeHtml(
-            subject.title
-          )}
+          ${escapeHtml(subject.title)}
         </h2>
 
         <p class="muted">
@@ -1372,24 +992,9 @@ async function openSubject(
 
     `;
 
+    await loadTopics(subject.id);
 
-    /*
-       IMPORTANT:
-
-       subject_topics.subject_id
-       = course_subjects.id
-
-       So pass subject.id,
-       NOT subject.subject_id.
-    */
-
-    await loadTopics(
-      subject.id
-    );
-
-  }
-
-  catch (error) {
+  } catch (error) {
 
     topicArea.innerHTML = `
 
@@ -1399,39 +1004,23 @@ async function openSubject(
 
         <br>
 
-        ${escapeHtml(
-          error.message
-        )}
+        ${escapeHtml(error.message)}
 
       </div>
 
     `;
-
   }
-
 }
-
-
-/* =====================================================
-   COURSE PAGE
-===================================================== */
 
 async function openCourse(course) {
 
   showBackButton("course");
 
-
   courseTitle.textContent =
     course.title;
 
-
   courseDesc.textContent =
     course.description || "";
-
-
-  /*
-     FIRST CHECK PAYMENT
-  */
 
   subjectArea.innerHTML = `
 
@@ -1441,9 +1030,7 @@ async function openCourse(course) {
 
   `;
 
-
   topicArea.innerHTML = "";
-
 
   try {
 
@@ -1453,33 +1040,18 @@ async function openCourse(course) {
         course.id
       );
 
-
     if (!courseAccess) {
 
-      showPurchaseRequired(
-        course
-      );
+      showPurchaseRequired(course);
 
       return;
-
     }
-
-
-    /*
-       Student has purchased the course.
-       Now subjects can be displayed.
-    */
 
     feeArea.innerHTML = "";
 
+    await loadSubjects(course.id);
 
-    await loadSubjects(
-      course.id
-    );
-
-  }
-
-  catch (error) {
+  } catch (error) {
 
     subjectArea.innerHTML = `
 
@@ -1489,117 +1061,66 @@ async function openCourse(course) {
 
         <br>
 
-        ${escapeHtml(
-          error.message
-        )}
+        ${escapeHtml(error.message)}
 
       </div>
 
     `;
-
   }
-
 }
 
+logout.onclick = async function() {
 
-/* =====================================================
-   LOGOUT
-===================================================== */
+  await sb.auth.signOut();
 
-logout.onclick =
-  async function() {
-
-    await sb.auth.signOut();
-
-    location.href =
-      "login.html";
-
-  };
-
-
-/* =====================================================
-   BOOT
-===================================================== */
+  location.href = "login.html";
+};
 
 async function boot() {
 
   try {
 
-    /*
-       CHECK LOGIN
-    */
-
     const userResult =
       await sb.auth.getUser();
-
 
     if (
       !userResult.data ||
       !userResult.data.user
     ) {
 
-      location.href =
-        "login.html";
+      location.href = "login.html";
 
       return;
-
     }
-
 
     currentUser =
       userResult.data.user;
-
-
-    /*
-       READ URL
-    */
 
     const params =
       new URLSearchParams(
         location.search
       );
 
-
     const courseSlug =
       params.get("course") ||
       "appsc-group-1";
 
-
     const subjectId =
       params.get("subject");
 
-
-    /*
-       GET COURSE
-    */
-
     const course =
-      await getCourse(
-        courseSlug
-      );
-
+      await getCourse(courseSlug);
 
     currentCourse =
       course;
 
-
-    /*
-       IF SUBJECT IS SELECTED
-    */
-
     if (subjectId) {
-
-      /*
-         Check purchase before opening
-         the subject directly.
-      */
 
       courseAccess =
         await checkCourseAccess(
           currentUser.id,
           course.id
         );
-
 
       if (!courseAccess) {
 
@@ -1611,48 +1132,30 @@ async function boot() {
         courseDesc.textContent =
           course.description || "";
 
-        showPurchaseRequired(
-          course
-        );
+        showPurchaseRequired(course);
 
         return;
-
       }
-
 
       await openSubject(
         course,
         Number(subjectId)
       );
 
+    } else {
+
+      await openCourse(course);
     }
 
-    /*
-       OTHERWISE OPEN COURSE
-    */
-
-    else {
-
-      await openCourse(
-        course
-      );
-
-    }
-
-  }
-
-  catch (error) {
+  } catch (error) {
 
     courseTitle.textContent =
       "Unable to load page";
 
-
     courseDesc.textContent =
       error.message || "";
 
-
     feeArea.innerHTML = "";
-
 
     subjectArea.innerHTML = `
 
@@ -1663,29 +1166,17 @@ async function boot() {
 
         <br><br>
 
-        ${escapeHtml(
-          error.message
-        )}
+        ${escapeHtml(error.message)}
 
       </div>
 
     `;
-
   }
-
 }
-
-
-/* =====================================================
-   START
-===================================================== */
 
 boot();
 
-
 </script>
 
-
 </body>
-
 </html>

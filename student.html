@@ -275,6 +275,63 @@
       margin-bottom: 8px !important;
     }
 
+    .test-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .test-item {
+      padding: 18px;
+      border: 1px solid #dfe5ee;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .test-item h3 {
+      margin: 0 0 7px;
+      color: #10233f;
+      font-size: 18px;
+    }
+
+    .test-item p {
+      margin: 0;
+      color: #667085;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .test-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .meta-label {
+      padding: 6px 9px;
+      border-radius: 7px;
+      background: #f0f3f8;
+      color: #475467;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .action-btn {
+      margin-top: 15px;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 15px;
+      background: #2457a6;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: #1c478a;
+    }
+
     @media (max-width: 650px) {
       .top {
         align-items: flex-start;
@@ -334,11 +391,9 @@
   </section>
 
   <div id="breadcrumb" class="breadcrumb">
-
     <button id="backButton">
       ← Back
     </button>
-
   </div>
 
   <!-- COURSES -->
@@ -411,11 +466,11 @@
 
     <div class="section-header">
 
-      <h2>
+      <h2 id="testsTitle">
         Test Series
       </h2>
 
-      <p>
+      <p id="testsDescription">
         Practice with structured tests designed for competitive examinations.
       </p>
 
@@ -438,7 +493,6 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="config.js"></script>
 
 <script>
@@ -510,6 +564,12 @@ const subjectsDescription =
 const topicsTitle =
   document.getElementById("topicsTitle");
 
+const testsTitle =
+  document.getElementById("testsTitle");
+
+const testsDescription =
+  document.getElementById("testsDescription");
+
 const breadcrumb =
   document.getElementById("breadcrumb");
 
@@ -520,6 +580,8 @@ const backButton =
 let courses = [];
 let currentCourse = null;
 let currentSubject = null;
+let currentTopic = null;
+let currentTestSeries = null;
 
 
 /* -------------------------------------------------------
@@ -677,6 +739,16 @@ function sortItems(items) {
     return Number(a.id || 0) - Number(b.id || 0);
 
   });
+
+}
+
+
+function resetSections() {
+
+  coursesSection.classList.add("hidden");
+  subjectsSection.classList.add("hidden");
+  topicsSection.classList.add("hidden");
+  testsSection.classList.add("hidden");
 
 }
 
@@ -847,12 +919,13 @@ async function openCourse(courseId) {
 
   currentCourse = course;
   currentSubject = null;
+  currentTopic = null;
+  currentTestSeries = null;
 
   coursesSection.classList.add("hidden");
   testsSection.classList.add("hidden");
-
-  subjectsSection.classList.remove("hidden");
   topicsSection.classList.add("hidden");
+  subjectsSection.classList.remove("hidden");
 
   breadcrumb.style.display = "block";
 
@@ -962,6 +1035,15 @@ async function openCourse(courseId) {
 
 /* -------------------------------------------------------
    OPEN SUBJECT
+   CORRECT ARCHITECTURE:
+
+   courses
+       ↓
+   course_subjects
+       ↓
+   course_topics
+
+   NEVER query subject_topics here.
 ------------------------------------------------------- */
 
 async function openSubject(courseSubjectId) {
@@ -1005,6 +1087,8 @@ async function openSubject(courseSubjectId) {
   currentSubject =
     subjectResult.data;
 
+  currentTopic = null;
+
   subjectsSection.classList.add("hidden");
   topicsSection.classList.remove("hidden");
 
@@ -1018,63 +1102,16 @@ async function openSubject(courseSubjectId) {
   `;
 
 
-  /* ---------------------------------------------------
-     IMPORTANT DATABASE MAPPING
-
-     course_subjects.id = 56
-     subject_id = 5
-
-     The topics already created for this subject
-     are connected using course_subject_id.
-
-     We therefore use the exact mapping ID:
-
-     course_subject_id = currentSubject.id
-
-     No subject_topics.course_subject_id is requested
-     unless the table actually contains that column.
-  --------------------------------------------------- */
-
-
-  let topicsResult =
+  const topicsResult =
     await sb
-      .from("subject_topics")
+      .from("course_topics")
       .select("*")
-      .eq("subject_id", currentSubject.subject_id)
+      .eq("course_subject_id", currentSubject.id)
       .eq("published", true);
 
 
-  /*
-     If the database does not use subject_id in
-     subject_topics, use the course_subject mapping.
-
-     This fallback is deliberately performed only
-     after the first query.
-  */
-
-
-  if (
-    topicsResult.error ||
-    !topicsResult.data ||
-    !topicsResult.data.length
-  ) {
-
-    const fallbackResult =
-      await sb
-        .from("subject_topics")
-        .select("*")
-        .eq("course_subject_id", currentSubject.id)
-        .eq("published", true);
-
-    if (!fallbackResult.error) {
-      topicsResult = fallbackResult;
-    }
-
-  }
-
-
   console.log(
-    "TOPICS:",
+    "COURSE TOPICS:",
     topicsResult
   );
 
@@ -1131,7 +1168,10 @@ async function openSubject(courseSubjectId) {
             </h3>
 
             <p>
-              Topic-wise learning content
+              ${escapeHtml(
+                topic.description ||
+                "Topic-wise learning content."
+              )}
             </p>
 
             <div class="card-footer">
@@ -1156,6 +1196,7 @@ async function openSubject(courseSubjectId) {
 
   `;
 
+
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1166,6 +1207,13 @@ async function openSubject(courseSubjectId) {
 
 /* -------------------------------------------------------
    OPEN TOPIC
+   CORRECT TABLE:
+
+   course_topics
+
+   Lessons:
+
+   lessons.topic_id
 ------------------------------------------------------- */
 
 async function openTopic(topicId) {
@@ -1180,18 +1228,22 @@ async function openTopic(topicId) {
     </div>
   `;
 
+
   const topicResult =
     await sb
-      .from("subject_topics")
+      .from("course_topics")
       .select("*")
       .eq("id", topicId)
+      .eq("course_subject_id", currentSubject.id)
       .eq("published", true)
       .single();
+
 
   console.log(
     "SELECTED TOPIC:",
     topicResult
   );
+
 
   if (topicResult.error) {
 
@@ -1205,17 +1257,20 @@ async function openTopic(topicId) {
 
   }
 
+
   const topic =
     topicResult.data;
+
+  currentTopic = topic;
 
 
   const lessonResult =
     await sb
-      .from("ls_lessons")
+      .from("lessons")
       .select("*")
       .eq("topic_id", topic.id)
       .eq("published", true)
-      .order("id", { ascending: true });
+      .order("sort_order", { ascending: true });
 
 
   console.log(
@@ -1306,7 +1361,6 @@ async function openTopic(topicId) {
               : ""
             }
 
-
             ${
               lesson.video_url
               ? `
@@ -1333,7 +1387,6 @@ async function openTopic(topicId) {
                 </div>
               `
             }
-
 
             ${
               lesson.pdf_url
@@ -1378,7 +1431,7 @@ async function openTopic(topicId) {
 
 
 /* -------------------------------------------------------
-   TEST SERIES
+   LOAD TEST SERIES
 ------------------------------------------------------- */
 
 async function loadTestSeries() {
@@ -1393,27 +1446,33 @@ async function loadTestSeries() {
     await sb
       .from("ls_test_series")
       .select("*")
-      .eq("published", true);
+      .eq("published", true)
+      .eq("archived", false)
+      .order("id", { ascending: true });
+
 
   console.log(
     "TEST SERIES:",
     result
   );
 
+
   if (result.error) {
 
-    showEmpty(
+    showError(
       testsArea,
-      "Test Series Coming Soon",
-      "Admin can publish test series from the Admin panel."
+      "Unable to load test series: " +
+      result.error.message
     );
 
     return;
 
   }
 
+
   const series =
     result.data || [];
+
 
   if (!series.length) {
 
@@ -1426,6 +1485,7 @@ async function loadTestSeries() {
     return;
 
   }
+
 
   testsArea.innerHTML = `
 
@@ -1495,7 +1555,9 @@ async function openTestSeries(seriesId) {
       .select("*")
       .eq("id", seriesId)
       .eq("published", true)
+      .eq("archived", false)
       .single();
+
 
   if (result.error) {
 
@@ -1509,27 +1571,109 @@ async function openTestSeries(seriesId) {
 
   }
 
+
   const series =
     result.data;
 
-  coursesSection.classList.add("hidden");
-  subjectsSection.classList.add("hidden");
-  topicsSection.classList.add("hidden");
+  currentTestSeries = series;
+
+
+  resetSections();
 
   testsSection.classList.remove("hidden");
 
   breadcrumb.style.display = "block";
 
-  testsSection.querySelector(
-    ".section-header h2"
-  ).textContent =
+
+  testsTitle.textContent =
     series.title;
 
-  testsSection.querySelector(
-    ".section-header p"
-  ).textContent =
+  testsDescription.textContent =
     "Test Series Fee: " +
     money(series.price);
+
+
+  testsArea.innerHTML = `
+    <div class="status">
+      Loading tests...
+    </div>
+  `;
+
+
+  const testsResult =
+    await sb
+      .from("ls_tests")
+      .select("*")
+      .eq("test_series_id", series.id)
+      .eq("published", true)
+      .eq("archived", false)
+      .order("id", { ascending: true });
+
+
+  console.log(
+    "TESTS:",
+    testsResult
+  );
+
+
+  if (testsResult.error) {
+
+    showError(
+      testsArea,
+      "Unable to load tests: " +
+      testsResult.error.message
+    );
+
+    return;
+
+  }
+
+
+  const tests =
+    testsResult.data || [];
+
+
+  if (!tests.length) {
+
+    testsArea.innerHTML = `
+
+      <div class="card">
+
+        <div class="test-icon">
+          T
+        </div>
+
+        <h3>
+          ${escapeHtml(series.title)}
+        </h3>
+
+        <p>
+          ${escapeHtml(
+            series.description ||
+            "This test series has been published."
+          )}
+        </p>
+
+        <div class="card-footer">
+
+          <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
+            ${money(series.price)}
+          </span>
+
+          <span class="open-label">
+            No Tests Yet
+          </span>
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
 
   testsArea.innerHTML = `
 
@@ -1546,25 +1690,264 @@ async function openTestSeries(seriesId) {
       <p>
         ${escapeHtml(
           series.description ||
-          "Test series details will be available here."
+          "Select a test to continue."
         )}
       </p>
 
-      <div class="card-footer">
+      <div class="test-list">
 
-        <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
-          ${money(series.price)}
-        </span>
+        ${tests.map((test, index) => {
 
-        <span class="open-label">
-          Test Series
-        </span>
+          return `
+
+            <div class="test-item">
+
+              <h3>
+                ${index + 1}.
+                ${escapeHtml(test.title)}
+              </h3>
+
+              ${
+                test.description
+                ? `
+                  <p>
+                    ${escapeHtml(test.description)}
+                  </p>
+                `
+                : ""
+              }
+
+              <div class="test-meta">
+
+                ${
+                  test.duration_minutes != null
+                  ? `
+                    <span class="meta-label">
+                      ${Number(test.duration_minutes)} minutes
+                    </span>
+                  `
+                  : ""
+                }
+
+                ${
+                  test.total_marks != null
+                  ? `
+                    <span class="meta-label">
+                      ${Number(test.total_marks)} marks
+                    </span>
+                  `
+                  : ""
+                }
+
+              </div>
+
+              <button
+                class="action-btn"
+                onclick="event.stopPropagation(); openTest(${test.id})"
+              >
+                Open Test
+              </button>
+
+            </div>
+
+          `;
+
+        }).join("")}
 
       </div>
 
     </div>
 
   `;
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* -------------------------------------------------------
+   OPEN TEST
+   For now this loads the question structure.
+   Attempt/submission will be connected after login/access
+   control is completed.
+------------------------------------------------------- */
+
+async function openTest(testId) {
+
+  testsArea.innerHTML = `
+    <div class="status">
+      Loading test...
+    </div>
+  `;
+
+
+  const testResult =
+    await sb
+      .from("ls_tests")
+      .select("*")
+      .eq("id", testId)
+      .eq("published", true)
+      .eq("archived", false)
+      .single();
+
+
+  if (testResult.error) {
+
+    showError(
+      testsArea,
+      "Unable to open test: " +
+      testResult.error.message
+    );
+
+    return;
+
+  }
+
+
+  const test =
+    testResult.data;
+
+
+  const questionResult =
+    await sb
+      .from("ls_test_questions")
+      .select("*")
+      .eq("test_id", test.id)
+      .order("display_order", { ascending: true });
+
+
+  console.log(
+    "TEST QUESTIONS:",
+    questionResult
+  );
+
+
+  if (questionResult.error) {
+
+    showError(
+      testsArea,
+      "Unable to load test questions: " +
+      questionResult.error.message
+    );
+
+    return;
+
+  }
+
+
+  const questions =
+    questionResult.data || [];
+
+
+  testsTitle.textContent =
+    test.title;
+
+  testsDescription.textContent =
+    "Test duration: " +
+    (
+      test.duration_minutes != null
+        ? test.duration_minutes + " minutes"
+        : "Not specified"
+    );
+
+
+  if (!questions.length) {
+
+    testsArea.innerHTML = `
+
+      <div class="card">
+
+        <h3>
+          ${escapeHtml(test.title)}
+        </h3>
+
+        <div class="learning-box">
+
+          <strong>
+            Questions are not available yet.
+          </strong>
+
+          <p>
+            Admin has published this test, but no questions
+            have been added yet.
+          </p>
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  testsArea.innerHTML = `
+
+    <div class="card">
+
+      <h3>
+        ${escapeHtml(test.title)}
+      </h3>
+
+      <p>
+        ${escapeHtml(
+          test.description ||
+          "Test questions are available."
+        )}
+      </p>
+
+      <div class="test-meta">
+
+        ${
+          test.duration_minutes != null
+          ? `
+            <span class="meta-label">
+              ${Number(test.duration_minutes)} minutes
+            </span>
+          `
+          : ""
+        }
+
+        ${
+          test.total_marks != null
+          ? `
+            <span class="meta-label">
+              ${Number(test.total_marks)} marks
+            </span>
+          `
+          : ""
+        }
+
+        <span class="meta-label">
+          ${questions.length} Questions
+        </span>
+
+      </div>
+
+      <div class="learning-box">
+
+        <strong>
+          Test Ready
+        </strong>
+
+        <p>
+          ${questions.length} question${questions.length === 1 ? "" : "s"}
+          available. Login and access control will be connected
+          before the live attempt and submission workflow.
+        </p>
+
+      </div>
+
+    </div>
+
+  `;
+
 
   window.scrollTo({
     top: 0,
@@ -1580,15 +1963,47 @@ async function openTestSeries(seriesId) {
 
 backButton.onclick = function() {
 
+  /* Test opened → return to test series */
+
+  if (!testsSection.classList.contains("hidden")) {
+
+    if (currentTestSeries) {
+
+      currentTestSeries = null;
+
+      testsTitle.textContent =
+        "Test Series";
+
+      testsDescription.textContent =
+        "Practice with structured tests designed for competitive examinations.";
+
+      loadTestSeries();
+
+      return;
+
+    }
+
+  }
+
+
+  /* Topic opened → return to topic list */
+
   if (!topicsSection.classList.contains("hidden")) {
 
-    if (currentCourse) {
-      openCourse(currentCourse.id);
+    if (currentSubject) {
+
+      currentTopic = null;
+
+      openSubject(currentSubject.id);
+
     }
 
     return;
+
   }
 
+
+  /* Subjects opened → return to courses */
 
   if (!subjectsSection.classList.contains("hidden")) {
 
@@ -1602,23 +2017,24 @@ backButton.onclick = function() {
 
     currentCourse = null;
     currentSubject = null;
+    currentTopic = null;
 
     return;
+
   }
 
 
   coursesSection.classList.remove("hidden");
-
   testsSection.classList.remove("hidden");
-
   subjectsSection.classList.add("hidden");
-
   topicsSection.classList.add("hidden");
 
   breadcrumb.style.display = "none";
 
   currentCourse = null;
   currentSubject = null;
+  currentTopic = null;
+  currentTestSeries = null;
 
 };
 

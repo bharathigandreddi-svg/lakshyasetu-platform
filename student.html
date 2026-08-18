@@ -811,7 +811,7 @@ async function loadCourses() {
 
           <article
             class="card"
-            onclick="openCourse(${Number(course.id)})"
+            onclick="openCourse(${course.id})"
           >
 
             <h3>
@@ -827,7 +827,7 @@ async function loadCourses() {
 
             <span
               class="count-label"
-              id="course-count-${Number(course.id)}"
+              id="course-count-${course.id}"
             >
               Loading subjects...
             </span>
@@ -863,9 +863,19 @@ async function loadCourses() {
 
 /* -------------------------------------------------------
    SUBJECT COUNT
+
+   IMPORTANT FIX:
+   Do NOT depend on published=true here.
+   Student editor changes can leave published values
+   inconsistent. We count subjects connected to the course.
 ------------------------------------------------------- */
 
 async function loadSubjectCount(courseId) {
+
+  const result = await sb
+    .from("course_subjects")
+    .select("id", { count: "exact", head: true })
+    .eq("course_id", courseId);
 
   const element =
     document.getElementById(
@@ -876,18 +886,9 @@ async function loadSubjectCount(courseId) {
     return;
   }
 
-  const result = await sb
-    .from("course_subjects")
-    .select("id", { count: "exact", head: true })
-    .eq("course_id", courseId)
-    .eq("published", true);
-
   if (result.error) {
 
-    console.log(
-      "SUBJECT COUNT ERROR:",
-      result.error
-    );
+    console.error("SUBJECT COUNT ERROR:", result.error);
 
     element.textContent =
       "Subjects available";
@@ -908,6 +909,11 @@ async function loadSubjectCount(courseId) {
 
 /* -------------------------------------------------------
    OPEN COURSE
+
+   FIX:
+   course_subjects are loaded using course_id only.
+   The old published=true restriction was preventing
+   subjects from appearing after Student/Admin editing.
 ------------------------------------------------------- */
 
 async function openCourse(courseId) {
@@ -919,14 +925,7 @@ async function openCourse(courseId) {
     );
 
   if (!course) {
-
-    showError(
-      coursesArea,
-      "Selected course could not be found."
-    );
-
     return;
-
   }
 
   currentCourse = course;
@@ -955,23 +954,16 @@ async function openCourse(courseId) {
 
   /*
     IMPORTANT:
-    Subjects are loaded ONLY by course_id.
-    This keeps the architecture:
-    courses -> course_subjects
+    Do not filter course_subjects by published.
+    The relationship course_id is the important part.
   */
 
   const result = await sb
     .from("course_subjects")
     .select("*")
-    .eq("course_id", course.id)
-    .eq("published", true);
+    .eq("course_id", course.id);
 
-  console.log(
-    "COURSE:",
-    course,
-    "COURSE SUBJECTS:",
-    result
-  );
+  console.log("COURSE SUBJECTS:", result);
 
   if (result.error) {
 
@@ -993,7 +985,7 @@ async function openCourse(courseId) {
     showEmpty(
       subjectsArea,
       "No subjects available",
-      "No published subjects are connected to this course yet."
+      "No subjects are connected to this course yet."
     );
 
     return;
@@ -1013,7 +1005,7 @@ async function openCourse(courseId) {
 
           <article
             class="card"
-            onclick="openSubject(${Number(subject.id)})"
+            onclick="openSubject(${subject.id})"
           >
 
             <h3>
@@ -1060,21 +1052,21 @@ async function openCourse(courseId) {
 /* -------------------------------------------------------
    OPEN SUBJECT
 
-   Architecture:
-
    courses
        ↓
    course_subjects
        ↓
    course_topics
+
+   FIX:
+   course_topics are loaded using
+   course_subject_id only.
 ------------------------------------------------------- */
 
 async function openSubject(courseSubjectId) {
 
   if (!currentCourse) {
-
     return;
-
   }
 
   subjectsArea.innerHTML = `
@@ -1083,18 +1075,12 @@ async function openSubject(courseSubjectId) {
     </div>
   `;
 
-  /*
-    First confirm that the selected subject
-    actually belongs to the current course.
-  */
-
   const subjectResult =
     await sb
       .from("course_subjects")
       .select("*")
       .eq("id", courseSubjectId)
       .eq("course_id", currentCourse.id)
-      .eq("published", true)
       .single();
 
   console.log(
@@ -1119,15 +1105,9 @@ async function openSubject(courseSubjectId) {
 
   currentTopic = null;
 
-  /*
-    Hide subject page and show topic page
-    ONLY after subject has successfully loaded.
-  */
-
   subjectsSection.classList.add("hidden");
   topicsSection.classList.remove("hidden");
   testsSection.classList.add("hidden");
-  coursesSection.classList.add("hidden");
 
   topicsTitle.textContent =
     currentSubject.title;
@@ -1140,22 +1120,14 @@ async function openSubject(courseSubjectId) {
 
   /*
     IMPORTANT:
-    Topics are loaded using the selected
-    course_subjects.id.
-
-    course_topics.course_subject_id
-    MUST match course_subjects.id.
+    Do not filter published here.
   */
 
   const topicsResult =
     await sb
       .from("course_topics")
       .select("*")
-      .eq(
-        "course_subject_id",
-        currentSubject.id
-      )
-      .eq("published", true);
+      .eq("course_subject_id", currentSubject.id);
 
   console.log(
     "COURSE TOPICS:",
@@ -1182,7 +1154,7 @@ async function openSubject(courseSubjectId) {
     showEmpty(
       topicsArea,
       "No topics available",
-      "No published topics are connected to this subject yet."
+      "No topics are connected to this subject yet."
     );
 
     return;
@@ -1202,7 +1174,7 @@ async function openSubject(courseSubjectId) {
 
           <article
             class="card"
-            onclick="openTopic(${Number(topic.id)})"
+            onclick="openTopic(${topic.id})"
           >
 
             <h3>
@@ -1252,7 +1224,12 @@ async function openSubject(courseSubjectId) {
 
    course_topics
        ↓
-   lessons.topic_id
+   lessons
+
+   FIX:
+   lesson loading uses topic_id.
+   No published restriction so edited lessons
+   continue to appear.
 ------------------------------------------------------- */
 
 async function openTopic(topicId) {
@@ -1272,11 +1249,7 @@ async function openTopic(topicId) {
       .from("course_topics")
       .select("*")
       .eq("id", topicId)
-      .eq(
-        "course_subject_id",
-        currentSubject.id
-      )
-      .eq("published", true)
+      .eq("course_subject_id", currentSubject.id)
       .single();
 
   console.log(
@@ -1306,7 +1279,6 @@ async function openTopic(topicId) {
       .from("lessons")
       .select("*")
       .eq("topic_id", topic.id)
-      .eq("published", true)
       .order("sort_order", { ascending: true });
 
   console.log(
@@ -1346,7 +1318,7 @@ async function openTopic(topicId) {
           </strong>
 
           <p>
-            This topic is published, but no lesson
+            This topic is available, but no lesson
             has been connected to it yet.
           </p>
 
@@ -1526,7 +1498,7 @@ async function loadTestSeries() {
 
           <article
             class="card test-card"
-            onclick="openTestSeries(${Number(item.id)})"
+            onclick="openTestSeries(${item.id})"
           >
 
             <div class="test-icon">
@@ -1758,7 +1730,7 @@ async function openTestSeries(seriesId) {
 
               <button
                 class="action-btn"
-                onclick="event.stopPropagation(); openTest(${Number(test.id)})"
+                onclick="event.stopPropagation(); openTest(${test.id})"
               >
                 Open Test
               </button>
@@ -1958,14 +1930,12 @@ async function openTest(testId) {
 
 
 /* -------------------------------------------------------
-   BACK BUTTON
+   BACK
 ------------------------------------------------------- */
 
 backButton.onclick = function() {
 
-  /*
-    Test opened -> return to test series
-  */
+  /* Test opened → return to test series */
 
   if (!testsSection.classList.contains("hidden")) {
 
@@ -1988,9 +1958,7 @@ backButton.onclick = function() {
   }
 
 
-  /*
-    Topic opened -> return to topic list
-  */
+  /* Topic opened → return to topic list */
 
   if (!topicsSection.classList.contains("hidden")) {
 
@@ -2007,9 +1975,7 @@ backButton.onclick = function() {
   }
 
 
-  /*
-    Subjects opened -> return to courses
-  */
+  /* Subjects opened → return to courses */
 
   if (!subjectsSection.classList.contains("hidden")) {
 
@@ -2018,8 +1984,6 @@ backButton.onclick = function() {
     coursesSection.classList.remove("hidden");
 
     testsSection.classList.remove("hidden");
-
-    topicsSection.classList.add("hidden");
 
     breadcrumb.style.display = "none";
 
@@ -2031,10 +1995,6 @@ backButton.onclick = function() {
 
   }
 
-
-  /*
-    Default state
-  */
 
   coursesSection.classList.remove("hidden");
   testsSection.classList.remove("hidden");

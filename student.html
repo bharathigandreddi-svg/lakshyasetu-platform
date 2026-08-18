@@ -811,7 +811,7 @@ async function loadCourses() {
 
           <article
             class="card"
-            onclick="openCourse(${course.id})"
+            onclick="openCourse(${Number(course.id)})"
           >
 
             <h3>
@@ -827,7 +827,7 @@ async function loadCourses() {
 
             <span
               class="count-label"
-              id="course-count-${course.id}"
+              id="course-count-${Number(course.id)}"
             >
               Loading subjects...
             </span>
@@ -867,12 +867,6 @@ async function loadCourses() {
 
 async function loadSubjectCount(courseId) {
 
-  const result = await sb
-    .from("course_subjects")
-    .select("id", { count: "exact", head: true })
-    .eq("course_id", courseId)
-    .eq("published", true);
-
   const element =
     document.getElementById(
       "course-count-" + courseId
@@ -882,7 +876,18 @@ async function loadSubjectCount(courseId) {
     return;
   }
 
+  const result = await sb
+    .from("course_subjects")
+    .select("id", { count: "exact", head: true })
+    .eq("course_id", courseId)
+    .eq("published", true);
+
   if (result.error) {
+
+    console.log(
+      "SUBJECT COUNT ERROR:",
+      result.error
+    );
 
     element.textContent =
       "Subjects available";
@@ -914,7 +919,14 @@ async function openCourse(courseId) {
     );
 
   if (!course) {
+
+    showError(
+      coursesArea,
+      "Selected course could not be found."
+    );
+
     return;
+
   }
 
   currentCourse = course;
@@ -941,13 +953,25 @@ async function openCourse(courseId) {
     </div>
   `;
 
+  /*
+    IMPORTANT:
+    Subjects are loaded ONLY by course_id.
+    This keeps the architecture:
+    courses -> course_subjects
+  */
+
   const result = await sb
     .from("course_subjects")
     .select("*")
     .eq("course_id", course.id)
     .eq("published", true);
 
-  console.log("COURSE SUBJECTS:", result);
+  console.log(
+    "COURSE:",
+    course,
+    "COURSE SUBJECTS:",
+    result
+  );
 
   if (result.error) {
 
@@ -969,7 +993,7 @@ async function openCourse(courseId) {
     showEmpty(
       subjectsArea,
       "No subjects available",
-      "Admin can add and publish subjects for this course."
+      "No published subjects are connected to this course yet."
     );
 
     return;
@@ -989,7 +1013,7 @@ async function openCourse(courseId) {
 
           <article
             class="card"
-            onclick="openSubject(${subject.id})"
+            onclick="openSubject(${Number(subject.id)})"
           >
 
             <h3>
@@ -1035,21 +1059,22 @@ async function openCourse(courseId) {
 
 /* -------------------------------------------------------
    OPEN SUBJECT
-   CORRECT ARCHITECTURE:
+
+   Architecture:
 
    courses
        ↓
    course_subjects
        ↓
    course_topics
-
-   NEVER query subject_topics here.
 ------------------------------------------------------- */
 
 async function openSubject(courseSubjectId) {
 
   if (!currentCourse) {
+
     return;
+
   }
 
   subjectsArea.innerHTML = `
@@ -1057,6 +1082,11 @@ async function openSubject(courseSubjectId) {
       Loading topics...
     </div>
   `;
+
+  /*
+    First confirm that the selected subject
+    actually belongs to the current course.
+  */
 
   const subjectResult =
     await sb
@@ -1089,8 +1119,15 @@ async function openSubject(courseSubjectId) {
 
   currentTopic = null;
 
+  /*
+    Hide subject page and show topic page
+    ONLY after subject has successfully loaded.
+  */
+
   subjectsSection.classList.add("hidden");
   topicsSection.classList.remove("hidden");
+  testsSection.classList.add("hidden");
+  coursesSection.classList.add("hidden");
 
   topicsTitle.textContent =
     currentSubject.title;
@@ -1101,20 +1138,29 @@ async function openSubject(courseSubjectId) {
     </div>
   `;
 
+  /*
+    IMPORTANT:
+    Topics are loaded using the selected
+    course_subjects.id.
+
+    course_topics.course_subject_id
+    MUST match course_subjects.id.
+  */
 
   const topicsResult =
     await sb
       .from("course_topics")
       .select("*")
-      .eq("course_subject_id", currentSubject.id)
+      .eq(
+        "course_subject_id",
+        currentSubject.id
+      )
       .eq("published", true);
-
 
   console.log(
     "COURSE TOPICS:",
     topicsResult
   );
-
 
   if (topicsResult.error) {
 
@@ -1128,23 +1174,20 @@ async function openSubject(courseSubjectId) {
 
   }
 
-
   const topics =
     sortItems(topicsResult.data || []);
-
 
   if (!topics.length) {
 
     showEmpty(
       topicsArea,
       "No topics available",
-      "Admin can add and publish topics under this subject."
+      "No published topics are connected to this subject yet."
     );
 
     return;
 
   }
-
 
   topicsArea.innerHTML = `
 
@@ -1159,7 +1202,7 @@ async function openSubject(courseSubjectId) {
 
           <article
             class="card"
-            onclick="openTopic(${topic.id})"
+            onclick="openTopic(${Number(topic.id)})"
           >
 
             <h3>
@@ -1196,7 +1239,6 @@ async function openSubject(courseSubjectId) {
 
   `;
 
-
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1207,12 +1249,9 @@ async function openSubject(courseSubjectId) {
 
 /* -------------------------------------------------------
    OPEN TOPIC
-   CORRECT TABLE:
 
    course_topics
-
-   Lessons:
-
+       ↓
    lessons.topic_id
 ------------------------------------------------------- */
 
@@ -1228,22 +1267,22 @@ async function openTopic(topicId) {
     </div>
   `;
 
-
   const topicResult =
     await sb
       .from("course_topics")
       .select("*")
       .eq("id", topicId)
-      .eq("course_subject_id", currentSubject.id)
+      .eq(
+        "course_subject_id",
+        currentSubject.id
+      )
       .eq("published", true)
       .single();
-
 
   console.log(
     "SELECTED TOPIC:",
     topicResult
   );
-
 
   if (topicResult.error) {
 
@@ -1257,12 +1296,10 @@ async function openTopic(topicId) {
 
   }
 
-
   const topic =
     topicResult.data;
 
   currentTopic = topic;
-
 
   const lessonResult =
     await sb
@@ -1272,12 +1309,10 @@ async function openTopic(topicId) {
       .eq("published", true)
       .order("sort_order", { ascending: true });
 
-
   console.log(
     "LESSONS:",
     lessonResult
   );
-
 
   if (lessonResult.error) {
 
@@ -1291,10 +1326,8 @@ async function openTopic(topicId) {
 
   }
 
-
   const lessons =
     lessonResult.data || [];
-
 
   if (!lessons.length) {
 
@@ -1326,7 +1359,6 @@ async function openTopic(topicId) {
     return;
 
   }
-
 
   topicsArea.innerHTML = `
 
@@ -1421,7 +1453,6 @@ async function openTopic(topicId) {
 
   `;
 
-
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1450,12 +1481,10 @@ async function loadTestSeries() {
       .eq("archived", false)
       .order("id", { ascending: true });
 
-
   console.log(
     "TEST SERIES:",
     result
   );
-
 
   if (result.error) {
 
@@ -1469,10 +1498,8 @@ async function loadTestSeries() {
 
   }
 
-
   const series =
     result.data || [];
-
 
   if (!series.length) {
 
@@ -1485,7 +1512,6 @@ async function loadTestSeries() {
     return;
 
   }
-
 
   testsArea.innerHTML = `
 
@@ -1500,7 +1526,7 @@ async function loadTestSeries() {
 
           <article
             class="card test-card"
-            onclick="openTestSeries(${item.id})"
+            onclick="openTestSeries(${Number(item.id)})"
           >
 
             <div class="test-icon">
@@ -1558,7 +1584,6 @@ async function openTestSeries(seriesId) {
       .eq("archived", false)
       .single();
 
-
   if (result.error) {
 
     showError(
@@ -1571,19 +1596,16 @@ async function openTestSeries(seriesId) {
 
   }
 
-
   const series =
     result.data;
 
   currentTestSeries = series;
-
 
   resetSections();
 
   testsSection.classList.remove("hidden");
 
   breadcrumb.style.display = "block";
-
 
   testsTitle.textContent =
     series.title;
@@ -1592,13 +1614,11 @@ async function openTestSeries(seriesId) {
     "Test Series Fee: " +
     money(series.price);
 
-
   testsArea.innerHTML = `
     <div class="status">
       Loading tests...
     </div>
   `;
-
 
   const testsResult =
     await sb
@@ -1609,12 +1629,10 @@ async function openTestSeries(seriesId) {
       .eq("archived", false)
       .order("id", { ascending: true });
 
-
   console.log(
     "TESTS:",
     testsResult
   );
-
 
   if (testsResult.error) {
 
@@ -1628,10 +1646,8 @@ async function openTestSeries(seriesId) {
 
   }
 
-
   const tests =
     testsResult.data || [];
-
 
   if (!tests.length) {
 
@@ -1673,7 +1689,6 @@ async function openTestSeries(seriesId) {
     return;
 
   }
-
 
   testsArea.innerHTML = `
 
@@ -1743,7 +1758,7 @@ async function openTestSeries(seriesId) {
 
               <button
                 class="action-btn"
-                onclick="event.stopPropagation(); openTest(${test.id})"
+                onclick="event.stopPropagation(); openTest(${Number(test.id)})"
               >
                 Open Test
               </button>
@@ -1760,7 +1775,6 @@ async function openTestSeries(seriesId) {
 
   `;
 
-
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1771,9 +1785,6 @@ async function openTestSeries(seriesId) {
 
 /* -------------------------------------------------------
    OPEN TEST
-   For now this loads the question structure.
-   Attempt/submission will be connected after login/access
-   control is completed.
 ------------------------------------------------------- */
 
 async function openTest(testId) {
@@ -1784,7 +1795,6 @@ async function openTest(testId) {
     </div>
   `;
 
-
   const testResult =
     await sb
       .from("ls_tests")
@@ -1793,7 +1803,6 @@ async function openTest(testId) {
       .eq("published", true)
       .eq("archived", false)
       .single();
-
 
   if (testResult.error) {
 
@@ -1807,10 +1816,8 @@ async function openTest(testId) {
 
   }
 
-
   const test =
     testResult.data;
-
 
   const questionResult =
     await sb
@@ -1819,12 +1826,10 @@ async function openTest(testId) {
       .eq("test_id", test.id)
       .order("display_order", { ascending: true });
 
-
   console.log(
     "TEST QUESTIONS:",
     questionResult
   );
-
 
   if (questionResult.error) {
 
@@ -1838,10 +1843,8 @@ async function openTest(testId) {
 
   }
 
-
   const questions =
     questionResult.data || [];
-
 
   testsTitle.textContent =
     test.title;
@@ -1853,7 +1856,6 @@ async function openTest(testId) {
         ? test.duration_minutes + " minutes"
         : "Not specified"
     );
-
 
   if (!questions.length) {
 
@@ -1885,7 +1887,6 @@ async function openTest(testId) {
     return;
 
   }
-
 
   testsArea.innerHTML = `
 
@@ -1948,7 +1949,6 @@ async function openTest(testId) {
 
   `;
 
-
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1958,12 +1958,14 @@ async function openTest(testId) {
 
 
 /* -------------------------------------------------------
-   BACK
+   BACK BUTTON
 ------------------------------------------------------- */
 
 backButton.onclick = function() {
 
-  /* Test opened → return to test series */
+  /*
+    Test opened -> return to test series
+  */
 
   if (!testsSection.classList.contains("hidden")) {
 
@@ -1986,7 +1988,9 @@ backButton.onclick = function() {
   }
 
 
-  /* Topic opened → return to topic list */
+  /*
+    Topic opened -> return to topic list
+  */
 
   if (!topicsSection.classList.contains("hidden")) {
 
@@ -2003,7 +2007,9 @@ backButton.onclick = function() {
   }
 
 
-  /* Subjects opened → return to courses */
+  /*
+    Subjects opened -> return to courses
+  */
 
   if (!subjectsSection.classList.contains("hidden")) {
 
@@ -2012,6 +2018,8 @@ backButton.onclick = function() {
     coursesSection.classList.remove("hidden");
 
     testsSection.classList.remove("hidden");
+
+    topicsSection.classList.add("hidden");
 
     breadcrumb.style.display = "none";
 
@@ -2023,6 +2031,10 @@ backButton.onclick = function() {
 
   }
 
+
+  /*
+    Default state
+  */
 
   coursesSection.classList.remove("hidden");
   testsSection.classList.remove("hidden");

@@ -186,6 +186,13 @@
       font-weight: 700;
     }
 
+    .count-label {
+      display: inline-block;
+      margin-top: 8px;
+      color: #667085;
+      font-size: 13px;
+    }
+
     .test-card {
       border-top: 4px solid #2457a6;
     }
@@ -335,6 +342,8 @@
 
   </div>
 
+  <!-- COURSES -->
+
   <section id="coursesSection" class="section">
 
     <div class="section-header">
@@ -357,6 +366,8 @@
 
   </section>
 
+  <!-- SUBJECTS -->
+
   <section id="subjectsSection" class="section hidden">
 
     <div class="section-header">
@@ -375,6 +386,8 @@
 
   </section>
 
+  <!-- TOPICS -->
+
   <section id="topicsSection" class="section hidden">
 
     <div class="section-header">
@@ -392,6 +405,8 @@
     <div id="topicsArea"></div>
 
   </section>
+
+  <!-- TEST SERIES -->
 
   <section id="testsSection" class="section">
 
@@ -423,1034 +438,1291 @@
 
 </main>
 
-<!-- Supabase -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- Project configuration -->
 <script src="config.js"></script>
+
 
 <script>
 
-  console.log("LakshyaSetu student page starting...");
+console.log("LakshyaSetu starting...");
 
-  if (!window.supabase) {
-    document.getElementById("coursesArea").innerHTML =
-      '<div class="error">Supabase library failed to load.</div>';
 
-    document.getElementById("testsArea").innerHTML =
-      '<div class="error">Supabase library failed to load.</div>';
+/* -------------------------------------------------------
+   SUPABASE
+------------------------------------------------------- */
 
-    throw new Error("Supabase library not loaded.");
+if (!window.supabase) {
+
+  document.getElementById("coursesArea").innerHTML =
+    '<div class="error">Supabase library failed to load.</div>';
+
+  throw new Error("Supabase library not loaded.");
+
+}
+
+
+if (!window.LAKSHYASETU_CONFIG) {
+
+  document.getElementById("coursesArea").innerHTML =
+    '<div class="error">config.js was not loaded.</div>';
+
+  throw new Error("LAKSHYASETU_CONFIG missing.");
+
+}
+
+
+const sb = window.supabase.createClient(
+  window.LAKSHYASETU_CONFIG.supabaseUrl,
+  window.LAKSHYASETU_CONFIG.supabasePublishableKey
+);
+
+
+/* -------------------------------------------------------
+   DOM
+------------------------------------------------------- */
+
+const coursesSection =
+  document.getElementById("coursesSection");
+
+const subjectsSection =
+  document.getElementById("subjectsSection");
+
+const topicsSection =
+  document.getElementById("topicsSection");
+
+const testsSection =
+  document.getElementById("testsSection");
+
+const coursesArea =
+  document.getElementById("coursesArea");
+
+const subjectsArea =
+  document.getElementById("subjectsArea");
+
+const topicsArea =
+  document.getElementById("topicsArea");
+
+const testsArea =
+  document.getElementById("testsArea");
+
+const subjectsTitle =
+  document.getElementById("subjectsTitle");
+
+const subjectsDescription =
+  document.getElementById("subjectsDescription");
+
+const topicsTitle =
+  document.getElementById("topicsTitle");
+
+const breadcrumb =
+  document.getElementById("breadcrumb");
+
+const backButton =
+  document.getElementById("backButton");
+
+
+let courses = [];
+let currentCourse = null;
+let currentSubject = null;
+
+
+/* -------------------------------------------------------
+   HELPERS
+------------------------------------------------------- */
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function money(value) {
+
+  const amount = Number(value || 0);
+
+  if (!amount) {
+    return "Free";
   }
 
-  if (!window.LAKSHYASETU_CONFIG) {
-    document.getElementById("coursesArea").innerHTML =
-      '<div class="error">config.js was not loaded.</div>';
+  return "₹" + amount.toLocaleString("en-IN");
 
-    document.getElementById("testsArea").innerHTML =
-      '<div class="error">config.js was not loaded.</div>';
+}
 
-    throw new Error("LAKSHYASETU_CONFIG missing.");
+
+function getCourseFee(course) {
+
+  if (course.course_fee != null) {
+    return Number(course.course_fee);
   }
 
-  console.log(
-    "Supabase URL:",
-    window.LAKSHYASETU_CONFIG.supabaseUrl
-  );
-
-  const sb = window.supabase.createClient(
-    window.LAKSHYASETU_CONFIG.supabaseUrl,
-    window.LAKSHYASETU_CONFIG.supabasePublishableKey
-  );
-
-  const coursesSection =
-    document.getElementById("coursesSection");
-
-  const subjectsSection =
-    document.getElementById("subjectsSection");
-
-  const topicsSection =
-    document.getElementById("topicsSection");
-
-  const testsSection =
-    document.getElementById("testsSection");
-
-  const coursesArea =
-    document.getElementById("coursesArea");
-
-  const subjectsArea =
-    document.getElementById("subjectsArea");
-
-  const topicsArea =
-    document.getElementById("topicsArea");
-
-  const testsArea =
-    document.getElementById("testsArea");
-
-  const subjectsTitle =
-    document.getElementById("subjectsTitle");
-
-  const subjectsDescription =
-    document.getElementById("subjectsDescription");
-
-  const topicsTitle =
-    document.getElementById("topicsTitle");
-
-  const breadcrumb =
-    document.getElementById("breadcrumb");
-
-  const backButton =
-    document.getElementById("backButton");
-
-  let courses = [];
-  let currentCourse = null;
-  let currentSubject = null;
-
-  function escapeHtml(value) {
-
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-
+  if (course.current_fee != null) {
+    return Number(course.current_fee);
   }
 
-  function money(value) {
-
-    const amount = Number(value || 0);
-
-    if (!amount) {
-      return "Free";
-    }
-
-    return "₹" + amount.toLocaleString("en-IN");
-
+  if (course.price != null) {
+    return Number(course.price);
   }
 
-  function getCourseFee(course) {
-
-    if (course.current_fee !== null &&
-        course.current_fee !== undefined) {
-      return Number(course.current_fee);
-    }
-
-    if (course.price !== null &&
-        course.price !== undefined) {
-      return Number(course.price);
-    }
-
-    if (course.fee !== null &&
-        course.fee !== undefined) {
-      return Number(course.fee);
-    }
-
-    if (course.original_fee !== null &&
-        course.original_fee !== undefined) {
-      return Number(course.original_fee);
-    }
-
-    return 0;
-
+  if (course.fee != null) {
+    return Number(course.fee);
   }
 
-  function getSubjectFee(subject) {
+  return 0;
 
-    if (subject.current_fee !== null &&
-        subject.current_fee !== undefined) {
-      return Number(subject.current_fee);
-    }
+}
 
-    if (subject.price !== null &&
-        subject.price !== undefined) {
-      return Number(subject.price);
-    }
 
-    if (subject.fee !== null &&
-        subject.fee !== undefined) {
-      return Number(subject.fee);
-    }
+function getSubjectFee(subject) {
 
-    if (subject.visualized_fee !== null &&
-        subject.visualized_fee !== undefined) {
-      return Number(subject.visualized_fee);
-    }
-
-    return 0;
-
+  if (subject.subject_fee != null) {
+    return Number(subject.subject_fee);
   }
 
-  function getTopicFee(topic) {
-
-    if (topic.current_fee !== null &&
-        topic.current_fee !== undefined) {
-      return Number(topic.current_fee);
-    }
-
-    if (topic.price !== null &&
-        topic.price !== undefined) {
-      return Number(topic.price);
-    }
-
-    if (topic.fee !== null &&
-        topic.fee !== undefined) {
-      return Number(topic.fee);
-    }
-
-    if (topic.video_fee !== null &&
-        topic.video_fee !== undefined) {
-      return Number(topic.video_fee);
-    }
-
-    return 0;
-
+  if (subject.current_fee != null) {
+    return Number(subject.current_fee);
   }
 
-  function showError(container, message) {
-
-    container.innerHTML = `
-      <div class="error">
-        ${escapeHtml(message)}
-      </div>
-    `;
-
+  if (subject.price != null) {
+    return Number(subject.price);
   }
 
-  function showEmpty(container, title, text) {
-
-    container.innerHTML = `
-      <div class="status empty">
-
-        <h3>
-          ${escapeHtml(title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(text)}
-        </p>
-
-      </div>
-    `;
-
+  if (subject.fee != null) {
+    return Number(subject.fee);
   }
 
-  function sortItems(items) {
+  return 0;
 
-    return [...items].sort((a, b) => {
+}
 
-      const aOrder =
-        Number(
-          a.sort_order ??
-          a.display_order ??
-          a.order_index ??
-          999999
-        );
 
-      const bOrder =
-        Number(
-          b.sort_order ??
-          b.display_order ??
-          b.order_index ??
-          999999
-        );
+function getTopicFee(topic) {
 
-      if (aOrder !== bOrder) {
-        return aOrder - bOrder;
-      }
-
-      return Number(a.id || 0) - Number(b.id || 0);
-
-    });
-
+  if (topic.topic_fee != null) {
+    return Number(topic.topic_fee);
   }
 
-  async function loadCourses() {
+  if (topic.current_fee != null) {
+    return Number(topic.current_fee);
+  }
 
-    try {
+  if (topic.price != null) {
+    return Number(topic.price);
+  }
 
-      coursesArea.innerHTML = `
-        <div class="status">
-          Loading courses...
-        </div>
-      `;
+  if (topic.fee != null) {
+    return Number(topic.fee);
+  }
 
-      const result = await sb
-        .from("courses")
-        .select("*")
-        .eq("published", true)
-        .order("id", { ascending: true });
+  return 0;
 
-      console.log("Courses result:", result);
+}
 
-      if (result.error) {
 
-        showError(
-          coursesArea,
-          "Unable to load courses: " +
-          result.error.message
-        );
+function showError(container, message) {
 
-        return;
+  container.innerHTML = `
+    <div class="error">
+      ${escapeHtml(message)}
+    </div>
+  `;
 
-      }
+}
 
-      courses = result.data || [];
 
-      if (!courses.length) {
+function showEmpty(container, title, text) {
 
-        showEmpty(
-          coursesArea,
-          "No courses available",
-          "Courses will appear here when they are published by Admin."
-        );
+  container.innerHTML = `
+    <div class="status empty">
 
-        return;
+      <h3>
+        ${escapeHtml(title)}
+      </h3>
 
-      }
+      <p>
+        ${escapeHtml(text)}
+      </p>
 
-      coursesArea.innerHTML = `
-        <div class="card-grid">
+    </div>
+  `;
 
-          ${courses.map(course => {
+}
 
-            const fee = getCourseFee(course);
 
-            return `
-              <article
-                class="card"
-                onclick="openCourse(${course.id})"
-              >
+function sortItems(items) {
 
-                <h3>
-                  ${escapeHtml(course.title)}
-                </h3>
+  return [...items].sort((a, b) => {
 
-                <p>
-                  ${escapeHtml(
-                    course.description ||
-                    "Explore subjects and topic-wise learning."
-                  )}
-                </p>
-
-                <div class="card-footer">
-
-                  <span class="fee ${fee === 0 ? "free" : ""}">
-                    ${money(fee)}
-                  </span>
-
-                  <span class="open-label">
-                    View Subjects
-                  </span>
-
-                </div>
-
-              </article>
-            `;
-
-          }).join("")}
-
-        </div>
-      `;
-
-    } catch (error) {
-
-      console.error("loadCourses error:", error);
-
-      showError(
-        coursesArea,
-        "Courses error: " + error.message
+    const aOrder =
+      Number(
+        a.sort_order ??
+        a.display_order ??
+        a.order_index ??
+        999999
       );
 
+    const bOrder =
+      Number(
+        b.sort_order ??
+        b.display_order ??
+        b.order_index ??
+        999999
+      );
+
+    if (aOrder !== bOrder) {
+      return aOrder - bOrder;
     }
+
+    return Number(a.id || 0) - Number(b.id || 0);
+
+  });
+
+}
+
+
+/* -------------------------------------------------------
+   LOAD COURSES
+------------------------------------------------------- */
+
+async function loadCourses() {
+
+  coursesArea.innerHTML = `
+    <div class="status">
+      Loading courses...
+    </div>
+  `;
+
+  const result = await sb
+    .from("courses")
+    .select("*")
+    .eq("published", true)
+    .order("id", { ascending: true });
+
+
+  console.log("COURSES:", result);
+
+
+  if (result.error) {
+
+    showError(
+      coursesArea,
+      "Unable to load courses: " +
+      result.error.message
+    );
+
+    return;
 
   }
 
-  async function openCourse(courseId) {
 
-    if (!courseId) {
-      return;
-    }
+  courses = result.data || [];
 
-    const course =
-      courses.find(
-        item => Number(item.id) === Number(courseId)
-      );
 
-    if (!course) {
-      return;
-    }
+  if (!courses.length) {
 
-    currentCourse = course;
-    currentSubject = null;
+    showEmpty(
+      coursesArea,
+      "No courses available",
+      "Admin has not published any courses yet."
+    );
 
-    coursesSection.classList.add("hidden");
-    testsSection.classList.add("hidden");
+    return;
 
-    subjectsSection.classList.remove("hidden");
-    topicsSection.classList.add("hidden");
+  }
 
-    breadcrumb.style.display = "block";
 
-    subjectsTitle.textContent =
-      course.title;
+  /*
+     IMPORTANT:
+     Only published courses appear.
 
-    subjectsDescription.textContent =
-      "Course Fee: " +
-      money(getCourseFee(course)) +
-      " | Select a subject to continue.";
+     Current expected four:
+     UPSC Civil Services
+     APPSC Group 1
+     APPSC Group 2
+     APPSC Group 4 / Junior Assistant
+  */
 
-    subjectsArea.innerHTML = `
-      <div class="status">
-        Loading subjects...
-      </div>
-    `;
 
-    const result = await sb
+  coursesArea.innerHTML = `
+
+    <div class="card-grid">
+
+      ${courses.map(course => {
+
+        const fee = getCourseFee(course);
+
+        return `
+
+          <article
+            class="card"
+            onclick="openCourse(${course.id})"
+          >
+
+            <h3>
+              ${escapeHtml(course.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(
+                course.description ||
+                "Explore subjects and topic-wise learning."
+              )}
+            </p>
+
+            <span
+              class="count-label"
+              id="course-count-${course.id}"
+            >
+              Loading subjects...
+            </span>
+
+            <div class="card-footer">
+
+              <span class="fee ${fee === 0 ? "free" : ""}">
+                ${money(fee)}
+              </span>
+
+              <span class="open-label">
+                View Subjects
+              </span>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+
+  /*
+     Load subject counts for every course.
+  */
+
+  for (const course of courses) {
+
+    loadSubjectCount(course.id);
+
+  }
+
+}
+
+
+/* -------------------------------------------------------
+   SUBJECT COUNT
+------------------------------------------------------- */
+
+async function loadSubjectCount(courseId) {
+
+  const result = await sb
+    .from("course_subjects")
+    .select("id", { count: "exact", head: true })
+    .eq("course_id", courseId)
+    .eq("published", true);
+
+
+  const element =
+    document.getElementById(
+      "course-count-" + courseId
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  if (result.error) {
+
+    element.textContent =
+      "Subjects available";
+
+    return;
+
+  }
+
+
+  const count =
+    result.count || 0;
+
+
+  element.textContent =
+    count +
+    (count === 1 ? " Subject" : " Subjects");
+
+}
+
+
+/* -------------------------------------------------------
+   OPEN COURSE
+------------------------------------------------------- */
+
+async function openCourse(courseId) {
+
+  const course =
+    courses.find(
+      item =>
+        Number(item.id) === Number(courseId)
+    );
+
+
+  if (!course) {
+    return;
+  }
+
+
+  currentCourse = course;
+  currentSubject = null;
+
+
+  coursesSection.classList.add("hidden");
+  testsSection.classList.add("hidden");
+
+  subjectsSection.classList.remove("hidden");
+  topicsSection.classList.add("hidden");
+
+  breadcrumb.style.display = "block";
+
+
+  subjectsTitle.textContent =
+    course.title;
+
+
+  subjectsDescription.textContent =
+    "Select a subject. Subject fees are controlled by Admin.";
+
+
+  subjectsArea.innerHTML = `
+    <div class="status">
+      Loading subjects...
+    </div>
+  `;
+
+
+  const result = await sb
+    .from("course_subjects")
+    .select("*")
+    .eq("course_id", course.id)
+    .eq("published", true);
+
+
+  console.log("COURSE SUBJECTS:", result);
+
+
+  if (result.error) {
+
+    showError(
+      subjectsArea,
+      "Unable to load subjects: " +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  const subjects =
+    sortItems(result.data || []);
+
+
+  if (!subjects.length) {
+
+    showEmpty(
+      subjectsArea,
+      "No subjects available",
+      "Admin can add and publish subjects for this course."
+    );
+
+    return;
+
+  }
+
+
+  subjectsArea.innerHTML = `
+
+    <div class="card-grid">
+
+      ${subjects.map(subject => {
+
+        const fee =
+          getSubjectFee(subject);
+
+
+        return `
+
+          <article
+            class="card"
+            onclick="openSubject(${subject.id})"
+          >
+
+            <h3>
+              ${escapeHtml(subject.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(
+                subject.description ||
+                "Explore topics under this subject."
+              )}
+            </p>
+
+            <div class="card-footer">
+
+              <span class="fee ${fee === 0 ? "free" : ""}">
+                ${money(fee)}
+              </span>
+
+              <span class="open-label">
+                View Topics
+              </span>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* -------------------------------------------------------
+   OPEN SUBJECT
+------------------------------------------------------- */
+
+async function openSubject(courseSubjectId) {
+
+  if (!currentCourse) {
+    return;
+  }
+
+
+  subjectsArea.innerHTML = `
+    <div class="status">
+      Loading topics...
+    </div>
+  `;
+
+
+  /*
+     IMPORTANT:
+
+     course_subjects.id is the mapping ID.
+
+     We first retrieve the exact subject belonging
+     to the selected course.
+  */
+
+
+  const subjectResult =
+    await sb
       .from("course_subjects")
       .select("*")
-      .eq("course_id", course.id)
-      .eq("published", true);
+      .eq("id", courseSubjectId)
+      .eq("course_id", currentCourse.id)
+      .eq("published", true)
+      .single();
 
-    if (result.error) {
 
-      showError(
-        subjectsArea,
-        "Unable to load subjects: " +
-        result.error.message
-      );
+  console.log(
+    "SELECTED COURSE SUBJECT:",
+    subjectResult
+  );
 
-      return;
 
-    }
+  if (subjectResult.error) {
 
-    const subjects =
-      sortItems(result.data || []);
+    showError(
+      subjectsArea,
+      "Unable to open subject: " +
+      subjectResult.error.message
+    );
 
-    if (!subjects.length) {
-
-      showEmpty(
-        subjectsArea,
-        "No subjects available",
-        "Subjects will appear here when Admin publishes them."
-      );
-
-      return;
-
-    }
-
-    subjectsArea.innerHTML = `
-      <div class="card-grid">
-
-        ${subjects.map(subject => {
-
-          const fee =
-            getSubjectFee(subject);
-
-          return `
-            <article
-              class="card"
-              onclick="openSubject(${subject.id})"
-            >
-
-              <h3>
-                ${escapeHtml(subject.title)}
-              </h3>
-
-              <p>
-                ${escapeHtml(
-                  subject.description ||
-                  "Explore topics under this subject."
-                )}
-              </p>
-
-              <div class="card-footer">
-
-                <span class="fee ${fee === 0 ? "free" : ""}">
-                  ${money(fee)}
-                </span>
-
-                <span class="open-label">
-                  View Topics
-                </span>
-
-              </div>
-
-            </article>
-          `;
-
-        }).join("")}
-
-      </div>
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    return;
 
   }
 
-  async function openSubject(courseSubjectId) {
 
-    if (!currentCourse) {
-      return;
-    }
+  currentSubject =
+    subjectResult.data;
 
-    currentSubject = null;
 
-    const result =
-      await sb
-        .from("course_subjects")
-        .select("*")
-        .eq("id", courseSubjectId)
-        .eq("course_id", currentCourse.id)
-        .eq("published", true)
-        .single();
+  subjectsSection.classList.add("hidden");
+  topicsSection.classList.remove("hidden");
 
-    if (result.error) {
 
-      showError(
-        subjectsArea,
-        "Unable to open subject: " +
-        result.error.message
-      );
+  topicsTitle.textContent =
+    currentSubject.title;
 
-      return;
 
-    }
+  topicsArea.innerHTML = `
+    <div class="status">
+      Loading topics...
+    </div>
+  `;
 
-    currentSubject =
-      result.data;
 
-    subjectsSection.classList.add("hidden");
-    topicsSection.classList.remove("hidden");
+  /*
+     TOPIC CONNECTION
 
-    topicsTitle.textContent =
-      currentSubject.title;
+     First try subject_id.
 
-    topicsArea.innerHTML = `
-      <div class="status">
-        Loading topics...
-      </div>
-    `;
+     This supports your existing mapping where
+     course_subjects.subject_id points to the
+     subject/topic parent.
 
-    const topicsResult =
+     If no topic is found, we also try the
+     course_subjects ID.
+  */
+
+
+  let topicsResult =
+    await sb
+      .from("subject_topics")
+      .select("*")
+      .eq("subject_id", currentSubject.subject_id)
+      .eq("published", true);
+
+
+  /*
+     If subject_id is null or no records found,
+     try course_subjects.id.
+  */
+
+
+  if (
+    (!topicsResult.data || !topicsResult.data.length) &&
+    currentSubject.id
+  ) {
+
+    const fallbackResult =
       await sb
         .from("subject_topics")
         .select("*")
         .eq("subject_id", currentSubject.id)
         .eq("published", true);
 
-    if (topicsResult.error) {
-
-      showError(
-        topicsArea,
-        "Unable to load topics: " +
-        topicsResult.error.message
-      );
-
-      return;
-
+    if (!fallbackResult.error) {
+      topicsResult = fallbackResult;
     }
-
-    const topics =
-      sortItems(topicsResult.data || []);
-
-    if (!topics.length) {
-
-      showEmpty(
-        topicsArea,
-        "No topics available",
-        "Topics will appear here when Admin publishes them."
-      );
-
-      return;
-
-    }
-
-    topicsArea.innerHTML = `
-      <div class="card-grid">
-
-        ${topics.map((topic, index) => {
-
-          const fee =
-            getTopicFee(topic);
-
-          return `
-            <article
-              class="card"
-              onclick="openTopic(${topic.id})"
-            >
-
-              <h3>
-                ${index + 1}.
-                ${escapeHtml(topic.title)}
-              </h3>
-
-              <p>
-                Topic-wise learning content
-              </p>
-
-              <div class="card-footer">
-
-                <span class="fee ${fee === 0 ? "free" : ""}">
-                  ${money(fee)}
-                </span>
-
-                <span class="open-label">
-                  Open Topic
-                </span>
-
-              </div>
-
-            </article>
-          `;
-
-        }).join("")}
-
-      </div>
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
 
   }
 
-  async function openTopic(topicId) {
 
-    if (!currentSubject) {
-      return;
-    }
+  console.log(
+    "TOPICS:",
+    topicsResult
+  );
 
-    topicsArea.innerHTML = `
-      <div class="status">
-        Loading learning content...
-      </div>
-    `;
 
-    const topicResult = await sb
+  if (topicsResult.error) {
+
+    showError(
+      topicsArea,
+      "Unable to load topics: " +
+      topicsResult.error.message
+    );
+
+    return;
+
+  }
+
+
+  const topics =
+    sortItems(topicsResult.data || []);
+
+
+  if (!topics.length) {
+
+    showEmpty(
+      topicsArea,
+      "No topics available",
+      "Admin can add and publish topics under this subject."
+    );
+
+    return;
+
+  }
+
+
+  topicsArea.innerHTML = `
+
+    <div class="card-grid">
+
+      ${topics.map((topic, index) => {
+
+        const fee =
+          getTopicFee(topic);
+
+
+        return `
+
+          <article
+            class="card"
+            onclick="openTopic(${topic.id})"
+          >
+
+            <h3>
+              ${index + 1}.
+              ${escapeHtml(topic.title)}
+            </h3>
+
+            <p>
+              Topic-wise learning content
+            </p>
+
+            <div class="card-footer">
+
+              <span class="fee ${fee === 0 ? "free" : ""}">
+                ${money(fee)}
+              </span>
+
+              <span class="open-label">
+                Open Topic
+              </span>
+
+            </div>
+
+          </article>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* -------------------------------------------------------
+   OPEN TOPIC
+------------------------------------------------------- */
+
+async function openTopic(topicId) {
+
+  if (!currentSubject) {
+    return;
+  }
+
+
+  topicsArea.innerHTML = `
+    <div class="status">
+      Loading learning content...
+    </div>
+  `;
+
+
+  const topicResult =
+    await sb
       .from("subject_topics")
       .select("*")
       .eq("id", topicId)
-      .eq("subject_id", currentSubject.id)
       .eq("published", true)
       .single();
 
-    if (topicResult.error) {
 
-      showError(
-        topicsArea,
-        "Unable to open topic: " +
-        topicResult.error.message
-      );
+  if (topicResult.error) {
 
-      return;
+    showError(
+      topicsArea,
+      "Unable to open topic: " +
+      topicResult.error.message
+    );
 
-    }
+    return;
 
-    const topic =
-      topicResult.data;
+  }
 
-    const lessonResult = await sb
+
+  const topic =
+    topicResult.data;
+
+
+  const lessonResult =
+    await sb
       .from("ls_lessons")
       .select("*")
       .eq("topic_id", topic.id)
       .eq("published", true)
       .order("id", { ascending: true });
 
-    console.log("Lesson result:", lessonResult);
 
-    if (lessonResult.error) {
+  console.log(
+    "LESSONS:",
+    lessonResult
+  );
 
-      showError(
-        topicsArea,
-        "Unable to load learning content: " +
-        lessonResult.error.message
-      );
 
-      return;
+  if (lessonResult.error) {
 
-    }
+    showError(
+      topicsArea,
+      "Unable to load learning content: " +
+      lessonResult.error.message
+    );
 
-    const lessons =
-      lessonResult.data || [];
+    return;
 
-    if (!lessons.length) {
+  }
 
-      topicsArea.innerHTML = `
-        <div class="card">
 
-          <h3>
-            ${escapeHtml(topic.title)}
-          </h3>
+  const lessons =
+    lessonResult.data || [];
 
-          <div class="learning-box">
 
-            <strong>
-              Learning Content
-            </strong>
-
-            <p>
-              This topic is published, but no lesson
-              has been connected to it yet.
-            </p>
-
-          </div>
-
-        </div>
-      `;
-
-      return;
-
-    }
+  if (!lessons.length) {
 
     topicsArea.innerHTML = `
+
       <div class="card">
 
         <h3>
           ${escapeHtml(topic.title)}
         </h3>
 
-        <p>
-          Learning Content
-        </p>
+        <div class="learning-box">
 
-        ${lessons.map((lesson, index) => {
+          <strong>
+            Learning Content
+          </strong>
 
-          return `
-            <div class="learning-box">
+          <p>
+            This topic is published, but no lesson
+            has been connected to it yet.
+          </p>
 
-              <h3 class="lesson-title">
-                ${index + 1}.
-                ${escapeHtml(lesson.title)}
-              </h3>
+        </div>
 
-              ${
-                lesson.description
-                ? `
-                  <p>
-                    ${escapeHtml(lesson.description)}
-                  </p>
-                `
-                : ""
-              }
+      </div>
 
-              ${
-                lesson.video_url
-                ? `
-                  <video
-                    class="lesson-video"
-                    controls
-                    playsinline
-                    preload="metadata"
+    `;
+
+    return;
+
+  }
+
+
+  topicsArea.innerHTML = `
+
+    <div class="card">
+
+      <h3>
+        ${escapeHtml(topic.title)}
+      </h3>
+
+      <p>
+        Learning Content
+      </p>
+
+      ${lessons.map((lesson, index) => {
+
+        return `
+
+          <div class="learning-box">
+
+            <h3 class="lesson-title">
+              ${index + 1}.
+              ${escapeHtml(lesson.title)}
+            </h3>
+
+            ${
+              lesson.description
+              ? `
+                <p>
+                  ${escapeHtml(lesson.description)}
+                </p>
+              `
+              : ""
+            }
+
+
+            ${
+              lesson.video_url
+              ? `
+                <video
+                  class="lesson-video"
+                  controls
+                  playsinline
+                  preload="metadata"
+                >
+
+                  <source
+                    src="${escapeHtml(lesson.video_url)}"
+                    type="video/mp4"
                   >
-                    <source
-                      src="${escapeHtml(lesson.video_url)}"
-                      type="video/mp4"
-                    >
-                    Your browser does not support video playback.
-                  </video>
-                `
-                : `
-                  <div class="status">
-                    Video will be available soon.
-                  </div>
-                `
-              }
 
-              ${
-                lesson.pdf_url
-                ? `
-                  <p style="margin-top:15px;">
-                    <a
-                      href="${escapeHtml(lesson.pdf_url)}"
-                      target="_blank"
-                      rel="noopener"
-                      style="
-                        color:#2457a6;
-                        font-weight:700;
-                        text-decoration:none;
-                      "
-                    >
-                      Open Study Material
-                    </a>
-                  </p>
-                `
-                : ""
-              }
+                  Your browser does not support
+                  video playback.
+
+                </video>
+              `
+              : `
+                <div class="status">
+                  Video will be available soon.
+                </div>
+              `
+            }
+
+
+            ${
+              lesson.pdf_url
+              ? `
+                <p style="margin-top:15px;">
+
+                  <a
+                    href="${escapeHtml(lesson.pdf_url)}"
+                    target="_blank"
+                    rel="noopener"
+                    style="
+                      color:#2457a6;
+                      font-weight:700;
+                      text-decoration:none;
+                    "
+                  >
+                    Open Study Material
+                  </a>
+
+                </p>
+              `
+              : ""
+            }
+
+          </div>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* -------------------------------------------------------
+   TEST SERIES
+------------------------------------------------------- */
+
+async function loadTestSeries() {
+
+  testsArea.innerHTML = `
+    <div class="status">
+      Loading test series...
+    </div>
+  `;
+
+
+  const result =
+    await sb
+      .from("ls_test_series")
+      .select("*")
+      .eq("published", true);
+
+
+  console.log(
+    "TEST SERIES:",
+    result
+  );
+
+
+  if (result.error) {
+
+    showEmpty(
+      testsArea,
+      "Test Series Coming Soon",
+      "Admin can publish test series from the Admin panel."
+    );
+
+    return;
+
+  }
+
+
+  const series =
+    result.data || [];
+
+
+  if (!series.length) {
+
+    showEmpty(
+      testsArea,
+      "Test Series Coming Soon",
+      "Admin has not published any test series yet."
+    );
+
+    return;
+
+  }
+
+
+  testsArea.innerHTML = `
+
+    <div class="card-grid">
+
+      ${series.map(item => {
+
+        const price =
+          Number(item.price || 0);
+
+
+        return `
+
+          <article
+            class="card test-card"
+            onclick="openTestSeries(${item.id})"
+          >
+
+            <div class="test-icon">
+              T
+            </div>
+
+            <h3>
+              ${escapeHtml(item.title)}
+            </h3>
+
+            <p>
+              ${escapeHtml(
+                item.description ||
+                "Structured examination practice and evaluation."
+              )}
+            </p>
+
+            <div class="card-footer">
+
+              <span class="fee ${price === 0 ? "free" : ""}">
+                ${money(price)}
+              </span>
+
+              <span class="open-label">
+                View Tests
+              </span>
 
             </div>
-          `;
 
-        }).join("")}
+          </article>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* -------------------------------------------------------
+   OPEN TEST SERIES
+------------------------------------------------------- */
+
+async function openTestSeries(seriesId) {
+
+  const result =
+    await sb
+      .from("ls_test_series")
+      .select("*")
+      .eq("id", seriesId)
+      .eq("published", true)
+      .single();
+
+
+  if (result.error) {
+
+    showError(
+      testsArea,
+      "Unable to open test series: " +
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  const series =
+    result.data;
+
+
+  coursesSection.classList.add("hidden");
+  subjectsSection.classList.add("hidden");
+  topicsSection.classList.add("hidden");
+
+  testsSection.classList.remove("hidden");
+
+  breadcrumb.style.display = "block";
+
+
+  testsSection.querySelector(
+    ".section-header h2"
+  ).textContent =
+    series.title;
+
+
+  testsSection.querySelector(
+    ".section-header p"
+  ).textContent =
+    "Test Series Fee: " +
+    money(series.price);
+
+
+  testsArea.innerHTML = `
+
+    <div class="card">
+
+      <div class="test-icon">
+        T
+      </div>
+
+      <h3>
+        ${escapeHtml(series.title)}
+      </h3>
+
+      <p>
+        ${escapeHtml(
+          series.description ||
+          "Test series details will be available here."
+        )}
+      </p>
+
+      <div class="card-footer">
+
+        <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
+          ${money(series.price)}
+        </span>
+
+        <span class="open-label">
+          Test Series
+        </span>
 
       </div>
-    `;
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    </div>
 
-  }
+  `;
 
-  async function loadTestSeries() {
 
-    try {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 
-      testsArea.innerHTML = `
-        <div class="status">
-          Loading test series...
-        </div>
-      `;
+}
 
-      const result =
-        await sb
-          .from("ls_test_series")
-          .select("*")
-          .eq("published", true);
 
-      console.log("Test series result:", result);
+/* -------------------------------------------------------
+   BACK
+------------------------------------------------------- */
 
-      if (result.error) {
+backButton.onclick = function() {
 
-        showEmpty(
-          testsArea,
-          "Test Series",
-          "Test series will appear here when published by Admin."
-        );
 
-        return;
+  if (!topicsSection.classList.contains("hidden")) {
 
-      }
+    if (currentCourse) {
 
-      const series =
-        result.data || [];
-
-      if (!series.length) {
-
-        showEmpty(
-          testsArea,
-          "Test Series Coming Soon",
-          "Admin has not published any test series yet."
-        );
-
-        return;
-
-      }
-
-      testsArea.innerHTML = `
-        <div class="card-grid">
-
-          ${series.map(item => {
-
-            const price =
-              Number(item.price || 0);
-
-            return `
-              <article
-                class="card test-card"
-                onclick="openTestSeries(${item.id})"
-              >
-
-                <div class="test-icon">
-                  T
-                </div>
-
-                <h3>
-                  ${escapeHtml(item.title)}
-                </h3>
-
-                <p>
-                  ${escapeHtml(
-                    item.description ||
-                    "Structured examination practice and evaluation."
-                  )}
-                </p>
-
-                <div class="card-footer">
-
-                  <span class="fee ${price === 0 ? "free" : ""}">
-                    ${money(price)}
-                  </span>
-
-                  <span class="open-label">
-                    View Tests
-                  </span>
-
-                </div>
-
-              </article>
-            `;
-
-          }).join("")}
-
-        </div>
-      `;
-
-    } catch (error) {
-
-      console.error("loadTestSeries error:", error);
-
-      showError(
-        testsArea,
-        "Test series error: " + error.message
-      );
+      openCourse(currentCourse.id);
 
     }
 
+    return;
+
   }
 
-  async function openTestSeries(seriesId) {
 
-    const result =
-      await sb
-        .from("ls_test_series")
-        .select("*")
-        .eq("id", seriesId)
-        .eq("published", true)
-        .single();
+  if (!subjectsSection.classList.contains("hidden")) {
 
-    if (result.error) {
-
-      showError(
-        testsArea,
-        "Unable to open test series: " +
-        result.error.message
-      );
-
-      return;
-
-    }
-
-    const series =
-      result.data;
-
-    coursesSection.classList.add("hidden");
     subjectsSection.classList.add("hidden");
-    topicsSection.classList.add("hidden");
-
-    testsSection.classList.remove("hidden");
-
-    breadcrumb.style.display = "block";
-
-    testsSection.querySelector(
-      ".section-header h2"
-    ).textContent =
-      series.title;
-
-    testsSection.querySelector(
-      ".section-header p"
-    ).textContent =
-      "Test Series Fee: " +
-      money(series.price);
-
-    testsArea.innerHTML = `
-      <div class="card">
-
-        <div class="test-icon">
-          T
-        </div>
-
-        <h3>
-          ${escapeHtml(series.title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(
-            series.description ||
-            "Test series details will be available here."
-          )}
-        </p>
-
-        <div class="card-footer">
-
-          <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
-            ${money(series.price)}
-          </span>
-
-          <span class="open-label">
-            Test Series
-          </span>
-
-        </div>
-
-      </div>
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  }
-
-  backButton.onclick = function() {
-
-    if (!topicsSection.classList.contains("hidden")) {
-
-      if (currentCourse) {
-        openCourse(currentCourse.id);
-      }
-
-      return;
-    }
-
-    if (!subjectsSection.classList.contains("hidden")) {
-
-      subjectsSection.classList.add("hidden");
-      coursesSection.classList.remove("hidden");
-      testsSection.classList.remove("hidden");
-
-      breadcrumb.style.display = "none";
-
-      currentCourse = null;
-      currentSubject = null;
-
-      testsSection.querySelector(
-        ".section-header h2"
-      ).textContent = "Test Series";
-
-      testsSection.querySelector(
-        ".section-header p"
-      ).textContent =
-        "Practice with structured tests designed for competitive examinations.";
-
-      return;
-    }
 
     coursesSection.classList.remove("hidden");
+
     testsSection.classList.remove("hidden");
-    subjectsSection.classList.add("hidden");
-    topicsSection.classList.add("hidden");
 
     breadcrumb.style.display = "none";
 
     currentCourse = null;
     currentSubject = null;
 
-    loadCourses();
-    loadTestSeries();
-
-  };
-
-  async function boot() {
-
-    console.log("Booting LakshyaSetu...");
-
-    await Promise.all([
-      loadCourses(),
-      loadTestSeries()
-    ]);
-
-    console.log("LakshyaSetu boot complete.");
+    return;
 
   }
 
-  boot();
+
+  coursesSection.classList.remove("hidden");
+
+  testsSection.classList.remove("hidden");
+
+  subjectsSection.classList.add("hidden");
+
+  topicsSection.classList.add("hidden");
+
+  breadcrumb.style.display = "none";
+
+  currentCourse = null;
+  currentSubject = null;
+
+};
+
+
+/* -------------------------------------------------------
+   BOOT
+------------------------------------------------------- */
+
+async function boot() {
+
+  console.log("Booting LakshyaSetu...");
+
+  await Promise.all([
+    loadCourses(),
+    loadTestSeries()
+  ]);
+
+  console.log(
+    "LakshyaSetu boot complete."
+  );
+
+}
+
+
+boot();
 
 </script>
 

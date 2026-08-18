@@ -253,7 +253,20 @@
       font-size: 13px;
     }
 
+    .learning-box {
+      margin-top: 22px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
+    }
+
+    .learning-box p {
+      margin-top: 8px;
+    }
+
     @media (max-width: 650px) {
+
       .top {
         align-items: flex-start;
         flex-direction: column;
@@ -275,9 +288,12 @@
       .card-grid {
         grid-template-columns: 1fr;
       }
+
     }
   </style>
+
 </head>
+
 
 <body>
 
@@ -289,15 +305,20 @@
   </div>
 
   <div class="top-actions">
+
     <a class="nav-btn" href="login.html">
       Student Login
     </a>
+
   </div>
 
 </header>
 
 
 <main class="wrap">
+
+
+  <!-- HERO -->
 
   <section class="hero">
 
@@ -312,6 +333,8 @@
 
   </section>
 
+
+  <!-- BACK BUTTON -->
 
   <div id="breadcrumb" class="breadcrumb">
 
@@ -418,12 +441,17 @@
   </section>
 
 
+  <!-- FOOTER -->
+
   <footer class="footer">
     LakshyaSetu © 2026. All rights reserved.
   </footer>
 
+
 </main>
 
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -524,15 +552,11 @@
   }
 
 
+  /* =========================================================
+     COURSE FEE
+  ========================================================= */
+
   function getCourseFee(course) {
-
-    /*
-      Supports the current fee naming used
-      by the LakshyaSetu course structure.
-
-      If Admin changes the fee in the database,
-      this page will read the changed value.
-    */
 
     if (
       course.current_fee !== null &&
@@ -567,15 +591,11 @@
   }
 
 
+  /* =========================================================
+     SUBJECT FEE
+  ========================================================= */
+
   function getSubjectFee(subject) {
-
-    /*
-      Subject fee is expected to be controlled
-      by Admin.
-
-      Multiple common field names are supported
-      so we don't break the existing database.
-    */
 
     if (
       subject.current_fee !== null &&
@@ -609,6 +629,10 @@
 
   }
 
+
+  /* =========================================================
+     TOPIC FEE
+  ========================================================= */
 
   function getTopicFee(topic) {
 
@@ -645,6 +669,10 @@
   }
 
 
+  /* =========================================================
+     ERROR
+  ========================================================= */
+
   function showError(container, message) {
 
     container.innerHTML = `
@@ -655,6 +683,10 @@
 
   }
 
+
+  /* =========================================================
+     EMPTY
+  ========================================================= */
 
   function showEmpty(container, title, text) {
 
@@ -676,6 +708,45 @@
 
 
   /* =========================================================
+     SORT HELPER
+     
+     This does NOT depend on database columns.
+     If sort_order/display_order exists, it uses it.
+     Otherwise it keeps the normal database order.
+  ========================================================= */
+
+  function sortItems(items) {
+
+    return [...items].sort((a, b) => {
+
+      const aOrder =
+        Number(
+          a.sort_order ??
+          a.display_order ??
+          a.order_index ??
+          999999
+        );
+
+      const bOrder =
+        Number(
+          b.sort_order ??
+          b.display_order ??
+          b.order_index ??
+          999999
+        );
+
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+
+      return Number(a.id || 0) - Number(b.id || 0);
+
+    });
+
+  }
+
+
+  /* =========================================================
      LOAD COURSES
   ========================================================= */
 
@@ -689,12 +760,11 @@
 
 
     /*
-      Only published courses are shown.
+      IMPORTANT
 
-      IMPORTANT:
-      We do NOT use "archived" here because
-      that column does not exist in the current
-      courses table.
+      Current courses table does NOT use archived.
+
+      Therefore only published is checked.
     */
 
     const result = await sb
@@ -832,14 +902,25 @@
     `;
 
 
+    /*
+      IMPORTANT FIX
+
+      We do NOT use:
+
+      .order("display_order")
+
+      because display_order does not exist
+      in the current course_subjects table.
+
+      We simply fetch the published subjects
+      and sort them safely in JavaScript.
+    */
+
     const result = await sb
       .from("course_subjects")
       .select("*")
       .eq("course_id", course.id)
-      .eq("published", true)
-      .order("display_order", {
-        ascending: true
-      });
+      .eq("published", true);
 
 
     if (result.error) {
@@ -856,7 +937,7 @@
 
 
     const subjects =
-      result.data || [];
+      sortItems(result.data || []);
 
 
     if (!subjects.length) {
@@ -970,6 +1051,7 @@
 
 
     subjectsSection.classList.add("hidden");
+
     topicsSection.classList.remove("hidden");
 
 
@@ -985,15 +1067,13 @@
 
 
     /*
-      Current LakshyaSetu structure:
+      IMPORTANT
 
       subject_topics.subject_id
       points to
       course_subjects.id
-
-      Therefore we query using
-      courseSubjectId.
     */
+
 
     const topicsResult =
       await sb
@@ -1003,10 +1083,7 @@
           "subject_id",
           currentSubject.id
         )
-        .eq("published", true)
-        .order("sort_order", {
-          ascending: true
-        });
+        .eq("published", true);
 
 
     if (topicsResult.error) {
@@ -1023,7 +1100,7 @@
 
 
     const topics =
-      topicsResult.data || [];
+      sortItems(topicsResult.data || []);
 
 
     if (!topics.length) {
@@ -1104,16 +1181,6 @@
     }
 
 
-    /*
-      At this stage we intentionally show the
-      topic information and learning content
-      entry point.
-
-      Video/PDF access will be connected through
-      the existing topic_videos / lesson structure.
-    */
-
-
     const result =
       await sb
         .from("subject_topics")
@@ -1163,21 +1230,14 @@
           </strong>
         </p>
 
-        <div
-          style="
-            margin-top:22px;
-            padding:20px;
-            border-radius:12px;
-            background:#f7f9fc;
-            border:1px solid #dfe5ee;
-          "
-        >
+
+        <div class="learning-box">
 
           <strong>
             Learning Content
           </strong>
 
-          <p style="margin-top:8px;">
+          <p>
             Video lessons, study material and
             other learning resources for this
             topic will be available here according
@@ -1185,6 +1245,7 @@
           </p>
 
         </div>
+
 
         <div class="card-footer">
 
@@ -1225,31 +1286,24 @@
 
 
     /*
-      Existing LakshyaSetu test-series table:
-
-      ls_test_series
-
-      We read published series only.
-
-      Admin will control these records.
+      We intentionally do NOT use created_at
+      in the database query because we want
+      this page to work even if that column
+      is not present.
     */
-
 
     const result =
       await sb
         .from("ls_test_series")
         .select("*")
-        .eq("published", true)
-        .order("created_at", {
-          ascending: false
-        });
+        .eq("published", true);
 
 
     if (result.error) {
 
       /*
-        Test series may not have been created
-        yet. We don't break the homepage.
+        Test series table may not have records yet.
+        Homepage should continue working.
       */
 
       showEmpty(
@@ -1286,10 +1340,7 @@
         ${series.map(item => {
 
           const price =
-            Number(
-              item.price ||
-              0
-            );
+            Number(item.price || 0);
 
           return `
 
@@ -1413,7 +1464,7 @@
 
         <div class="card-footer">
 
-          <span class="fee">
+          <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
             ${money(series.price)}
           </span>
 
@@ -1441,6 +1492,7 @@
   ========================================================= */
 
   backButton.onclick = function() {
+
 
     /*
       Topic page -> Subject page
@@ -1483,6 +1535,23 @@
 
       currentSubject = null;
 
+
+      /*
+        Reset test-series heading.
+      */
+
+      testsSection.querySelector(
+        ".section-header h2"
+      ).textContent =
+        "Test Series";
+
+
+      testsSection.querySelector(
+        ".section-header p"
+      ).textContent =
+        "Practice with structured tests designed for competitive examinations.";
+
+
       window.scrollTo({
         top: 0,
         behavior: "smooth"
@@ -1507,9 +1576,28 @@
 
     breadcrumb.style.display = "none";
 
+
+    testsSection.querySelector(
+      ".section-header h2"
+    ).textContent =
+      "Test Series";
+
+
+    testsSection.querySelector(
+      ".section-header p"
+    ).textContent =
+      "Practice with structured tests designed for competitive examinations.";
+
+
+    currentCourse = null;
+
+    currentSubject = null;
+
+
     loadCourses();
 
     loadTestSeries();
+
 
     window.scrollTo({
       top: 0,
@@ -1554,4 +1642,5 @@
 </script>
 
 </body>
+
 </html>

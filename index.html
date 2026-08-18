@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -288,7 +289,9 @@
   </div>
 
   <div class="top-actions">
-    <a class="nav-btn" href="login.html">Student Login</a>
+    <a class="nav-btn" href="login.html">
+      Student Login
+    </a>
   </div>
 
 </header>
@@ -297,16 +300,25 @@
 <main class="wrap">
 
   <section class="hero">
-    <h1>Your Civil Services Journey Starts Here</h1>
+
+    <h1>
+      Your Civil Services Journey Starts Here
+    </h1>
+
     <p>
       Structured courses, subject-wise learning, topic-wise classes
       and test series designed for serious competitive examination preparation.
     </p>
+
   </section>
 
 
   <div id="breadcrumb" class="breadcrumb">
-    <button id="backButton">← Back</button>
+
+    <button id="backButton">
+      ← Back
+    </button>
+
   </div>
 
 
@@ -315,14 +327,23 @@
   <section id="coursesSection" class="section">
 
     <div class="section-header">
-      <h2>Courses</h2>
-      <p>Select an examination to explore its subjects.</p>
+
+      <h2>
+        Courses
+      </h2>
+
+      <p>
+        Select an examination to explore its subjects.
+      </p>
+
     </div>
 
     <div id="coursesArea">
+
       <div class="status">
         Loading courses...
       </div>
+
     </div>
 
   </section>
@@ -333,10 +354,15 @@
   <section id="subjectsSection" class="section hidden">
 
     <div class="section-header">
-      <h2 id="subjectsTitle">Subjects</h2>
+
+      <h2 id="subjectsTitle">
+        Subjects
+      </h2>
+
       <p id="subjectsDescription">
         Select a subject to explore topics.
       </p>
+
     </div>
 
     <div id="subjectsArea"></div>
@@ -349,10 +375,15 @@
   <section id="topicsSection" class="section hidden">
 
     <div class="section-header">
-      <h2 id="topicsTitle">Topics</h2>
+
+      <h2 id="topicsTitle">
+        Topics
+      </h2>
+
       <p>
         Select a topic to view its learning content.
       </p>
+
     </div>
 
     <div id="topicsArea"></div>
@@ -365,16 +396,23 @@
   <section id="testsSection" class="section">
 
     <div class="section-header">
-      <h2>Test Series</h2>
+
+      <h2>
+        Test Series
+      </h2>
+
       <p>
         Practice with structured tests designed for competitive examinations.
       </p>
+
     </div>
 
     <div id="testsArea">
+
       <div class="status">
         Loading test series...
       </div>
+
     </div>
 
   </section>
@@ -388,7 +426,9 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="config.js"></script>
+
 
 <script>
 
@@ -490,9 +530,8 @@
       Supports the current fee naming used
       by the LakshyaSetu course structure.
 
-      If the Admin changes the fee in the
-      database, this page will read the
-      changed value automatically.
+      If Admin changes the fee in the database,
+      this page will read the changed value.
     */
 
     if (
@@ -621,8 +660,15 @@
 
     container.innerHTML = `
       <div class="status empty">
-        <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(text)}</p>
+
+        <h3>
+          ${escapeHtml(title)}
+        </h3>
+
+        <p>
+          ${escapeHtml(text)}
+        </p>
+
       </div>
     `;
 
@@ -641,17 +687,20 @@
       </div>
     `;
 
+
     /*
       Only published courses are shown.
 
-      Admin controls publication.
+      IMPORTANT:
+      We do NOT use "archived" here because
+      that column does not exist in the current
+      courses table.
     */
 
     const result = await sb
       .from("courses")
       .select("*")
       .eq("published", true)
-      .eq("archived", false)
       .order("id", {
         ascending: true
       });
@@ -795,12 +844,6 @@
 
     if (result.error) {
 
-      /*
-        Some older structures may use sort_order.
-        We only show the database error if the
-        primary query fails.
-      */
-
       showError(
         subjectsArea,
         "Unable to load subjects: " +
@@ -876,6 +919,7 @@
       </div>
     `;
 
+
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -941,8 +985,6 @@
 
 
     /*
-      IMPORTANT
-
       Current LakshyaSetu structure:
 
       subject_topics.subject_id
@@ -952,7 +994,6 @@
       Therefore we query using
       courseSubjectId.
     */
-
 
     const topicsResult =
       await sb
@@ -1431,12 +1472,15 @@
     ) {
 
       subjectsSection.classList.add("hidden");
+
       coursesSection.classList.remove("hidden");
+
       testsSection.classList.remove("hidden");
 
       breadcrumb.style.display = "none";
 
       currentCourse = null;
+
       currentSubject = null;
 
       window.scrollTo({
@@ -1454,13 +1498,17 @@
     */
 
     coursesSection.classList.remove("hidden");
+
     testsSection.classList.remove("hidden");
+
     subjectsSection.classList.add("hidden");
+
     topicsSection.classList.add("hidden");
 
     breadcrumb.style.display = "none";
 
     loadCourses();
+
     loadTestSeries();
 
     window.scrollTo({
@@ -1502,7 +1550,6 @@
 
 
   boot();
-
 
 </script>
 

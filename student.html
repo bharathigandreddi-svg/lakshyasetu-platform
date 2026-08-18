@@ -396,31 +396,18 @@
     </button>
   </div>
 
-  <!-- COURSES -->
-
   <section id="coursesSection" class="section">
 
     <div class="section-header">
-
       <h2>Courses</h2>
-
-      <p>
-        Select an examination to explore its subjects.
-      </p>
-
+      <p>Select an examination to explore its subjects.</p>
     </div>
 
     <div id="coursesArea">
-
-      <div class="status">
-        Loading courses...
-      </div>
-
+      <div class="status">Loading courses...</div>
     </div>
 
   </section>
-
-  <!-- SUBJECTS -->
 
   <section id="subjectsSection" class="section hidden">
 
@@ -440,8 +427,6 @@
 
   </section>
 
-  <!-- TOPICS -->
-
   <section id="topicsSection" class="section hidden">
 
     <div class="section-header">
@@ -460,8 +445,6 @@
 
   </section>
 
-  <!-- TEST SERIES -->
-
   <section id="testsSection" class="section">
 
     <div class="section-header">
@@ -477,11 +460,7 @@
     </div>
 
     <div id="testsArea">
-
-      <div class="status">
-        Loading test series...
-      </div>
-
+      <div class="status">Loading test series...</div>
     </div>
 
   </section>
@@ -531,51 +510,24 @@ const sb = window.supabase.createClient(
    DOM
 ------------------------------------------------------- */
 
-const coursesSection =
-  document.getElementById("coursesSection");
+const coursesSection = document.getElementById("coursesSection");
+const subjectsSection = document.getElementById("subjectsSection");
+const topicsSection = document.getElementById("topicsSection");
+const testsSection = document.getElementById("testsSection");
 
-const subjectsSection =
-  document.getElementById("subjectsSection");
+const coursesArea = document.getElementById("coursesArea");
+const subjectsArea = document.getElementById("subjectsArea");
+const topicsArea = document.getElementById("topicsArea");
+const testsArea = document.getElementById("testsArea");
 
-const topicsSection =
-  document.getElementById("topicsSection");
+const subjectsTitle = document.getElementById("subjectsTitle");
+const subjectsDescription = document.getElementById("subjectsDescription");
+const topicsTitle = document.getElementById("topicsTitle");
+const testsTitle = document.getElementById("testsTitle");
+const testsDescription = document.getElementById("testsDescription");
 
-const testsSection =
-  document.getElementById("testsSection");
-
-const coursesArea =
-  document.getElementById("coursesArea");
-
-const subjectsArea =
-  document.getElementById("subjectsArea");
-
-const topicsArea =
-  document.getElementById("topicsArea");
-
-const testsArea =
-  document.getElementById("testsArea");
-
-const subjectsTitle =
-  document.getElementById("subjectsTitle");
-
-const subjectsDescription =
-  document.getElementById("subjectsDescription");
-
-const topicsTitle =
-  document.getElementById("topicsTitle");
-
-const testsTitle =
-  document.getElementById("testsTitle");
-
-const testsDescription =
-  document.getElementById("testsDescription");
-
-const breadcrumb =
-  document.getElementById("breadcrumb");
-
-const backButton =
-  document.getElementById("backButton");
-
+const breadcrumb = document.getElementById("breadcrumb");
+const backButton = document.getElementById("backButton");
 
 let courses = [];
 let currentCourse = null;
@@ -599,7 +551,6 @@ function escapeHtml(value) {
 
 }
 
-
 function money(value) {
 
   const amount = Number(value || 0);
@@ -612,75 +563,38 @@ function money(value) {
 
 }
 
-
 function getCourseFee(course) {
 
-  if (course.course_fee != null) {
-    return Number(course.course_fee);
-  }
-
-  if (course.current_fee != null) {
-    return Number(course.current_fee);
-  }
-
-  if (course.price != null) {
-    return Number(course.price);
-  }
-
-  if (course.fee != null) {
-    return Number(course.fee);
-  }
+  if (course.course_fee != null) return Number(course.course_fee);
+  if (course.current_fee != null) return Number(course.current_fee);
+  if (course.price != null) return Number(course.price);
+  if (course.fee != null) return Number(course.fee);
 
   return 0;
 
 }
-
 
 function getSubjectFee(subject) {
 
-  if (subject.subject_fee != null) {
-    return Number(subject.subject_fee);
-  }
-
-  if (subject.current_fee != null) {
-    return Number(subject.current_fee);
-  }
-
-  if (subject.price != null) {
-    return Number(subject.price);
-  }
-
-  if (subject.fee != null) {
-    return Number(subject.fee);
-  }
+  if (subject.subject_fee != null) return Number(subject.subject_fee);
+  if (subject.current_fee != null) return Number(subject.current_fee);
+  if (subject.price != null) return Number(subject.price);
+  if (subject.fee != null) return Number(subject.fee);
 
   return 0;
 
 }
-
 
 function getTopicFee(topic) {
 
-  if (topic.topic_fee != null) {
-    return Number(topic.topic_fee);
-  }
-
-  if (topic.current_fee != null) {
-    return Number(topic.current_fee);
-  }
-
-  if (topic.price != null) {
-    return Number(topic.price);
-  }
-
-  if (topic.fee != null) {
-    return Number(topic.fee);
-  }
+  if (topic.topic_fee != null) return Number(topic.topic_fee);
+  if (topic.current_fee != null) return Number(topic.current_fee);
+  if (topic.price != null) return Number(topic.price);
+  if (topic.fee != null) return Number(topic.fee);
 
   return 0;
 
 }
-
 
 function showError(container, message) {
 
@@ -692,45 +606,34 @@ function showError(container, message) {
 
 }
 
-
 function showEmpty(container, title, text) {
 
   container.innerHTML = `
     <div class="status empty">
-
-      <h3>
-        ${escapeHtml(title)}
-      </h3>
-
-      <p>
-        ${escapeHtml(text)}
-      </p>
-
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(text)}</p>
     </div>
   `;
 
 }
 
-
 function sortItems(items) {
 
   return [...items].sort((a, b) => {
 
-    const aOrder =
-      Number(
-        a.sort_order ??
-        a.display_order ??
-        a.order_index ??
-        999999
-      );
+    const aOrder = Number(
+      a.sort_order ??
+      a.display_order ??
+      a.order_index ??
+      999999
+    );
 
-    const bOrder =
-      Number(
-        b.sort_order ??
-        b.display_order ??
-        b.order_index ??
-        999999
-      );
+    const bOrder = Number(
+      b.sort_order ??
+      b.display_order ??
+      b.order_index ??
+      999999
+    );
 
     if (aOrder !== bOrder) {
       return aOrder - bOrder;
@@ -742,13 +645,109 @@ function sortItems(items) {
 
 }
 
-
 function resetSections() {
 
   coursesSection.classList.add("hidden");
   subjectsSection.classList.add("hidden");
   topicsSection.classList.add("hidden");
   testsSection.classList.add("hidden");
+
+}
+
+
+/* -------------------------------------------------------
+   SUBJECT QUERY FIX
+   First use published subjects.
+   If none are returned, use all subjects connected to the
+   selected course. This protects against the Student/Admin
+   editor changing the published flag.
+------------------------------------------------------- */
+
+async function getCourseSubjects(courseId) {
+
+  let result = await sb
+    .from("course_subjects")
+    .select("*")
+    .eq("course_id", courseId)
+    .eq("published", true);
+
+  if (result.error) {
+    console.log("PUBLISHED SUBJECT QUERY:", result.error);
+  }
+
+  if (!result.error && result.data && result.data.length) {
+    return {
+      data: sortItems(result.data),
+      error: null
+    };
+  }
+
+  const fallback = await sb
+    .from("course_subjects")
+    .select("*")
+    .eq("course_id", courseId);
+
+  console.log("SUBJECT FALLBACK:", fallback);
+
+  if (fallback.error) {
+    return {
+      data: [],
+      error: fallback.error
+    };
+  }
+
+  return {
+    data: sortItems(fallback.data || []),
+    error: null
+  };
+
+}
+
+
+/* -------------------------------------------------------
+   TOPIC QUERY FIX
+   First use published topics.
+   If none are returned, use all topics connected to the
+   selected subject.
+------------------------------------------------------- */
+
+async function getCourseTopics(courseSubjectId) {
+
+  let result = await sb
+    .from("course_topics")
+    .select("*")
+    .eq("course_subject_id", courseSubjectId)
+    .eq("published", true);
+
+  if (result.error) {
+    console.log("PUBLISHED TOPIC QUERY:", result.error);
+  }
+
+  if (!result.error && result.data && result.data.length) {
+    return {
+      data: sortItems(result.data),
+      error: null
+    };
+  }
+
+  const fallback = await sb
+    .from("course_topics")
+    .select("*")
+    .eq("course_subject_id", courseSubjectId);
+
+  console.log("TOPIC FALLBACK:", fallback);
+
+  if (fallback.error) {
+    return {
+      data: [],
+      error: fallback.error
+    };
+  }
+
+  return {
+    data: sortItems(fallback.data || []),
+    error: null
+  };
 
 }
 
@@ -862,25 +861,16 @@ async function loadCourses() {
 
 
 /* -------------------------------------------------------
-   SUBJECT COUNT
-
-   IMPORTANT FIX:
-   Do NOT depend on published=true here.
-   Student editor changes can leave published values
-   inconsistent. We count subjects connected to the course.
+   SUBJECT COUNT FIX
 ------------------------------------------------------- */
 
 async function loadSubjectCount(courseId) {
 
-  const result = await sb
-    .from("course_subjects")
-    .select("id", { count: "exact", head: true })
-    .eq("course_id", courseId);
+  const result = await getCourseSubjects(courseId);
 
-  const element =
-    document.getElementById(
-      "course-count-" + courseId
-    );
+  const element = document.getElementById(
+    "course-count-" + courseId
+  );
 
   if (!element) {
     return;
@@ -888,17 +878,12 @@ async function loadSubjectCount(courseId) {
 
   if (result.error) {
 
-    console.error("SUBJECT COUNT ERROR:", result.error);
-
-    element.textContent =
-      "Subjects available";
-
+    element.textContent = "Subjects available";
     return;
 
   }
 
-  const count =
-    result.count || 0;
+  const count = result.data.length;
 
   element.textContent =
     count +
@@ -909,11 +894,6 @@ async function loadSubjectCount(courseId) {
 
 /* -------------------------------------------------------
    OPEN COURSE
-
-   FIX:
-   course_subjects are loaded using course_id only.
-   The old published=true restriction was preventing
-   subjects from appearing after Student/Admin editing.
 ------------------------------------------------------- */
 
 async function openCourse(courseId) {
@@ -940,8 +920,7 @@ async function openCourse(courseId) {
 
   breadcrumb.style.display = "block";
 
-  subjectsTitle.textContent =
-    course.title;
+  subjectsTitle.textContent = course.title;
 
   subjectsDescription.textContent =
     "Select a subject to explore topics.";
@@ -952,16 +931,7 @@ async function openCourse(courseId) {
     </div>
   `;
 
-  /*
-    IMPORTANT:
-    Do not filter course_subjects by published.
-    The relationship course_id is the important part.
-  */
-
-  const result = await sb
-    .from("course_subjects")
-    .select("*")
-    .eq("course_id", course.id);
+  const result = await getCourseSubjects(course.id);
 
   console.log("COURSE SUBJECTS:", result);
 
@@ -977,8 +947,7 @@ async function openCourse(courseId) {
 
   }
 
-  const subjects =
-    sortItems(result.data || []);
+  const subjects = result.data || [];
 
   if (!subjects.length) {
 
@@ -998,8 +967,7 @@ async function openCourse(courseId) {
 
       ${subjects.map(subject => {
 
-        const fee =
-          getSubjectFee(subject);
+        const fee = getSubjectFee(subject);
 
         return `
 
@@ -1051,16 +1019,6 @@ async function openCourse(courseId) {
 
 /* -------------------------------------------------------
    OPEN SUBJECT
-
-   courses
-       ↓
-   course_subjects
-       ↓
-   course_topics
-
-   FIX:
-   course_topics are loaded using
-   course_subject_id only.
 ------------------------------------------------------- */
 
 async function openSubject(courseSubjectId) {
@@ -1100,14 +1058,11 @@ async function openSubject(courseSubjectId) {
 
   }
 
-  currentSubject =
-    subjectResult.data;
-
+  currentSubject = subjectResult.data;
   currentTopic = null;
 
   subjectsSection.classList.add("hidden");
   topicsSection.classList.remove("hidden");
-  testsSection.classList.add("hidden");
 
   topicsTitle.textContent =
     currentSubject.title;
@@ -1118,16 +1073,8 @@ async function openSubject(courseSubjectId) {
     </div>
   `;
 
-  /*
-    IMPORTANT:
-    Do not filter published here.
-  */
-
   const topicsResult =
-    await sb
-      .from("course_topics")
-      .select("*")
-      .eq("course_subject_id", currentSubject.id);
+    await getCourseTopics(currentSubject.id);
 
   console.log(
     "COURSE TOPICS:",
@@ -1146,8 +1093,7 @@ async function openSubject(courseSubjectId) {
 
   }
 
-  const topics =
-    sortItems(topicsResult.data || []);
+  const topics = topicsResult.data || [];
 
   if (!topics.length) {
 
@@ -1167,8 +1113,7 @@ async function openSubject(courseSubjectId) {
 
       ${topics.map((topic, index) => {
 
-        const fee =
-          getTopicFee(topic);
+        const fee = getTopicFee(topic);
 
         return `
 
@@ -1221,15 +1166,6 @@ async function openSubject(courseSubjectId) {
 
 /* -------------------------------------------------------
    OPEN TOPIC
-
-   course_topics
-       ↓
-   lessons
-
-   FIX:
-   lesson loading uses topic_id.
-   No published restriction so edited lessons
-   continue to appear.
 ------------------------------------------------------- */
 
 async function openTopic(topicId) {
@@ -1269,9 +1205,7 @@ async function openTopic(topicId) {
 
   }
 
-  const topic =
-    topicResult.data;
-
+  const topic = topicResult.data;
   currentTopic = topic;
 
   const lessonResult =
@@ -1279,6 +1213,7 @@ async function openTopic(topicId) {
       .from("lessons")
       .select("*")
       .eq("topic_id", topic.id)
+      .eq("published", true)
       .order("sort_order", { ascending: true });
 
   console.log(
@@ -1298,8 +1233,7 @@ async function openTopic(topicId) {
 
   }
 
-  const lessons =
-    lessonResult.data || [];
+  const lessons = lessonResult.data || [];
 
   if (!lessons.length) {
 
@@ -1318,7 +1252,7 @@ async function openTopic(topicId) {
           </strong>
 
           <p>
-            This topic is available, but no lesson
+            This topic is published, but no lesson
             has been connected to it yet.
           </p>
 
@@ -1470,8 +1404,7 @@ async function loadTestSeries() {
 
   }
 
-  const series =
-    result.data || [];
+  const series = result.data || [];
 
   if (!series.length) {
 
@@ -1568,15 +1501,12 @@ async function openTestSeries(seriesId) {
 
   }
 
-  const series =
-    result.data;
-
+  const series = result.data;
   currentTestSeries = series;
 
   resetSections();
 
   testsSection.classList.remove("hidden");
-
   breadcrumb.style.display = "block";
 
   testsTitle.textContent =
@@ -1618,8 +1548,7 @@ async function openTestSeries(seriesId) {
 
   }
 
-  const tests =
-    testsResult.data || [];
+  const tests = testsResult.data || [];
 
   if (!tests.length) {
 
@@ -1788,8 +1717,7 @@ async function openTest(testId) {
 
   }
 
-  const test =
-    testResult.data;
+  const test = testResult.data;
 
   const questionResult =
     await sb
@@ -1935,8 +1863,6 @@ async function openTest(testId) {
 
 backButton.onclick = function() {
 
-  /* Test opened → return to test series */
-
   if (!testsSection.classList.contains("hidden")) {
 
     if (currentTestSeries) {
@@ -1957,9 +1883,6 @@ backButton.onclick = function() {
 
   }
 
-
-  /* Topic opened → return to topic list */
-
   if (!topicsSection.classList.contains("hidden")) {
 
     if (currentSubject) {
@@ -1974,15 +1897,11 @@ backButton.onclick = function() {
 
   }
 
-
-  /* Subjects opened → return to courses */
-
   if (!subjectsSection.classList.contains("hidden")) {
 
     subjectsSection.classList.add("hidden");
 
     coursesSection.classList.remove("hidden");
-
     testsSection.classList.remove("hidden");
 
     breadcrumb.style.display = "none";
@@ -1994,7 +1913,6 @@ backButton.onclick = function() {
     return;
 
   }
-
 
   coursesSection.classList.remove("hidden");
   testsSection.classList.remove("hidden");

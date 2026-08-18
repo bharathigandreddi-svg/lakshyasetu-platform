@@ -35,6 +35,7 @@
     .brand {
       font-size: 25px;
       font-weight: 800;
+      letter-spacing: .2px;
     }
 
     .brand small {
@@ -49,6 +50,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .nav-btn {
@@ -84,6 +86,7 @@
     .hero h1 {
       margin: 0 0 12px;
       font-size: clamp(28px, 5vw, 44px);
+      color: white;
     }
 
     .hero p {
@@ -264,25 +267,22 @@
     }
 
     .video-box {
-      margin-top: 20px;
+      margin-top: 18px;
     }
 
     .video-box video {
-      width: 100%;
-      max-height: 650px;
       display: block;
+      width: 100%;
+      max-height: 620px;
       border-radius: 12px;
       background: #000;
     }
 
-    .video-title {
-      margin-bottom: 12px;
-      color: #10233f;
-      font-weight: 700;
+    .special-topic {
+      border: 2px solid #2457a6;
     }
 
     @media (max-width: 650px) {
-
       .top {
         align-items: flex-start;
         flex-direction: column;
@@ -308,6 +308,7 @@
   </style>
 </head>
 
+
 <body>
 
 <header class="top">
@@ -325,6 +326,7 @@
 
 </header>
 
+
 <main class="wrap">
 
   <section class="hero">
@@ -340,6 +342,7 @@
 
   </section>
 
+
   <div id="breadcrumb" class="breadcrumb">
 
     <button id="backButton">
@@ -347,6 +350,7 @@
     </button>
 
   </div>
+
 
   <section id="coursesSection" class="section">
 
@@ -372,6 +376,7 @@
 
   </section>
 
+
   <section id="subjectsSection" class="section hidden">
 
     <div class="section-header">
@@ -390,6 +395,7 @@
 
   </section>
 
+
   <section id="topicsSection" class="section hidden">
 
     <div class="section-header">
@@ -407,6 +413,7 @@
     <div id="topicsArea"></div>
 
   </section>
+
 
   <section id="testsSection" class="section">
 
@@ -432,15 +439,18 @@
 
   </section>
 
+
   <footer class="footer">
     LakshyaSetu © 2026. All rights reserved.
   </footer>
 
 </main>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="config.js"></script>
+
 
 <script>
 
@@ -448,6 +458,11 @@ const sb = window.supabase.createClient(
   LAKSHYASETU_CONFIG.supabaseUrl,
   LAKSHYASETU_CONFIG.supabasePublishableKey
 );
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const coursesSection =
   document.getElementById("coursesSection");
@@ -488,10 +503,19 @@ const breadcrumb =
 const backButton =
   document.getElementById("backButton");
 
+
+/* =========================================================
+   STATE
+========================================================= */
+
 let courses = [];
 let currentCourse = null;
 let currentSubject = null;
 
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function escapeHtml(value) {
 
@@ -518,86 +542,115 @@ function money(value) {
 }
 
 
+/* =========================================================
+   FEE HELPERS
+========================================================= */
+
 function getCourseFee(course) {
 
-  if (course.current_fee !== null &&
-      course.current_fee !== undefined) {
+  if (
+    course.current_fee !== null &&
+    course.current_fee !== undefined
+  ) {
     return Number(course.current_fee);
   }
 
-  if (course.price !== null &&
-      course.price !== undefined) {
+  if (
+    course.price !== null &&
+    course.price !== undefined
+  ) {
     return Number(course.price);
   }
 
-  if (course.fee !== null &&
-      course.fee !== undefined) {
+  if (
+    course.fee !== null &&
+    course.fee !== undefined
+  ) {
     return Number(course.fee);
   }
 
-  if (course.original_fee !== null &&
-      course.original_fee !== undefined) {
+  if (
+    course.original_fee !== null &&
+    course.original_fee !== undefined
+  ) {
     return Number(course.original_fee);
   }
 
   return 0;
-
 }
 
 
 function getSubjectFee(subject) {
 
-  if (subject.current_fee !== null &&
-      subject.current_fee !== undefined) {
+  if (
+    subject.current_fee !== null &&
+    subject.current_fee !== undefined
+  ) {
     return Number(subject.current_fee);
   }
 
-  if (subject.price !== null &&
-      subject.price !== undefined) {
+  if (
+    subject.price !== null &&
+    subject.price !== undefined
+  ) {
     return Number(subject.price);
   }
 
-  if (subject.fee !== null &&
-      subject.fee !== undefined) {
+  if (
+    subject.fee !== null &&
+    subject.fee !== undefined
+  ) {
     return Number(subject.fee);
   }
 
-  if (subject.visualized_fee !== null &&
-      subject.visualized_fee !== undefined) {
+  if (
+    subject.visualized_fee !== null &&
+    subject.visualized_fee !== undefined
+  ) {
     return Number(subject.visualized_fee);
   }
 
   return 0;
-
 }
 
 
 function getTopicFee(topic) {
 
-  if (topic.current_fee !== null &&
-      topic.current_fee !== undefined) {
+  if (
+    topic.current_fee !== null &&
+    topic.current_fee !== undefined
+  ) {
     return Number(topic.current_fee);
   }
 
-  if (topic.price !== null &&
-      topic.price !== undefined) {
+  if (
+    topic.price !== null &&
+    topic.price !== undefined
+  ) {
     return Number(topic.price);
   }
 
-  if (topic.fee !== null &&
-      topic.fee !== undefined) {
+  if (
+    topic.fee !== null &&
+    topic.fee !== undefined
+  ) {
     return Number(topic.fee);
   }
 
-  if (topic.video_fee !== null &&
-      topic.video_fee !== undefined) {
+  if (
+    topic.video_fee !== null &&
+    topic.video_fee !== undefined
+  ) {
     return Number(topic.video_fee);
   }
 
   return 0;
-
 }
 
+
+/* =========================================================
+   ERROR
+========================================================= */
 
 function showError(container, message) {
 
@@ -609,6 +662,10 @@ function showError(container, message) {
 
 }
 
+
+/* =========================================================
+   EMPTY
+========================================================= */
 
 function showEmpty(container, title, text) {
 
@@ -628,6 +685,10 @@ function showEmpty(container, title, text) {
 
 }
 
+
+/* =========================================================
+   SORT
+========================================================= */
 
 function sortItems(items) {
 
@@ -660,6 +721,10 @@ function sortItems(items) {
 }
 
 
+/* =========================================================
+   LOAD COURSES
+========================================================= */
+
 async function loadCourses() {
 
   coursesArea.innerHTML = `
@@ -685,7 +750,6 @@ async function loadCourses() {
     );
 
     return;
-
   }
 
   courses = result.data || [];
@@ -699,7 +763,6 @@ async function loadCourses() {
     );
 
     return;
-
   }
 
   coursesArea.innerHTML = `
@@ -752,6 +815,10 @@ async function loadCourses() {
 }
 
 
+/* =========================================================
+   OPEN COURSE
+========================================================= */
+
 async function openCourse(courseId) {
 
   const course =
@@ -803,7 +870,6 @@ async function openCourse(courseId) {
     );
 
     return;
-
   }
 
   const subjects =
@@ -818,7 +884,6 @@ async function openCourse(courseId) {
     );
 
     return;
-
   }
 
   subjectsArea.innerHTML = `
@@ -876,6 +941,10 @@ async function openCourse(courseId) {
 }
 
 
+/* =========================================================
+   OPEN SUBJECT
+========================================================= */
+
 async function openSubject(courseSubjectId) {
 
   if (!currentCourse) {
@@ -902,13 +971,13 @@ async function openSubject(courseSubjectId) {
     );
 
     return;
-
   }
 
   currentSubject =
     result.data;
 
   subjectsSection.classList.add("hidden");
+
   topicsSection.classList.remove("hidden");
 
   topicsTitle.textContent =
@@ -939,11 +1008,51 @@ async function openSubject(courseSubjectId) {
     );
 
     return;
+  }
+
+  let topics =
+    sortItems(topicsResult.data || []);
+
+
+  /* =======================================================
+     SPECIAL FIX
+     
+     Physical Geography lo Latitude and Longitude
+     database row lekunda kuda display cheyyadam.
+  ======================================================= */
+
+  const isPhysicalGeography =
+    String(currentSubject.title || "")
+      .trim()
+      .toLowerCase() === "physical geography";
+
+
+  if (isPhysicalGeography) {
+
+    const alreadyExists =
+      topics.some(topic =>
+        String(topic.title || "")
+          .trim()
+          .toLowerCase() === "latitude and longitude"
+      );
+
+    if (!alreadyExists) {
+
+      topics.push({
+        id: "legacy-latitude-longitude",
+        title: "Latitude and Longitude",
+        description: "Latitude and Longitude video lesson",
+        current_fee: 0,
+        price: 0,
+        fee: 0,
+        is_legacy_lat_long: true,
+        published: true
+      });
+
+    }
 
   }
 
-  const topics =
-    sortItems(topicsResult.data || []);
 
   if (!topics.length) {
 
@@ -954,8 +1063,8 @@ async function openSubject(courseSubjectId) {
     );
 
     return;
-
   }
+
 
   topicsArea.innerHTML = `
     <div class="card-grid">
@@ -965,11 +1074,18 @@ async function openSubject(courseSubjectId) {
         const fee =
           getTopicFee(topic);
 
+        const legacy =
+          topic.is_legacy_lat_long === true;
+
         return `
 
           <article
-            class="card"
-            onclick="openTopic(${topic.id})"
+            class="card ${legacy ? "special-topic" : ""}"
+            onclick="${
+              legacy
+                ? "openLatitudeLongitude()"
+                : `openTopic(${topic.id})`
+            }"
           >
 
             <h3>
@@ -1013,6 +1129,218 @@ async function openSubject(courseSubjectId) {
 }
 
 
+/* =========================================================
+   LATITUDE AND LONGITUDE
+   SPECIAL TOPIC
+========================================================= */
+
+async function openLatitudeLongitude() {
+
+  topicsTitle.textContent =
+    "Latitude and Longitude";
+
+  topicsArea.innerHTML = `
+    <div class="card">
+
+      <h3>
+        Latitude and Longitude
+      </h3>
+
+      <p>
+        Topic-wise learning content
+      </p>
+
+      <div class="learning-box">
+
+        <strong>
+          Learning Content
+        </strong>
+
+        <p>
+          Latitude and Longitude video lesson.
+        </p>
+
+      </div>
+
+      <div id="latLongVideoArea" class="video-box">
+
+        <div class="status">
+          Loading video...
+        </div>
+
+      </div>
+
+      <div class="card-footer">
+
+        <span class="fee free">
+          Free
+        </span>
+
+        <span class="open-label">
+          Video Lesson
+        </span>
+
+      </div>
+
+    </div>
+  `;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+
+  const videoArea =
+    document.getElementById("latLongVideoArea");
+
+
+  /* -------------------------------------------------------
+     First try to find the real database topic.
+     If it exists, use its video_url.
+  ------------------------------------------------------- */
+
+  try {
+
+    const dbResult =
+      await sb
+        .from("subject_topics")
+        .select("*")
+        .eq("subject_id", currentSubject.id)
+        .eq("published", true);
+
+    if (!dbResult.error) {
+
+      const realTopic =
+        (dbResult.data || []).find(topic =>
+          String(topic.title || "")
+            .trim()
+            .toLowerCase() === "latitude and longitude"
+        );
+
+      if (
+        realTopic &&
+        realTopic.video_url
+      ) {
+
+        videoArea.innerHTML = `
+          <video
+            controls
+            playsinline
+            preload="metadata"
+          >
+            <source
+              src="${escapeHtml(realTopic.video_url)}"
+              type="video/mp4"
+            >
+
+            Your browser does not support video playback.
+          </video>
+        `;
+
+        return;
+      }
+
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Database video lookup skipped:",
+      error
+    );
+
+  }
+
+
+  /* -------------------------------------------------------
+     If database row is not available,
+     create a temporary signed URL from Supabase Storage.
+  ------------------------------------------------------- */
+
+  try {
+
+    const storageResult =
+      await sb
+        .storage
+        .from("course-videos")
+        .createSignedUrl(
+          "Latitude_and_Longitude_optimized.mp4",
+          60 * 60 * 24
+        );
+
+    if (
+      storageResult.error ||
+      !storageResult.data ||
+      !storageResult.data.signedUrl
+    ) {
+
+      videoArea.innerHTML = `
+        <div class="status">
+
+          <strong>
+            Video is being prepared.
+          </strong>
+
+          <p>
+            The Latitude and Longitude topic is available,
+            but the video file could not be loaded.
+          </p>
+
+        </div>
+      `;
+
+      return;
+    }
+
+
+    videoArea.innerHTML = `
+      <video
+        controls
+        playsinline
+        preload="metadata"
+      >
+
+        <source
+          src="${escapeHtml(
+            storageResult.data.signedUrl
+          )}"
+          type="video/mp4"
+        >
+
+        Your browser does not support video playback.
+
+      </video>
+    `;
+
+  } catch (error) {
+
+    console.error(error);
+
+    videoArea.innerHTML = `
+      <div class="status">
+
+        <strong>
+          Video is being prepared.
+        </strong>
+
+        <p>
+          The topic is available, but the video could not
+          be loaded at this moment.
+        </p>
+
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   OPEN NORMAL TOPIC
+========================================================= */
+
 async function openTopic(topicId) {
 
   if (!currentSubject) {
@@ -1040,7 +1368,6 @@ async function openTopic(topicId) {
     );
 
     return;
-
   }
 
   const topic =
@@ -1049,40 +1376,40 @@ async function openTopic(topicId) {
   const fee =
     getTopicFee(topic);
 
-  const videoUrl =
-    topic.video_url || "";
 
-  let videoContent = "";
+  let videoHtml = "";
 
-  if (videoUrl) {
 
-    videoContent = `
+  if (topic.video_url) {
+
+    videoHtml = `
+
       <div class="video-box">
-
-        <div class="video-title">
-          Video Lesson
-        </div>
 
         <video
           controls
-          preload="metadata"
           playsinline
+          preload="metadata"
         >
+
           <source
-            src="${escapeHtml(videoUrl)}"
+            src="${escapeHtml(topic.video_url)}"
             type="video/mp4"
           >
 
           Your browser does not support video playback.
+
         </video>
 
       </div>
+
     `;
 
   } else {
 
-    videoContent = `
-      <div class="learning-box">
+    videoHtml = `
+
+      <div class="status">
 
         <strong>
           Learning content is being prepared.
@@ -1094,9 +1421,11 @@ async function openTopic(topicId) {
         </p>
 
       </div>
+
     `;
 
   }
+
 
   topicsArea.innerHTML = `
 
@@ -1107,8 +1436,12 @@ async function openTopic(topicId) {
       </h3>
 
       <p>
-        Topic-wise learning content
+        ${escapeHtml(
+          topic.description ||
+          "Topic-wise learning content"
+        )}
       </p>
+
 
       <div class="learning-box">
 
@@ -1123,7 +1456,9 @@ async function openTopic(topicId) {
 
       </div>
 
-      ${videoContent}
+
+      ${videoHtml}
+
 
       <div class="card-footer">
 
@@ -1141,6 +1476,7 @@ async function openTopic(topicId) {
 
   `;
 
+
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1148,6 +1484,10 @@ async function openTopic(topicId) {
 
 }
 
+
+/* =========================================================
+   LOAD TEST SERIES
+========================================================= */
 
 async function loadTestSeries() {
 
@@ -1172,7 +1512,6 @@ async function loadTestSeries() {
     );
 
     return;
-
   }
 
   const series =
@@ -1187,7 +1526,6 @@ async function loadTestSeries() {
     );
 
     return;
-
   }
 
   testsArea.innerHTML = `
@@ -1244,6 +1582,10 @@ async function loadTestSeries() {
 }
 
 
+/* =========================================================
+   OPEN TEST SERIES
+========================================================= */
+
 async function openTestSeries(seriesId) {
 
   const result =
@@ -1263,7 +1605,6 @@ async function openTestSeries(seriesId) {
     );
 
     return;
-
   }
 
   const series =
@@ -1331,7 +1672,14 @@ async function openTestSeries(seriesId) {
 }
 
 
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
 backButton.onclick = function() {
+
+
+  /* Topic -> Subject */
 
   if (
     !topicsSection.classList.contains("hidden")
@@ -1346,8 +1694,10 @@ backButton.onclick = function() {
     }
 
     return;
-
   }
+
+
+  /* Subject -> Courses */
 
   if (
     !subjectsSection.classList.contains("hidden")
@@ -1381,8 +1731,10 @@ backButton.onclick = function() {
     });
 
     return;
-
   }
+
+
+  /* Test Series -> Home */
 
   coursesSection.classList.remove("hidden");
   testsSection.classList.remove("hidden");
@@ -1415,6 +1767,10 @@ backButton.onclick = function() {
 };
 
 
+/* =========================================================
+   START
+========================================================= */
+
 async function boot() {
 
   try {
@@ -1424,9 +1780,7 @@ async function boot() {
       loadTestSeries()
     ]);
 
-  }
-
-  catch (error) {
+  } catch (error) {
 
     console.error(error);
 
@@ -1446,5 +1800,4 @@ boot();
 </script>
 
 </body>
-
 </html>

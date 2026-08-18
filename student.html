@@ -738,18 +738,6 @@ async function loadCourses() {
   }
 
 
-  /*
-     IMPORTANT:
-     Only published courses appear.
-
-     Current expected four:
-     UPSC Civil Services
-     APPSC Group 1
-     APPSC Group 2
-     APPSC Group 4 / Junior Assistant
-  */
-
-
   coursesArea.innerHTML = `
 
     <div class="card-grid">
@@ -805,10 +793,6 @@ async function loadCourses() {
 
   `;
 
-
-  /*
-     Load subject counts for every course.
-  */
 
   for (const course of courses) {
 
@@ -1028,12 +1012,30 @@ async function openSubject(courseSubjectId) {
 
 
   /*
-     IMPORTANT:
+     IMPORTANT DATABASE RELATIONSHIP
 
-     course_subjects.id is the mapping ID.
+     course_subjects.id
+              ↓
+     subject_topics.course_subject_id
 
-     We first retrieve the exact subject belonging
-     to the selected course.
+     Example:
+
+     course_subjects
+     id = 56
+     title = Indian Polity & Constitution
+
+              ↓
+
+     subject_topics
+     course_subject_id = 56
+     id = 766
+     title = Constitutional Framework
+
+              ↓
+
+     ls_lessons
+     topic_id = 766
+     lesson_id = 9
   */
 
 
@@ -1086,50 +1088,23 @@ async function openSubject(courseSubjectId) {
 
 
   /*
-     TOPIC CONNECTION
+     CORRECT TOPIC QUERY
 
-     First try subject_id.
+     Do NOT use:
 
-     This supports your existing mapping where
-     course_subjects.subject_id points to the
-     subject/topic parent.
+     .eq("subject_id", currentSubject.subject_id)
 
-     If no topic is found, we also try the
-     course_subjects ID.
+     Topics belong to the selected course subject
+     through subject_topics.course_subject_id.
   */
 
 
-  let topicsResult =
+  const topicsResult =
     await sb
       .from("subject_topics")
       .select("*")
-      .eq("subject_id", currentSubject.subject_id)
+      .eq("course_subject_id", currentSubject.id)
       .eq("published", true);
-
-
-  /*
-     If subject_id is null or no records found,
-     try course_subjects.id.
-  */
-
-
-  if (
-    (!topicsResult.data || !topicsResult.data.length) &&
-    currentSubject.id
-  ) {
-
-    const fallbackResult =
-      await sb
-        .from("subject_topics")
-        .select("*")
-        .eq("subject_id", currentSubject.id)
-        .eq("published", true);
-
-    if (!fallbackResult.error) {
-      topicsResult = fallbackResult;
-    }
-
-  }
 
 
   console.log(
@@ -1252,6 +1227,12 @@ async function openTopic(topicId) {
       .single();
 
 
+  console.log(
+    "SELECTED TOPIC:",
+    topicResult
+  );
+
+
   if (topicResult.error) {
 
     showError(
@@ -1267,6 +1248,26 @@ async function openTopic(topicId) {
 
   const topic =
     topicResult.data;
+
+
+  /*
+     Verify that the topic belongs to the
+     currently selected course subject.
+  */
+
+  if (
+    Number(topic.course_subject_id) !==
+    Number(currentSubject.id)
+  ) {
+
+    showError(
+      topicsArea,
+      "This topic does not belong to the selected subject."
+    );
+
+    return;
+
+  }
 
 
   const lessonResult =
@@ -1366,7 +1367,6 @@ async function openTopic(topicId) {
               : ""
             }
 
-
             ${
               lesson.video_url
               ? `
@@ -1393,7 +1393,6 @@ async function openTopic(topicId) {
                 </div>
               `
             }
-
 
             ${
               lesson.pdf_url
@@ -1649,11 +1648,15 @@ async function openTestSeries(seriesId) {
 
 
 /* -------------------------------------------------------
-   BACK
+   BACK BUTTON
 ------------------------------------------------------- */
 
 backButton.onclick = function() {
 
+  /*
+     TOPIC / LESSON LEVEL
+     Go back to subjects.
+  */
 
   if (!topicsSection.classList.contains("hidden")) {
 
@@ -1667,6 +1670,11 @@ backButton.onclick = function() {
 
   }
 
+
+  /*
+     SUBJECT LEVEL
+     Go back to courses.
+  */
 
   if (!subjectsSection.classList.contains("hidden")) {
 
@@ -1685,6 +1693,10 @@ backButton.onclick = function() {
 
   }
 
+
+  /*
+     DEFAULT
+  */
 
   coursesSection.classList.remove("hidden");
 

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -453,7 +454,9 @@
     }
 
   </style>
+
 </head>
+
 
 <body>
 
@@ -495,6 +498,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="config.js"></script>
 
 
@@ -568,6 +572,19 @@ function money(value) {
 }
 
 
+/*
+  IMPORTANT:
+
+  Pricing is NEVER created here.
+
+  Pricing is only READ from the database.
+
+  Admin controls the database values.
+
+  If Admin has not entered a price,
+  the student sees "Price not set by Admin".
+*/
+
 function feeHtml(
   currentFee,
   originalFee,
@@ -580,10 +597,12 @@ function feeHtml(
   const original =
     money(originalFee);
 
+
   if (!current && !original) {
 
     return `
       <div class="fee-box">
+
         <div class="fee-label">
           ${escapeHtml(label)}
         </div>
@@ -591,6 +610,7 @@ function feeHtml(
         <div class="not-set">
           Price not set by Admin
         </div>
+
       </div>
     `;
 
@@ -660,11 +680,71 @@ function showError(message) {
 
   app.innerHTML = `
     <div class="error-box">
-      <strong>Unable to load this page.</strong>
-      <br><br>
+
+      <strong>
+        Unable to load this page.
+      </strong>
+
+      <br>
+      <br>
+
       ${escapeHtml(message)}
+
     </div>
   `;
+
+}
+
+
+/* =========================================================
+   DATABASE VALUE HELPERS
+========================================================= */
+
+/*
+  These helpers allow Admin-controlled pricing to work
+  without hardcoding a particular pricing implementation.
+
+  The student page simply reads whichever values exist
+  in the database.
+*/
+
+function getCourseCurrentFee(course) {
+
+  return (
+    course?.current_fee ??
+    course?.course_fee ??
+    null
+  );
+
+}
+
+
+function getCourseOriginalFee(course) {
+
+  return (
+    course?.original_fee ??
+    null
+  );
+
+}
+
+
+function getSubjectFee(subject) {
+
+  return (
+    subject?.subject_fee ??
+    null
+  );
+
+}
+
+
+function getTopicFee(topic) {
+
+  return (
+    topic?.topic_fee ??
+    null
+  );
 
 }
 
@@ -688,6 +768,7 @@ function renderBreadcrumb() {
 
     parts.push(`
       <span>›</span>
+
       <button onclick="openCourseById(${currentCourse.id})">
         ${escapeHtml(currentCourse.title)}
       </button>
@@ -700,6 +781,7 @@ function renderBreadcrumb() {
 
     parts.push(`
       <span>›</span>
+
       <button onclick="openSubjectById(${currentSubject.id})">
         ${escapeHtml(currentSubject.title)}
       </button>
@@ -712,6 +794,7 @@ function renderBreadcrumb() {
 
     parts.push(`
       <span>›</span>
+
       <span class="current">
         ${escapeHtml(currentTopic.title)}
       </span>
@@ -738,11 +821,13 @@ async function goHome() {
 
   currentTopic = null;
 
+
   history.pushState(
     {},
     "",
     "student.html"
   );
+
 
   renderBreadcrumb();
 
@@ -761,26 +846,30 @@ async function loadCourses() {
 
   renderBreadcrumb();
 
+
   showLoading(
     "Loading courses..."
   );
 
 
+  /*
+    IMPORTANT:
+
+    We intentionally use select("*").
+
+    This prevents the student page from failing
+    because of a column such as "archived" that
+    does not exist in the actual database.
+
+    No pricing is generated here.
+    Pricing is read directly from Admin-controlled
+    database fields.
+  */
+
   const result =
     await supabaseClient
       .from("courses")
-      .select(`
-        id,
-        title,
-        slug,
-        description,
-        language,
-        published,
-        validity_years,
-        course_fee,
-        original_fee,
-        current_fee
-      `)
+      .select("*")
       .eq("published", true)
       .order("id");
 
@@ -833,9 +922,12 @@ async function loadCourses() {
 
       ${courses.map((course, index) => {
 
-        const fee =
-          course.current_fee ??
-          course.course_fee;
+        const currentFee =
+          getCourseCurrentFee(course);
+
+        const originalFee =
+          getCourseOriginalFee(course);
+
 
         return `
 
@@ -845,9 +937,11 @@ async function loadCourses() {
               ${index + 1}
             </div>
 
+
             <h2>
               ${escapeHtml(course.title)}
             </h2>
+
 
             <p>
               ${escapeHtml(
@@ -855,6 +949,7 @@ async function loadCourses() {
                 "Structured preparation course."
               )}
             </p>
+
 
             <div class="card-meta">
 
@@ -868,11 +963,13 @@ async function loadCourses() {
                 : ""
               }
 
+
               ${
                 course.validity_years
                 ? `
                   <span class="badge">
-                    ${course.validity_years} years
+                    ${escapeHtml(course.validity_years)}
+                    years
                   </span>
                 `
                 : ""
@@ -882,8 +979,8 @@ async function loadCourses() {
 
 
             ${feeHtml(
-              fee,
-              course.original_fee,
+              currentFee,
+              originalFee,
               "Course Fee"
             )}
 
@@ -926,18 +1023,7 @@ async function openCourseById(courseId) {
   const result =
     await supabaseClient
       .from("courses")
-      .select(`
-        id,
-        title,
-        slug,
-        description,
-        language,
-        published,
-        validity_years,
-        course_fee,
-        original_fee,
-        current_fee
-      `)
+      .select("*")
       .eq("id", courseId)
       .eq("published", true)
       .single();
@@ -962,11 +1048,16 @@ async function openCourseById(courseId) {
   currentTopic = null;
 
 
+  const courseSlug =
+    currentCourse.slug ||
+    String(currentCourse.id);
+
+
   history.pushState(
     {},
     "",
     "student.html?course=" +
-    encodeURIComponent(currentCourse.slug)
+    encodeURIComponent(courseSlug)
   );
 
 
@@ -980,6 +1071,10 @@ async function openCourseById(courseId) {
 }
 
 
+/* =========================================================
+   SUBJECTS
+========================================================= */
+
 async function loadSubjects(courseId) {
 
   showLoading(
@@ -990,17 +1085,7 @@ async function loadSubjects(courseId) {
   const result =
     await supabaseClient
       .from("course_subjects")
-      .select(`
-        id,
-        course_id,
-        title,
-        slug,
-        description,
-        sort_order,
-        published,
-        is_trial,
-        subject_fee
-      `)
+      .select("*")
       .eq("course_id", courseId)
       .eq("published", true)
       .order("sort_order", {
@@ -1046,9 +1131,8 @@ async function loadSubjects(courseId) {
 
 
     ${feeHtml(
-      currentCourse.current_fee ??
-      currentCourse.course_fee,
-      currentCourse.original_fee,
+      getCourseCurrentFee(currentCourse),
+      getCourseOriginalFee(currentCourse),
       "Course Fee"
     )}
 
@@ -1071,11 +1155,13 @@ async function loadSubjects(courseId) {
                 ${index + 1}
               </div>
 
+
               <h2>
                 ${escapeHtml(
                   subject.title
                 )}
               </h2>
+
 
               <p>
                 ${escapeHtml(
@@ -1088,7 +1174,7 @@ async function loadSubjects(courseId) {
               <div class="card-meta">
 
                 ${
-                  subject.is_trial
+                  subject.is_trial === true
                   ? `
                     <span class="badge green">
                       Trial Available
@@ -1101,7 +1187,7 @@ async function loadSubjects(courseId) {
 
 
               ${feeHtml(
-                subject.subject_fee,
+                getSubjectFee(subject),
                 null,
                 "Subject Fee"
               )}
@@ -1150,20 +1236,21 @@ async function openSubjectById(
   );
 
 
+  if (!currentCourse) {
+
+    showError(
+      "Course information is missing."
+    );
+
+    return;
+
+  }
+
+
   const result =
     await supabaseClient
       .from("course_subjects")
-      .select(`
-        id,
-        course_id,
-        title,
-        slug,
-        description,
-        sort_order,
-        published,
-        is_trial,
-        subject_fee
-      `)
+      .select("*")
       .eq("id", courseSubjectId)
       .eq("course_id", currentCourse.id)
       .eq("published", true)
@@ -1187,13 +1274,16 @@ async function openSubjectById(
   currentTopic = null;
 
 
+  const courseSlug =
+    currentCourse.slug ||
+    String(currentCourse.id);
+
+
   history.pushState(
     {},
     "",
     "student.html?course=" +
-    encodeURIComponent(
-      currentCourse.slug
-    ) +
+    encodeURIComponent(courseSlug) +
     "&subject=" +
     currentSubject.id
   );
@@ -1209,6 +1299,10 @@ async function openSubjectById(
 }
 
 
+/* =========================================================
+   TOPICS
+========================================================= */
+
 async function loadTopics(
   courseSubjectId
 ) {
@@ -1221,18 +1315,7 @@ async function loadTopics(
   const result =
     await supabaseClient
       .from("course_topics")
-      .select(`
-        id,
-        course_subject_id,
-        title,
-        slug,
-        description,
-        sort_order,
-        published,
-        is_trial,
-        topic_fee,
-        video_count
-      `)
+      .select("*")
       .eq(
         "course_subject_id",
         courseSubjectId
@@ -1282,7 +1365,7 @@ async function loadTopics(
 
 
     ${feeHtml(
-      currentSubject.subject_fee,
+      getSubjectFee(currentSubject),
       null,
       "Subject Fee"
     )}
@@ -1306,11 +1389,13 @@ async function loadTopics(
                 ${index + 1}
               </div>
 
+
               <h2>
                 ${escapeHtml(
                   topic.title
                 )}
               </h2>
+
 
               <p>
                 ${escapeHtml(
@@ -1326,14 +1411,16 @@ async function loadTopics(
                   topic.video_count
                   ? `
                     <span class="badge">
-                      ${topic.video_count} videos
+                      ${escapeHtml(topic.video_count)}
+                      videos
                     </span>
                   `
                   : ""
                 }
 
+
                 ${
-                  topic.is_trial
+                  topic.is_trial === true
                   ? `
                     <span class="badge green">
                       Trial
@@ -1346,7 +1433,7 @@ async function loadTopics(
 
 
               ${feeHtml(
-                topic.topic_fee,
+                getTopicFee(topic),
                 null,
                 "Topic Fee"
               )}
@@ -1395,21 +1482,21 @@ async function openTopicById(
   );
 
 
+  if (!currentSubject) {
+
+    showError(
+      "Subject information is missing."
+    );
+
+    return;
+
+  }
+
+
   const result =
     await supabaseClient
       .from("course_topics")
-      .select(`
-        id,
-        course_subject_id,
-        title,
-        slug,
-        description,
-        sort_order,
-        published,
-        is_trial,
-        topic_fee,
-        video_count
-      `)
+      .select("*")
       .eq("id", topicId)
       .eq(
         "course_subject_id",
@@ -1434,13 +1521,16 @@ async function openTopicById(
     result.data;
 
 
+  const courseSlug =
+    currentCourse.slug ||
+    String(currentCourse.id);
+
+
   history.pushState(
     {},
     "",
     "student.html?course=" +
-    encodeURIComponent(
-      currentCourse.slug
-    ) +
+    encodeURIComponent(courseSlug) +
     "&subject=" +
     currentSubject.id +
     "&topic=" +
@@ -1471,26 +1561,35 @@ async function loadLessons(
   );
 
 
+  /*
+    We use select("*") because the actual lessons
+    table structure was verified by you.
+
+    Confirmed fields include:
+
+    id
+    course_id
+    title
+    description
+    video_url
+    pdf_url
+    sort_order
+    published
+    subject_id
+    is_trial
+    visualized_fee
+    ppt_fee
+    visualized_video_url
+    ppt_video_url
+    topic_id
+    video_count
+  */
+
+
   const result =
     await supabaseClient
       .from("lessons")
-      .select(`
-        id,
-        course_id,
-        title,
-        description,
-        video_url,
-        pdf_url,
-        sort_order,
-        published,
-        is_trial,
-        visualized_fee,
-        ppt_fee,
-        visualized_video_url,
-        ppt_video_url,
-        topic_id,
-        video_count
-      `)
+      .select("*")
       .eq("topic_id", topicId)
       .eq("published", true)
       .order("sort_order", {
@@ -1537,7 +1636,7 @@ async function loadLessons(
 
 
     ${feeHtml(
-      currentTopic.topic_fee,
+      getTopicFee(currentTopic),
       null,
       "Topic Fee"
     )}
@@ -1545,9 +1644,9 @@ async function loadLessons(
 
     <div class="notice">
 
-      Lesson access and purchasing will follow
-      the pricing and access settings controlled
-      by Admin.
+      Lesson access and pricing are controlled
+      by Admin. Students cannot change or
+      determine pricing.
 
     </div>
 
@@ -1585,6 +1684,10 @@ async function loadLessons(
 }
 
 
+/* =========================================================
+   LESSON CARD
+========================================================= */
+
 function renderLesson(
   lesson,
   index
@@ -1595,15 +1698,27 @@ function renderLesson(
 
 
   const normalVideo =
-    lesson.video_url;
+    lesson.video_url || null;
 
 
   const visualizedFee =
-    money(lesson.visualized_fee);
+    money(
+      lesson.visualized_fee
+    );
 
 
   const pptFee =
-    money(lesson.ppt_fee);
+    money(
+      lesson.ppt_fee
+    );
+
+
+  const visualizedVideo =
+    lesson.visualized_video_url || null;
+
+
+  const pptVideo =
+    lesson.ppt_video_url || null;
 
 
   return `
@@ -1622,6 +1737,7 @@ function renderLesson(
             )}
 
           </div>
+
 
           ${
             lesson.description
@@ -1697,6 +1813,28 @@ function renderLesson(
 
 
         ${
+          visualizedVideo
+          ? `
+            <div class="option-box">
+              Visualized Video Available
+            </div>
+          `
+          : ""
+        }
+
+
+        ${
+          pptVideo
+          ? `
+            <div class="option-box">
+              PPT Video Available
+            </div>
+          `
+          : ""
+        }
+
+
+        ${
           lesson.pdf_url
           ? `
             <div class="option-box">
@@ -1725,8 +1863,10 @@ function renderLesson(
           </div>
         `
         : `
-          <div class="option-box locked"
-               style="margin-top:14px;">
+          <div
+            class="option-box locked"
+            style="margin-top:14px;"
+          >
 
             ${
               trial
@@ -1793,8 +1933,7 @@ async function boot() {
 
 
     /*
-      No course selected:
-      show complete course catalog.
+      No course selected.
     */
 
     if (!courseSlug) {
@@ -1808,41 +1947,81 @@ async function boot() {
 
     /*
       Load course.
+
+      IMPORTANT:
+      No archived column is requested.
     */
 
     const courseResult =
       await supabaseClient
         .from("courses")
-        .select(`
-          id,
-          title,
-          slug,
-          description,
-          language,
-          published,
-          validity_years,
-          course_fee,
-          original_fee,
-          current_fee
-        `)
+        .select("*")
         .eq("slug", courseSlug)
         .eq("published", true)
         .single();
 
 
-    if (courseResult.error) {
+    /*
+      If slug is actually unavailable,
+      allow numeric course ID in URL.
+    */
 
-      showError(
-        courseResult.error.message
-      );
+    let courseData =
+      courseResult.data;
 
-      return;
+
+    if (
+      courseResult.error ||
+      !courseData
+    ) {
+
+      if (
+        /^\d+$/.test(courseSlug)
+      ) {
+
+        const fallbackResult =
+          await supabaseClient
+            .from("courses")
+            .select("*")
+            .eq(
+              "id",
+              Number(courseSlug)
+            )
+            .eq("published", true)
+            .single();
+
+
+        if (fallbackResult.error) {
+
+          showError(
+            fallbackResult.error.message
+          );
+
+          return;
+
+        }
+
+
+        courseData =
+          fallbackResult.data;
+
+      }
+      else {
+
+        showError(
+          courseResult.error?.message ||
+          "Course not found."
+        );
+
+        return;
+
+      }
 
     }
 
 
     currentCourse =
-      courseResult.data;
+      courseData;
 
 
     /*
@@ -1857,18 +2036,11 @@ async function boot() {
       const subjectResult =
         await supabaseClient
           .from("course_subjects")
-          .select(`
-            id,
-            course_id,
-            title,
-            slug,
-            description,
-            sort_order,
-            published,
-            is_trial,
-            subject_fee
-          `)
-          .eq("id", Number(subjectId))
+          .select("*")
+          .eq(
+            "id",
+            Number(subjectId)
+          )
           .eq(
             "course_id",
             currentCourse.id
@@ -1895,19 +2067,11 @@ async function boot() {
       const topicResult =
         await supabaseClient
           .from("course_topics")
-          .select(`
-            id,
-            course_subject_id,
-            title,
-            slug,
-            description,
-            sort_order,
-            published,
-            is_trial,
-            topic_fee,
-            video_count
-          `)
-          .eq("id", Number(topicId))
+          .select("*")
+          .eq(
+            "id",
+            Number(topicId)
+          )
           .eq(
             "course_subject_id",
             currentSubject.id
@@ -1933,9 +2097,11 @@ async function boot() {
 
       renderBreadcrumb();
 
+
       await loadLessons(
         currentTopic.id
       );
+
 
       return;
 
@@ -1950,9 +2116,11 @@ async function boot() {
 
       currentSubject = null;
 
+
       await openSubjectById(
         Number(subjectId)
       );
+
 
       return;
 
@@ -1966,6 +2134,7 @@ async function boot() {
     await loadSubjects(
       currentCourse.id
     );
+
 
     renderBreadcrumb();
 
@@ -1998,7 +2167,7 @@ logoutBtn.onclick =
 
 
 /* =========================================================
-   BROWSER BACK/FORWARD
+   BROWSER BACK / FORWARD
 ========================================================= */
 
 window.addEventListener(
@@ -2019,5 +2188,7 @@ boot();
 
 </script>
 
+
 </body>
+
 </html>

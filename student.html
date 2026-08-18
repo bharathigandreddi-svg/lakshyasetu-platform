@@ -35,7 +35,6 @@
     .brand {
       font-size: 25px;
       font-weight: 800;
-      letter-spacing: .2px;
     }
 
     .brand small {
@@ -44,13 +43,6 @@
       font-size: 12px;
       font-weight: 400;
       opacity: .78;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
     }
 
     .nav-btn {
@@ -143,10 +135,13 @@
       background: white;
       box-shadow: 0 3px 12px rgba(16,35,63,.04);
       transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .clickable {
       cursor: pointer;
     }
 
-    .card:hover {
+    .clickable:hover {
       transform: translateY(-3px);
       box-shadow: 0 12px 28px rgba(16,35,63,.10);
     }
@@ -194,6 +189,7 @@
 
     .test-card {
       border-top: 4px solid #2457a6;
+      cursor: pointer;
     }
 
     .test-icon {
@@ -261,10 +257,6 @@
       border: 1px solid #dfe5ee;
     }
 
-    .learning-box p {
-      margin-top: 8px;
-    }
-
     .lesson-video {
       width: 100%;
       max-width: 950px;
@@ -278,15 +270,28 @@
       margin-bottom: 8px !important;
     }
 
-    @media (max-width: 650px) {
+    .video-status {
+      margin-top: 12px;
+      color: #667085;
+      font-size: 14px;
+    }
 
+    .video-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #2457a6;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .video-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 650px) {
       .top {
         align-items: flex-start;
         flex-direction: column;
-      }
-
-      .top-actions {
-        width: 100%;
       }
 
       .hero {
@@ -301,10 +306,8 @@
       .card-grid {
         grid-template-columns: 1fr;
       }
-
     }
   </style>
-
 </head>
 
 <body>
@@ -316,12 +319,10 @@
     <small>Learn. Prepare. Achieve.</small>
   </div>
 
-  <div class="top-actions">
-
+  <div>
     <a class="nav-btn" href="login.html">
       Student Login
     </a>
-
   </div>
 
 </header>
@@ -343,11 +344,13 @@
 
   <div id="breadcrumb" class="breadcrumb">
 
-    <button id="backButton">
+    <button id="backButton" type="button">
       ← Back
     </button>
 
   </div>
+
+  <!-- COURSES -->
 
   <section id="coursesSection" class="section">
 
@@ -373,6 +376,8 @@
 
   </section>
 
+  <!-- SUBJECTS -->
+
   <section id="subjectsSection" class="section hidden">
 
     <div class="section-header">
@@ -391,6 +396,8 @@
 
   </section>
 
+  <!-- TOPICS -->
+
   <section id="topicsSection" class="section hidden">
 
     <div class="section-header">
@@ -408,6 +415,8 @@
     <div id="topicsArea"></div>
 
   </section>
+
+  <!-- TEST SERIES -->
 
   <section id="testsSection" class="section">
 
@@ -446,1077 +455,11 @@
 <script>
 
   const sb = window.supabase.createClient(
-    LAKSHYASETU_CONFIG.supabaseUrl,
-    LAKSHYASETU_CONFIG.supabasePublishableKey
+    LAKSHAYSETU_CONFIG.supabaseUrl,
+    LAKSHAYSETU_CONFIG.supabasePublishableKey
   );
-
-  const coursesSection =
-    document.getElementById("coursesSection");
-
-  const subjectsSection =
-    document.getElementById("subjectsSection");
-
-  const topicsSection =
-    document.getElementById("topicsSection");
-
-  const testsSection =
-    document.getElementById("testsSection");
-
-  const coursesArea =
-    document.getElementById("coursesArea");
-
-  const subjectsArea =
-    document.getElementById("subjectsArea");
-
-  const topicsArea =
-    document.getElementById("topicsArea");
-
-  const testsArea =
-    document.getElementById("testsArea");
-
-  const subjectsTitle =
-    document.getElementById("subjectsTitle");
-
-  const subjectsDescription =
-    document.getElementById("subjectsDescription");
-
-  const topicsTitle =
-    document.getElementById("topicsTitle");
-
-  const breadcrumb =
-    document.getElementById("breadcrumb");
-
-  const backButton =
-    document.getElementById("backButton");
-
-  let courses = [];
-  let currentCourse = null;
-  let currentSubject = null;
-
-  function escapeHtml(value) {
-
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-
-  }
-
-  function money(value) {
-
-    const amount = Number(value || 0);
-
-    if (!amount) {
-      return "Free";
-    }
-
-    return "₹" + amount.toLocaleString("en-IN");
-
-  }
-
-  function getCourseFee(course) {
-
-    if (
-      course.current_fee !== null &&
-      course.current_fee !== undefined
-    ) {
-      return Number(course.current_fee);
-    }
-
-    if (
-      course.price !== null &&
-      course.price !== undefined
-    ) {
-      return Number(course.price);
-    }
-
-    if (
-      course.fee !== null &&
-      course.fee !== undefined
-    ) {
-      return Number(course.fee);
-    }
-
-    if (
-      course.original_fee !== null &&
-      course.original_fee !== undefined
-    ) {
-      return Number(course.original_fee);
-    }
-
-    return 0;
-
-  }
-
-  function getSubjectFee(subject) {
-
-    if (
-      subject.current_fee !== null &&
-      subject.current_fee !== undefined
-    ) {
-      return Number(subject.current_fee);
-    }
-
-    if (
-      subject.price !== null &&
-      subject.price !== undefined
-    ) {
-      return Number(subject.price);
-    }
-
-    if (
-      subject.fee !== null &&
-      subject.fee !== undefined
-    ) {
-      return Number(subject.fee);
-    }
-
-    if (
-      subject.visualized_fee !== null &&
-      subject.visualized_fee !== undefined
-    ) {
-      return Number(subject.visualized_fee);
-    }
-
-    return 0;
-
-  }
-
-  function getTopicFee(topic) {
-
-    if (
-      topic.current_fee !== null &&
-      topic.current_fee !== undefined
-    ) {
-      return Number(topic.current_fee);
-    }
-
-    if (
-      topic.price !== null &&
-      topic.price !== undefined
-    ) {
-      return Number(topic.price);
-    }
-
-    if (
-      topic.fee !== null &&
-      topic.fee !== undefined
-    ) {
-      return Number(topic.fee);
-    }
-
-    if (
-      topic.video_fee !== null &&
-      topic.video_fee !== undefined
-    ) {
-      return Number(topic.video_fee);
-    }
-
-    return 0;
-
-  }
-
-  function showError(container, message) {
-
-    container.innerHTML = `
-      <div class="error">
-        ${escapeHtml(message)}
-      </div>
-    `;
-
-  }
-
-  function showEmpty(container, title, text) {
-
-    container.innerHTML = `
-      <div class="status empty">
-
-        <h3>
-          ${escapeHtml(title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(text)}
-        </p>
-
-      </div>
-    `;
-
-  }
-
-  function sortItems(items) {
-
-    return [...items].sort((a, b) => {
-
-      const aOrder =
-        Number(
-          a.sort_order ??
-          a.display_order ??
-          a.order_index ??
-          999999
-        );
-
-      const bOrder =
-        Number(
-          b.sort_order ??
-          b.display_order ??
-          b.order_index ??
-          999999
-        );
-
-      if (aOrder !== bOrder) {
-        return aOrder - bOrder;
-      }
-
-      return Number(a.id || 0) - Number(b.id || 0);
-
-    });
-
-  }
-
-  async function loadCourses() {
-
-    coursesArea.innerHTML = `
-      <div class="status">
-        Loading courses...
-      </div>
-    `;
-
-    const result = await sb
-      .from("courses")
-      .select("*")
-      .eq("published", true)
-      .order("id", {
-        ascending: true
-      });
-
-    if (result.error) {
-
-      showError(
-        coursesArea,
-        "Unable to load courses: " +
-        result.error.message
-      );
-
-      return;
-
-    }
-
-    courses = result.data || [];
-
-    if (!courses.length) {
-
-      showEmpty(
-        coursesArea,
-        "No courses available",
-        "Courses will appear here when they are published by Admin."
-      );
-
-      return;
-
-    }
-
-    coursesArea.innerHTML = `
-      <div class="card-grid">
-
-        ${courses.map(course => {
-
-          const fee =
-            getCourseFee(course);
-
-          return `
-
-            <article
-              class="card"
-              onclick="openCourse(${course.id})"
-            >
-
-              <h3>
-                ${escapeHtml(course.title)}
-              </h3>
-
-              <p>
-                ${escapeHtml(
-                  course.description ||
-                  "Explore subjects and topic-wise learning."
-                )}
-              </p>
-
-              <div class="card-footer">
-
-                <span class="fee ${fee === 0 ? "free" : ""}">
-                  ${money(fee)}
-                </span>
-
-                <span class="open-label">
-                  View Subjects
-                </span>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join("")}
-
-      </div>
-    `;
-
-  }
-
-  async function openCourse(courseId) {
-
-    const course =
-      courses.find(
-        item => Number(item.id) === Number(courseId)
-      );
-
-    if (!course) {
-      return;
-    }
-
-    currentCourse = course;
-    currentSubject = null;
-
-    coursesSection.classList.add("hidden");
-    testsSection.classList.add("hidden");
-
-    subjectsSection.classList.remove("hidden");
-    topicsSection.classList.add("hidden");
-
-    breadcrumb.style.display = "block";
-
-    subjectsTitle.textContent =
-      course.title;
-
-    subjectsDescription.textContent =
-      "Course Fee: " +
-      money(getCourseFee(course)) +
-      " | Select a subject to continue.";
-
-    subjectsArea.innerHTML = `
-      <div class="status">
-        Loading subjects...
-      </div>
-    `;
-
-    const result = await sb
-      .from("course_subjects")
-      .select("*")
-      .eq("course_id", course.id)
-      .eq("published", true);
-
-    if (result.error) {
-
-      showError(
-        subjectsArea,
-        "Unable to load subjects: " +
-        result.error.message
-      );
-
-      return;
-
-    }
-
-    const subjects =
-      sortItems(result.data || []);
-
-    if (!subjects.length) {
-
-      showEmpty(
-        subjectsArea,
-        "No subjects available",
-        "Subjects will appear here when Admin publishes them."
-      );
-
-      return;
-
-    }
-
-    subjectsArea.innerHTML = `
-      <div class="card-grid">
-
-        ${subjects.map(subject => {
-
-          const fee =
-            getSubjectFee(subject);
-
-          return `
-
-            <article
-              class="card"
-              onclick="openSubject(${subject.id})"
-            >
-
-              <h3>
-                ${escapeHtml(subject.title)}
-              </h3>
-
-              <p>
-                ${escapeHtml(
-                  subject.description ||
-                  "Explore topics under this subject."
-                )}
-              </p>
-
-              <div class="card-footer">
-
-                <span class="fee ${fee === 0 ? "free" : ""}">
-                  ${money(fee)}
-                </span>
-
-                <span class="open-label">
-                  View Topics
-                </span>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join("")}
-
-      </div>
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  }
-
-  async function openSubject(courseSubjectId) {
-
-    if (!currentCourse) {
-      return;
-    }
-
-    currentSubject = null;
-
-    const result =
-      await sb
-        .from("course_subjects")
-        .select("*")
-        .eq("id", courseSubjectId)
-        .eq("course_id", currentCourse.id)
-        .eq("published", true)
-        .single();
-
-    if (result.error) {
-
-      showError(
-        subjectsArea,
-        "Unable to open subject: " +
-        result.error.message
-      );
-
-      return;
-
-    }
-
-    currentSubject =
-      result.data;
-
-    subjectsSection.classList.add("hidden");
-
-    topicsSection.classList.remove("hidden");
-
-    topicsTitle.textContent =
-      currentSubject.title;
-
-    topicsArea.innerHTML = `
-      <div class="status">
-        Loading topics...
-      </div>
-    `;
-
-    const topicsResult =
-      await sb
-        .from("subject_topics")
-        .select("*")
-        .eq(
-          "subject_id",
-          currentSubject.id
-        )
-        .eq("published", true);
-
-    if (topicsResult.error) {
-
-      showError(
-        topicsArea,
-        "Unable to load topics: " +
-        topicsResult.error.message
-      );
-
-      return;
-
-    }
-
-    const topics =
-      sortItems(topicsResult.data || []);
-
-    if (!topics.length) {
-
-      showEmpty(
-        topicsArea,
-        "No topics available",
-        "Topics will appear here when Admin publishes them."
-      );
-
-      return;
-
-    }
-
-    topicsArea.innerHTML = `
-      <div class="card-grid">
-
-        ${topics.map((topic, index) => {
-
-          const fee =
-            getTopicFee(topic);
-
-          return `
-
-            <article
-              class="card"
-              onclick="openTopic(${topic.id})"
-            >
-
-              <h3>
-                ${index + 1}.
-                ${escapeHtml(topic.title)}
-              </h3>
-
-              <p>
-                Topic-wise learning content
-              </p>
-
-              <div class="card-footer">
-
-                <span class="fee ${fee === 0 ? "free" : ""}">
-                  ${money(fee)}
-                </span>
-
-                <span class="open-label">
-                  Open Topic
-                </span>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join("")}
-
-      </div>
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  }
-
-  /*
-    TOPIC OPENING
-
-    This version uses subject_topics for the topic
-    and ls_lessons for the actual learning content.
-
-    Latitude and Longitude is now:
-    subject_topics.id = 1
-    ls_lessons.topic_id = 1
-  */
-
-  async function openTopic(topicId) {
-
-    if (!currentSubject) {
-      return;
-    }
-
-    const topicResult = await sb
-      .from("subject_topics")
-      .select("*")
-      .eq("id", topicId)
-      .eq("subject_id", currentSubject.id)
-      .eq("published", true)
-      .single();
-
-    if (topicResult.error) {
-
-      showError(
-        topicsArea,
-        "Unable to open topic: " +
-        topicResult.error.message
-      );
-
-      return;
-
-    }
-
-    const topic =
-      topicResult.data;
-
-    topicsArea.innerHTML = `
-      <div class="status">
-        Loading learning content...
-      </div>
-    `;
-
-    const lessonResult = await sb
-      .from("ls_lessons")
-      .select("*")
-      .eq("topic_id", topic.id)
-      .eq("published", true)
-      .order("display_order", {
-        ascending: true
-      });
-
-    if (lessonResult.error) {
-
-      showError(
-        topicsArea,
-        "Unable to load learning content: " +
-        lessonResult.error.message
-      );
-
-      return;
-
-    }
-
-    const lessons =
-      lessonResult.data || [];
-
-    if (!lessons.length) {
-
-      topicsArea.innerHTML = `
-
-        <div class="card">
-
-          <h3>
-            ${escapeHtml(topic.title)}
-          </h3>
-
-          <div class="learning-box">
-
-            <strong>
-              Learning Content
-            </strong>
-
-            <p>
-              Video lessons and study material
-              will be available here when published
-              by Admin.
-            </p>
-
-          </div>
-
-        </div>
-
-      `;
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-      return;
-
-    }
-
-    topicsArea.innerHTML = `
-
-      <div class="card">
-
-        <h3>
-          ${escapeHtml(topic.title)}
-        </h3>
-
-        <p>
-          Learning Content
-        </p>
-
-        ${lessons.map((lesson, index) => {
-
-          return `
-
-            <div class="learning-box">
-
-              <h3 class="lesson-title">
-                ${index + 1}.
-                ${escapeHtml(lesson.title)}
-              </h3>
-
-              ${
-                lesson.description
-                  ? `
-                    <p>
-                      ${escapeHtml(lesson.description)}
-                    </p>
-                  `
-                  : ""
-              }
-
-              ${
-                lesson.video_url
-                  ? `
-                    <video
-                      class="lesson-video"
-                      controls
-                      playsinline
-                      preload="metadata"
-                    >
-                      <source
-                        src="${escapeHtml(lesson.video_url)}"
-                        type="video/mp4"
-                      >
-                      Your browser does not support video playback.
-                    </video>
-                  `
-                  : `
-                    <p>
-                      Video will be available soon.
-                    </p>
-                  `
-              }
-
-              ${
-                lesson.pdf_url
-                  ? `
-                    <p style="margin-top:15px;">
-                      <a
-                        href="${escapeHtml(lesson.pdf_url)}"
-                        target="_blank"
-                        rel="noopener"
-                        style="
-                          color:#2457a6;
-                          font-weight:700;
-                          text-decoration:none;
-                        "
-                      >
-                        Open Study Material
-                      </a>
-                    </p>
-                  `
-                  : ""
-              }
-
-            </div>
-
-          `;
-
-        }).join("")}
-
-      </div>
-
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  }
-
-  async function loadTestSeries() {
-
-    testsArea.innerHTML = `
-      <div class="status">
-        Loading test series...
-      </div>
-    `;
-
-    const result =
-      await sb
-        .from("ls_test_series")
-        .select("*")
-        .eq("published", true);
-
-    if (result.error) {
-
-      showEmpty(
-        testsArea,
-        "Test Series",
-        "Test series will appear here when published by Admin."
-      );
-
-      return;
-
-    }
-
-    const series =
-      result.data || [];
-
-    if (!series.length) {
-
-      showEmpty(
-        testsArea,
-        "Test Series Coming Soon",
-        "Admin has not published any test series yet."
-      );
-
-      return;
-
-    }
-
-    testsArea.innerHTML = `
-      <div class="card-grid">
-
-        ${series.map(item => {
-
-          const price =
-            Number(item.price || 0);
-
-          return `
-
-            <article
-              class="card test-card"
-              onclick="openTestSeries(${item.id})"
-            >
-
-              <div class="test-icon">
-                T
-              </div>
-
-              <h3>
-                ${escapeHtml(item.title)}
-              </h3>
-
-              <p>
-                ${escapeHtml(
-                  item.description ||
-                  "Structured examination practice and evaluation."
-                )}
-              </p>
-
-              <div class="card-footer">
-
-                <span class="fee ${price === 0 ? "free" : ""}">
-                  ${money(price)}
-                </span>
-
-                <span class="open-label">
-                  View Tests
-                </span>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join("")}
-
-      </div>
-    `;
-
-  }
-
-  async function openTestSeries(seriesId) {
-
-    const result =
-      await sb
-        .from("ls_test_series")
-        .select("*")
-        .eq("id", seriesId)
-        .eq("published", true)
-        .single();
-
-    if (result.error) {
-
-      showError(
-        testsArea,
-        "Unable to open test series: " +
-        result.error.message
-      );
-
-      return;
-
-    }
-
-    const series =
-      result.data;
-
-    coursesSection.classList.add("hidden");
-    subjectsSection.classList.add("hidden");
-    topicsSection.classList.add("hidden");
-
-    testsSection.classList.remove("hidden");
-
-    breadcrumb.style.display = "block";
-
-    testsSection.querySelector(
-      ".section-header h2"
-    ).textContent =
-      series.title;
-
-    testsSection.querySelector(
-      ".section-header p"
-    ).textContent =
-      "Test Series Fee: " +
-      money(series.price);
-
-    testsArea.innerHTML = `
-
-      <div class="card">
-
-        <div class="test-icon">
-          T
-        </div>
-
-        <h3>
-          ${escapeHtml(series.title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(
-            series.description ||
-            "Test series details will be available here."
-          )}
-        </p>
-
-        <div class="card-footer">
-
-          <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
-            ${money(series.price)}
-          </span>
-
-          <span class="open-label">
-            Test Series
-          </span>
-
-        </div>
-
-      </div>
-
-    `;
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  }
-
-  backButton.onclick = function() {
-
-    if (
-      !topicsSection.classList.contains("hidden")
-    ) {
-
-      if (currentCourse) {
-
-        openCourse(
-          currentCourse.id
-        );
-
-      }
-
-      return;
-
-    }
-
-    if (
-      !subjectsSection.classList.contains("hidden")
-    ) {
-
-      subjectsSection.classList.add("hidden");
-
-      coursesSection.classList.remove("hidden");
-
-      testsSection.classList.remove("hidden");
-
-      breadcrumb.style.display = "none";
-
-      currentCourse = null;
-
-      currentSubject = null;
-
-      testsSection.querySelector(
-        ".section-header h2"
-      ).textContent =
-        "Test Series";
-
-      testsSection.querySelector(
-        ".section-header p"
-      ).textContent =
-        "Practice with structured tests designed for competitive examinations.";
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-      return;
-
-    }
-
-    coursesSection.classList.remove("hidden");
-    testsSection.classList.remove("hidden");
-    subjectsSection.classList.add("hidden");
-    topicsSection.classList.add("hidden");
-
-    breadcrumb.style.display = "none";
-
-    testsSection.querySelector(
-      ".section-header h2"
-    ).textContent =
-      "Test Series";
-
-    testsSection.querySelector(
-      ".section-header p"
-    ).textContent =
-      "Practice with structured tests designed for competitive examinations.";
-
-    currentCourse = null;
-    currentSubject = null;
-
-    loadCourses();
-    loadTestSeries();
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-  };
-
-  async function boot() {
-
-    try {
-
-      await Promise.all([
-        loadCourses(),
-        loadTestSeries()
-      ]);
-
-    }
-
-    catch (error) {
-
-      console.error(error);
-
-      showError(
-        coursesArea,
-        error.message ||
-        "Unable to load LakshyaSetu."
-      );
-
-    }
-
-  }
-
-  boot();
 
 </script>
 
 </body>
-
 </html>

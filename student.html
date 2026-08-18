@@ -5,1174 +5,2015 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Student | LakshyaSetu</title>
+  <title>LakshyaSetu | Student</title>
 
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    .page-header {
-      margin-bottom: 24px;
+
+    * {
+      box-sizing: border-box;
     }
 
-    .page-header h1 {
-      margin-bottom: 8px;
+    body {
+      background: #f5f7fb;
+      color: #172033;
     }
 
-    .course-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
+    .student-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 18px 60px;
     }
 
-    .course-card {
-      display: block;
-      padding: 22px;
-      border: 1px solid #dfe5ee;
-      border-radius: 14px;
-      background: #fff;
-      text-decoration: none;
-      color: inherit;
-      transition: 0.2s;
-    }
-
-    .course-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    }
-
-    .course-card h3 {
-      margin: 0 0 8px;
-      color: #10233f;
-    }
-
-    .course-card p {
-      margin: 0;
-    }
-
-    .count-badge {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background: #eef4ff;
-      color: #2457a6;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .section-title {
-      margin-top: 32px;
-      margin-bottom: 14px;
-    }
-
-    .subject-header {
-      padding: 22px;
-      border-radius: 14px;
-      background: #f7f9fc;
-      border: 1px solid #dfe5ee;
-      margin-bottom: 24px;
-    }
-
-    .topic-card {
-      border: 1px solid #dfe5ee;
-      border-radius: 14px;
-      background: #fff;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-
-    .topic-header {
-      padding: 18px 20px;
-      cursor: pointer;
+    .student-header {
+      background: #10233f;
+      color: #fff;
+      padding: 18px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 4px 18px rgba(0,0,0,.12);
     }
 
-    .topic-header:hover {
-      background: #f8fafc;
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
     }
 
-    .topic-title {
-      margin: 0;
-      color: #10233f;
-      font-size: 18px;
-    }
-
-    .topic-number {
-      color: #667085;
-      font-size: 14px;
-      margin-right: 8px;
-    }
-
-    .topic-arrow {
-      font-size: 18px;
-      color: #667085;
-    }
-
-    .topic-content {
-      display: none;
-      padding: 0 20px 20px;
-      border-top: 1px solid #edf0f4;
-    }
-
-    .topic-content.open {
+    .brand small {
       display: block;
-    }
-
-    .video-card {
-      margin-top: 16px;
-      padding: 16px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      background: #fafbfc;
-    }
-
-    .video-title {
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .video-meta {
-      font-size: 13px;
-      color: #667085;
-      margin-bottom: 12px;
-    }
-
-    .video-player {
-      width: 100%;
-      max-height: 600px;
-      border-radius: 10px;
-      background: #000;
-    }
-
-    .trial-badge {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 4px 8px;
-      border-radius: 12px;
-      background: #eaf7ee;
-      color: #187a3d;
       font-size: 12px;
+      font-weight: 500;
+      opacity: .75;
+      margin-top: 3px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button,
+    a {
+      font-family: inherit;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      text-decoration: none;
       font-weight: 700;
-    }
-
-    .status-message {
-      padding: 18px;
-      border-radius: 12px;
-      background: #f7f9fc;
-      border: 1px solid #dfe5ee;
-      margin-top: 16px;
-    }
-
-    .error-message {
-      padding: 18px;
-      border-radius: 12px;
-      background: #fff5f5;
-      border: 1px solid #f3caca;
-      color: #a61b1b;
-      margin-top: 16px;
-    }
-
-    .back-btn {
-      margin-bottom: 18px;
       display: inline-block;
     }
 
-    .fee-card,
-    .purchase-card {
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 14px;
-      background: #f7f9fc;
-      border: 1px solid #dfe5ee;
+    .btn-primary {
+      background: #2457a6;
+      color: #fff;
     }
 
-    .fee-label {
-      font-size: 14px;
-      color: #667085;
-      margin-bottom: 6px;
+    .btn-primary:hover {
+      background: #1d4789;
     }
 
-    .old-fee {
-      text-decoration: line-through;
-      color: #777;
-      margin-right: 12px;
-    }
-
-    .current-fee {
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    .purchase-card h2 {
-      margin-top: 0;
+    .btn-light {
+      background: #fff;
       color: #10233f;
     }
 
-    .purchase-card p {
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #cfd7e6;
+      color: #10233f;
+    }
+
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 8px;
+      color: #10233f;
+      font-size: 32px;
+    }
+
+    .page-heading p {
+      margin: 0;
       color: #667085;
       line-height: 1.6;
     }
 
-    .purchase-btn {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 11px 18px;
-      border-radius: 8px;
-      background: #2457a6;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
+    .breadcrumb {
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      color: #667085;
+      font-size: 14px;
     }
 
-    .access-badge {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 6px 10px;
-      border-radius: 20px;
-      background: #eaf7ee;
-      color: #187a3d;
-      font-size: 13px;
+    .breadcrumb button {
+      border: 0;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      color: #2457a6;
       font-weight: 700;
     }
 
-    @media (max-width: 600px) {
-      .topic-header {
-        padding: 15px;
-      }
-
-      .topic-title {
-        font-size: 16px;
-      }
-
-      .topic-content {
-        padding: 0 15px 15px;
-      }
+    .breadcrumb .current {
+      color: #172033;
+      font-weight: 700;
     }
+
+    .loading,
+    .empty,
+    .error-box {
+      padding: 22px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #dfe5ee;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .error-box {
+      background: #fff5f5;
+      border-color: #f3caca;
+      color: #a61b1b;
+      text-align: left;
+    }
+
+    .course-grid,
+    .subject-grid,
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .course-card,
+    .subject-card,
+    .topic-card {
+      background: #fff;
+      border: 1px solid #dfe5ee;
+      border-radius: 16px;
+      padding: 22px;
+      transition: .2s;
+      box-shadow: 0 2px 8px rgba(16,35,63,.04);
+    }
+
+    .course-card:hover,
+    .subject-card:hover,
+    .topic-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(16,35,63,.10);
+      border-color: #b8c8e2;
+    }
+
+    .card-number {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eef4ff;
+      color: #2457a6;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .course-card h2,
+    .subject-card h2,
+    .topic-card h2 {
+      margin: 0 0 9px;
+      color: #10233f;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .course-card p,
+    .subject-card p,
+    .topic-card p {
+      color: #667085;
+      line-height: 1.55;
+      margin: 0 0 14px;
+      font-size: 14px;
+    }
+
+    .fee-box {
+      background: #f7f9fc;
+      border: 1px solid #e1e6ef;
+      border-radius: 11px;
+      padding: 13px;
+      margin: 15px 0;
+    }
+
+    .fee-label {
+      font-size: 12px;
+      color: #667085;
+      margin-bottom: 4px;
+    }
+
+    .fee-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .old-fee {
+      text-decoration: line-through;
+      color: #8b93a1;
+      font-size: 14px;
+    }
+
+    .current-fee {
+      color: #10233f;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .free-label {
+      color: #187a3d;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .not-set {
+      color: #667085;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #eef4ff;
+      color: #2457a6;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.green {
+      background: #eaf7ee;
+      color: #187a3d;
+    }
+
+    .badge.orange {
+      background: #fff4df;
+      color: #9a6500;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      margin: 28px 0 16px;
+      color: #10233f;
+      font-size: 24px;
+    }
+
+    .subject-top,
+    .topic-top {
+      background: #fff;
+      border: 1px solid #dfe5ee;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .subject-top h1,
+    .topic-top h1 {
+      margin: 0 0 7px;
+      color: #10233f;
+    }
+
+    .subject-top p,
+    .topic-top p {
+      margin: 0;
+      color: #667085;
+      line-height: 1.6;
+    }
+
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .lesson-card {
+      background: #fff;
+      border: 1px solid #dfe5ee;
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .lesson-main {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .lesson-title {
+      font-weight: 800;
+      color: #10233f;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .lesson-description {
+      color: #667085;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .lesson-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .option-box {
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 1px solid #dfe5ee;
+      background: #f8fafc;
+      font-size: 13px;
+    }
+
+    .locked {
+      color: #8a3d00;
+      background: #fff4df;
+      border-color: #f2d49a;
+    }
+
+    .trial {
+      color: #187a3d;
+      background: #eaf7ee;
+      border-color: #b9e2c7;
+    }
+
+    .video-box {
+      margin-top: 15px;
+      background: #0b0d10;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .video-box video {
+      width: 100%;
+      max-height: 600px;
+      display: block;
+    }
+
+    .notice {
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: #eef4ff;
+      color: #2457a6;
+      margin-bottom: 18px;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .purchase-panel {
+      background: linear-gradient(135deg, #10233f, #2457a6);
+      color: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+
+    .purchase-panel h2 {
+      margin: 0 0 8px;
+    }
+
+    .purchase-panel p {
+      margin: 0 0 16px;
+      opacity: .9;
+      line-height: 1.6;
+    }
+
+    .purchase-price {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 700px) {
+
+      .student-header {
+        padding: 14px 15px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+
+      .student-wrap {
+        padding: 22px 13px 45px;
+      }
+
+      .page-heading h1 {
+        font-size: 26px;
+      }
+
+      .lesson-main {
+        flex-direction: column;
+      }
+
+    }
+
   </style>
 </head>
 
 <body>
 
-<header class="top">
+<header class="student-header">
 
   <div class="brand">
     LakshyaSetu
-    <small>Student Dashboard</small>
+    <small>Student Learning Portal</small>
   </div>
 
-  <button id="logout" class="btn alt logout-btn">
-    Logout
-  </button>
+  <div class="header-actions">
+
+    <a
+      href="index.html"
+      class="btn btn-light"
+    >
+      Home
+    </a>
+
+    <button
+      id="logoutBtn"
+      class="btn btn-light"
+    >
+      Logout
+    </button>
+
+  </div>
 
 </header>
 
-<main class="wrap">
 
-  <section class="panel">
+<main class="student-wrap">
 
-    <div id="backArea"></div>
+  <div id="breadcrumb" class="breadcrumb"></div>
 
-    <div class="page-header">
-
-      <h1 id="courseTitle">
-        Loading...
-      </h1>
-
-      <p id="courseDesc" class="muted"></p>
-
-    </div>
-
-    <div id="feeArea"></div>
-
-    <div id="subjectArea"></div>
-
-    <div id="topicArea"></div>
-
-  </section>
+  <div id="app"></div>
 
 </main>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 
+
 <script>
 
-const sb = window.supabase.createClient(
-  window.LAKSHYASETU_CONFIG.supabaseUrl,
-  window.LAKSHYASETU_CONFIG.supabasePublishableKey
-);
+const supabaseClient =
+  window.supabase.createClient(
+    window.LAKSHYASETU_CONFIG.supabaseUrl,
+    window.LAKSHYASETU_CONFIG.supabasePublishableKey
+  );
 
-const courseTitle = document.getElementById("courseTitle");
-const courseDesc = document.getElementById("courseDesc");
-const subjectArea = document.getElementById("subjectArea");
-const topicArea = document.getElementById("topicArea");
-const backArea = document.getElementById("backArea");
-const feeArea = document.getElementById("feeArea");
-const logout = document.getElementById("logout");
+
+const app =
+  document.getElementById("app");
+
+const breadcrumb =
+  document.getElementById("breadcrumb");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
 
 let currentUser = null;
+
 let currentCourse = null;
-let courseAccess = false;
+
+let currentSubject = null;
+
+let currentTopic = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function escapeHtml(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
-function formatDuration(seconds) {
 
-  const total = Number(seconds || 0);
+function money(value) {
 
-  if (!total) return "";
-
-  const minutes = Math.floor(total / 60);
-  const secs = total % 60;
-
-  if (minutes >= 60) {
-
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-
-    return `${hours}h ${mins}m`;
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
   }
 
-  return `${minutes}m ${secs}s`;
+  const amount = Number(value);
+
+  if (!Number.isFinite(amount)) {
+    return null;
+  }
+
+  if (amount <= 0) {
+    return null;
+  }
+
+  return "₹" +
+    amount.toLocaleString("en-IN");
+
 }
 
-function renderCourseFee(course) {
 
-  const original = Number(course.original_fee || 0);
-  const current = Number(course.current_fee || 0);
-
-  if (!original && !current) {
-    feeArea.innerHTML = "";
-    return;
-  }
-
-  let html = `
-    <div class="fee-card">
-      <div class="fee-label">Course Fee</div>
-  `;
-
-  if (original && current && original !== current) {
-
-    html += `
-      <div>
-        <span class="old-fee">
-          ₹${original.toLocaleString("en-IN")}
-        </span>
-
-        <span class="current-fee">
-          ₹${current.toLocaleString("en-IN")}
-        </span>
-      </div>
-    `;
-
-  } else {
-
-    const amount = current || original;
-
-    html += `
-      <div class="current-fee">
-        ₹${amount.toLocaleString("en-IN")}
-      </div>
-    `;
-  }
-
-  html += `</div>`;
-
-  feeArea.innerHTML = html;
-}
-
-async function getCourse(slug) {
-
-  const result = await sb
-    .from("courses")
-    .select("*")
-    .eq("slug", slug)
-    .eq("published", true)
-    .single();
-
-  if (result.error) {
-    throw new Error(result.error.message);
-  }
-
-  return result.data;
-}
-
-async function checkCourseAccess(userId, courseId) {
-
-  const result = await sb
-    .from("memberships")
-    .select(
-      "id,user_id,course_id,status,payment_status,expires_at,paid_at"
-    )
-    .eq("user_id", userId)
-    .eq("course_id", courseId)
-    .eq("payment_status", "paid")
-    .order("created_at", {
-      ascending: false
-    });
-
-  if (result.error) {
-    throw new Error(result.error.message);
-  }
-
-  const memberships = result.data || [];
-  const now = new Date();
-
-  const validMembership = memberships.find(membership => {
-
-    if (membership.payment_status !== "paid") {
-      return false;
-    }
-
-    if (
-      membership.status &&
-      membership.status !== "active"
-    ) {
-      return false;
-    }
-
-    if (membership.expires_at) {
-
-      const expiry = new Date(
-        membership.expires_at
-      );
-
-      if (expiry <= now) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-
-  return !!validMembership;
-}
-
-function showPurchaseRequired(course) {
-
-  courseAccess = false;
-
-  subjectArea.innerHTML = "";
-  topicArea.innerHTML = "";
-
-  renderCourseFee(course);
-
-  subjectArea.innerHTML = `
-
-    <div class="purchase-card">
-
-      <h2>
-        Course Access Required
-      </h2>
-
-      <p>
-        You have not purchased this course yet.
-        Please purchase the course from the
-        LakshyaSetu Home page to access its
-        subjects, topics and video lessons.
-      </p>
-
-      <p>
-        After successful payment, login again
-        with your student account and the
-        purchased course subjects will appear here.
-      </p>
-
-      <a class="purchase-btn" href="index.html">
-        Go to LakshyaSetu Home
-      </a>
-
-    </div>
-  `;
-}
-
-async function loadSubjects(courseId) {
-
-  subjectArea.innerHTML = `
-
-    <h2 class="section-title">
-      Subjects
-    </h2>
-
-    <div class="status-message">
-      Loading subjects...
-    </div>
-  `;
-
-  const result = await sb
-    .from("course_subjects")
-    .select("*")
-    .eq("course_id", courseId)
-    .eq("published", true)
-    .order("display_order", {
-      ascending: true
-    });
-
-  if (result.error) {
-
-    subjectArea.innerHTML = `
-
-      <div class="error-message">
-
-        Unable to load subjects.
-
-        <br>
-
-        ${escapeHtml(result.error.message)}
-
-      </div>
-    `;
-
-    return;
-  }
-
-  const subjects = result.data || [];
-
-  if (!subjects.length) {
-
-    subjectArea.innerHTML = `
-
-      <h2 class="section-title">
-        Subjects
-      </h2>
-
-      <div class="status-message">
-        No published subjects are available yet.
-      </div>
-    `;
-
-    return;
-  }
-
-  subjectArea.innerHTML = `
-
-    <h2 class="section-title">
-      Subjects
-    </h2>
-
-    <div class="access-badge">
-      Course Access Active
-    </div>
-
-    <div class="course-grid">
-
-      ${subjects.map(subject => `
-
-        <a
-          class="course-card"
-          href="student.html?course=${encodeURIComponent(
-            currentCourse.slug
-          )}&subject=${subject.id}"
-        >
-
-          <h3>
-            ${escapeHtml(subject.title)}
-          </h3>
-
-          <p class="muted">
-            Open subject
-          </p>
-
-          <span class="count-badge">
-            View Topics
-          </span>
-
-        </a>
-
-      `).join("")}
-
-    </div>
-  `;
-}
-
-async function getCourseSubject(
-  courseId,
-  courseSubjectId
+function feeHtml(
+  currentFee,
+  originalFee,
+  label
 ) {
 
-  const result = await sb
-    .from("course_subjects")
-    .select("*")
-    .eq("course_id", courseId)
-    .eq("id", courseSubjectId)
-    .eq("published", true)
-    .single();
+  const current =
+    money(currentFee);
 
-  if (result.error) {
-    throw new Error(result.error.message);
-  }
+  const original =
+    money(originalFee);
 
-  return result.data;
-}
+  if (!current && !original) {
 
-async function loadTopics(courseSubjectId) {
+    return `
+      <div class="fee-box">
+        <div class="fee-label">
+          ${escapeHtml(label)}
+        </div>
 
-  topicArea.innerHTML = `
-
-    <h2 class="section-title">
-      Topics
-    </h2>
-
-    <div class="status-message">
-      Loading topics...
-    </div>
-  `;
-
-  /*
-    IMPORTANT
-
-    subject_topics.course_subject_id
-    points to
-    course_subjects.id.
-
-    Therefore the query must use
-    course_subject_id.
-  */
-
-  const result = await sb
-    .from("subject_topics")
-    .select("*")
-    .eq("course_subject_id", courseSubjectId)
-    .eq("published", true)
-    .order("display_order", {
-      ascending: true
-    });
-
-  if (result.error) {
-
-    topicArea.innerHTML = `
-
-      <div class="error-message">
-
-        Unable to load topics.
-
-        <br>
-
-        ${escapeHtml(result.error.message)}
-
+        <div class="not-set">
+          Price not set by Admin
+        </div>
       </div>
     `;
 
-    return;
   }
 
-  const topics = result.data || [];
 
-  if (!topics.length) {
+  if (
+    current &&
+    original &&
+    Number(originalFee) > Number(currentFee)
+  ) {
 
-    topicArea.innerHTML = `
+    return `
+      <div class="fee-box">
 
-      <h2 class="section-title">
-        Topics
-      </h2>
+        <div class="fee-label">
+          ${escapeHtml(label)}
+        </div>
 
-      <div class="status-message">
-        No topics have been added yet.
-      </div>
-    `;
+        <div class="fee-row">
 
-    return;
-  }
+          <span class="old-fee">
+            ${original}
+          </span>
 
-  topicArea.innerHTML = `
-
-    <h2 class="section-title">
-      Topics
-    </h2>
-
-    <div id="topicsList"></div>
-  `;
-
-  const topicsList =
-    document.getElementById("topicsList");
-
-  topicsList.innerHTML =
-    topics.map((topic, index) => `
-
-      <div class="topic-card">
-
-        <div
-          class="topic-header"
-          onclick="toggleTopic(${topic.id})"
-        >
-
-          <div>
-
-            <span class="topic-number">
-              ${index + 1}.
-            </span>
-
-            <span class="topic-title">
-              ${escapeHtml(topic.title)}
-            </span>
-
-          </div>
-
-          <span
-            id="arrow-${topic.id}"
-            class="topic-arrow"
-          >
-            +
+          <span class="current-fee">
+            ${current}
           </span>
 
         </div>
 
-        <div
-          id="topic-${topic.id}"
-          class="topic-content"
-        >
+      </div>
+    `;
 
-          <div id="videos-${topic.id}">
+  }
 
-            <div class="status-message">
-              Loading videos...
+
+  return `
+    <div class="fee-box">
+
+      <div class="fee-label">
+        ${escapeHtml(label)}
+      </div>
+
+      <div class="current-fee">
+        ${current || original}
+      </div>
+
+    </div>
+  `;
+
+}
+
+
+function showLoading(message) {
+
+  app.innerHTML = `
+    <div class="loading">
+      ${escapeHtml(message || "Loading...")}
+    </div>
+  `;
+
+}
+
+
+function showError(message) {
+
+  app.innerHTML = `
+    <div class="error-box">
+      <strong>Unable to load this page.</strong>
+      <br><br>
+      ${escapeHtml(message)}
+    </div>
+  `;
+
+}
+
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+function renderBreadcrumb() {
+
+  const parts = [];
+
+  parts.push(`
+    <button onclick="goHome()">
+      Courses
+    </button>
+  `);
+
+
+  if (currentCourse) {
+
+    parts.push(`
+      <span>›</span>
+      <button onclick="openCourseById(${currentCourse.id})">
+        ${escapeHtml(currentCourse.title)}
+      </button>
+    `);
+
+  }
+
+
+  if (currentSubject) {
+
+    parts.push(`
+      <span>›</span>
+      <button onclick="openSubjectById(${currentSubject.id})">
+        ${escapeHtml(currentSubject.title)}
+      </button>
+    `);
+
+  }
+
+
+  if (currentTopic) {
+
+    parts.push(`
+      <span>›</span>
+      <span class="current">
+        ${escapeHtml(currentTopic.title)}
+      </span>
+    `);
+
+  }
+
+
+  breadcrumb.innerHTML =
+    parts.join("");
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+async function goHome() {
+
+  currentCourse = null;
+
+  currentSubject = null;
+
+  currentTopic = null;
+
+  history.pushState(
+    {},
+    "",
+    "student.html"
+  );
+
+  renderBreadcrumb();
+
+  await loadCourses();
+
+}
+
+
+async function loadCourses() {
+
+  currentCourse = null;
+
+  currentSubject = null;
+
+  currentTopic = null;
+
+  renderBreadcrumb();
+
+  showLoading(
+    "Loading courses..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("courses")
+      .select(`
+        id,
+        title,
+        slug,
+        description,
+        language,
+        published,
+        validity_years,
+        course_fee,
+        original_fee,
+        current_fee
+      `)
+      .eq("published", true)
+      .order("id");
+
+
+  if (result.error) {
+
+    showError(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  const courses =
+    result.data || [];
+
+
+  if (!courses.length) {
+
+    app.innerHTML = `
+      <div class="empty">
+        No courses are currently available.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  app.innerHTML = `
+
+    <div class="page-heading">
+
+      <h1>
+        Courses
+      </h1>
+
+      <p>
+        Choose a course to view its subjects,
+        topics and lessons.
+      </p>
+
+    </div>
+
+
+    <div class="course-grid">
+
+      ${courses.map((course, index) => {
+
+        const fee =
+          course.current_fee ??
+          course.course_fee;
+
+        return `
+
+          <div class="course-card">
+
+            <div class="card-number">
+              ${index + 1}
+            </div>
+
+            <h2>
+              ${escapeHtml(course.title)}
+            </h2>
+
+            <p>
+              ${escapeHtml(
+                course.description ||
+                "Structured preparation course."
+              )}
+            </p>
+
+            <div class="card-meta">
+
+              ${
+                course.language
+                ? `
+                  <span class="badge">
+                    ${escapeHtml(course.language)}
+                  </span>
+                `
+                : ""
+              }
+
+              ${
+                course.validity_years
+                ? `
+                  <span class="badge">
+                    ${course.validity_years} years
+                  </span>
+                `
+                : ""
+              }
+
+            </div>
+
+
+            ${feeHtml(
+              fee,
+              course.original_fee,
+              "Course Fee"
+            )}
+
+
+            <div class="card-actions">
+
+              <button
+                class="btn btn-primary"
+                onclick="openCourseById(${course.id})"
+              >
+                View Subjects
+              </button>
+
             </div>
 
           </div>
 
-        </div>
+        `;
 
-      </div>
+      }).join("")}
 
-    `).join("");
-}
-
-async function toggleTopic(topicId) {
-
-  const content =
-    document.getElementById(
-      "topic-" + topicId
-    );
-
-  const arrow =
-    document.getElementById(
-      "arrow-" + topicId
-    );
-
-  if (!content) return;
-
-  const isOpen =
-    content.classList.contains("open");
-
-  if (isOpen) {
-
-    content.classList.remove("open");
-
-    if (arrow) {
-      arrow.textContent = "+";
-    }
-
-    return;
-  }
-
-  content.classList.add("open");
-
-  if (arrow) {
-    arrow.textContent = "−";
-  }
-
-  await loadVideos(topicId);
-}
-
-async function loadVideos(topicId) {
-
-  const container =
-    document.getElementById(
-      "videos-" + topicId
-    );
-
-  if (!container) return;
-
-  container.innerHTML = `
-
-    <div class="status-message">
-      Loading videos...
     </div>
+
   `;
 
-  const result = await sb
-    .from("topic_videos")
-    .select("*")
-    .eq("topic_id", topicId)
-    .eq("published", true)
-    .order("display_order", {
-      ascending: true
-    });
+}
+
+
+/* =========================================================
+   COURSE
+========================================================= */
+
+async function openCourseById(courseId) {
+
+  showLoading(
+    "Loading course..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("courses")
+      .select(`
+        id,
+        title,
+        slug,
+        description,
+        language,
+        published,
+        validity_years,
+        course_fee,
+        original_fee,
+        current_fee
+      `)
+      .eq("id", courseId)
+      .eq("published", true)
+      .single();
+
 
   if (result.error) {
 
-    container.innerHTML = `
-
-      <div class="error-message">
-
-        Unable to load videos.
-
-        <br>
-
-        ${escapeHtml(result.error.message)}
-
-      </div>
-    `;
+    showError(
+      result.error.message
+    );
 
     return;
+
   }
 
-  const videos = result.data || [];
 
-  if (!videos.length) {
+  currentCourse =
+    result.data;
 
-    container.innerHTML = `
+  currentSubject = null;
 
-      <div class="status-message">
-        No published videos are available
-        for this topic yet.
-      </div>
-    `;
+  currentTopic = null;
+
+
+  history.pushState(
+    {},
+    "",
+    "student.html?course=" +
+    encodeURIComponent(currentCourse.slug)
+  );
+
+
+  renderBreadcrumb();
+
+
+  await loadSubjects(
+    currentCourse.id
+  );
+
+}
+
+
+async function loadSubjects(courseId) {
+
+  showLoading(
+    "Loading subjects..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("course_subjects")
+      .select(`
+        id,
+        course_id,
+        title,
+        slug,
+        description,
+        sort_order,
+        published,
+        is_trial,
+        subject_fee
+      `)
+      .eq("course_id", courseId)
+      .eq("published", true)
+      .order("sort_order", {
+        ascending: true
+      })
+      .order("id", {
+        ascending: true
+      });
+
+
+  if (result.error) {
+
+    showError(
+      result.error.message
+    );
 
     return;
+
   }
 
-  container.innerHTML =
-    videos.map((video, index) => {
 
-      const duration =
-        formatDuration(
-          video.duration_seconds
-        );
+  const subjects =
+    result.data || [];
 
-      const trialBadge =
-        video.is_trial
-          ? `
-            <span class="trial-badge">
-              Free Preview
-            </span>
-          `
-          : "";
 
-      let videoContent = "";
+  app.innerHTML = `
 
-      if (video.video_url) {
+    <div class="page-heading">
 
-        videoContent = `
+      <h1>
+        ${escapeHtml(
+          currentCourse.title
+        )}
+      </h1>
 
-          <video
-            class="video-player"
-            controls
-            preload="metadata"
-            src="${escapeHtml(
-              video.video_url
-            )}"
-          ></video>
+      <p>
+        ${escapeHtml(
+          currentCourse.description || ""
+        )}
+      </p>
 
-        `;
+    </div>
 
-      } else {
 
-        videoContent = `
+    ${feeHtml(
+      currentCourse.current_fee ??
+      currentCourse.course_fee,
+      currentCourse.original_fee,
+      "Course Fee"
+    )}
 
-          <div class="status-message">
-            Video will be available soon.
-          </div>
 
-        `;
-      }
+    <h2 class="section-title">
+      Subjects
+    </h2>
 
-      return `
 
-        <div class="video-card">
+    ${
+      subjects.length
+      ? `
+        <div class="subject-grid">
 
-          <div class="video-title">
+          ${subjects.map((subject, index) => `
+
+            <div class="subject-card">
+
+              <div class="card-number">
+                ${index + 1}
+              </div>
+
+              <h2>
+                ${escapeHtml(
+                  subject.title
+                )}
+              </h2>
+
+              <p>
+                ${escapeHtml(
+                  subject.description ||
+                  "Open this subject to view topics."
+                )}
+              </p>
+
+
+              <div class="card-meta">
+
+                ${
+                  subject.is_trial
+                  ? `
+                    <span class="badge green">
+                      Trial Available
+                    </span>
+                  `
+                  : ""
+                }
+
+              </div>
+
+
+              ${feeHtml(
+                subject.subject_fee,
+                null,
+                "Subject Fee"
+              )}
+
+
+              <div class="card-actions">
+
+                <button
+                  class="btn btn-primary"
+                  onclick="openSubjectById(${subject.id})"
+                >
+                  View Topics
+                </button>
+
+              </div>
+
+            </div>
+
+          `).join("")}
+
+        </div>
+      `
+      : `
+        <div class="empty">
+          No published subjects are available
+          for this course yet.
+        </div>
+      `
+    }
+
+  `;
+
+}
+
+
+/* =========================================================
+   SUBJECT
+========================================================= */
+
+async function openSubjectById(
+  courseSubjectId
+) {
+
+  showLoading(
+    "Loading subject..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("course_subjects")
+      .select(`
+        id,
+        course_id,
+        title,
+        slug,
+        description,
+        sort_order,
+        published,
+        is_trial,
+        subject_fee
+      `)
+      .eq("id", courseSubjectId)
+      .eq("course_id", currentCourse.id)
+      .eq("published", true)
+      .single();
+
+
+  if (result.error) {
+
+    showError(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  currentSubject =
+    result.data;
+
+  currentTopic = null;
+
+
+  history.pushState(
+    {},
+    "",
+    "student.html?course=" +
+    encodeURIComponent(
+      currentCourse.slug
+    ) +
+    "&subject=" +
+    currentSubject.id
+  );
+
+
+  renderBreadcrumb();
+
+
+  await loadTopics(
+    currentSubject.id
+  );
+
+}
+
+
+async function loadTopics(
+  courseSubjectId
+) {
+
+  showLoading(
+    "Loading topics..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("course_topics")
+      .select(`
+        id,
+        course_subject_id,
+        title,
+        slug,
+        description,
+        sort_order,
+        published,
+        is_trial,
+        topic_fee,
+        video_count
+      `)
+      .eq(
+        "course_subject_id",
+        courseSubjectId
+      )
+      .eq("published", true)
+      .order("sort_order", {
+        ascending: true
+      })
+      .order("id", {
+        ascending: true
+      });
+
+
+  if (result.error) {
+
+    showError(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  const topics =
+    result.data || [];
+
+
+  app.innerHTML = `
+
+    <div class="subject-top">
+
+      <h1>
+        ${escapeHtml(
+          currentSubject.title
+        )}
+      </h1>
+
+      <p>
+        ${escapeHtml(
+          currentSubject.description ||
+          "Select a topic to view lessons."
+        )}
+      </p>
+
+    </div>
+
+
+    ${feeHtml(
+      currentSubject.subject_fee,
+      null,
+      "Subject Fee"
+    )}
+
+
+    <h2 class="section-title">
+      Topics
+    </h2>
+
+
+    ${
+      topics.length
+      ? `
+        <div class="topic-grid">
+
+          ${topics.map((topic, index) => `
+
+            <div class="topic-card">
+
+              <div class="card-number">
+                ${index + 1}
+              </div>
+
+              <h2>
+                ${escapeHtml(
+                  topic.title
+                )}
+              </h2>
+
+              <p>
+                ${escapeHtml(
+                  topic.description ||
+                  "Open topic to view lessons."
+                )}
+              </p>
+
+
+              <div class="card-meta">
+
+                ${
+                  topic.video_count
+                  ? `
+                    <span class="badge">
+                      ${topic.video_count} videos
+                    </span>
+                  `
+                  : ""
+                }
+
+                ${
+                  topic.is_trial
+                  ? `
+                    <span class="badge green">
+                      Trial
+                    </span>
+                  `
+                  : ""
+                }
+
+              </div>
+
+
+              ${feeHtml(
+                topic.topic_fee,
+                null,
+                "Topic Fee"
+              )}
+
+
+              <div class="card-actions">
+
+                <button
+                  class="btn btn-primary"
+                  onclick="openTopicById(${topic.id})"
+                >
+                  View Lessons
+                </button>
+
+              </div>
+
+            </div>
+
+          `).join("")}
+
+        </div>
+      `
+      : `
+        <div class="empty">
+          No published topics are available
+          for this subject yet.
+        </div>
+      `
+    }
+
+  `;
+
+}
+
+
+/* =========================================================
+   TOPIC
+========================================================= */
+
+async function openTopicById(
+  topicId
+) {
+
+  showLoading(
+    "Loading topic..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("course_topics")
+      .select(`
+        id,
+        course_subject_id,
+        title,
+        slug,
+        description,
+        sort_order,
+        published,
+        is_trial,
+        topic_fee,
+        video_count
+      `)
+      .eq("id", topicId)
+      .eq(
+        "course_subject_id",
+        currentSubject.id
+      )
+      .eq("published", true)
+      .single();
+
+
+  if (result.error) {
+
+    showError(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  currentTopic =
+    result.data;
+
+
+  history.pushState(
+    {},
+    "",
+    "student.html?course=" +
+    encodeURIComponent(
+      currentCourse.slug
+    ) +
+    "&subject=" +
+    currentSubject.id +
+    "&topic=" +
+    currentTopic.id
+  );
+
+
+  renderBreadcrumb();
+
+
+  await loadLessons(
+    currentTopic.id
+  );
+
+}
+
+
+/* =========================================================
+   LESSONS
+========================================================= */
+
+async function loadLessons(
+  topicId
+) {
+
+  showLoading(
+    "Loading lessons..."
+  );
+
+
+  const result =
+    await supabaseClient
+      .from("lessons")
+      .select(`
+        id,
+        course_id,
+        title,
+        description,
+        video_url,
+        pdf_url,
+        sort_order,
+        published,
+        is_trial,
+        visualized_fee,
+        ppt_fee,
+        visualized_video_url,
+        ppt_video_url,
+        topic_id,
+        video_count
+      `)
+      .eq("topic_id", topicId)
+      .eq("published", true)
+      .order("sort_order", {
+        ascending: true
+      })
+      .order("id", {
+        ascending: true
+      });
+
+
+  if (result.error) {
+
+    showError(
+      result.error.message
+    );
+
+    return;
+
+  }
+
+
+  const lessons =
+    result.data || [];
+
+
+  app.innerHTML = `
+
+    <div class="topic-top">
+
+      <h1>
+        ${escapeHtml(
+          currentTopic.title
+        )}
+      </h1>
+
+      <p>
+        ${escapeHtml(
+          currentTopic.description ||
+          "Lessons available under this topic."
+        )}
+      </p>
+
+    </div>
+
+
+    ${feeHtml(
+      currentTopic.topic_fee,
+      null,
+      "Topic Fee"
+    )}
+
+
+    <div class="notice">
+
+      Lesson access and purchasing will follow
+      the pricing and access settings controlled
+      by Admin.
+
+    </div>
+
+
+    <h2 class="section-title">
+      Lessons
+    </h2>
+
+
+    ${
+      lessons.length
+      ? `
+        <div class="lesson-list">
+
+          ${lessons.map(
+            (lesson, index) =>
+              renderLesson(
+                lesson,
+                index
+              )
+          ).join("")}
+
+        </div>
+      `
+      : `
+        <div class="empty">
+          No published lessons are available
+          for this topic yet.
+        </div>
+      `
+    }
+
+  `;
+
+}
+
+
+function renderLesson(
+  lesson,
+  index
+) {
+
+  const trial =
+    lesson.is_trial === true;
+
+
+  const normalVideo =
+    lesson.video_url;
+
+
+  const visualizedFee =
+    money(lesson.visualized_fee);
+
+
+  const pptFee =
+    money(lesson.ppt_fee);
+
+
+  return `
+
+    <div class="lesson-card">
+
+      <div class="lesson-main">
+
+        <div>
+
+          <div class="lesson-title">
 
             ${index + 1}.
-            ${escapeHtml(video.title)}
-
-            ${trialBadge}
+            ${escapeHtml(
+              lesson.title
+            )}
 
           </div>
 
           ${
-            duration
-              ? `
-                <div class="video-meta">
-                  Duration: ${duration}
-                </div>
-              `
-              : ""
+            lesson.description
+            ? `
+              <div class="lesson-description">
+                ${escapeHtml(
+                  lesson.description
+                )}
+              </div>
+            `
+            : ""
           }
-
-          ${videoContent}
 
         </div>
 
-      `;
 
-    }).join("");
-}
+        <div class="card-meta">
 
-function showBackButton(type) {
+          ${
+            trial
+            ? `
+              <span class="badge green">
+                Free Trial
+              </span>
+            `
+            : `
+              <span class="badge orange">
+                Premium
+              </span>
+            `
+          }
 
-  if (type === "subject") {
-
-    backArea.innerHTML = `
-
-      <a
-        class="btn alt back-btn"
-        href="student.html?course=${encodeURIComponent(
-          currentCourse.slug
-        )}"
-      >
-        ← Back to Subjects
-      </a>
-
-    `;
-
-  } else {
-
-    backArea.innerHTML = "";
-  }
-}
-
-async function openSubject(
-  course,
-  courseSubjectId
-) {
-
-  showBackButton("subject");
-
-  subjectArea.innerHTML = "";
-
-  try {
-
-    if (!courseAccess) {
-
-      showPurchaseRequired(course);
-
-      return;
-    }
-
-    const subject =
-      await getCourseSubject(
-        course.id,
-        courseSubjectId
-      );
-
-    courseTitle.textContent =
-      subject.title;
-
-    courseDesc.textContent =
-      "Topics and video lessons";
-
-    feeArea.innerHTML = "";
-
-    topicArea.innerHTML = `
-
-      <div class="subject-header">
-
-        <h2>
-          ${escapeHtml(subject.title)}
-        </h2>
-
-        <p class="muted">
-          Select a topic to view its
-          available video lessons.
-        </p>
+        </div>
 
       </div>
 
-    `;
 
-    await loadTopics(subject.id);
+      <div class="lesson-options">
 
-  } catch (error) {
+        ${
+          normalVideo
+          ? `
+            <div class="option-box">
+              Main Video
+            </div>
+          `
+          : ""
+        }
 
-    topicArea.innerHTML = `
 
-      <div class="error-message">
+        ${
+          visualizedFee
+          ? `
+            <div class="option-box">
+              Visualized Video:
+              ${visualizedFee}
+            </div>
+          `
+          : ""
+        }
 
-        Subject could not be loaded.
 
-        <br>
+        ${
+          pptFee
+          ? `
+            <div class="option-box">
+              PPT Video:
+              ${pptFee}
+            </div>
+          `
+          : ""
+        }
 
-        ${escapeHtml(error.message)}
+
+        ${
+          lesson.pdf_url
+          ? `
+            <div class="option-box">
+              PDF Available
+            </div>
+          `
+          : ""
+        }
 
       </div>
 
-    `;
-  }
-}
 
-async function openCourse(course) {
+      ${
+        trial && normalVideo
+        ? `
+          <div class="video-box">
 
-  showBackButton("course");
+            <video
+              controls
+              preload="metadata"
+              src="${escapeHtml(
+                normalVideo
+              )}"
+            ></video>
 
-  courseTitle.textContent =
-    course.title;
+          </div>
+        `
+        : `
+          <div class="option-box locked"
+               style="margin-top:14px;">
 
-  courseDesc.textContent =
-    course.description || "";
+            ${
+              trial
+              ? "Trial content will be available soon."
+              : "This lesson is locked. Purchase access to watch the lesson."
+            }
 
-  subjectArea.innerHTML = `
+          </div>
+        `
+      }
 
-    <div class="status-message">
-      Checking your course access...
     </div>
 
   `;
 
-  topicArea.innerHTML = "";
-
-  try {
-
-    courseAccess =
-      await checkCourseAccess(
-        currentUser.id,
-        course.id
-      );
-
-    if (!courseAccess) {
-
-      showPurchaseRequired(course);
-
-      return;
-    }
-
-    feeArea.innerHTML = "";
-
-    await loadSubjects(course.id);
-
-  } catch (error) {
-
-    subjectArea.innerHTML = `
-
-      <div class="error-message">
-
-        Unable to verify course access.
-
-        <br>
-
-        ${escapeHtml(error.message)}
-
-      </div>
-
-    `;
-  }
 }
 
-logout.onclick = async function() {
 
-  await sb.auth.signOut();
-
-  location.href = "login.html";
-};
+/* =========================================================
+   INITIAL URL ROUTING
+========================================================= */
 
 async function boot() {
 
   try {
 
     const userResult =
-      await sb.auth.getUser();
+      await supabaseClient.auth.getUser();
+
 
     if (
       !userResult.data ||
       !userResult.data.user
     ) {
 
-      location.href = "login.html";
+      location.href =
+        "login.html";
 
       return;
+
     }
+
 
     currentUser =
       userResult.data.user;
+
 
     const params =
       new URLSearchParams(
         location.search
       );
 
+
     const courseSlug =
-      params.get("course") ||
-      "appsc-group-1";
+      params.get("course");
+
 
     const subjectId =
       params.get("subject");
 
-    const course =
-      await getCourse(courseSlug);
+
+    const topicId =
+      params.get("topic");
+
+
+    /*
+      No course selected:
+      show complete course catalog.
+    */
+
+    if (!courseSlug) {
+
+      await loadCourses();
+
+      return;
+
+    }
+
+
+    /*
+      Load course.
+    */
+
+    const courseResult =
+      await supabaseClient
+        .from("courses")
+        .select(`
+          id,
+          title,
+          slug,
+          description,
+          language,
+          published,
+          validity_years,
+          course_fee,
+          original_fee,
+          current_fee
+        `)
+        .eq("slug", courseSlug)
+        .eq("published", true)
+        .single();
+
+
+    if (courseResult.error) {
+
+      showError(
+        courseResult.error.message
+      );
+
+      return;
+
+    }
+
 
     currentCourse =
-      course;
+      courseResult.data;
+
+
+    /*
+      Topic selected.
+    */
+
+    if (
+      subjectId &&
+      topicId
+    ) {
+
+      const subjectResult =
+        await supabaseClient
+          .from("course_subjects")
+          .select(`
+            id,
+            course_id,
+            title,
+            slug,
+            description,
+            sort_order,
+            published,
+            is_trial,
+            subject_fee
+          `)
+          .eq("id", Number(subjectId))
+          .eq(
+            "course_id",
+            currentCourse.id
+          )
+          .eq("published", true)
+          .single();
+
+
+      if (subjectResult.error) {
+
+        showError(
+          subjectResult.error.message
+        );
+
+        return;
+
+      }
+
+
+      currentSubject =
+        subjectResult.data;
+
+
+      const topicResult =
+        await supabaseClient
+          .from("course_topics")
+          .select(`
+            id,
+            course_subject_id,
+            title,
+            slug,
+            description,
+            sort_order,
+            published,
+            is_trial,
+            topic_fee,
+            video_count
+          `)
+          .eq("id", Number(topicId))
+          .eq(
+            "course_subject_id",
+            currentSubject.id
+          )
+          .eq("published", true)
+          .single();
+
+
+      if (topicResult.error) {
+
+        showError(
+          topicResult.error.message
+        );
+
+        return;
+
+      }
+
+
+      currentTopic =
+        topicResult.data;
+
+
+      renderBreadcrumb();
+
+      await loadLessons(
+        currentTopic.id
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Subject selected.
+    */
 
     if (subjectId) {
 
-      courseAccess =
-        await checkCourseAccess(
-          currentUser.id,
-          course.id
-        );
+      currentSubject = null;
 
-      if (!courseAccess) {
-
-        showBackButton("course");
-
-        courseTitle.textContent =
-          course.title;
-
-        courseDesc.textContent =
-          course.description || "";
-
-        showPurchaseRequired(course);
-
-        return;
-      }
-
-      await openSubject(
-        course,
+      await openSubjectById(
         Number(subjectId)
       );
 
-    } else {
+      return;
 
-      await openCourse(course);
     }
 
-  } catch (error) {
 
-    courseTitle.textContent =
-      "Unable to load page";
+    /*
+      Course selected.
+    */
 
-    courseDesc.textContent =
-      error.message || "";
+    await loadSubjects(
+      currentCourse.id
+    );
 
-    feeArea.innerHTML = "";
+    renderBreadcrumb();
 
-    subjectArea.innerHTML = `
-
-      <div class="error-message">
-
-        Something went wrong while
-        loading the course.
-
-        <br><br>
-
-        ${escapeHtml(error.message)}
-
-      </div>
-
-    `;
   }
+  catch (error) {
+
+    showError(
+      error.message ||
+      "Unexpected error."
+    );
+
+  }
+
 }
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+logoutBtn.onclick =
+  async function() {
+
+    await supabaseClient.auth.signOut();
+
+    location.href =
+      "login.html";
+
+  };
+
+
+/* =========================================================
+   BROWSER BACK/FORWARD
+========================================================= */
+
+window.addEventListener(
+  "popstate",
+  function() {
+
+    boot();
+
+  }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
 
 boot();
 

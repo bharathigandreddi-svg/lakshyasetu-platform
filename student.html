@@ -656,14 +656,24 @@ function resetSections() {
 
 
 /* -------------------------------------------------------
-   SUBJECT QUERY FIX
-   First use published subjects.
-   If none are returned, use all subjects connected to the
-   selected course. This protects against the Student/Admin
-   editor changing the published flag.
+   SUBJECT QUERY
+   FIXED
+
+   Course -> course_subjects -> Subject
+
+   First try published subjects.
+   If none are returned, use all subjects connected
+   to the selected course.
+
+   Also supports the case where the editor has changed
+   the published value.
 ------------------------------------------------------- */
 
 async function getCourseSubjects(courseId) {
+
+  console.log("Loading subjects for course:", courseId);
+
+  /* First attempt: published subjects */
 
   let result = await sb
     .from("course_subjects")
@@ -671,33 +681,85 @@ async function getCourseSubjects(courseId) {
     .eq("course_id", courseId)
     .eq("published", true);
 
-  if (result.error) {
-    console.log("PUBLISHED SUBJECT QUERY:", result.error);
-  }
+  console.log("PUBLISHED COURSE SUBJECTS:", result);
 
-  if (!result.error && result.data && result.data.length) {
+  if (!result.error && result.data && result.data.length > 0) {
+
     return {
       data: sortItems(result.data),
       error: null
     };
+
   }
+
+
+  /* Second attempt: all connected subjects */
 
   const fallback = await sb
     .from("course_subjects")
     .select("*")
     .eq("course_id", courseId);
 
-  console.log("SUBJECT FALLBACK:", fallback);
+  console.log("ALL COURSE SUBJECTS FALLBACK:", fallback);
+
+  if (!fallback.error && fallback.data && fallback.data.length > 0) {
+
+    return {
+      data: sortItems(fallback.data),
+      error: null
+    };
+
+  }
+
+
+  /* Third attempt:
+     Some versions of the editor may use a direct
+     subjects table with course_id.
+  */
+
+  const directSubjects = await sb
+    .from("subjects")
+    .select("*")
+    .eq("course_id", courseId);
+
+  console.log("DIRECT SUBJECTS FALLBACK:", directSubjects);
+
+  if (
+    !directSubjects.error &&
+    directSubjects.data &&
+    directSubjects.data.length > 0
+  ) {
+
+    return {
+      data: sortItems(directSubjects.data),
+      error: null
+    };
+
+  }
+
+
+  /* Return the most useful error */
 
   if (fallback.error) {
+
     return {
       data: [],
       error: fallback.error
     };
+
+  }
+
+  if (directSubjects.error) {
+
+    return {
+      data: [],
+      error: directSubjects.error
+    };
+
   }
 
   return {
-    data: sortItems(fallback.data || []),
+    data: [],
     error: null
   };
 
@@ -705,13 +767,15 @@ async function getCourseSubjects(courseId) {
 
 
 /* -------------------------------------------------------
-   TOPIC QUERY FIX
-   First use published topics.
-   If none are returned, use all topics connected to the
-   selected subject.
+   TOPIC QUERY
 ------------------------------------------------------- */
 
 async function getCourseTopics(courseSubjectId) {
+
+  console.log(
+    "Loading topics for course subject:",
+    courseSubjectId
+  );
 
   let result = await sb
     .from("course_topics")
@@ -719,15 +783,15 @@ async function getCourseTopics(courseSubjectId) {
     .eq("course_subject_id", courseSubjectId)
     .eq("published", true);
 
-  if (result.error) {
-    console.log("PUBLISHED TOPIC QUERY:", result.error);
-  }
+  console.log("PUBLISHED COURSE TOPICS:", result);
 
   if (!result.error && result.data && result.data.length) {
+
     return {
       data: sortItems(result.data),
       error: null
     };
+
   }
 
   const fallback = await sb
@@ -735,13 +799,15 @@ async function getCourseTopics(courseSubjectId) {
     .select("*")
     .eq("course_subject_id", courseSubjectId);
 
-  console.log("TOPIC FALLBACK:", fallback);
+  console.log("ALL COURSE TOPICS FALLBACK:", fallback);
 
   if (fallback.error) {
+
     return {
       data: [],
       error: fallback.error
     };
+
   }
 
   return {
@@ -861,7 +927,7 @@ async function loadCourses() {
 
 
 /* -------------------------------------------------------
-   SUBJECT COUNT FIX
+   SUBJECT COUNT
 ------------------------------------------------------- */
 
 async function loadSubjectCount(courseId) {
@@ -933,7 +999,7 @@ async function openCourse(courseId) {
 
   const result = await getCourseSubjects(course.id);
 
-  console.log("COURSE SUBJECTS:", result);
+  console.log("COURSE SUBJECTS FINAL:", result);
 
   if (result.error) {
 
@@ -1048,17 +1114,39 @@ async function openSubject(courseSubjectId) {
 
   if (subjectResult.error) {
 
-    showError(
-      subjectsArea,
-      "Unable to open subject: " +
-      subjectResult.error.message
-    );
+    /*
+      Fallback for direct subjects table.
+    */
 
-    return;
+    const directSubject =
+      await sb
+        .from("subjects")
+        .select("*")
+        .eq("id", courseSubjectId)
+        .single();
+
+    if (!directSubject.error && directSubject.data) {
+
+      currentSubject = directSubject.data;
+
+    } else {
+
+      showError(
+        subjectsArea,
+        "Unable to open subject: " +
+        subjectResult.error.message
+      );
+
+      return;
+
+    }
+
+  } else {
+
+    currentSubject = subjectResult.data;
 
   }
 
-  currentSubject = subjectResult.data;
   currentTopic = null;
 
   subjectsSection.classList.add("hidden");

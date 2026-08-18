@@ -1,249 +1,1415 @@
-/* =========================================================
-   OPEN SUBJECT
-   ========================================================= */
+<!doctype html>
+<html lang="en">
 
-async function openSubject(courseSubjectId) {
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  if (!currentCourse) {
-    return;
-  }
+  <title>LakshyaSetu | Civil Services Learning Platform</title>
 
-  currentSubject = null;
+  <link rel="stylesheet" href="styles.css">
 
-  const result =
-    await sb
-      .from("course_subjects")
-      .select("*")
-      .eq("id", courseSubjectId)
-      .eq("course_id", currentCourse.id)
-      .eq("published", true)
-      .single();
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  if (result.error) {
+    body {
+      margin: 0;
+      background: #f5f7fb;
+      color: #172033;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-    showError(
-      subjectsArea,
-      "Unable to open subject: " +
-      result.error.message
-    );
+    .top {
+      min-height: 74px;
+      padding: 14px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #10233f;
+      color: white;
+      gap: 20px;
+    }
 
-    return;
-  }
+    .brand {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
 
-  currentSubject = result.data;
+    .brand small {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: .78;
+    }
 
-  subjectsSection.classList.add("hidden");
-  topicsSection.classList.remove("hidden");
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-  topicsTitle.textContent =
-    currentSubject.title;
+    .nav-btn {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.3);
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      background: rgba(255,255,255,.08);
+    }
 
-  topicsArea.innerHTML = `
-    <div class="status">
-      Loading topics...
+    .nav-btn:hover {
+      background: rgba(255,255,255,.16);
+    }
+
+    .wrap {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+      padding: 36px 0 60px;
+    }
+
+    .hero {
+      padding: 38px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #10233f, #2457a6);
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 5vw, 44px);
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 720px;
+      line-height: 1.7;
+      opacity: .9;
+    }
+
+    .section {
+      margin-top: 34px;
+    }
+
+    .section-header {
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      margin: 0 0 6px;
+      color: #10233f;
+      font-size: 26px;
+    }
+
+    .section-header p {
+      margin: 0;
+      color: #667085;
+    }
+
+    .breadcrumb {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb button {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: #2457a6;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      padding: 23px;
+      border-radius: 16px;
+      border: 1px solid #dfe5ee;
+      background: white;
+      box-shadow: 0 3px 12px rgba(16,35,63,.04);
+      transition: transform .18s ease, box-shadow .18s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(16,35,63,.10);
+    }
+
+    .card h3 {
+      margin: 0 0 9px;
+      color: #10233f;
+      font-size: 19px;
+      line-height: 1.35;
+    }
+
+    .card p {
+      margin: 0;
+      color: #667085;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .card-footer {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .fee {
+      font-size: 20px;
+      font-weight: 800;
+      color: #10233f;
+    }
+
+    .free {
+      color: #187a3d;
+    }
+
+    .open-label {
+      padding: 7px 11px;
+      border-radius: 8px;
+      background: #eef4ff;
+      color: #2457a6;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .test-card {
+      border-top: 4px solid #2457a6;
+    }
+
+    .test-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      background: #eef4ff;
+      color: #2457a6;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .status {
+      padding: 22px;
+      border: 1px solid #dfe5ee;
+      border-radius: 14px;
+      background: white;
+      color: #667085;
+    }
+
+    .error {
+      padding: 18px;
+      border-radius: 12px;
+      background: #fff5f5;
+      border: 1px solid #f3caca;
+      color: #a61b1b;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    .empty h3 {
+      margin-bottom: 8px;
+      color: #10233f;
+    }
+
+    .empty p {
+      color: #667085;
+      margin: 0;
+    }
+
+    .footer {
+      margin-top: 50px;
+      padding: 28px 0;
+      text-align: center;
+      color: #667085;
+      font-size: 13px;
+    }
+
+    .learning-box {
+      margin-top: 22px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f7f9fc;
+      border: 1px solid #dfe5ee;
+    }
+
+    .learning-box p {
+      margin-top: 8px;
+    }
+
+    .video-box {
+      margin-top: 20px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid #dfe5ee;
+    }
+
+    .video-box video {
+      width: 100%;
+      max-height: 650px;
+      display: block;
+      background: #000;
+    }
+
+    .pdf-button {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: #2457a6;
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 650px) {
+
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .top-actions {
+        width: 100%;
+      }
+
+      .hero {
+        padding: 25px;
+      }
+
+      .wrap {
+        width: 94%;
+        padding-top: 22px;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+<header class="top">
+
+  <div class="brand">
+    LakshyaSetu
+    <small>Learn. Prepare. Achieve.</small>
+  </div>
+
+  <div class="top-actions">
+
+    <a class="nav-btn" href="login.html">
+      Student Login
+    </a>
+
+  </div>
+
+</header>
+
+
+<main class="wrap">
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <h1>
+      Your Civil Services Journey Starts Here
+    </h1>
+
+    <p>
+      Structured courses, subject-wise learning, topic-wise classes
+      and test series designed for serious competitive examination preparation.
+    </p>
+
+  </section>
+
+
+  <!-- BACK BUTTON -->
+
+  <div id="breadcrumb" class="breadcrumb">
+
+    <button id="backButton">
+      ← Back
+    </button>
+
+  </div>
+
+
+  <!-- COURSES -->
+
+  <section id="coursesSection" class="section">
+
+    <div class="section-header">
+
+      <h2>
+        Courses
+      </h2>
+
+      <p>
+        Select an examination to explore its subjects.
+      </p>
+
     </div>
-  `;
+
+    <div id="coursesArea">
+
+      <div class="status">
+        Loading courses...
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SUBJECTS -->
+
+  <section id="subjectsSection" class="section hidden">
+
+    <div class="section-header">
+
+      <h2 id="subjectsTitle">
+        Subjects
+      </h2>
+
+      <p id="subjectsDescription">
+        Select a subject to explore topics.
+      </p>
+
+    </div>
+
+    <div id="subjectsArea"></div>
+
+  </section>
+
+
+  <!-- TOPICS -->
+
+  <section id="topicsSection" class="section hidden">
+
+    <div class="section-header">
+
+      <h2 id="topicsTitle">
+        Topics
+      </h2>
+
+      <p>
+        Select a topic to view its learning content.
+      </p>
+
+    </div>
+
+    <div id="topicsArea"></div>
+
+  </section>
+
+
+  <!-- TEST SERIES -->
+
+  <section id="testsSection" class="section">
+
+    <div class="section-header">
+
+      <h2>
+        Test Series
+      </h2>
+
+      <p>
+        Practice with structured tests designed for competitive examinations.
+      </p>
+
+    </div>
+
+    <div id="testsArea">
+
+      <div class="status">
+        Loading test series...
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+    LakshyaSetu © 2026. All rights reserved.
+  </footer>
+
+
+</main>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="config.js"></script>
+
+
+<script>
+
+  /* =========================================================
+     SUPABASE
+     ========================================================= */
+
+  const sb = window.supabase.createClient(
+    LAKSHYASETU_CONFIG.supabaseUrl,
+    LAKSHYASETU_CONFIG.supabasePublishableKey
+  );
 
 
   /* =========================================================
-     LOAD CURRENT TOPICS
+     ELEMENTS
      ========================================================= */
 
-  const topicsResult =
-    await sb
-      .from("subject_topics")
+  const coursesSection =
+    document.getElementById("coursesSection");
+
+  const subjectsSection =
+    document.getElementById("subjectsSection");
+
+  const topicsSection =
+    document.getElementById("topicsSection");
+
+  const testsSection =
+    document.getElementById("testsSection");
+
+  const coursesArea =
+    document.getElementById("coursesArea");
+
+  const subjectsArea =
+    document.getElementById("subjectsArea");
+
+  const topicsArea =
+    document.getElementById("topicsArea");
+
+  const testsArea =
+    document.getElementById("testsArea");
+
+  const subjectsTitle =
+    document.getElementById("subjectsTitle");
+
+  const subjectsDescription =
+    document.getElementById("subjectsDescription");
+
+  const topicsTitle =
+    document.getElementById("topicsTitle");
+
+  const breadcrumb =
+    document.getElementById("breadcrumb");
+
+  const backButton =
+    document.getElementById("backButton");
+
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+
+  let courses = [];
+  let currentCourse = null;
+  let currentSubject = null;
+
+
+  /* =========================================================
+     LATITUDE AND LONGITUDE VIDEO
+     ========================================================= */
+
+  const LATITUDE_LONGITUDE_VIDEO =
+    "https://byounbmdyuytoqqyhgos.supabase.co/storage/v1/object/sign/course-videos/Latitude_and_Longitude_optimized.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wYWJmN2ViMy0zZWMxLTQwYWUtOWNiMy0wZWI3OGM3NjM3NTUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb3Vyc2UtdmlkZW9zL0xhdGl0dWRlX2FuZF9Mb25naXR1ZGVfb3B0aW1pemVkLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY0NDA1MDIsImV4cCI6NDk0MDA0MDUwMn0.UjakXFhsTaoDaFyPbNsrLcjYGamzzcf3_iHthHVeR7o";
+
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function money(value) {
+
+    const amount = Number(value || 0);
+
+    if (!amount) {
+      return "Free";
+    }
+
+    return "₹" + amount.toLocaleString("en-IN");
+
+  }
+
+
+  /* =========================================================
+     COURSE FEE
+     ========================================================= */
+
+  function getCourseFee(course) {
+
+    if (
+      course.current_fee !== null &&
+      course.current_fee !== undefined
+    ) {
+      return Number(course.current_fee);
+    }
+
+    if (
+      course.price !== null &&
+      course.price !== undefined
+    ) {
+      return Number(course.price);
+    }
+
+    if (
+      course.fee !== null &&
+      course.fee !== undefined
+    ) {
+      return Number(course.fee);
+    }
+
+    if (
+      course.original_fee !== null &&
+      course.original_fee !== undefined
+    ) {
+      return Number(course.original_fee);
+    }
+
+    return 0;
+
+  }
+
+
+  /* =========================================================
+     SUBJECT FEE
+     ========================================================= */
+
+  function getSubjectFee(subject) {
+
+    if (
+      subject.current_fee !== null &&
+      subject.current_fee !== undefined
+    ) {
+      return Number(subject.current_fee);
+    }
+
+    if (
+      subject.price !== null &&
+      subject.price !== undefined
+    ) {
+      return Number(subject.price);
+    }
+
+    if (
+      subject.fee !== null &&
+      subject.fee !== undefined
+    ) {
+      return Number(subject.fee);
+    }
+
+    if (
+      subject.visualized_fee !== null &&
+      subject.visualized_fee !== undefined
+    ) {
+      return Number(subject.visualized_fee);
+    }
+
+    return 0;
+
+  }
+
+
+  /* =========================================================
+     TOPIC FEE
+     ========================================================= */
+
+  function getTopicFee(topic) {
+
+    if (
+      topic.current_fee !== null &&
+      topic.current_fee !== undefined
+    ) {
+      return Number(topic.current_fee);
+    }
+
+    if (
+      topic.price !== null &&
+      topic.price !== undefined
+    ) {
+      return Number(topic.price);
+    }
+
+    if (
+      topic.fee !== null &&
+      topic.fee !== undefined
+    ) {
+      return Number(topic.fee);
+    }
+
+    if (
+      topic.video_fee !== null &&
+      topic.video_fee !== undefined
+    ) {
+      return Number(topic.video_fee);
+    }
+
+    return 0;
+
+  }
+
+
+  /* =========================================================
+     ERROR
+     ========================================================= */
+
+  function showError(container, message) {
+
+    container.innerHTML = `
+      <div class="error">
+        ${escapeHtml(message)}
+      </div>
+    `;
+
+  }
+
+
+  /* =========================================================
+     EMPTY
+     ========================================================= */
+
+  function showEmpty(container, title, text) {
+
+    container.innerHTML = `
+      <div class="status empty">
+
+        <h3>
+          ${escapeHtml(title)}
+        </h3>
+
+        <p>
+          ${escapeHtml(text)}
+        </p>
+
+      </div>
+    `;
+
+  }
+
+
+  /* =========================================================
+     SORT
+     ========================================================= */
+
+  function sortItems(items) {
+
+    return [...items].sort((a, b) => {
+
+      const aOrder =
+        Number(
+          a.sort_order ??
+          a.display_order ??
+          a.order_index ??
+          999999
+        );
+
+      const bOrder =
+        Number(
+          b.sort_order ??
+          b.display_order ??
+          b.order_index ??
+          999999
+        );
+
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder;
+      }
+
+      return Number(a.id || 0) - Number(b.id || 0);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     LOAD COURSES
+     ========================================================= */
+
+  async function loadCourses() {
+
+    coursesArea.innerHTML = `
+      <div class="status">
+        Loading courses...
+      </div>
+    `;
+
+
+    const result = await sb
+      .from("courses")
       .select("*")
-      .eq("subject_id", currentSubject.id)
+      .eq("published", true)
+      .order("id", {
+        ascending: true
+      });
+
+
+    if (result.error) {
+
+      showError(
+        coursesArea,
+        "Unable to load courses: " +
+        result.error.message
+      );
+
+      return;
+
+    }
+
+
+    courses = result.data || [];
+
+
+    if (!courses.length) {
+
+      showEmpty(
+        coursesArea,
+        "No courses available",
+        "Courses will appear here when they are published by Admin."
+      );
+
+      return;
+
+    }
+
+
+    coursesArea.innerHTML = `
+      <div class="card-grid">
+
+        ${courses.map(course => {
+
+          const fee =
+            getCourseFee(course);
+
+          return `
+
+            <article
+              class="card"
+              onclick="openCourse(${course.id})"
+            >
+
+              <h3>
+                ${escapeHtml(course.title)}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  course.description ||
+                  "Explore subjects and topic-wise learning."
+                )}
+              </p>
+
+              <div class="card-footer">
+
+                <span class="fee ${fee === 0 ? "free" : ""}">
+                  ${money(fee)}
+                </span>
+
+                <span class="open-label">
+                  View Subjects
+                </span>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("")}
+
+      </div>
+    `;
+
+  }
+
+
+  /* =========================================================
+     OPEN COURSE
+     ========================================================= */
+
+  async function openCourse(courseId) {
+
+    const course =
+      courses.find(
+        item => Number(item.id) === Number(courseId)
+      );
+
+
+    if (!course) {
+      return;
+    }
+
+
+    currentCourse = course;
+    currentSubject = null;
+
+
+    coursesSection.classList.add("hidden");
+    testsSection.classList.add("hidden");
+
+    subjectsSection.classList.remove("hidden");
+    topicsSection.classList.add("hidden");
+
+    breadcrumb.style.display = "block";
+
+
+    subjectsTitle.textContent =
+      course.title;
+
+
+    subjectsDescription.textContent =
+      "Course Fee: " +
+      money(getCourseFee(course)) +
+      " | Select a subject to continue.";
+
+
+    subjectsArea.innerHTML = `
+      <div class="status">
+        Loading subjects...
+      </div>
+    `;
+
+
+    const result = await sb
+      .from("course_subjects")
+      .select("*")
+      .eq("course_id", course.id)
       .eq("published", true);
 
 
-  if (topicsResult.error) {
+    if (result.error) {
 
-    showError(
-      topicsArea,
-      "Unable to load topics: " +
-      topicsResult.error.message
-    );
+      showError(
+        subjectsArea,
+        "Unable to load subjects: " +
+        result.error.message
+      );
 
-    return;
+      return;
+
+    }
+
+
+    const subjects =
+      sortItems(result.data || []);
+
+
+    if (!subjects.length) {
+
+      showEmpty(
+        subjectsArea,
+        "No subjects available",
+        "Subjects will appear here when Admin publishes them."
+      );
+
+      return;
+
+    }
+
+
+    subjectsArea.innerHTML = `
+      <div class="card-grid">
+
+        ${subjects.map(subject => {
+
+          const fee =
+            getSubjectFee(subject);
+
+          return `
+
+            <article
+              class="card"
+              onclick="openSubject(${subject.id})"
+            >
+
+              <h3>
+                ${escapeHtml(subject.title)}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  subject.description ||
+                  "Explore topics under this subject."
+                )}
+              </p>
+
+              <div class="card-footer">
+
+                <span class="fee ${fee === 0 ? "free" : ""}">
+                  ${money(fee)}
+                </span>
+
+                <span class="open-label">
+                  View Topics
+                </span>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("")}
+
+      </div>
+    `;
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
   }
 
 
-  let topics =
-    sortItems(topicsResult.data || []);
-
-
   /* =========================================================
-     SPECIAL LEGACY TOPIC
-     
-     Latitude and Longitude exists in the old lessons table
-     with topic_id = 2.
-
-     The current subject_topics table does not contain it.
-
-     Therefore we add it here for Physical Geography.
+     OPEN SUBJECT
      ========================================================= */
 
-  const isPhysicalGeography =
-    String(currentSubject.title || "")
-      .trim()
-      .toLowerCase() === "physical geography";
+  async function openSubject(courseSubjectId) {
+
+    if (!currentCourse) {
+      return;
+    }
 
 
-  if (isPhysicalGeography) {
+    currentSubject = null;
 
-    const latitudeTopicExists =
-      topics.some(
-        topic =>
+
+    const result =
+      await sb
+        .from("course_subjects")
+        .select("*")
+        .eq("id", courseSubjectId)
+        .eq("course_id", currentCourse.id)
+        .eq("published", true)
+        .single();
+
+
+    if (result.error) {
+
+      showError(
+        subjectsArea,
+        "Unable to open subject: " +
+        result.error.message
+      );
+
+      return;
+
+    }
+
+
+    currentSubject =
+      result.data;
+
+
+    subjectsSection.classList.add("hidden");
+
+    topicsSection.classList.remove("hidden");
+
+
+    topicsTitle.textContent =
+      currentSubject.title;
+
+
+    topicsArea.innerHTML = `
+      <div class="status">
+        Loading topics...
+      </div>
+    `;
+
+
+    /* =========================================================
+       LOAD CURRENT TOPICS
+       ========================================================= */
+
+    const topicsResult =
+      await sb
+        .from("subject_topics")
+        .select("*")
+        .eq(
+          "subject_id",
+          currentSubject.id
+        )
+        .eq("published", true);
+
+
+    if (topicsResult.error) {
+
+      showError(
+        topicsArea,
+        "Unable to load topics: " +
+        topicsResult.error.message
+      );
+
+      return;
+
+    }
+
+
+    let topics =
+      sortItems(topicsResult.data || []);
+
+
+    /* =========================================================
+       ADD LEGACY LATITUDE AND LONGITUDE
+
+       The existing database has:
+
+       lessons:
+       topic_id = 2
+       title = Latitude and Longitude
+
+       and the video exists in storage.
+
+       Current subject_topics does not contain this topic.
+
+       Therefore we display it here without changing Supabase.
+       ========================================================= */
+
+    const isPhysicalGeography =
+      String(currentSubject.title || "")
+        .trim()
+        .toLowerCase() === "physical geography";
+
+
+    if (isPhysicalGeography) {
+
+      const latitudeTopicExists =
+        topics.some(topic =>
           Number(topic.topic_id) === 2 ||
           String(topic.title || "")
             .trim()
             .toLowerCase() === "latitude and longitude"
-      );
+        );
 
 
-    if (!latitudeTopicExists) {
+      if (!latitudeTopicExists) {
 
-      topics.unshift({
+        topics.unshift({
 
-        id: "legacy-latitude-longitude",
+          id: "legacy-latitude-longitude",
 
-        topic_id: 2,
+          topic_id: 2,
 
-        title: "Latitude and Longitude",
+          title: "Latitude and Longitude",
 
-        description:
-          "Latitude and Longitude",
+          description:
+            "Latitude and Longitude",
 
-        published: true,
+          published: true,
 
-        is_trial: false,
+          is_trial: false,
 
-        current_fee: 0,
+          current_fee: 0,
 
-        price: 0,
+          price: 0,
 
-        fee: 0,
+          fee: 0,
 
-        video_url:
-          "https://byounbmdyuytoqqyhgos.supabase.co/storage/v1/object/sign/course-videos/Latitude_and_Longitude_optimized.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wYWJmN2ViMy0zZWMxLTQwYWUtOWNiMy0wZWI3OGM3NjM3NTUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb3Vyc2UtdmlkZW9zL0xhdGl0dWRlX2FuZF9Mb25naXR1ZGVfb3B0aW1pemVkLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY0NDA1MDIsImV4cCI6NDk0MDA0MDUwMn0.UjakXFhsTaoDaFyPbNsrLcjYGamzzcf3_iHthHVeR7o",
+          video_url:
+            LATITUDE_LONGITUDE_VIDEO,
 
-        pdf_url: null
+          pdf_url: null
 
-      });
+        });
+
+      }
 
     }
 
+
+    /* =========================================================
+       NO TOPICS
+       ========================================================= */
+
+    if (!topics.length) {
+
+      showEmpty(
+        topicsArea,
+        "No topics available",
+        "Topics will appear here when Admin publishes them."
+      );
+
+      return;
+
+    }
+
+
+    /* =========================================================
+       DISPLAY TOPICS
+       ========================================================= */
+
+    topicsArea.innerHTML = `
+      <div class="card-grid">
+
+        ${topics.map((topic, index) => {
+
+          const fee =
+            getTopicFee(topic);
+
+          const topicId =
+            String(topic.id);
+
+          const onclickValue =
+            topicId === "legacy-latitude-longitude"
+              ? "openTopic('legacy-latitude-longitude')"
+              : `openTopic(${Number(topic.id)})`;
+
+
+          return `
+
+            <article
+              class="card"
+              onclick="${onclickValue}"
+            >
+
+              <h3>
+                ${index + 1}.
+                ${escapeHtml(topic.title)}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  topic.description ||
+                  "Topic-wise learning content"
+                )}
+              </p>
+
+              <div class="card-footer">
+
+                <span class="fee ${fee === 0 ? "free" : ""}">
+                  ${money(fee)}
+                </span>
+
+                <span class="open-label">
+                  Open Topic
+                </span>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("")}
+
+      </div>
+    `;
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
   }
 
 
   /* =========================================================
-     NO TOPICS
+     OPEN TOPIC
      ========================================================= */
 
-  if (!topics.length) {
+  async function openTopic(topicId) {
 
-    showEmpty(
-      topicsArea,
-      "No topics available",
-      "Topics will appear here when Admin publishes them."
-    );
-
-    return;
-  }
+    if (!currentSubject) {
+      return;
+    }
 
 
-  /* =========================================================
-     DISPLAY TOPICS
-     ========================================================= */
+    /* =========================================================
+       LATITUDE AND LONGITUDE
 
-  topicsArea.innerHTML = `
-    <div class="card-grid">
+       This is the legacy topic.
+       It is opened directly from the known video URL.
+       ========================================================= */
 
-      ${topics.map((topic, index) => {
+    if (
+      String(topicId) ===
+      "legacy-latitude-longitude"
+    ) {
 
-        const fee =
-          getTopicFee(topic);
+      topicsArea.innerHTML = `
 
-        return `
+        <div class="card">
 
-          <article
-            class="card"
-            onclick="openTopic('${String(topic.id).replace(/'/g, "\\'")}')"
-          >
+          <h3>
+            Latitude and Longitude
+          </h3>
 
-            <h3>
-              ${index + 1}.
-              ${escapeHtml(topic.title)}
-            </h3>
+          <p>
+            Topic-wise learning content
+          </p>
+
+
+          <div class="learning-box">
+
+            <strong>
+              Learning Content
+            </strong>
 
             <p>
-              ${escapeHtml(
-                topic.description ||
-                "Topic-wise learning content"
-              )}
+              Latitude and Longitude video lesson.
             </p>
 
-            <div class="card-footer">
-
-              <span class="fee ${fee === 0 ? "free" : ""}">
-                ${money(fee)}
-              </span>
-
-              <span class="open-label">
-                Open Topic
-              </span>
-
-            </div>
-
-          </article>
-
-        `;
-
-      }).join("")}
-
-    </div>
-  `;
+          </div>
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+          <div class="video-box">
 
-}
+            <video
+              controls
+              playsinline
+              preload="metadata"
+            >
+
+              <source
+                src="${LATITUDE_LONGITUDE_VIDEO}"
+                type="video/mp4"
+              >
+
+              Your browser does not support video playback.
+
+            </video>
+
+          </div>
 
 
+          <div class="card-footer">
 
-/* =========================================================
-   OPEN TOPIC
-   ========================================================= */
+            <span class="fee free">
+              Free
+            </span>
 
-async function openTopic(topicId) {
+            <span class="open-label">
+              Video Lesson
+            </span>
 
-  if (!currentSubject) {
-    return;
-  }
+          </div>
+
+        </div>
+
+      `;
 
 
-  /* =========================================================
-     SPECIAL LEGACY TOPIC
-     LATITUDE AND LONGITUDE
-     ========================================================= */
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
 
-  if (String(topicId) === "legacy-latitude-longitude") {
+      return;
+
+    }
+
+
+    /* =========================================================
+       NORMAL CURRENT TOPIC
+       ========================================================= */
+
+    const result =
+      await sb
+        .from("subject_topics")
+        .select("*")
+        .eq("id", topicId)
+        .eq(
+          "subject_id",
+          currentSubject.id
+        )
+        .eq("published", true)
+        .single();
+
+
+    if (result.error) {
+
+      showError(
+        topicsArea,
+        "Unable to open topic: " +
+        result.error.message
+      );
+
+      return;
+
+    }
+
+
+    const topic =
+      result.data;
+
+
+    const fee =
+      getTopicFee(topic);
+
 
     topicsArea.innerHTML = `
 
       <div class="card">
 
         <h3>
-          Latitude and Longitude
+          ${escapeHtml(topic.title)}
         </h3>
 
         <p>
-          Topic-wise learning content
+          Topic Fee:
+          <strong>
+            ${money(fee)}
+          </strong>
         </p>
+
 
         <div class="learning-box">
 
@@ -252,51 +1418,86 @@ async function openTopic(topicId) {
           </strong>
 
           <p>
-            Latitude and Longitude video lesson.
+            Video lessons and study material
+            for this topic are shown below.
           </p>
 
         </div>
 
 
-        <div style="
-          margin-top:20px;
-          border-radius:12px;
-          overflow:hidden;
-          background:#000;
-        ">
+        ${
+          topic.video_url
+          ?
+          `
 
-          <video
-            controls
-            playsinline
-            preload="metadata"
-            style="
-              width:100%;
-              max-height:600px;
-              display:block;
-              background:#000;
-            "
-          >
+          <div class="video-box">
 
-            <source
-              src="https://byounbmdyuytoqqyhgos.supabase.co/storage/v1/object/sign/course-videos/Latitude_and_Longitude_optimized.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wYWJmN2ViMy0zZWMxLTQwYWUtOWNiMy0wZWI3OGM3NjM3NTUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb3Vyc2UtdmlkZW9zL0xhdGl0dWRlX2FuZF9Mb25naXR1ZGVfb3B0aW1pemVkLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY0NDA1MDIsImV4cCI6NDk0MDA0MDUwMn0.UjakXFhsTaoDaFyPbNsrLcjYGamzzcf3_iHthHVeR7o"
-              type="video/mp4"
+            <video
+              controls
+              playsinline
+              preload="metadata"
             >
 
-            Your browser does not support video playback.
+              <source
+                src="${escapeHtml(topic.video_url)}"
+                type="video/mp4"
+              >
 
-          </video>
+              Your browser does not support video playback.
 
-        </div>
+            </video>
+
+          </div>
+
+          `
+          :
+          `
+
+          <div class="status" style="margin-top:20px;">
+
+            <strong>
+              Learning content is being prepared.
+            </strong>
+
+            <p>
+              This topic is published, but a playable
+              video has not yet been added.
+            </p>
+
+          </div>
+
+          `
+        }
+
+
+        ${
+          topic.pdf_url
+          ?
+          `
+
+          <a
+            href="${escapeHtml(topic.pdf_url)}"
+            target="_blank"
+            rel="noopener"
+            class="pdf-button"
+          >
+            Open Study Material
+          </a>
+
+          `
+          :
+          ""
+        }
 
 
         <div class="card-footer">
 
-          <span class="fee free">
-            Free
+          <span class="fee ${fee === 0 ? "free" : ""}">
+            ${money(fee)}
           </span>
 
           <span class="open-label">
-            Video Lesson
+            Topic Access
           </span>
 
         </div>
@@ -311,183 +1512,356 @@ async function openTopic(topicId) {
       behavior: "smooth"
     });
 
-    return;
   }
-
 
 
   /* =========================================================
-     NORMAL CURRENT TOPIC
+     LOAD TEST SERIES
      ========================================================= */
 
-  const result =
-    await sb
-      .from("subject_topics")
-      .select("*")
-      .eq("id", topicId)
-      .eq(
-        "subject_id",
-        currentSubject.id
-      )
-      .eq("published", true)
-      .single();
+  async function loadTestSeries() {
+
+    testsArea.innerHTML = `
+      <div class="status">
+        Loading test series...
+      </div>
+    `;
 
 
-  if (result.error) {
+    const result =
+      await sb
+        .from("ls_test_series")
+        .select("*")
+        .eq("published", true);
 
-    showError(
-      topicsArea,
-      "Unable to open topic: " +
-      result.error.message
-    );
 
-    return;
+    if (result.error) {
+
+      showEmpty(
+        testsArea,
+        "Test Series",
+        "Test series will appear here when published by Admin."
+      );
+
+      return;
+
+    }
+
+
+    const series =
+      result.data || [];
+
+
+    if (!series.length) {
+
+      showEmpty(
+        testsArea,
+        "Test Series Coming Soon",
+        "Admin has not published any test series yet."
+      );
+
+      return;
+
+    }
+
+
+    testsArea.innerHTML = `
+      <div class="card-grid">
+
+        ${series.map(item => {
+
+          const price =
+            Number(item.price || 0);
+
+          return `
+
+            <article
+              class="card test-card"
+              onclick="openTestSeries(${item.id})"
+            >
+
+              <div class="test-icon">
+                T
+              </div>
+
+              <h3>
+                ${escapeHtml(item.title)}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  item.description ||
+                  "Structured examination practice and evaluation."
+                )}
+              </p>
+
+              <div class="card-footer">
+
+                <span class="fee ${price === 0 ? "free" : ""}">
+                  ${money(price)}
+                </span>
+
+                <span class="open-label">
+                  View Tests
+                </span>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("")}
+
+      </div>
+    `;
+
   }
 
 
-  const topic =
-    result.data;
+  /* =========================================================
+     OPEN TEST SERIES
+     ========================================================= */
+
+  async function openTestSeries(seriesId) {
+
+    const result =
+      await sb
+        .from("ls_test_series")
+        .select("*")
+        .eq("id", seriesId)
+        .eq("published", true)
+        .single();
 
 
-  const fee =
-    getTopicFee(topic);
+    if (result.error) {
+
+      showError(
+        testsArea,
+        "Unable to open test series: " +
+        result.error.message
+      );
+
+      return;
+
+    }
 
 
-  topicsArea.innerHTML = `
-
-    <div class="card">
-
-      <h3>
-        ${escapeHtml(topic.title)}
-      </h3>
-
-      <p>
-        Topic Fee:
-        <strong>
-          ${money(fee)}
-        </strong>
-      </p>
+    const series =
+      result.data;
 
 
-      <div class="learning-box">
+    coursesSection.classList.add("hidden");
+    subjectsSection.classList.add("hidden");
+    topicsSection.classList.add("hidden");
 
-        <strong>
-          Learning Content
-        </strong>
+    testsSection.classList.remove("hidden");
+
+
+    breadcrumb.style.display = "block";
+
+
+    testsSection.querySelector(
+      ".section-header h2"
+    ).textContent =
+      series.title;
+
+
+    testsSection.querySelector(
+      ".section-header p"
+    ).textContent =
+      "Test Series Fee: " +
+      money(series.price);
+
+
+    testsArea.innerHTML = `
+
+      <div class="card">
+
+        <div class="test-icon">
+          T
+        </div>
+
+        <h3>
+          ${escapeHtml(series.title)}
+        </h3>
 
         <p>
-          Video lessons and study material
-          for this topic are shown below.
+          ${escapeHtml(
+            series.description ||
+            "Test series details will be available here."
+          )}
         </p>
 
-      </div>
+        <div class="card-footer">
 
+          <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
+            ${money(series.price)}
+          </span>
 
-      ${
-        topic.video_url
-        ?
-        `
-
-        <div style="
-          margin-top:20px;
-          border-radius:12px;
-          overflow:hidden;
-          background:#000;
-        ">
-
-          <video
-            controls
-            playsinline
-            preload="metadata"
-            style="
-              width:100%;
-              max-height:600px;
-              display:block;
-              background:#000;
-            "
-          >
-
-            <source
-              src="${escapeHtml(topic.video_url)}"
-              type="video/mp4"
-            >
-
-            Your browser does not support video playback.
-
-          </video>
+          <span class="open-label">
+            Test Series
+          </span>
 
         </div>
-
-        `
-        :
-        `
-
-        <div class="status" style="margin-top:20px;">
-
-          <strong>
-            Learning content is being prepared.
-          </strong>
-
-          <p>
-            This topic is published, but a playable
-            video has not yet been added.
-          </p>
-
-        </div>
-
-        `
-      }
-
-
-      ${
-        topic.pdf_url
-        ?
-        `
-
-        <div style="margin-top:15px;">
-
-          <a
-            href="${escapeHtml(topic.pdf_url)}"
-            target="_blank"
-            rel="noopener"
-            class="nav-btn"
-            style="
-              background:#2457a6;
-              color:white;
-              display:inline-block;
-            "
-          >
-            Open Study Material
-          </a>
-
-        </div>
-
-        `
-        :
-        ""
-      }
-
-
-      <div class="card-footer">
-
-        <span class="fee ${fee === 0 ? "free" : ""}">
-          ${money(fee)}
-        </span>
-
-        <span class="open-label">
-          Topic Access
-        </span>
 
       </div>
 
-    </div>
-
-  `;
+    `;
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
 
-}
+  }
+
+
+  /* =========================================================
+     BACK BUTTON
+     ========================================================= */
+
+  backButton.onclick = function() {
+
+
+    /* Topic -> Subject */
+
+    if (
+      !topicsSection.classList.contains("hidden")
+    ) {
+
+      if (currentCourse) {
+
+        openCourse(
+          currentCourse.id
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    /* Subject -> Courses */
+
+    if (
+      !subjectsSection.classList.contains("hidden")
+    ) {
+
+      subjectsSection.classList.add("hidden");
+
+      coursesSection.classList.remove("hidden");
+
+      testsSection.classList.remove("hidden");
+
+      breadcrumb.style.display = "none";
+
+      currentCourse = null;
+
+      currentSubject = null;
+
+
+      testsSection.querySelector(
+        ".section-header h2"
+      ).textContent =
+        "Test Series";
+
+
+      testsSection.querySelector(
+        ".section-header p"
+      ).textContent =
+        "Practice with structured tests designed for competitive examinations.";
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      return;
+
+    }
+
+
+    /* Test Series -> Home */
+
+    coursesSection.classList.remove("hidden");
+
+    testsSection.classList.remove("hidden");
+
+    subjectsSection.classList.add("hidden");
+
+    topicsSection.classList.add("hidden");
+
+    breadcrumb.style.display = "none";
+
+
+    testsSection.querySelector(
+      ".section-header h2"
+    ).textContent =
+      "Test Series";
+
+
+    testsSection.querySelector(
+      ".section-header p"
+    ).textContent =
+      "Practice with structured tests designed for competitive examinations.";
+
+
+    currentCourse = null;
+
+    currentSubject = null;
+
+
+    loadCourses();
+
+    loadTestSeries();
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  };
+
+
+  /* =========================================================
+     START
+     ========================================================= */
+
+  async function boot() {
+
+    try {
+
+      await Promise.all([
+        loadCourses(),
+        loadTestSeries()
+      ]);
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      showError(
+        coursesArea,
+        error.message ||
+        "Unable to load LakshyaSetu."
+      );
+
+    }
+
+  }
+
+
+  boot();
+
+</script>
+
+</body>
+
+</html>

@@ -174,7 +174,7 @@
     }
 
     .fee {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
       color: #10233f;
     }
@@ -208,20 +208,6 @@
       color: #2457a6;
       font-weight: 800;
       font-size: 18px;
-    }
-
-    .topic-number {
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-      border-radius: 50%;
-      background: #10233f;
-      color: white;
-      font-weight: 800;
-      font-size: 15px;
     }
 
     .status {
@@ -275,56 +261,39 @@
       border: 1px solid #dfe5ee;
     }
 
-    .learning-box h4 {
-      margin: 0 0 10px;
-      color: #10233f;
+    .learning-box p {
+      margin-top: 8px;
     }
 
     .video-box {
       margin-top: 20px;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .video-box video {
-      width: 100%;
-      display: block;
-      max-height: 600px;
-      background: #000;
-    }
-
-    .video-item {
       padding: 18px;
-      margin-top: 15px;
+      border-radius: 14px;
+      background: #f7f9fc;
       border: 1px solid #dfe5ee;
-      border-radius: 12px;
-      background: white;
     }
 
-    .video-item h4 {
+    .video-box h4 {
       margin: 0 0 12px;
       color: #10233f;
+      font-size: 17px;
     }
 
-    .pdf-link {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 9px 14px;
-      border-radius: 8px;
-      background: #eef4ff;
-      color: #2457a6;
-      text-decoration: none;
+    .video-player {
+      width: 100%;
+      max-height: 620px;
+      display: block;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    .video-note {
+      margin-top: 10px;
       font-size: 13px;
-      font-weight: 700;
-    }
-
-    .back-top {
-      margin-bottom: 20px;
+      color: #667085;
     }
 
     @media (max-width: 650px) {
-
       .top {
         align-items: flex-start;
         flex-direction: column;
@@ -348,9 +317,7 @@
       }
     }
   </style>
-
 </head>
-
 
 <body>
 
@@ -369,7 +336,6 @@
 
 </header>
 
-
 <main class="wrap">
 
   <section class="hero">
@@ -385,7 +351,6 @@
 
   </section>
 
-
   <div id="breadcrumb" class="breadcrumb">
 
     <button id="backButton">
@@ -393,9 +358,6 @@
     </button>
 
   </div>
-
-
-  <!-- COURSES -->
 
   <section id="coursesSection" class="section">
 
@@ -421,9 +383,6 @@
 
   </section>
 
-
-  <!-- SUBJECTS -->
-
   <section id="subjectsSection" class="section hidden">
 
     <div class="section-header">
@@ -433,7 +392,7 @@
       </h2>
 
       <p id="subjectsDescription">
-        Select a subject to continue.
+        Select a subject to explore topics.
       </p>
 
     </div>
@@ -441,9 +400,6 @@
     <div id="subjectsArea"></div>
 
   </section>
-
-
-  <!-- TOPICS -->
 
   <section id="topicsSection" class="section hidden">
 
@@ -453,7 +409,7 @@
         Topics
       </h2>
 
-      <p id="topicsDescription">
+      <p>
         Select a topic to view its learning content.
       </p>
 
@@ -462,9 +418,6 @@
     <div id="topicsArea"></div>
 
   </section>
-
-
-  <!-- TEST SERIES -->
 
   <section id="testsSection" class="section">
 
@@ -490,34 +443,21 @@
 
   </section>
 
-
   <footer class="footer">
     LakshyaSetu © 2026. All rights reserved.
   </footer>
 
 </main>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="config.js"></script>
 
-
 <script>
-
-  /* =========================================================
-     SUPABASE
-  ========================================================= */
 
   const sb = window.supabase.createClient(
     LAKSHYASETU_CONFIG.supabaseUrl,
     LAKSHYASETU_CONFIG.supabasePublishableKey
   );
-
-
-  /* =========================================================
-     ELEMENTS
-  ========================================================= */
 
   const coursesSection =
     document.getElementById("coursesSection");
@@ -552,29 +492,15 @@
   const topicsTitle =
     document.getElementById("topicsTitle");
 
-  const topicsDescription =
-    document.getElementById("topicsDescription");
-
   const breadcrumb =
     document.getElementById("breadcrumb");
 
   const backButton =
     document.getElementById("backButton");
 
-
-  /* =========================================================
-     STATE
-  ========================================================= */
-
   let courses = [];
   let currentCourse = null;
   let currentSubject = null;
-  let currentTopic = null;
-
-
-  /* =========================================================
-     HELPERS
-  ========================================================= */
 
   function escapeHtml(value) {
 
@@ -586,7 +512,6 @@
       .replace(/'/g, "&#039;");
 
   }
-
 
   function money(value) {
 
@@ -600,33 +525,83 @@
 
   }
 
+  function getCourseFee(course) {
 
-  function getFee(item) {
-
-    if (item.current_fee !== null &&
-        item.current_fee !== undefined) {
-      return Number(item.current_fee);
+    if (course.current_fee !== null &&
+        course.current_fee !== undefined) {
+      return Number(course.current_fee);
     }
 
-    if (item.price !== null &&
-        item.price !== undefined) {
-      return Number(item.price);
+    if (course.price !== null &&
+        course.price !== undefined) {
+      return Number(course.price);
     }
 
-    if (item.fee !== null &&
-        item.fee !== undefined) {
-      return Number(item.fee);
+    if (course.fee !== null &&
+        course.fee !== undefined) {
+      return Number(course.fee);
     }
 
-    if (item.video_fee !== null &&
-        item.video_fee !== undefined) {
-      return Number(item.video_fee);
+    if (course.original_fee !== null &&
+        course.original_fee !== undefined) {
+      return Number(course.original_fee);
     }
 
     return 0;
 
   }
 
+  function getSubjectFee(subject) {
+
+    if (subject.current_fee !== null &&
+        subject.current_fee !== undefined) {
+      return Number(subject.current_fee);
+    }
+
+    if (subject.price !== null &&
+        subject.price !== undefined) {
+      return Number(subject.price);
+    }
+
+    if (subject.fee !== null &&
+        subject.fee !== undefined) {
+      return Number(subject.fee);
+    }
+
+    if (subject.visualized_fee !== null &&
+        subject.visualized_fee !== undefined) {
+      return Number(subject.visualized_fee);
+    }
+
+    return 0;
+
+  }
+
+  function getTopicFee(topic) {
+
+    if (topic.current_fee !== null &&
+        topic.current_fee !== undefined) {
+      return Number(topic.current_fee);
+    }
+
+    if (topic.price !== null &&
+        topic.price !== undefined) {
+      return Number(topic.price);
+    }
+
+    if (topic.fee !== null &&
+        topic.fee !== undefined) {
+      return Number(topic.fee);
+    }
+
+    if (topic.video_fee !== null &&
+        topic.video_fee !== undefined) {
+      return Number(topic.video_fee);
+    }
+
+    return 0;
+
+  }
 
   function showError(container, message) {
 
@@ -638,7 +613,6 @@
 
   }
 
-
   function showEmpty(container, title, text) {
 
     container.innerHTML = `
@@ -649,7 +623,6 @@
     `;
 
   }
-
 
   function sortItems(items) {
 
@@ -679,11 +652,6 @@
 
   }
 
-
-  /* =========================================================
-     LOAD COURSES
-  ========================================================= */
-
   async function loadCourses() {
 
     coursesArea.innerHTML = `
@@ -696,9 +664,7 @@
       .from("courses")
       .select("*")
       .eq("published", true)
-      .order("id", {
-        ascending: true
-      });
+      .order("id", { ascending: true });
 
     if (result.error) {
 
@@ -709,6 +675,7 @@
       );
 
       return;
+
     }
 
     courses = result.data || [];
@@ -718,10 +685,11 @@
       showEmpty(
         coursesArea,
         "No courses available",
-        "Courses will appear here when published by Admin."
+        "Courses will appear here when they are published by Admin."
       );
 
       return;
+
     }
 
     coursesArea.innerHTML = `
@@ -729,7 +697,7 @@
 
         ${courses.map(course => {
 
-          const fee = getFee(course);
+          const fee = getCourseFee(course);
 
           return `
             <article
@@ -770,11 +738,6 @@
 
   }
 
-
-  /* =========================================================
-     OPEN COURSE
-  ========================================================= */
-
   async function openCourse(courseId) {
 
     const course = courses.find(
@@ -787,7 +750,6 @@
 
     currentCourse = course;
     currentSubject = null;
-    currentTopic = null;
 
     coursesSection.classList.add("hidden");
     testsSection.classList.add("hidden");
@@ -797,22 +759,18 @@
 
     breadcrumb.style.display = "block";
 
-    subjectsTitle.textContent =
-      course.title;
+    subjectsTitle.textContent = course.title;
 
     subjectsDescription.textContent =
-      "Select a subject to continue.";
+      "Course Fee: " +
+      money(getCourseFee(course)) +
+      " | Select a subject to continue.";
 
     subjectsArea.innerHTML = `
       <div class="status">
         Loading subjects...
       </div>
     `;
-
-
-    /*
-      NORMAL SUBJECT LOADING
-    */
 
     const result = await sb
       .from("course_subjects")
@@ -829,59 +787,10 @@
       );
 
       return;
-    }
-
-    let subjects = sortItems(result.data || []);
-
-
-    /*
-      SPECIAL FIX FOR PHYSICAL GEOGRAPHY
-
-      The existing database already contains the
-      25 published lesson/topic records:
-
-      85 to 109
-
-      Their topic IDs are:
-
-      280 to 304
-
-      We use these records directly instead of relying
-      on the broken subject_topics relationship.
-    */
-
-    if (
-      String(course.title || "")
-        .toLowerCase()
-        .includes("physical geography")
-    ) {
-
-      const lessonResult = await sb
-        .from("lessons")
-        .select("*")
-        .gte("id", 85)
-        .lte("id", 109)
-        .eq("published", true)
-        .order("id", {
-          ascending: true
-        });
-
-      if (!lessonResult.error &&
-          lessonResult.data &&
-          lessonResult.data.length) {
-
-        subjects = lessonResult.data.map(item => ({
-          id: item.id,
-          title: item.title,
-          topic_id: item.topic_id,
-          published: item.published,
-          is_lesson_topic: true
-        }));
-
-      }
 
     }
 
+    const subjects = sortItems(result.data || []);
 
     if (!subjects.length) {
 
@@ -892,13 +801,15 @@
       );
 
       return;
-    }
 
+    }
 
     subjectsArea.innerHTML = `
       <div class="card-grid">
 
-        ${subjects.map((subject, index) => {
+        ${subjects.map(subject => {
+
+          const fee = getSubjectFee(subject);
 
           return `
             <article
@@ -906,26 +817,25 @@
               onclick="openSubject(${subject.id})"
             >
 
-              <div class="topic-number">
-                ${index + 1}
-              </div>
-
               <h3>
                 ${escapeHtml(subject.title)}
               </h3>
 
               <p>
-                Topic-wise learning content
+                ${escapeHtml(
+                  subject.description ||
+                  "Explore topics under this subject."
+                )}
               </p>
 
               <div class="card-footer">
 
-                <span class="fee free">
-                  Free
+                <span class="fee ${fee === 0 ? "free" : ""}">
+                  ${money(fee)}
                 </span>
 
                 <span class="open-label">
-                  Open Topic
+                  View Topics
                 </span>
 
               </div>
@@ -938,7 +848,6 @@
       </div>
     `;
 
-
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -946,65 +855,18 @@
 
   }
 
-
-  /* =========================================================
-     OPEN SUBJECT / TOPIC
-  ========================================================= */
-
-  async function openSubject(subjectId) {
+  async function openSubject(courseSubjectId) {
 
     if (!currentCourse) {
       return;
     }
 
-
-    /*
-      Physical Geography uses the lessons table.
-    */
-
-    if (
-      String(currentCourse.title || "")
-        .toLowerCase()
-        .includes("physical geography")
-    ) {
-
-      const result = await sb
-        .from("lessons")
-        .select("*")
-        .eq("id", subjectId)
-        .eq("published", true)
-        .single();
-
-      if (result.error) {
-
-        showError(
-          subjectsArea,
-          "Unable to open topic: " +
-          result.error.message
-        );
-
-        return;
-      }
-
-      currentSubject = result.data;
-
-      await showTopicContent(
-        result.data.topic_id,
-        result.data.title
-      );
-
-      return;
-    }
-
-
-    /*
-      Normal course subject.
-    */
+    currentSubject = null;
 
     const result = await sb
       .from("course_subjects")
       .select("*")
-      .eq("id", subjectId)
+      .eq("id", courseSubjectId)
       .eq("course_id", currentCourse.id)
       .eq("published", true)
       .single();
@@ -1018,6 +880,7 @@
       );
 
       return;
+
     }
 
     currentSubject = result.data;
@@ -1025,11 +888,7 @@
     subjectsSection.classList.add("hidden");
     topicsSection.classList.remove("hidden");
 
-    topicsTitle.textContent =
-      currentSubject.title;
-
-    topicsDescription.textContent =
-      "Select a topic to view its learning content.";
+    topicsTitle.textContent = currentSubject.title;
 
     topicsArea.innerHTML = `
       <div class="status">
@@ -1037,13 +896,11 @@
       </div>
     `;
 
-
     const topicsResult = await sb
       .from("subject_topics")
       .select("*")
       .eq("subject_id", currentSubject.id)
       .eq("published", true);
-
 
     if (topicsResult.error) {
 
@@ -1054,29 +911,29 @@
       );
 
       return;
+
     }
 
-
-    const topics =
-      sortItems(topicsResult.data || []);
-
+    const topics = sortItems(topicsResult.data || []);
 
     if (!topics.length) {
 
       showEmpty(
         topicsArea,
-        "No topics available",
-        "Topics will appear here when Admin publishes them."
+        "Learning Content Not Available",
+        "This subject is not connected to a topic yet."
       );
 
       return;
-    }
 
+    }
 
     topicsArea.innerHTML = `
       <div class="card-grid">
 
         ${topics.map((topic, index) => {
+
+          const fee = getTopicFee(topic);
 
           return `
             <article
@@ -1084,11 +941,8 @@
               onclick="openTopic(${topic.id})"
             >
 
-              <div class="topic-number">
-                ${index + 1}
-              </div>
-
               <h3>
+                ${index + 1}.
                 ${escapeHtml(topic.title)}
               </h3>
 
@@ -1098,8 +952,8 @@
 
               <div class="card-footer">
 
-                <span class="fee free">
-                  ${money(getFee(topic))}
+                <span class="fee ${fee === 0 ? "free" : ""}">
+                  ${money(fee)}
                 </span>
 
                 <span class="open-label">
@@ -1116,7 +970,6 @@
       </div>
     `;
 
-
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -1124,10 +977,81 @@
 
   }
 
+  /*
+   * =========================================================
+   * FIND PLAYABLE VIDEO
+   *
+   * Priority 1:
+   * topic_videos
+   *
+   * Priority 2:
+   * lessons table using the topic title.
+   *
+   * This allows existing uploaded videos to work
+   * even when the new topic IDs are different.
+   * =========================================================
+   */
 
-  /* =========================================================
-     OPEN TOPIC
-  ========================================================= */
+  async function findPlayableVideo(topic) {
+
+    let videoUrl = null;
+    let source = null;
+
+    const topicVideoResult = await sb
+      .from("topic_videos")
+      .select("*")
+      .eq("topic_id", topic.id)
+      .eq("published", true)
+      .order("id", { ascending: true })
+      .limit(1);
+
+    if (!topicVideoResult.error &&
+        topicVideoResult.data &&
+        topicVideoResult.data.length) {
+
+      const video = topicVideoResult.data[0];
+
+      if (video.video_url) {
+
+        videoUrl = video.video_url;
+        source = "topic_videos";
+
+      }
+
+    }
+
+    if (!videoUrl) {
+
+      const lessonResult = await sb
+        .from("lessons")
+        .select("*")
+        .eq("title", topic.title)
+        .eq("published", true)
+        .limit(1);
+
+      if (!lessonResult.error &&
+          lessonResult.data &&
+          lessonResult.data.length) {
+
+        const lesson = lessonResult.data[0];
+
+        if (lesson.video_url) {
+
+          videoUrl = lesson.video_url;
+          source = "lessons";
+
+        }
+
+      }
+
+    }
+
+    return {
+      videoUrl,
+      source
+    };
+
+  }
 
   async function openTopic(topicId) {
 
@@ -1135,14 +1059,13 @@
       return;
     }
 
-
     const result = await sb
       .from("subject_topics")
       .select("*")
       .eq("id", topicId)
+      .eq("subject_id", currentSubject.id)
       .eq("published", true)
       .single();
-
 
     if (result.error) {
 
@@ -1153,312 +1076,120 @@
       );
 
       return;
+
     }
 
+    const topic = result.data;
 
-    await showTopicContent(
-      result.data.id,
-      result.data.title
-    );
-
-  }
-
-
-  /* =========================================================
-     SHOW TOPIC CONTENT
-  ========================================================= */
-
-  async function showTopicContent(topicId, topicTitle) {
-
-    currentTopic = {
-      id: topicId,
-      title: topicTitle
-    };
-
-
-    subjectsSection.classList.add("hidden");
-    topicsSection.classList.remove("hidden");
-
-    topicsTitle.textContent =
-      topicTitle;
-
-    topicsDescription.textContent =
-      "Learning content for this topic.";
-
+    const fee = getTopicFee(topic);
 
     topicsArea.innerHTML = `
-      <div class="status">
-        Loading learning content...
-      </div>
-    `;
-
-
-    /*
-      Load topic videos.
-    */
-
-    const videoResult = await sb
-      .from("topic_videos")
-      .select("*")
-      .eq("topic_id", topicId)
-      .eq("published", true)
-      .order("sort_order", {
-        ascending: true
-      });
-
-
-    let videos = [];
-
-
-    if (!videoResult.error) {
-      videos = videoResult.data || [];
-    }
-
-
-    /*
-      If sort_order is unavailable in the table,
-      retry without ordering.
-    */
-
-    if (videoResult.error) {
-
-      const retry = await sb
-        .from("topic_videos")
-        .select("*")
-        .eq("topic_id", topicId)
-        .eq("published", true);
-
-      if (!retry.error) {
-        videos = retry.data || [];
-      }
-
-    }
-
-
-    /*
-      Load lesson record for PDF/video fallback.
-    */
-
-    let lessonData = null;
-
-    const lessonResult = await sb
-      .from("lessons")
-      .select("*")
-      .eq("topic_id", topicId)
-      .eq("published", true)
-      .order("id", {
-        ascending: true
-      })
-      .limit(1);
-
-    if (!lessonResult.error &&
-        lessonResult.data &&
-        lessonResult.data.length) {
-
-      lessonData = lessonResult.data[0];
-
-    }
-
-
-    /*
-      Combine lesson video if topic_videos has no
-      playable video.
-    */
-
-    let html = `
       <div class="card">
 
         <h3>
-          ${escapeHtml(topicTitle)}
+          ${escapeHtml(topic.title)}
         </h3>
+
+        <p>
+          Topic Fee:
+          <strong>
+            ${money(fee)}
+          </strong>
+        </p>
 
         <div class="learning-box">
 
-          <h4>
-            Learning Content
-          </h4>
-
-          <p>
-            Video lessons and study material for
-            this topic are shown below.
-          </p>
-
-        </div>
-    `;
-
-
-    /*
-      Topic videos
-    */
-
-    if (videos.length) {
-
-      videos.forEach((video, index) => {
-
-        html += `
-          <div class="video-item">
-
-            <h4>
-              ${escapeHtml(
-                video.title ||
-                "Lesson " + (index + 1)
-              )}
-            </h4>
-        `;
-
-
-        if (video.video_url) {
-
-          html += `
-            <div class="video-box">
-
-              <video
-                controls
-                preload="metadata"
-                src="${escapeHtml(video.video_url)}"
-              >
-              </video>
-
-            </div>
-          `;
-
-        } else {
-
-          html += `
-            <div class="status">
-              Video will be available here when Admin
-              adds the video URL.
-            </div>
-          `;
-
-        }
-
-
-        if (video.pdf_url) {
-
-          html += `
-            <a
-              class="pdf-link"
-              href="${escapeHtml(video.pdf_url)}"
-              target="_blank"
-              rel="noopener"
-            >
-              Open Study Material
-            </a>
-          `;
-
-        }
-
-
-        html += `
-          </div>
-        `;
-
-      });
-
-    }
-
-
-    /*
-      Lesson-level video fallback.
-    */
-
-    if (
-      !videos.length &&
-      lessonData &&
-      lessonData.video_url
-    ) {
-
-      html += `
-        <div class="video-item">
-
-          <h4>
-            ${escapeHtml(lessonData.title)}
-          </h4>
-
-          <div class="video-box">
-
-            <video
-              controls
-              preload="metadata"
-              src="${escapeHtml(lessonData.video_url)}"
-            >
-            </video>
-
-          </div>
-
-      `;
-
-
-      if (lessonData.pdf_url) {
-
-        html += `
-          <a
-            class="pdf-link"
-            href="${escapeHtml(lessonData.pdf_url)}"
-            target="_blank"
-            rel="noopener"
-          >
-            Open Study Material
-          </a>
-        `;
-
-      }
-
-
-      html += `
-        </div>
-      `;
-
-    }
-
-
-    /*
-      No content yet.
-    */
-
-    if (
-      !videos.length &&
-      !(lessonData && lessonData.video_url)
-    ) {
-
-      html += `
-        <div class="status" style="margin-top:18px">
-
           <strong>
-            Learning content is being prepared.
+            Learning Content
           </strong>
 
-          <p style="margin:8px 0 0">
-            This topic is published, but a playable
-            video has not yet been added.
+          <p>
+            Video lessons and study material for this topic
+            are shown below.
           </p>
 
         </div>
-      `;
 
-    }
+        <div id="topicVideoArea" class="video-box">
 
+          <div class="status">
+            Checking available learning videos...
+          </div>
 
-    html += `
+        </div>
+
+        <div class="card-footer">
+
+          <span class="fee ${fee === 0 ? "free" : ""}">
+            ${money(fee)}
+          </span>
+
+          <span class="open-label">
+            Topic Access
+          </span>
+
+        </div>
+
       </div>
     `;
-
-
-    topicsArea.innerHTML = html;
-
 
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
 
+    const videoArea =
+      document.getElementById("topicVideoArea");
+
+    const videoResult =
+      await findPlayableVideo(topic);
+
+    if (videoResult.videoUrl) {
+
+      videoArea.innerHTML = `
+        <h4>
+          Video Lesson
+        </h4>
+
+        <video
+          class="video-player"
+          controls
+          playsinline
+          preload="metadata"
+        >
+          <source
+            src="${escapeHtml(videoResult.videoUrl)}"
+            type="video/mp4"
+          >
+
+          Your browser does not support video playback.
+        </video>
+
+        <div class="video-note">
+          Video lesson available for this topic.
+        </div>
+      `;
+
+    } else {
+
+      videoArea.innerHTML = `
+        <div class="status">
+
+          <strong>
+            Learning content is being prepared.
+          </strong>
+
+          <p style="margin-top:8px;">
+            This topic is published, but a playable video
+            has not yet been added.
+          </p>
+
+        </div>
+      `;
+
+    }
+
   }
-
-
-  /* =========================================================
-     TEST SERIES
-  ========================================================= */
 
   async function loadTestSeries() {
 
@@ -1468,12 +1199,10 @@
       </div>
     `;
 
-
     const result = await sb
       .from("ls_test_series")
       .select("*")
       .eq("published", true);
-
 
     if (result.error) {
 
@@ -1484,11 +1213,10 @@
       );
 
       return;
+
     }
 
-
     const series = result.data || [];
-
 
     if (!series.length) {
 
@@ -1499,16 +1227,15 @@
       );
 
       return;
-    }
 
+    }
 
     testsArea.innerHTML = `
       <div class="card-grid">
 
         ${series.map(item => {
 
-          const price =
-            Number(item.price || 0);
+          const price = Number(item.price || 0);
 
           return `
             <article
@@ -1553,11 +1280,6 @@
 
   }
 
-
-  /* =========================================================
-     OPEN TEST SERIES
-  ========================================================= */
-
   async function openTestSeries(seriesId) {
 
     const result = await sb
@@ -1566,7 +1288,6 @@
       .eq("id", seriesId)
       .eq("published", true)
       .single();
-
 
     if (result.error) {
 
@@ -1577,11 +1298,10 @@
       );
 
       return;
+
     }
 
-
     const series = result.data;
-
 
     coursesSection.classList.add("hidden");
     subjectsSection.classList.add("hidden");
@@ -1591,12 +1311,9 @@
 
     breadcrumb.style.display = "block";
 
-
     testsSection.querySelector(
       ".section-header h2"
-    ).textContent =
-      series.title;
-
+    ).textContent = series.title;
 
     testsSection.querySelector(
       ".section-header p"
@@ -1604,8 +1321,8 @@
       "Test Series Fee: " +
       money(series.price);
 
-
     testsArea.innerHTML = `
+
       <div class="card">
 
         <div class="test-icon">
@@ -1625,11 +1342,7 @@
 
         <div class="card-footer">
 
-          <span class="fee ${
-            Number(series.price || 0) === 0
-              ? "free"
-              : ""
-          }">
+          <span class="fee ${Number(series.price || 0) === 0 ? "free" : ""}">
             ${money(series.price)}
           </span>
 
@@ -1640,8 +1353,8 @@
         </div>
 
       </div>
-    `;
 
+    `;
 
     window.scrollTo({
       top: 0,
@@ -1650,66 +1363,34 @@
 
   }
 
-
-  /* =========================================================
-     BACK BUTTON
-  ========================================================= */
-
   backButton.onclick = function() {
 
+    if (!topicsSection.classList.contains("hidden")) {
 
-    /*
-      Topic content -> topic list
-    */
-
-    if (
-      !topicsSection.classList.contains("hidden") &&
-      currentSubject
-    ) {
-
-      if (
-        currentCourse &&
-        String(currentCourse.title || "")
-          .toLowerCase()
-          .includes("physical geography")
-      ) {
-
+      if (currentCourse) {
         openCourse(currentCourse.id);
-
-        return;
-
       }
-
-      subjectsSection.classList.remove("hidden");
-      topicsSection.classList.add("hidden");
 
       return;
 
     }
 
-
-    /*
-      Subject list -> courses
-    */
-
-    if (
-      !subjectsSection.classList.contains("hidden")
-    ) {
+    if (!subjectsSection.classList.contains("hidden")) {
 
       subjectsSection.classList.add("hidden");
+
       coursesSection.classList.remove("hidden");
+
       testsSection.classList.remove("hidden");
 
       breadcrumb.style.display = "none";
 
       currentCourse = null;
       currentSubject = null;
-      currentTopic = null;
 
       testsSection.querySelector(
         ".section-header h2"
-      ).textContent =
-        "Test Series";
+      ).textContent = "Test Series";
 
       testsSection.querySelector(
         ".section-header p"
@@ -1725,11 +1406,6 @@
 
     }
 
-
-    /*
-      Test Series -> Home
-    */
-
     coursesSection.classList.remove("hidden");
     testsSection.classList.remove("hidden");
     subjectsSection.classList.add("hidden");
@@ -1739,8 +1415,7 @@
 
     testsSection.querySelector(
       ".section-header h2"
-    ).textContent =
-      "Test Series";
+    ).textContent = "Test Series";
 
     testsSection.querySelector(
       ".section-header p"
@@ -1749,7 +1424,6 @@
 
     currentCourse = null;
     currentSubject = null;
-    currentTopic = null;
 
     loadCourses();
     loadTestSeries();
@@ -1760,11 +1434,6 @@
     });
 
   };
-
-
-  /* =========================================================
-     START
-  ========================================================= */
 
   async function boot() {
 
@@ -1788,7 +1457,6 @@
     }
 
   }
-
 
   boot();
 

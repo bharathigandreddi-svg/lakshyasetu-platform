@@ -3,12 +3,27 @@ window.LAKSHYASETU_CONFIG = {
   supabasePublishableKey: "sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa"
 };
 
-/* Make the Supabase client available to the lesson upload code. */
-if (window.supabase && !window.db) {
+/* Always create and expose one Supabase client for the admin upload code. */
+function getLakshyaSetuDb() {
+  if (window.db && window.db.storage) return window.db;
+
+  if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+    throw new Error('Supabase client library is not loaded. Please refresh the page and try again.');
+  }
+
   window.db = window.supabase.createClient(
     window.LAKSHYASETU_CONFIG.supabaseUrl,
     window.LAKSHYASETU_CONFIG.supabasePublishableKey
   );
+
+  return window.db;
+}
+
+/* Initialize immediately when the Supabase CDN script is available. */
+try {
+  getLakshyaSetuDb();
+} catch (e) {
+  console.error('Supabase initialization failed:', e);
 }
 
 /* LakshyaSetu: direct Video + PDF upload for Lesson Management */
@@ -76,6 +91,7 @@ window.addEventListener('load', function () {
       const selectedPdf = document.getElementById('lessonPdfFile')?.files?.[0];
 
       try {
+        const db = getLakshyaSetuDb();
         const topicId = document.getElementById('lessonTopic').value || 'general';
 
         /* Upload video if a file was selected. File takes priority over Video URL. */
@@ -92,7 +108,7 @@ window.addEventListener('load', function () {
           const path = topicId + '/' + Date.now() + '-' + safeName;
 
           notice('Uploading video...');
-          const { error: uploadError } = await window.db.storage
+          const { error: uploadError } = await db.storage
             .from('lesson-videos')
             .upload(path, selectedVideo, {
               cacheControl: '3600',
@@ -102,7 +118,7 @@ window.addEventListener('load', function () {
 
           if (uploadError) throw uploadError;
 
-          const { data } = window.db.storage.from('lesson-videos').getPublicUrl(path);
+          const { data } = db.storage.from('lesson-videos').getPublicUrl(path);
           if (!data?.publicUrl) throw new Error('Video uploaded but public URL could not be created.');
 
           document.getElementById('lessonVideo').value = data.publicUrl;
@@ -122,7 +138,7 @@ window.addEventListener('load', function () {
           const path = topicId + '/' + Date.now() + '-' + safeName;
 
           notice('Uploading PDF...');
-          const { error: uploadError } = await window.db.storage
+          const { error: uploadError } = await db.storage
             .from('lesson-pdfs')
             .upload(path, selectedPdf, {
               cacheControl: '3600',
@@ -132,7 +148,7 @@ window.addEventListener('load', function () {
 
           if (uploadError) throw uploadError;
 
-          const { data } = window.db.storage.from('lesson-pdfs').getPublicUrl(path);
+          const { data } = db.storage.from('lesson-pdfs').getPublicUrl(path);
           if (!data?.publicUrl) throw new Error('PDF uploaded but public URL could not be created.');
 
           document.getElementById('lessonPdf').value = data.publicUrl;

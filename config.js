@@ -164,3 +164,11 @@ window.addEventListener('load', function () {
   s.defer = true;
   document.head.appendChild(s);
 });
+
+/* Load live student test attempt/result flow after the page scripts are ready. */
+window.addEventListener('load', function () {
+  const s = document.createElement('script');
+  s.src = 'test-runner.js';
+  s.defer = true;
+  document.head.appendChild(s);
+});

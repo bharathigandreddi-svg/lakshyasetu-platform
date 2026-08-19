@@ -6,29 +6,57 @@
 <title>LakshyaSetu Admin</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f3f6fa;color:#172b4d}
-header{background:#173b67;color:#fff;padding:18px 28px;display:flex;justify-content:space-between}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f3f6fa;color:#172b4d}
+header{background:#173b67;color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
 button{border:0;border-radius:6px;padding:9px 13px;cursor:pointer;font-weight:600;margin:3px}
-.primary{background:#173b67;color:#fff}.secondary{background:#e8eef7;color:#173b67}.danger{background:#b42318;color:#fff}
-.wrap{width:min(1450px,95%);margin:20px auto}.nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
-.nav button.active{background:#173b67;color:#fff}.nav button{background:#e8eef7;color:#173b67}
-.section{display:none}.section.active{display:block}.card{background:#fff;padding:20px;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 10px #0000000d}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}
+.primary{background:#173b67;color:#fff}
+.secondary{background:#e8eef7;color:#173b67}
+.danger{background:#b42318;color:#fff}
+.wrap{width:min(1450px,95%);margin:20px auto}
+.nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.nav button{background:#e8eef7;color:#173b67}
+.nav button.active{background:#173b67;color:#fff}
+.section{display:none}
+.section.active{display:block}
+.card{background:#fff;padding:20px;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 10px #0000000d}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.full{grid-column:1/-1}
 label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
-input,select,textarea{width:100%;padding:10px;border:1px solid #ccd6e3;border-radius:6px}textarea{min-height:90px}
-.item{border:1px solid #dce4ee;border-radius:8px;padding:14px;margin:10px 0}.title{font-weight:700;font-size:16px}
-.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#edf2f7;font-size:11px;margin:4px 4px 4px 0}
-.green{background:#dcfce7;color:#166534}.red{background:#fee2e2;color:#991b1b}
-.msg{display:none;padding:12px;border-radius:7px;margin-bottom:15px}.ok{background:#e9f8ef;color:#146c43}.bad{background:#ffe9e7;color:#9b1c13}
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.stat{background:#fff;padding:18px;text-align:center;border-radius:8px}.num{font-size:26px;font-weight:700}
-@media(max-width:800px){.grid,.stats{grid-template-columns:1fr}}
+input,select,textarea{width:100%;padding:10px;border:1px solid #ccd6e3;border-radius:6px}
+textarea{min-height:90px}
+.item{border:1px solid #dce4ee;border-radius:8px;padding:14px;margin:10px 0}
+.title{font-weight:700;font-size:16px}
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#edf2f7;font-size:11px;margin:4px}
+.green{background:#dcfce7;color:#166534}
+.red{background:#fee2e2;color:#991b1b}
+.msg{display:none;padding:12px;border-radius:7px;margin-bottom:15px}
+.ok{background:#e9f8ef;color:#146c43}
+.bad{background:#ffe9e7;color:#9b1c13}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.stat{background:#fff;padding:18px;text-align:center;border-radius:8px}
+.num{font-size:26px;font-weight:700}
+.bulk{background:#f8fafc;border:1px solid #dce4ee;border-radius:8px;padding:15px}
+pre{white-space:pre-wrap;background:#172b4d;color:#fff;padding:12px;border-radius:6px;font-size:12px}
+@media(max-width:800px){
+.grid,.stats{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
-<header><h2>LakshyaSetu Admin</h2><button class="secondary" onclick="logout()">Logout</button></header>
+
+<header>
+<h2>LakshyaSetu Admin</h2>
+<button class="secondary" onclick="logout()">Logout</button>
+</header>
+
 <div class="wrap">
+
 <div id="msg" class="msg"></div>
+
 <div class="nav">
 <button data-t="dashboard" onclick="tab('dashboard')">Dashboard</button>
 <button data-t="courses" onclick="tab('courses')">Courses</button>
@@ -42,190 +70,1645 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #ccd6e3;border-ra
 </div>
 
 <section id="dashboard" class="section">
-<div class="card"><h2>Admin Dashboard</h2><p>Courses, learning content and complete Test Series management.</p></div>
+<div class="card">
+<h2>Admin Dashboard</h2>
+<p>Complete LakshyaSetu content and Test Series management.</p>
+</div>
+
 <div class="stats">
-<div class="stat"><div id="n1" class="num">0</div>Courses</div><div class="stat"><div id="n2" class="num">0</div>Subjects</div>
-<div class="stat"><div id="n3" class="num">0</div>Topics</div><div class="stat"><div id="n4" class="num">0</div>Lessons</div>
-<div class="stat"><div id="n5" class="num">0</div>MCQs</div><div class="stat"><div id="n6" class="num">0</div>Test Series</div>
+<div class="stat"><div id="n1" class="num">0</div>Courses</div>
+<div class="stat"><div id="n2" class="num">0</div>Subjects</div>
+<div class="stat"><div id="n3" class="num">0</div>Topics</div>
+<div class="stat"><div id="n4" class="num">0</div>Lessons</div>
+<div class="stat"><div id="n5" class="num">0</div>MCQs</div>
+<div class="stat"><div id="n6" class="num">0</div>Test Series</div>
 </div>
 </section>
 
-<section id="courses" class="section"><div class="card"><h2>Course Management</h2>
-<input type="hidden" id="courseId"><div class="grid">
-<div><label>Title</label><input id="courseTitle"></div><div><label>Slug</label><input id="courseSlug"></div>
+<section id="courses" class="section">
+<div class="card">
+<h2>Course Management</h2>
+<input type="hidden" id="courseId">
+
+<div class="grid">
+<div><label>Title</label><input id="courseTitle"></div>
+<div><label>Slug</label><input id="courseSlug"></div>
 <div class="full"><label>Description</label><textarea id="courseDescription"></textarea></div>
-<div><label>Exam Code</label><input id="courseExamCode"></div><div><label>Display Order</label><input id="courseOrder" type="number" value="0"></div>
-</div><label><input id="coursePublished" type="checkbox"> Published</label><br>
-<button class="primary" onclick="saveCourse()">Save</button><button class="secondary" onclick="clearCourse()">Clear</button></div>
-<div class="card"><h2>Courses</h2><div id="coursesList"></div></div></section>
+<div><label>Exam Code</label><input id="courseExamCode"></div>
+<div><label>Display Order</label><input id="courseOrder" type="number" value="0"></div>
+</div>
 
-<section id="subjects" class="section"><div class="card"><h2>Subject Management</h2>
-<input type="hidden" id="subjectId"><div class="grid"><div><label>Title</label><input id="subjectTitle"></div><div><label>Slug</label><input id="subjectSlug"></div>
-<div class="full"><label>Description</label><textarea id="subjectDescription"></textarea></div><div><label>Display Order</label><input id="subjectOrder" type="number" value="0"></div></div>
-<label><input id="subjectPublished" type="checkbox"> Published</label><br><button class="primary" onclick="saveSubject()">Save</button><button class="secondary" onclick="clearSubject()">Clear</button></div>
-<div class="card"><h2>Subjects</h2><div id="subjectsList"></div></div></section>
+<label><input id="coursePublished" type="checkbox"> Published</label><br>
+<button class="primary" onclick="saveCourse()">Save</button>
+<button class="secondary" onclick="clearCourse()">Clear</button>
+</div>
 
-<section id="topics" class="section"><div class="card"><h2>Topic Management</h2>
-<input type="hidden" id="topicId"><div class="grid"><div><label>Course Subject</label><select id="topicCS"></select></div><div><label>Title</label><input id="topicTitle"></div>
-<div><label>Slug</label><input id="topicSlug"></div><div><label>Display Order</label><input id="topicOrder" type="number" value="0"></div>
-<div><label>Fee</label><input id="topicFee" type="number"></div><div><label>Validity Days</label><input id="topicValidity" type="number"></div>
-<div class="full"><label>Description</label><textarea id="topicDescription"></textarea></div></div>
-<label><input id="topicPublished" type="checkbox"> Published</label><br><button class="primary" onclick="saveTopic()">Save</button><button class="secondary" onclick="clearTopic()">Clear</button></div>
-<div class="card"><h2>Topics</h2><div id="topicsList"></div></div></section>
-
-<section id="lessons" class="section"><div class="card"><h2>Lesson Management</h2>
-<input type="hidden" id="lessonId"><div class="grid"><div><label>Topic</label><select id="lessonTopic"></select></div><div><label>Title</label><input id="lessonTitle"></div>
-<div><label>Video URL</label><input id="lessonVideo"></div><div><label>PDF URL</label><input id="lessonPdf"></div>
-<div><label>Fee</label><input id="lessonFee" type="number"></div><div><label>Validity Days</label><input id="lessonValidity" type="number"></div>
-<div class="full"><label>Description</label><textarea id="lessonDescription"></textarea></div></div>
-<label><input id="lessonTrial" type="checkbox"> Trial</label> <label><input id="lessonPublished" type="checkbox"> Published</label><br>
-<button class="primary" onclick="saveLesson()">Save</button><button class="secondary" onclick="clearLesson()">Clear</button></div>
-<div class="card"><h2>Lessons</h2><div id="lessonsList"></div></div></section>
-
-<section id="notes" class="section"><div class="card"><h2>Notes Management</h2>
-<input type="hidden" id="noteId"><div class="grid"><div><label>Topic</label><select id="noteTopic"></select></div><div><label>Title</label><input id="noteTitle"></div>
-<div><label>File URL</label><input id="noteFile"></div><div><label>Fee</label><input id="noteFee" type="number"></div>
-<div><label>Validity Days</label><input id="noteValidity" type="number"></div><div class="full"><label>Description</label><textarea id="noteDescription"></textarea></div></div>
-<label><input id="notePublished" type="checkbox"> Published</label><br><button class="primary" onclick="saveNote()">Save</button><button class="secondary" onclick="clearNote()">Clear</button></div>
-<div class="card"><h2>Notes</h2><div id="notesList"></div></div></section>
-
-<section id="mcqs" class="section"><div class="card"><h2>Practice MCQ Management</h2>
-<input type="hidden" id="mcqId"><div class="grid"><div><label>Topic</label><select id="mcqTopic"></select></div><div><label>Correct Option</label><select id="mcqCorrect"><option value="">Select</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
-<div class="full"><label>Question</label><textarea id="mcqQuestion"></textarea></div><div><label>A</label><input id="mcqA"></div><div><label>B</label><input id="mcqB"></div><div><label>C</label><input id="mcqC"></div><div><label>D</label><input id="mcqD"></div>
-<div class="full"><label>Explanation</label><textarea id="mcqExplanation"></textarea></div></div><label><input id="mcqPublished" type="checkbox"> Published</label><br>
-<button class="primary" onclick="saveMcq()">Save</button><button class="secondary" onclick="clearMcq()">Clear</button></div><div class="card"><h2>Practice MCQs</h2><div id="mcqsList"></div></div></section>
-
-<section id="series" class="section">
-<div class="card"><h2>Test Series Management</h2><p>Create 2026, 2027, 2028 or any future year. Admin can create, edit, publish, archive and delete.</p>
-<input type="hidden" id="seriesId"><div class="grid">
-<div><label>Exam Year</label><input id="seriesYear" type="number" placeholder="2027"></div><div><label>Title</label><input id="seriesTitle" placeholder="UPSC Prelims Test Series 2027"></div>
-<div><label>Slug</label><input id="seriesSlug"></div><div><label>Course</label><select id="seriesCourse"></select></div>
-<div><label>Series Type</label><input id="seriesType" placeholder="Prelims / Mains / CSAT"></div><div><label>Price</label><input id="seriesPrice" type="number"></div>
-<div><label>Validity Days</label><input id="seriesValidity" type="number"></div><div><label>Start At</label><input id="seriesStart" type="datetime-local"></div>
-<div><label>Expiry At</label><input id="seriesExpiry" type="datetime-local"></div><div class="full"><label>Description</label><textarea id="seriesDescription"></textarea></div>
-</div><label><input id="seriesPublished" type="checkbox"> Published</label> <label><input id="seriesArchived" type="checkbox"> Archived</label><br>
-<button class="primary" onclick="saveSeries()">Save Test Series</button><button class="secondary" onclick="clearSeries()">Clear</button></div>
-
-<div class="card"><h2>Test Series</h2><div id="seriesList"></div></div>
-
-<div class="card"><h2>Tests inside Series</h2>
-<input type="hidden" id="testId"><div class="grid"><div><label>Test Series</label><select id="testSeries"></select></div><div><label>Test Title</label><input id="testTitle"></div>
-<div><label>Course Subject</label><select id="testSubject"></select></div><div><label>Topic</label><select id="testTopic"></select></div>
-<div><label>Duration Minutes</label><input id="testDuration" type="number"></div><div><label>Total Marks</label><input id="testMarks" type="number"></div>
-<div><label>Price</label><input id="testPrice" type="number"></div><div><label>Start At</label><input id="testStart" type="datetime-local"></div>
-<div><label>Expiry At</label><input id="testExpiry" type="datetime-local"></div><div class="full"><label>Description</label><textarea id="testDescription"></textarea></div></div>
-<label><input id="testPublished" type="checkbox"> Published</label> <label><input id="testArchived" type="checkbox"> Archived</label><br>
-<button class="primary" onclick="saveTest()">Save Test</button><button class="secondary" onclick="clearTest()">Clear</button></div>
-<div class="card"><h2>Tests</h2><div id="testsList"></div></div>
-
-<div class="card"><h2>Questions inside Test</h2>
-<input type="hidden" id="questionId"><div class="grid"><div><label>Test</label><select id="questionTest"></select></div><div><label>Correct Option</label><select id="questionCorrect"><option value="">Select</option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
-<div class="full"><label>Question</label><textarea id="questionText"></textarea></div><div><label>A</label><input id="questionA"></div><div><label>B</label><input id="questionB"></div><div><label>C</label><input id="questionC"></div><div><label>D</label><input id="questionD"></div>
-<div><label>Marks</label><input id="questionMarks" type="number" value="1"></div><div><label>Negative Marks</label><input id="questionNegative" type="number" value="0"></div><div><label>Display Order</label><input id="questionOrder" type="number" value="0"></div>
-<div class="full"><label>Explanation</label><textarea id="questionExplanation"></textarea></div></div>
-<button class="primary" onclick="saveQuestion()">Save Question</button><button class="secondary" onclick="clearQuestion()">Clear</button></div>
-<div class="card"><h2>Questions</h2><div id="questionsList"></div></div>
+<div class="card">
+<h2>Courses</h2>
+<div id="coursesList"></div>
+</div>
 </section>
 
-<section id="pricing" class="section"><div class="card"><h2>Pricing</h2><p>Course, Topic, Lesson and Test Series prices are managed from their respective tabs.</p><div id="pricingList"></div></div></section>
+<section id="subjects" class="section">
+<div class="card">
+<h2>Subject Management</h2>
+<input type="hidden" id="subjectId">
+
+<div class="grid">
+<div><label>Title</label><input id="subjectTitle"></div>
+<div><label>Slug</label><input id="subjectSlug"></div>
+<div class="full"><label>Description</label><textarea id="subjectDescription"></textarea></div>
+<div><label>Display Order</label><input id="subjectOrder" type="number" value="0"></div>
+</div>
+
+<label><input id="subjectPublished" type="checkbox"> Published</label><br>
+<button class="primary" onclick="saveSubject()">Save</button>
+<button class="secondary" onclick="clearSubject()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Subjects</h2>
+<div id="subjectsList"></div>
+</div>
+</section>
+
+<section id="topics" class="section">
+<div class="card">
+<h2>Topic Management</h2>
+<input type="hidden" id="topicId">
+
+<div class="grid">
+<div><label>Course Subject</label><select id="topicCS"></select></div>
+<div><label>Title</label><input id="topicTitle"></div>
+<div><label>Slug</label><input id="topicSlug"></div>
+<div><label>Display Order</label><input id="topicOrder" type="number" value="0"></div>
+<div><label>Fee</label><input id="topicFee" type="number"></div>
+<div><label>Validity Days</label><input id="topicValidity" type="number"></div>
+<div class="full"><label>Description</label><textarea id="topicDescription"></textarea></div>
+</div>
+
+<label><input id="topicPublished" type="checkbox"> Published</label><br>
+<button class="primary" onclick="saveTopic()">Save</button>
+<button class="secondary" onclick="clearTopic()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Topics</h2>
+<div id="topicsList"></div>
+</div>
+</section>
+
+<section id="lessons" class="section">
+<div class="card">
+<h2>Lesson Management</h2>
+<input type="hidden" id="lessonId">
+
+<div class="grid">
+<div><label>Topic</label><select id="lessonTopic"></select></div>
+<div><label>Title</label><input id="lessonTitle"></div>
+<div><label>Video URL</label><input id="lessonVideo"></div>
+<div><label>PDF URL</label><input id="lessonPdf"></div>
+<div><label>Fee</label><input id="lessonFee" type="number"></div>
+<div><label>Validity Days</label><input id="lessonValidity" type="number"></div>
+<div class="full"><label>Description</label><textarea id="lessonDescription"></textarea></div>
+</div>
+
+<label><input id="lessonTrial" type="checkbox"> Trial</label>
+<label><input id="lessonPublished" type="checkbox"> Published</label><br>
+
+<button class="primary" onclick="saveLesson()">Save</button>
+<button class="secondary" onclick="clearLesson()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Lessons</h2>
+<div id="lessonsList"></div>
+</div>
+</section>
+
+<section id="notes" class="section">
+<div class="card">
+<h2>Notes Management</h2>
+<input type="hidden" id="noteId">
+
+<div class="grid">
+<div><label>Topic</label><select id="noteTopic"></select></div>
+<div><label>Title</label><input id="noteTitle"></div>
+<div><label>File URL</label><input id="noteFile"></div>
+<div><label>Fee</label><input id="noteFee" type="number"></div>
+<div><label>Validity Days</label><input id="noteValidity" type="number"></div>
+<div class="full"><label>Description</label><textarea id="noteDescription"></textarea></div>
+</div>
+
+<label><input id="notePublished" type="checkbox"> Published</label><br>
+
+<button class="primary" onclick="saveNote()">Save</button>
+<button class="secondary" onclick="clearNote()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Notes</h2>
+<div id="notesList"></div>
+</div>
+</section>
+
+<section id="mcqs" class="section">
+<div class="card">
+<h2>Practice MCQ Management</h2>
+<input type="hidden" id="mcqId">
+
+<div class="grid">
+<div><label>Topic</label><select id="mcqTopic"></select></div>
+<div>
+<label>Correct Option</label>
+<select id="mcqCorrect">
+<option value="">Select</option>
+<option>A</option>
+<option>B</option>
+<option>C</option>
+<option>D</option>
+</select>
+</div>
+
+<div class="full"><label>Question</label><textarea id="mcqQuestion"></textarea></div>
+<div><label>A</label><input id="mcqA"></div>
+<div><label>B</label><input id="mcqB"></div>
+<div><label>C</label><input id="mcqC"></div>
+<div><label>D</label><input id="mcqD"></div>
+<div class="full"><label>Explanation</label><textarea id="mcqExplanation"></textarea></div>
+</div>
+
+<label><input id="mcqPublished" type="checkbox"> Published</label><br>
+
+<button class="primary" onclick="saveMcq()">Save</button>
+<button class="secondary" onclick="clearMcq()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Practice MCQs</h2>
+<div id="mcqsList"></div>
+</div>
+</section>
+
+<!-- TEST SERIES -->
+
+<section id="series" class="section">
+
+<div class="card">
+<h2>Test Series Management</h2>
+<p>Create and manage 2026, 2027, 2028 and future Test Series.</p>
+
+<input type="hidden" id="seriesId">
+
+<div class="grid">
+
+<div>
+<label>Exam Year</label>
+<input id="seriesYear" type="number" placeholder="2027">
+</div>
+
+<div>
+<label>Title</label>
+<input id="seriesTitle" placeholder="UPSC Prelims Test Series 2027">
+</div>
+
+<div>
+<label>Slug</label>
+<input id="seriesSlug">
+</div>
+
+<div>
+<label>Course</label>
+<select id="seriesCourse"></select>
+</div>
+
+<div>
+<label>Series Type</label>
+<input id="seriesType" placeholder="Prelims / Mains / CSAT">
+</div>
+
+<div>
+<label>Price</label>
+<input id="seriesPrice" type="number">
+</div>
+
+<div>
+<label>Validity Days</label>
+<input id="seriesValidity" type="number">
+</div>
+
+<div>
+<label>Start At</label>
+<input id="seriesStart" type="datetime-local">
+</div>
+
+<div>
+<label>Expiry At</label>
+<input id="seriesExpiry" type="datetime-local">
+</div>
+
+<div class="full">
+<label>Description</label>
+<textarea id="seriesDescription"></textarea>
+</div>
+
+</div>
+
+<label><input id="seriesPublished" type="checkbox"> Published</label>
+<label><input id="seriesArchived" type="checkbox"> Archived</label>
+<br>
+
+<button class="primary" onclick="saveSeries()">Save Test Series</button>
+<button class="secondary" onclick="clearSeries()">Clear</button>
+
+</div>
+
+<div class="card">
+<h2>Test Series</h2>
+<div id="seriesList"></div>
+</div>
+
+<!-- TESTS -->
+
+<div class="card">
+<h2>Tests Inside Series</h2>
+
+<input type="hidden" id="testId">
+
+<div class="grid">
+
+<div>
+<label>Test Series</label>
+<select id="testSeries"></select>
+</div>
+
+<div>
+<label>Test Title</label>
+<input id="testTitle">
+</div>
+
+<div>
+<label>Course Subject</label>
+<select id="testSubject"></select>
+</div>
+
+<div>
+<label>Topic</label>
+<select id="testTopic"></select>
+</div>
+
+<div>
+<label>Duration Minutes</label>
+<input id="testDuration" type="number">
+</div>
+
+<div>
+<label>Total Marks</label>
+<input id="testMarks" type="number">
+</div>
+
+<div>
+<label>Price</label>
+<input id="testPrice" type="number">
+</div>
+
+<div>
+<label>Start At</label>
+<input id="testStart" type="datetime-local">
+</div>
+
+<div>
+<label>Expiry At</label>
+<input id="testExpiry" type="datetime-local">
+</div>
+
+<div class="full">
+<label>Description</label>
+<textarea id="testDescription"></textarea>
+</div>
+
+</div>
+
+<label><input id="testPublished" type="checkbox"> Published</label>
+<label><input id="testArchived" type="checkbox"> Archived</label>
+<br>
+
+<button class="primary" onclick="saveTest()">Save Test</button>
+<button class="secondary" onclick="clearTest()">Clear</button>
+</div>
+
+<div class="card">
+<h2>Tests</h2>
+<div id="testsList"></div>
+</div>
+
+<!-- QUESTIONS -->
+
+<div class="card">
+
+<h2>Questions Inside Test</h2>
+
+<input type="hidden" id="questionId">
+
+<div class="grid">
+
+<div>
+<label>Test</label>
+<select id="questionTest"></select>
+</div>
+
+<div>
+<label>Correct Option</label>
+<select id="questionCorrect">
+<option value="">Select</option>
+<option>A</option>
+<option>B</option>
+<option>C</option>
+<option>D</option>
+</select>
+</div>
+
+<div class="full">
+<label>Question</label>
+<textarea id="questionText"></textarea>
+</div>
+
+<div><label>A</label><input id="questionA"></div>
+<div><label>B</label><input id="questionB"></div>
+<div><label>C</label><input id="questionC"></div>
+<div><label>D</label><input id="questionD"></div>
+
+<div>
+<label>Marks</label>
+<input id="questionMarks" type="number" value="1">
+</div>
+
+<div>
+<label>Negative Marks</label>
+<input id="questionNegative" type="number" value="0">
+</div>
+
+<div>
+<label>Display Order</label>
+<input id="questionOrder" type="number" value="0">
+</div>
+
+<div class="full">
+<label>Explanation</label>
+<textarea id="questionExplanation"></textarea>
+</div>
+
+</div>
+
+<button class="primary" onclick="saveQuestion()">Save Question</button>
+<button class="secondary" onclick="clearQuestion()">Clear</button>
+
+</div>
+
+<!-- BULK QUESTIONS -->
+
+<div class="card bulk">
+
+<h2>Bulk Question Upload</h2>
+
+<p>Select a Test and paste multiple questions at once.</p>
+
+<label>Test</label>
+<select id="bulkTest"></select>
+
+<label style="margin-top:12px">Paste Questions</label>
+
+<textarea id="bulkText" style="min-height:300px"
+placeholder="Use this format:
+
+Q1. What is the capital of India?
+A. Mumbai
+B. New Delhi
+C. Kolkata
+D. Chennai
+Answer: B
+Explanation: New Delhi is the capital of India.
+
+Q2. Which Article deals with...
+A. ...
+B. ...
+C. ...
+D. ...
+Answer: C
+Explanation: ..."></textarea>
+
+<button class="primary" onclick="bulkUpload()">
+Submit All Questions
+</button>
+
+<button class="secondary" onclick="clearBulk()">
+Clear
+</button>
+
+<div id="bulkResult"></div>
+
+</div>
+
+<div class="card">
+<h2>Questions</h2>
+<div id="questionsList"></div>
+</div>
+
+</section>
+
+<section id="pricing" class="section">
+<div class="card">
+<h2>Pricing</h2>
+<p>Course, Topic, Lesson and Test Series prices are managed from their respective tabs.</p>
+<div id="pricingList"></div>
+</div>
+</section>
+
 </div>
 
 <script>
-const C=window.LAKSHYASETU_CONFIG,db=supabase.createClient(C.supabaseUrl,C.supabasePublishableKey);
+
+const C=window.LAKSHYASETU_CONFIG;
+const db=supabase.createClient(C.supabaseUrl,C.supabasePublishableKey);
+
 let courses=[],subjects=[],cs=[],topics=[],lessons=[],notes=[],mcqs=[],series=[],tests=[],questions=[];
-const $=x=>document.getElementById(x),esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-const slug=x=>String(x||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-const opts=(a,f,s='')=>'<option value="">Select</option>'+a.map(x=>`<option value="${x.id}" ${String(x.id)==String(s)?'selected':''}>${esc(typeof f==='function'?f(x):x[f])}</option>`).join('');
-function notice(t,bad=false){let x=$('msg');x.textContent=t;x.className='msg '+(bad?'bad':'ok');x.style.display='block';setTimeout(()=>x.style.display='none',3500)}
-function badge(v){return v?'<span class="badge green">Published</span>':'<span class="badge red">Unpublished</span>'}
-function tab(t){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));$(t).classList.add('active');document.querySelector(`[data-t="${t}"]`).classList.add('active')}
-async function logout(){await db.auth.signOut();location='login.html'}
+
+const $=x=>document.getElementById(x);
+
+const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#039;'
+}[m]));
+
+const slug=x=>String(x||'')
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9]+/g,'-')
+.replace(/^-+|-+$/g,'');
+
+function opts(a,f,s=''){
+return '<option value="">Select</option>'+
+a.map(x=>`
+<option value="${x.id}" ${String(x.id)==String(s)?'selected':''}>
+${esc(typeof f==='function'?f(x):x[f])}
+</option>`).join('');
+}
+
+function notice(t,bad=false){
+let x=$('msg');
+x.textContent=t;
+x.className='msg '+(bad?'bad':'ok');
+x.style.display='block';
+setTimeout(()=>x.style.display='none',3500);
+}
+
+function badge(v){
+return v
+?'<span class="badge green">Published</span>'
+:'<span class="badge red">Unpublished</span>';
+}
+
+function tab(t){
+document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+
+$(t).classList.add('active');
+document.querySelector(`[data-t="${t}"]`).classList.add('active');
+}
+
+async function logout(){
+await db.auth.signOut();
+location='login.html';
+}
+
 async function load(){
- try{
-  let r=await Promise.all([
-   db.from('ls_courses').select('*').order('display_order'),db.from('ls_subjects').select('*').order('display_order'),
-   db.from('ls_course_subjects').select('*').order('display_order'),db.from('ls_topics').select('*').order('display_order'),
-   db.from('ls_lessons').select('*').order('display_order'),db.from('ls_notes').select('*').order('id'),
-   db.from('ls_practice_mcqs').select('*').order('display_order'),db.from('ls_test_series').select('*').order('exam_year',{ascending:false}),
-   db.from('ls_tests').select('*').order('id'),db.from('ls_test_questions').select('*').order('display_order')
-  ]);
-  [courses,subjects,cs,topics,lessons,notes,mcqs,series,tests,questions]=r.map(x=>{if(x.error)throw x.error;return x.data||[]});
-  render();
- }catch(e){console.error(e);notice(e.message,true)}
+
+try{
+
+let r=await Promise.all([
+
+db.from('ls_courses').select('*').order('display_order'),
+
+db.from('ls_subjects').select('*').order('display_order'),
+
+db.from('ls_course_subjects').select('*').order('display_order'),
+
+db.from('ls_topics').select('*').order('display_order'),
+
+db.from('ls_lessons').select('*').order('display_order'),
+
+db.from('ls_notes').select('*').order('id'),
+
+db.from('ls_practice_mcqs').select('*').order('display_order'),
+
+db.from('ls_test_series').select('*').order('exam_year',{ascending:false}),
+
+db.from('ls_tests').select('*').order('id'),
+
+db.from('ls_test_questions').select('*').order('display_order')
+
+]);
+
+[courses,subjects,cs,topics,lessons,notes,mcqs,series,tests,questions]=r.map(x=>{
+if(x.error)throw x.error;
+return x.data||[];
+});
+
+render();
+
+}catch(e){
+console.error(e);
+notice(e.message,true);
 }
+
+}
+
 function render(){
- $('n1').textContent=courses.length;$('n2').textContent=subjects.length;$('n3').textContent=topics.length;$('n4').textContent=lessons.length;$('n5').textContent=mcqs.length;$('n6').textContent=series.length;
- $('seriesCourse').innerHTML=opts(courses,'title');$('testSeries').innerHTML=opts(series,x=>`${x.exam_year||''} - ${x.title}`);$('questionTest').innerHTML=opts(tests,'title');
- $('testSubject').innerHTML=opts(cs,x=>(courses.find(c=>c.id==x.course_id)?.title||'')+' - '+(subjects.find(s=>s.id==x.subject_id)?.title||''));refreshTestTopics();
- $('topicCS').innerHTML=opts(cs,x=>subjects.find(s=>s.id==x.subject_id)?.title||'');$('lessonTopic').innerHTML=opts(topics,'title');$('noteTopic').innerHTML=opts(topics,'title');$('mcqTopic').innerHTML=opts(topics,'title');
- drawCourses();drawSubjects();drawTopics();drawLessons();drawNotes();drawMcqs();drawSeries();drawTests();drawQuestions();drawPricing();
+
+$('n1').textContent=courses.length;
+$('n2').textContent=subjects.length;
+$('n3').textContent=topics.length;
+$('n4').textContent=lessons.length;
+$('n5').textContent=mcqs.length;
+$('n6').textContent=series.length;
+
+$('seriesCourse').innerHTML=opts(courses,'title');
+
+$('testSeries').innerHTML=opts(
+series,
+x=>`${x.exam_year||''} - ${x.title}`
+);
+
+$('questionTest').innerHTML=opts(tests,'title');
+
+$('bulkTest').innerHTML=opts(tests,'title');
+
+$('testSubject').innerHTML=opts(
+cs,
+x=>
+(courses.find(c=>c.id==x.course_id)?.title||'')+
+' - '+
+(subjects.find(s=>s.id==x.subject_id)?.title||'')
+);
+
+refreshTestTopics();
+
+$('topicCS').innerHTML=opts(
+cs,
+x=>subjects.find(s=>s.id==x.subject_id)?.title||''
+);
+
+$('lessonTopic').innerHTML=opts(topics,'title');
+$('noteTopic').innerHTML=opts(topics,'title');
+$('mcqTopic').innerHTML=opts(topics,'title');
+
+drawCourses();
+drawSubjects();
+drawTopics();
+drawLessons();
+drawNotes();
+drawMcqs();
+drawSeries();
+drawTests();
+drawQuestions();
+drawPricing();
 }
-function drawCourses(){$('coursesList').innerHTML=courses.map(x=>`<div class=item><div class=title>${esc(x.title)}</div>${badge(x.published)} <button class=primary onclick="editCourse(${x.id})">Edit</button><button class=secondary onclick="pub('ls_courses',${x.id},${!x.published})">${x.published?'Unpublish':'Publish'}</button></div>`).join('')||'<p>No courses.</p>'}
-function drawSubjects(){$('subjectsList').innerHTML=subjects.map(x=>`<div class=item><div class=title>${esc(x.title)}</div>${badge(x.published)} <button class=primary onclick="editSubject(${x.id})">Edit</button><button class=secondary onclick="pub('ls_subjects',${x.id},${!x.published})">${x.published?'Unpublish':'Publish'}</button></div>`).join('')||'<p>No subjects.</p>'}
-function drawTopics(){$('topicsList').innerHTML=topics.map(x=>`<div class=item><div class=title>${esc(x.title)}</div>${badge(x.published)} <button class=primary onclick="editTopic(${x.id})">Edit</button></div>`).join('')||'<p>No topics.</p>'}
-function drawLessons(){$('lessonsList').innerHTML=lessons.map(x=>`<div class=item><div class=title>${esc(x.title)}</div>${badge(x.published)} <button class=primary onclick="editLesson(${x.id})">Edit</button></div>`).join('')||'<p>No lessons.</p>'}
-function drawNotes(){$('notesList').innerHTML=notes.map(x=>`<div class=item><div class=title>${esc(x.title)}</div>${badge(x.published)} <button class=primary onclick="editNote(${x.id})">Edit</button></div>`).join('')||'<p>No notes.</p>'}
-function drawMcqs(){$('mcqsList').innerHTML=mcqs.map(x=>`<div class=item><div class=title>${esc(x.question)}</div>${badge(x.published)} <button class=primary onclick="editMcq(${x.id})">Edit</button></div>`).join('')||'<p>No MCQs.</p>'}
 
-async function save(table,id,p){let r=id?await db.from(table).update(p).eq('id',id):await db.from(table).insert(p);if(r.error)throw r.error;notice(id?'Updated successfully.':'Created successfully.');await load()}
-async function pub(t,id,v){try{await save(t,id,{published:v})}catch(e){notice(e.message,true)}}
+function drawCourses(){
+$('coursesList').innerHTML=courses.map(x=>`
+<div class=item>
+<div class=title>${esc(x.title)}</div>
+${badge(x.published)}
+<button class=primary onclick="editCourse(${x.id})">Edit</button>
+<button class=secondary onclick="pub('ls_courses',${x.id},${!x.published})">
+${x.published?'Unpublish':'Publish'}
+</button>
+</div>`).join('')||'<p>No courses.</p>';
+}
 
-/* Courses */
-function clearCourse(){$('courseId').value='';['courseTitle','courseSlug','courseDescription','courseExamCode'].forEach(x=>$(x).value='');$('courseOrder').value=0;$('coursePublished').checked=false}
-async function saveCourse(){try{let id=$('courseId').value;await save('ls_courses',id,{title:$('courseTitle').value.trim(),slug:$('courseSlug').value.trim()||slug($('courseTitle').value),description:$('courseDescription').value.trim()||null,exam_code:$('courseExamCode').value.trim()||null,display_order:+$('courseOrder').value||0,published:$('coursePublished').checked});clearCourse()}catch(e){notice(e.message,true)}}
-function editCourse(id){let x=courses.find(x=>x.id==id);$('courseId').value=x.id;$('courseTitle').value=x.title||'';$('courseSlug').value=x.slug||'';$('courseDescription').value=x.description||'';$('courseExamCode').value=x.exam_code||'';$('courseOrder').value=x.display_order||0;$('coursePublished').checked=!!x.published;tab('courses')}
+function drawSubjects(){
+$('subjectsList').innerHTML=subjects.map(x=>`
+<div class=item>
+<div class=title>${esc(x.title)}</div>
+${badge(x.published)}
+<button class=primary onclick="editSubject(${x.id})">Edit</button>
+<button class=secondary onclick="pub('ls_subjects',${x.id},${!x.published})">
+${x.published?'Unpublish':'Publish'}
+</button>
+</div>`).join('')||'<p>No subjects.</p>';
+}
 
-/* Subjects */
-function clearSubject(){$('subjectId').value='';['subjectTitle','subjectSlug','subjectDescription'].forEach(x=>$(x).value='');$('subjectOrder').value=0;$('subjectPublished').checked=false}
-async function saveSubject(){try{let id=$('subjectId').value;await save('ls_subjects',id,{title:$('subjectTitle').value.trim(),slug:$('subjectSlug').value.trim()||slug($('subjectTitle').value),description:$('subjectDescription').value.trim()||null,display_order:+$('subjectOrder').value||0,published:$('subjectPublished').checked,archived:false});clearSubject()}catch(e){notice(e.message,true)}}
-function editSubject(id){let x=subjects.find(x=>x.id==id);$('subjectId').value=x.id;$('subjectTitle').value=x.title||'';$('subjectSlug').value=x.slug||'';$('subjectDescription').value=x.description||'';$('subjectOrder').value=x.display_order||0;$('subjectPublished').checked=!!x.published;tab('subjects')}
+function drawTopics(){
+$('topicsList').innerHTML=topics.map(x=>`
+<div class=item>
+<div class=title>${esc(x.title)}</div>
+${badge(x.published)}
+<button class=primary onclick="editTopic(${x.id})">Edit</button>
+</div>`).join('')||'<p>No topics.</p>';
+}
 
-/* Topics */
-function clearTopic(){$('topicId').value='';['topicTitle','topicSlug','topicDescription','topicFee','topicValidity'].forEach(x=>$(x).value='');$('topicCS').value='';$('topicOrder').value=0;$('topicPublished').checked=false}
-async function saveTopic(){try{let id=$('topicId').value;await save('ls_topics',id,{course_subject_id:$('topicCS').value,title:$('topicTitle').value.trim(),slug:$('topicSlug').value.trim()||slug($('topicTitle').value),description:$('topicDescription').value.trim()||null,display_order:+$('topicOrder').value||0,topic_fee:$('topicFee').value===''?null:+$('topicFee').value,validity_days:$('topicValidity').value===''?null:+$('topicValidity').value,published:$('topicPublished').checked,archived:false});clearTopic()}catch(e){notice(e.message,true)}}
-function editTopic(id){let x=topics.find(x=>x.id==id);$('topicId').value=x.id;$('topicCS').value=x.course_subject_id;$('topicTitle').value=x.title||'';$('topicSlug').value=x.slug||'';$('topicDescription').value=x.description||'';$('topicOrder').value=x.display_order||0;$('topicFee').value=x.topic_fee??'';$('topicValidity').value=x.validity_days??'';$('topicPublished').checked=!!x.published;tab('topics')}
+function drawLessons(){
+$('lessonsList').innerHTML=lessons.map(x=>`
+<div class=item>
+<div class=title>${esc(x.title)}</div>
+${badge(x.published)}
+<button class=primary onclick="editLesson(${x.id})">Edit</button>
+</div>`).join('')||'<p>No lessons.</p>';
+}
 
-/* Lessons */
-function clearLesson(){$('lessonId').value='';['lessonTitle','lessonVideo','lessonPdf','lessonFee','lessonValidity','lessonDescription'].forEach(x=>$(x).value='');$('lessonTopic').value='';$('lessonTrial').checked=false;$('lessonPublished').checked=false}
-async function saveLesson(){try{let id=$('lessonId').value;await save('ls_lessons',id,{topic_id:$('lessonTopic').value,title:$('lessonTitle').value.trim(),description:$('lessonDescription').value.trim()||null,video_url:$('lessonVideo').value.trim()||null,pdf_url:$('lessonPdf').value.trim()||null,video_fee:$('lessonFee').value===''?null:+$('lessonFee').value,validity_days:$('lessonValidity').value===''?null:+$('lessonValidity').value,is_trial:$('lessonTrial').checked,published:$('lessonPublished').checked});clearLesson()}catch(e){notice(e.message,true)}}
-function editLesson(id){let x=lessons.find(x=>x.id==id);$('lessonId').value=x.id;$('lessonTopic').value=x.topic_id;$('lessonTitle').value=x.title||'';$('lessonVideo').value=x.video_url||'';$('lessonPdf').value=x.pdf_url||'';$('lessonFee').value=x.video_fee??'';$('lessonValidity').value=x.validity_days??'';$('lessonDescription').value=x.description||'';$('lessonTrial').checked=!!x.is_trial;$('lessonPublished').checked=!!x.published;tab('lessons')}
+function drawNotes(){
+$('notesList').innerHTML=notes.map(x=>`
+<div class=item>
+<div class=title>${esc(x.title)}</div>
+${badge(x.published)}
+<button class=primary onclick="editNote(${x.id})">Edit</button>
+</div>`).join('')||'<p>No notes.</p>';
+}
 
-/* Notes */
-function clearNote(){$('noteId').value='';['noteTitle','noteFile','noteFee','noteValidity','noteDescription'].forEach(x=>$(x).value='');$('noteTopic').value='';$('notePublished').checked=false}
-async function saveNote(){try{let id=$('noteId').value;await save('ls_notes',id,{topic_id:$('noteTopic').value,title:$('noteTitle').value.trim(),file_url:$('noteFile').value.trim()||null,fee:$('noteFee').value===''?null:+$('noteFee').value,validity_days:$('noteValidity').value===''?null:+$('noteValidity').value,description:$('noteDescription').value.trim()||null,published:$('notePublished').checked});clearNote()}catch(e){notice(e.message,true)}}
-function editNote(id){let x=notes.find(x=>x.id==id);$('noteId').value=x.id;$('noteTopic').value=x.topic_id;$('noteTitle').value=x.title||'';$('noteFile').value=x.file_url||'';$('noteFee').value=x.fee??'';$('noteValidity').value=x.validity_days??'';$('noteDescription').value=x.description||'';$('notePublished').checked=!!x.published;tab('notes')}
+function drawMcqs(){
+$('mcqsList').innerHTML=mcqs.map(x=>`
+<div class=item>
+<div class=title>${esc(x.question)}</div>
+${badge(x.published)}
+<button class=primary onclick="editMcq(${x.id})">Edit</button>
+</div>`).join('')||'<p>No MCQs.</p>';
+}
+
+async function save(table,id,p){
+
+let r=id
+?await db.from(table).update(p).eq('id',id)
+:await db.from(table).insert(p);
+
+if(r.error)throw r.error;
+
+notice(id?'Updated successfully.':'Created successfully.');
+
+await load();
+}
+
+async function pub(t,id,v){
+
+try{
+await save(t,id,{published:v});
+}catch(e){
+notice(e.message,true);
+}
+
+}
+
+/* COURSES */
+
+function clearCourse(){
+$('courseId').value='';
+['courseTitle','courseSlug','courseDescription','courseExamCode'].forEach(x=>$(x).value='');
+$('courseOrder').value=0;
+$('coursePublished').checked=false;
+}
+
+async function saveCourse(){
+
+try{
+
+let id=$('courseId').value;
+
+await save('ls_courses',id,{
+title:$('courseTitle').value.trim(),
+slug:$('courseSlug').value.trim()||slug($('courseTitle').value),
+description:$('courseDescription').value.trim()||null,
+exam_code:$('courseExamCode').value.trim()||null,
+display_order:+$('courseOrder').value||0,
+published:$('coursePublished').checked
+});
+
+clearCourse();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editCourse(id){
+
+let x=courses.find(x=>x.id==id);
+
+$('courseId').value=x.id;
+$('courseTitle').value=x.title||'';
+$('courseSlug').value=x.slug||'';
+$('courseDescription').value=x.description||'';
+$('courseExamCode').value=x.exam_code||'';
+$('courseOrder').value=x.display_order||0;
+$('coursePublished').checked=!!x.published;
+
+tab('courses');
+}
+
+/* SUBJECTS */
+
+function clearSubject(){
+
+$('subjectId').value='';
+
+['subjectTitle','subjectSlug','subjectDescription']
+.forEach(x=>$(x).value='');
+
+$('subjectOrder').value=0;
+$('subjectPublished').checked=false;
+}
+
+async function saveSubject(){
+
+try{
+
+let id=$('subjectId').value;
+
+await save('ls_subjects',id,{
+title:$('subjectTitle').value.trim(),
+slug:$('subjectSlug').value.trim()||slug($('subjectTitle').value),
+description:$('subjectDescription').value.trim()||null,
+display_order:+$('subjectOrder').value||0,
+published:$('subjectPublished').checked,
+archived:false
+});
+
+clearSubject();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editSubject(id){
+
+let x=subjects.find(x=>x.id==id);
+
+$('subjectId').value=x.id;
+$('subjectTitle').value=x.title||'';
+$('subjectSlug').value=x.slug||'';
+$('subjectDescription').value=x.description||'';
+$('subjectOrder').value=x.display_order||0;
+$('subjectPublished').checked=!!x.published;
+
+tab('subjects');
+}
+
+/* TOPICS */
+
+function clearTopic(){
+
+$('topicId').value='';
+
+['topicTitle','topicSlug','topicDescription','topicFee','topicValidity']
+.forEach(x=>$(x).value='');
+
+$('topicCS').value='';
+$('topicOrder').value=0;
+$('topicPublished').checked=false;
+}
+
+async function saveTopic(){
+
+try{
+
+let id=$('topicId').value;
+
+await save('ls_topics',id,{
+course_subject_id:$('topicCS').value,
+title:$('topicTitle').value.trim(),
+slug:$('topicSlug').value.trim()||slug($('topicTitle').value),
+description:$('topicDescription').value.trim()||null,
+display_order:+$('topicOrder').value||0,
+topic_fee:$('topicFee').value===''?null:+$('topicFee').value,
+validity_days:$('topicValidity').value===''?null:+$('topicValidity').value,
+published:$('topicPublished').checked,
+archived:false
+});
+
+clearTopic();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editTopic(id){
+
+let x=topics.find(x=>x.id==id);
+
+$('topicId').value=x.id;
+$('topicCS').value=x.course_subject_id;
+$('topicTitle').value=x.title||'';
+$('topicSlug').value=x.slug||'';
+$('topicDescription').value=x.description||'';
+$('topicOrder').value=x.display_order||0;
+$('topicFee').value=x.topic_fee??'';
+$('topicValidity').value=x.validity_days??'';
+$('topicPublished').checked=!!x.published;
+
+tab('topics');
+}
+
+/* LESSONS */
+
+function clearLesson(){
+
+$('lessonId').value='';
+
+['lessonTitle','lessonVideo','lessonPdf','lessonFee','lessonValidity','lessonDescription']
+.forEach(x=>$(x).value='');
+
+$('lessonTopic').value='';
+$('lessonTrial').checked=false;
+$('lessonPublished').checked=false;
+}
+
+async function saveLesson(){
+
+try{
+
+let id=$('lessonId').value;
+
+await save('ls_lessons',id,{
+topic_id:$('lessonTopic').value,
+title:$('lessonTitle').value.trim(),
+description:$('lessonDescription').value.trim()||null,
+video_url:$('lessonVideo').value.trim()||null,
+pdf_url:$('lessonPdf').value.trim()||null,
+video_fee:$('lessonFee').value===''?null:+$('lessonFee').value,
+validity_days:$('lessonValidity').value===''?null:+$('lessonValidity').value,
+is_trial:$('lessonTrial').checked,
+published:$('lessonPublished').checked
+});
+
+clearLesson();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editLesson(id){
+
+let x=lessons.find(x=>x.id==id);
+
+$('lessonId').value=x.id;
+$('lessonTopic').value=x.topic_id;
+$('lessonTitle').value=x.title||'';
+$('lessonVideo').value=x.video_url||'';
+$('lessonPdf').value=x.pdf_url||'';
+$('lessonFee').value=x.video_fee??'';
+$('lessonValidity').value=x.validity_days??'';
+$('lessonDescription').value=x.description||'';
+$('lessonTrial').checked=!!x.is_trial;
+$('lessonPublished').checked=!!x.published;
+
+tab('lessons');
+}
+
+/* NOTES */
+
+function clearNote(){
+
+$('noteId').value='';
+
+['noteTitle','noteFile','noteFee','noteValidity','noteDescription']
+.forEach(x=>$(x).value='');
+
+$('noteTopic').value='';
+$('notePublished').checked=false;
+}
+
+async function saveNote(){
+
+try{
+
+let id=$('noteId').value;
+
+await save('ls_notes',id,{
+topic_id:$('noteTopic').value,
+title:$('noteTitle').value.trim(),
+file_url:$('noteFile').value.trim()||null,
+fee:$('noteFee').value===''?null:+$('noteFee').value,
+validity_days:$('noteValidity').value===''?null:+$('noteValidity').value,
+description:$('noteDescription').value.trim()||null,
+published:$('notePublished').checked
+});
+
+clearNote();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editNote(id){
+
+let x=notes.find(x=>x.id==id);
+
+$('noteId').value=x.id;
+$('noteTopic').value=x.topic_id;
+$('noteTitle').value=x.title||'';
+$('noteFile').value=x.file_url||'';
+$('noteFee').value=x.fee??'';
+$('noteValidity').value=x.validity_days??'';
+$('noteDescription').value=x.description||'';
+$('notePublished').checked=!!x.published;
+
+tab('notes');
+}
 
 /* MCQ */
-function clearMcq(){$('mcqId').value='';['mcqQuestion','mcqA','mcqB','mcqC','mcqD','mcqExplanation'].forEach(x=>$(x).value='');$('mcqTopic').value='';$('mcqCorrect').value='';$('mcqPublished').checked=false}
-async function saveMcq(){try{let id=$('mcqId').value;await save('ls_practice_mcqs',id,{topic_id:$('mcqTopic').value,question:$('mcqQuestion').value.trim(),option_a:$('mcqA').value.trim(),option_b:$('mcqB').value.trim(),option_c:$('mcqC').value.trim(),option_d:$('mcqD').value.trim(),correct_option:$('mcqCorrect').value,explanation:$('mcqExplanation').value.trim()||null,published:$('mcqPublished').checked});clearMcq()}catch(e){notice(e.message,true)}}
-function editMcq(id){let x=mcqs.find(x=>x.id==id);$('mcqId').value=x.id;$('mcqTopic').value=x.topic_id;$('mcqQuestion').value=x.question||'';$('mcqA').value=x.option_a||'';$('mcqB').value=x.option_b||'';$('mcqC').value=x.option_c||'';$('mcqD').value=x.option_d||'';$('mcqCorrect').value=x.correct_option||'';$('mcqExplanation').value=x.explanation||'';$('mcqPublished').checked=!!x.published;tab('mcqs')}
 
-/* Test Series */
+function clearMcq(){
+
+$('mcqId').value='';
+
+['mcqQuestion','mcqA','mcqB','mcqC','mcqD','mcqExplanation']
+.forEach(x=>$(x).value='');
+
+$('mcqTopic').value='';
+$('mcqCorrect').value='';
+$('mcqPublished').checked=false;
+}
+
+async function saveMcq(){
+
+try{
+
+let id=$('mcqId').value;
+
+await save('ls_practice_mcqs',id,{
+topic_id:$('mcqTopic').value,
+question:$('mcqQuestion').value.trim(),
+option_a:$('mcqA').value.trim(),
+option_b:$('mcqB').value.trim(),
+option_c:$('mcqC').value.trim(),
+option_d:$('mcqD').value.trim(),
+correct_option:$('mcqCorrect').value,
+explanation:$('mcqExplanation').value.trim()||null,
+published:$('mcqPublished').checked
+});
+
+clearMcq();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editMcq(id){
+
+let x=mcqs.find(x=>x.id==id);
+
+$('mcqId').value=x.id;
+$('mcqTopic').value=x.topic_id;
+$('mcqQuestion').value=x.question||'';
+$('mcqA').value=x.option_a||'';
+$('mcqB').value=x.option_b||'';
+$('mcqC').value=x.option_c||'';
+$('mcqD').value=x.option_d||'';
+$('mcqCorrect').value=x.correct_option||'';
+$('mcqExplanation').value=x.explanation||'';
+$('mcqPublished').checked=!!x.published;
+
+tab('mcqs');
+}
+
+/* SERIES */
+
 const dt=v=>v?new Date(v).toISOString().slice(0,16):'';
-function clearSeries(){$('seriesId').value='';['seriesYear','seriesTitle','seriesSlug','seriesType','seriesPrice','seriesValidity','seriesStart','seriesExpiry','seriesDescription'].forEach(x=>$(x).value='');$('seriesCourse').value='';$('seriesPublished').checked=false;$('seriesArchived').checked=false}
-async function saveSeries(){try{let id=$('seriesId').value;await save('ls_test_series',id,{course_id:$('seriesCourse').value||null,title:$('seriesTitle').value.trim(),slug:$('seriesSlug').value.trim()||slug($('seriesTitle').value),description:$('seriesDescription').value.trim()||null,series_type:$('seriesType').value.trim()||null,price:$('seriesPrice').value===''?null:+$('seriesPrice').value,validity_days:$('seriesValidity').value===''?null:+$('seriesValidity').value,start_at:$('seriesStart').value?new Date($('seriesStart').value).toISOString():null,expiry_at:$('seriesExpiry').value?new Date($('seriesExpiry').value).toISOString():null,published:$('seriesPublished').checked,archived:$('seriesArchived').checked,exam_year:+$('seriesYear').value});clearSeries()}catch(e){notice(e.message,true)}}
-function editSeries(id){let x=series.find(x=>x.id==id);$('seriesId').value=x.id;$('seriesYear').value=x.exam_year??'';$('seriesTitle').value=x.title||'';$('seriesSlug').value=x.slug||'';$('seriesCourse').value=x.course_id||'';$('seriesType').value=x.series_type||'';$('seriesPrice').value=x.price??'';$('seriesValidity').value=x.validity_days??'';$('seriesStart').value=dt(x.start_at);$('seriesExpiry').value=dt(x.expiry_at);$('seriesDescription').value=x.description||'';$('seriesPublished').checked=!!x.published;$('seriesArchived').checked=!!x.archived;tab('series')}
-async function delSeries(id){if(!confirm('Delete this Test Series?'))return;try{let r=await db.from('ls_test_series').delete().eq('id',id);if(r.error)throw r.error;notice('Test Series deleted.');await load()}catch(e){notice(e.message,true)}}
-function drawSeries(){$('seriesList').innerHTML=series.map(x=>`<div class=item><div class=title>${esc(x.title)}</div><span class=badge>Year ${x.exam_year||'-'}</span>${badge(x.published)}<span class=badge>${x.price??'Free'}</span><button class=primary onclick="editSeries(${x.id})">Edit</button><button class=secondary onclick="pub('ls_test_series',${x.id},${!x.published})">${x.published?'Unpublish':'Publish'}</button><button class=danger onclick="delSeries(${x.id})">Delete</button></div>`).join('')||'<p>No Test Series yet.</p>'}
 
-/* Tests */
-function refreshTestTopics(){let id=$('testSubject').value;$('testTopic').innerHTML=opts(topics.filter(t=>t.course_subject_id==id),'title')}
-function clearTest(){$('testId').value='';['testTitle','testDuration','testMarks','testPrice','testStart','testExpiry','testDescription'].forEach(x=>$(x).value='');$('testSeries').value='';$('testSubject').value='';$('testTopic').value='';$('testPublished').checked=false;$('testArchived').checked=false}
-async function saveTest(){try{let id=$('testId').value;await save('ls_tests',id,{test_series_id:$('testSeries').value,package_id:null,course_subject_id:$('testSubject').value||null,topic_id:$('testTopic').value||null,title:$('testTitle').value.trim(),description:$('testDescription').value.trim()||null,duration_minutes:$('testDuration').value===''?null:+$('testDuration').value,total_marks:$('testMarks').value===''?null:+$('testMarks').value,price:$('testPrice').value===''?null:+$('testPrice').value,start_at:$('testStart').value?new Date($('testStart').value).toISOString():null,expiry_at:$('testExpiry').value?new Date($('testExpiry').value).toISOString():null,published:$('testPublished').checked,archived:$('testArchived').checked});clearTest()}catch(e){notice(e.message,true)}}
-function editTest(id){let x=tests.find(x=>x.id==id);$('testId').value=x.id;$('testSeries').value=x.test_series_id;$('testSubject').value=x.course_subject_id||'';refreshTestTopics();$('testTopic').value=x.topic_id||'';$('testTitle').value=x.title||'';$('testDuration').value=x.duration_minutes??'';$('testMarks').value=x.total_marks??'';$('testPrice').value=x.price??'';$('testStart').value=dt(x.start_at);$('testExpiry').value=dt(x.expiry_at);$('testDescription').value=x.description||'';$('testPublished').checked=!!x.published;$('testArchived').checked=!!x.archived;tab('series')}
-async function delTest(id){if(!confirm('Delete this test?'))return;try{let r=await db.from('ls_tests').delete().eq('id',id);if(r.error)throw r.error;notice('Test deleted.');await load()}catch(e){notice(e.message,true)}}
-function drawTests(){$('testsList').innerHTML=tests.map(x=>`<div class=item><div class=title>${esc(x.title)}</div><span class=badge>${esc(series.find(s=>s.id==x.test_series_id)?.title||'Unknown')}</span>${badge(x.published)}<button class=primary onclick="editTest(${x.id})">Edit</button><button class=danger onclick="delTest(${x.id})">Delete</button></div>`).join('')||'<p>No tests yet.</p>'}
+function clearSeries(){
 
-/* Questions */
-function clearQuestion(){$('questionId').value='';['questionText','questionA','questionB','questionC','questionD','questionExplanation'].forEach(x=>$(x).value='');$('questionTest').value='';$('questionCorrect').value='';$('questionMarks').value=1;$('questionNegative').value=0;$('questionOrder').value=0}
-async function saveQuestion(){try{let id=$('questionId').value;await save('ls_test_questions',id,{test_id:$('questionTest').value,question:$('questionText').value.trim(),option_a:$('questionA').value.trim()||null,option_b:$('questionB').value.trim()||null,option_c:$('questionC').value.trim()||null,option_d:$('questionD').value.trim()||null,correct_option:$('questionCorrect').value,explanation:$('questionExplanation').value.trim()||null,marks:+$('questionMarks').value||1,negative_marks:+$('questionNegative').value||0,display_order:+$('questionOrder').value||0});clearQuestion()}catch(e){notice(e.message,true)}}
-function editQuestion(id){let x=questions.find(x=>x.id==id);$('questionId').value=x.id;$('questionTest').value=x.test_id;$('questionText').value=x.question||'';$('questionA').value=x.option_a||'';$('questionB').value=x.option_b||'';$('questionC').value=x.option_c||'';$('questionD').value=x.option_d||'';$('questionCorrect').value=x.correct_option||'';$('questionExplanation').value=x.explanation||'';$('questionMarks').value=x.marks??1;$('questionNegative').value=x.negative_marks??0;$('questionOrder').value=x.display_order??0;tab('series')}
-async function delQuestion(id){if(!confirm('Delete this question?'))return;try{let r=await db.from('ls_test_questions').delete().eq('id',id);if(r.error)throw r.error;notice('Question deleted.');await load()}catch(e){notice(e.message,true)}}
-function drawQuestions(){let t=$('questionTest').value;$('questionsList').innerHTML=questions.filter(q=>!t||q.test_id==t).map(x=>`<div class=item><div class=title>${esc(x.question)}</div><span class=badge>Correct ${esc(x.correct_option)}</span><span class=badge>Marks ${x.marks}</span><span class=badge>Negative ${x.negative_marks}</span><button class=primary onclick="editQuestion(${x.id})">Edit</button><button class=danger onclick="delQuestion(${x.id})">Delete</button></div>`).join('')||'<p>No questions for selected test.</p>'}
-$('testSubject').onchange=refreshTestTopics;$('questionTest').onchange=drawQuestions;
+$('seriesId').value='';
 
-function drawPricing(){$('pricingList').innerHTML=series.map(x=>`<div class=item>${esc(x.title)} <span class=badge>Year ${x.exam_year||'-'}</span><span class=badge>Price ${x.price??'Free'}</span></div>`).join('')||'<p>No Test Series.</p>'}
-(async()=>{let s=await db.auth.getSession();if(!s.data.session){location='login.html';return}tab('dashboard');await load()})();
+[
+'seriesYear','seriesTitle','seriesSlug','seriesType',
+'seriesPrice','seriesValidity','seriesStart',
+'seriesExpiry','seriesDescription'
+].forEach(x=>$(x).value='');
+
+$('seriesCourse').value='';
+$('seriesPublished').checked=false;
+$('seriesArchived').checked=false;
+}
+
+async function saveSeries(){
+
+try{
+
+let id=$('seriesId').value;
+
+await save('ls_test_series',id,{
+
+course_id:$('seriesCourse').value||null,
+
+title:$('seriesTitle').value.trim(),
+
+slug:$('seriesSlug').value.trim()||
+slug($('seriesTitle').value),
+
+description:$('seriesDescription').value.trim()||null,
+
+series_type:$('seriesType').value.trim()||null,
+
+price:$('seriesPrice').value===''?
+null:+$('seriesPrice').value,
+
+validity_days:$('seriesValidity').value===''?
+null:+$('seriesValidity').value,
+
+start_at:$('seriesStart').value?
+new Date($('seriesStart').value).toISOString():null,
+
+expiry_at:$('seriesExpiry').value?
+new Date($('seriesExpiry').value).toISOString():null,
+
+published:$('seriesPublished').checked,
+
+archived:$('seriesArchived').checked,
+
+exam_year:+$('seriesYear').value
+
+});
+
+clearSeries();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editSeries(id){
+
+let x=series.find(x=>x.id==id);
+
+$('seriesId').value=x.id;
+$('seriesYear').value=x.exam_year??'';
+$('seriesTitle').value=x.title||'';
+$('seriesSlug').value=x.slug||'';
+$('seriesCourse').value=x.course_id||'';
+$('seriesType').value=x.series_type||'';
+$('seriesPrice').value=x.price??'';
+$('seriesValidity').value=x.validity_days??'';
+$('seriesStart').value=dt(x.start_at);
+$('seriesExpiry').value=dt(x.expiry_at);
+$('seriesDescription').value=x.description||'';
+$('seriesPublished').checked=!!x.published;
+$('seriesArchived').checked=!!x.archived;
+
+tab('series');
+}
+
+async function delSeries(id){
+
+if(!confirm('Delete this Test Series?'))return;
+
+try{
+
+let r=await db
+.from('ls_test_series')
+.delete()
+.eq('id',id);
+
+if(r.error)throw r.error;
+
+notice('Test Series deleted.');
+await load();
+
+}catch(e){
+notice(e.message,true);
+}
+
+}
+
+function drawSeries(){
+
+$('seriesList').innerHTML=series.map(x=>`
+
+<div class=item>
+
+<div class=title>${esc(x.title)}</div>
+
+<span class=badge>Year ${x.exam_year||'-'}</span>
+${badge(x.published)}
+<span class=badge>${x.price??'Free'}</span>
+
+<button class=primary onclick="editSeries(${x.id})">
+Edit
+</button>
+
+<button class=secondary
+onclick="pub('ls_test_series',${x.id},${!x.published})">
+${x.published?'Unpublish':'Publish'}
+</button>
+
+<button class=danger onclick="delSeries(${x.id})">
+Delete
+</button>
+
+</div>
+
+`).join('')||'<p>No Test Series yet.</p>';
+}
+
+/* TESTS */
+
+function refreshTestTopics(){
+
+let id=$('testSubject').value;
+
+$('testTopic').innerHTML=
+opts(topics.filter(t=>t.course_subject_id==id),'title');
+
+}
+
+function clearTest(){
+
+$('testId').value='';
+
+[
+'testTitle','testDuration','testMarks','testPrice',
+'testStart','testExpiry','testDescription'
+].forEach(x=>$(x).value='');
+
+$('testSeries').value='';
+$('testSubject').value='';
+$('testTopic').value='';
+$('testPublished').checked=false;
+$('testArchived').checked=false;
+}
+
+async function saveTest(){
+
+try{
+
+let id=$('testId').value;
+
+await save('ls_tests',id,{
+
+test_series_id:$('testSeries').value,
+
+package_id:null,
+
+course_subject_id:$('testSubject').value||null,
+
+topic_id:$('testTopic').value||null,
+
+title:$('testTitle').value.trim(),
+
+description:$('testDescription').value.trim()||null,
+
+duration_minutes:$('testDuration').value===''?
+null:+$('testDuration').value,
+
+total_marks:$('testMarks').value===''?
+null:+$('testMarks').value,
+
+price:$('testPrice').value===''?
+null:+$('testPrice').value,
+
+start_at:$('testStart').value?
+new Date($('testStart').value).toISOString():null,
+
+expiry_at:$('testExpiry').value?
+new Date($('testExpiry').value).toISOString():null,
+
+published:$('testPublished').checked,
+
+archived:$('testArchived').checked
+
+});
+
+clearTest();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editTest(id){
+
+let x=tests.find(x=>x.id==id);
+
+$('testId').value=x.id;
+$('testSeries').value=x.test_series_id;
+$('testSubject').value=x.course_subject_id||'';
+
+refreshTestTopics();
+
+$('testTopic').value=x.topic_id||'';
+$('testTitle').value=x.title||'';
+$('testDuration').value=x.duration_minutes??'';
+$('testMarks').value=x.total_marks??'';
+$('testPrice').value=x.price??'';
+$('testStart').value=dt(x.start_at);
+$('testExpiry').value=dt(x.expiry_at);
+$('testDescription').value=x.description||'';
+$('testPublished').checked=!!x.published;
+$('testArchived').checked=!!x.archived;
+
+tab('series');
+}
+
+async function delTest(id){
+
+if(!confirm('Delete this test?'))return;
+
+try{
+
+let r=await db
+.from('ls_tests')
+.delete()
+.eq('id',id);
+
+if(r.error)throw r.error;
+
+notice('Test deleted.');
+await load();
+
+}catch(e){
+notice(e.message,true);
+}
+
+}
+
+function drawTests(){
+
+$('testsList').innerHTML=tests.map(x=>`
+
+<div class=item>
+
+<div class=title>${esc(x.title)}</div>
+
+<span class=badge>
+${esc(series.find(s=>s.id==x.test_series_id)?.title||'Unknown')}
+</span>
+
+${badge(x.published)}
+
+<button class=primary onclick="editTest(${x.id})">
+Edit
+</button>
+
+<button class=danger onclick="delTest(${x.id})">
+Delete
+</button>
+
+</div>
+
+`).join('')||'<p>No tests yet.</p>';
+}
+
+/* QUESTIONS */
+
+function clearQuestion(){
+
+$('questionId').value='';
+
+[
+'questionText','questionA','questionB',
+'questionC','questionD','questionExplanation'
+].forEach(x=>$(x).value='');
+
+$('questionTest').value='';
+$('questionCorrect').value='';
+$('questionMarks').value=1;
+$('questionNegative').value=0;
+$('questionOrder').value=0;
+}
+
+async function saveQuestion(){
+
+try{
+
+let id=$('questionId').value;
+
+await save('ls_test_questions',id,{
+
+test_id:$('questionTest').value,
+
+question:$('questionText').value.trim(),
+
+option_a:$('questionA').value.trim()||null,
+option_b:$('questionB').value.trim()||null,
+option_c:$('questionC').value.trim()||null,
+option_d:$('questionD').value.trim()||null,
+
+correct_option:$('questionCorrect').value,
+
+explanation:$('questionExplanation').value.trim()||null,
+
+marks:+$('questionMarks').value||1,
+
+negative_marks:+$('questionNegative').value||0,
+
+display_order:+$('questionOrder').value||0
+
+});
+
+clearQuestion();
+
+}catch(e){notice(e.message,true)}
+
+}
+
+function editQuestion(id){
+
+let x=questions.find(x=>x.id==id);
+
+$('questionId').value=x.id;
+$('questionTest').value=x.test_id;
+$('questionText').value=x.question||'';
+$('questionA').value=x.option_a||'';
+$('questionB').value=x.option_b||'';
+$('questionC').value=x.option_c||'';
+$('questionD').value=x.option_d||'';
+$('questionCorrect').value=x.correct_option||'';
+$('questionExplanation').value=x.explanation||'';
+$('questionMarks').value=x.marks??1;
+$('questionNegative').value=x.negative_marks??0;
+$('questionOrder').value=x.display_order??0;
+
+tab('series');
+}
+
+async function delQuestion(id){
+
+if(!confirm('Delete this question?'))return;
+
+try{
+
+let r=await db
+.from('ls_test_questions')
+.delete()
+.eq('id',id);
+
+if(r.error)throw r.error;
+
+notice('Question deleted.');
+await load();
+
+}catch(e){
+notice(e.message,true);
+}
+
+}
+
+function drawQuestions(){
+
+let t=$('questionTest').value;
+
+$('questionsList').innerHTML=
+
+questions
+.filter(q=>!t||q.test_id==t)
+.map(x=>`
+
+<div class=item>
+
+<div class=title>
+${esc(x.question)}
+</div>
+
+<span class=badge>
+Correct ${esc(x.correct_option)}
+</span>
+
+<span class=badge>
+Marks ${x.marks}
+</span>
+
+<span class=badge>
+Negative ${x.negative_marks}
+</span>
+
+<button class=primary onclick="editQuestion(${x.id})">
+Edit
+</button>
+
+<button class=danger onclick="delQuestion(${x.id})">
+Delete
+</button>
+
+</div>
+
+`).join('')||
+'<p>No questions for selected test.</p>';
+}
+
+/* BULK QUESTION UPLOAD */
+
+function clearBulk(){
+$('bulkText').value='';
+$('bulkResult').innerHTML='';
+}
+
+function parseBulkQuestions(text){
+
+let blocks=text
+.replace(/\r/g,'')
+.split(/\n\s*\n/)
+.map(x=>x.trim())
+.filter(Boolean);
+
+let result=[];
+
+for(let block of blocks){
+
+let lines=block
+.split('\n')
+.map(x=>x.trim())
+.filter(Boolean);
+
+if(!lines.length)continue;
+
+let qLine=lines.find(x=>/^Q?\d+[\.\):]/i.test(x));
+
+if(!qLine){
+qLine=lines.find(x=>/^Q\d+/i.test(x));
+}
+
+if(!qLine)continue;
+
+let question=qLine
+.replace(/^Q?\d+[\.\):]\s*/i,'')
+.trim();
+
+let getOpt=letter=>{
+
+let line=lines.find(x=>
+new RegExp('^'+letter+'[\\.:\\)]\\s*','i').test(x)
+);
+
+return line
+?line.replace(new RegExp('^'+letter+'[\\.:\\)]\\s*','i'),'').trim()
+:null;
+
+};
+
+let ans=lines.find(x=>/^Answer\s*:/i.test(x));
+
+let correct=ans
+?ans.replace(/^Answer\s*:\s*/i,'').trim().toUpperCase()
+:null;
+
+if(correct.length>1){
+correct=correct.charAt(0);
+}
+
+let exp=lines.find(x=>/^Explanation\s*:/i.test(x));
+
+let explanation=exp
+?exp.replace(/^Explanation\s*:\s*/i,'').trim()
+:null;
+
+result.push({
+question,
+option_a:getOpt('A'),
+option_b:getOpt('B'),
+option_c:getOpt('C'),
+option_d:getOpt('D'),
+correct_option:correct,
+explanation
+});
+
+}
+
+return result;
+}
+
+async function bulkUpload(){
+
+let testId=$('bulkTest').value;
+let text=$('bulkText').value.trim();
+
+if(!testId){
+notice('Select a Test first.',true);
+return;
+}
+
+if(!text){
+notice('Paste questions first.',true);
+return;
+}
+
+let parsed=parseBulkQuestions(text);
+
+if(!parsed.length){
+notice('No valid questions detected. Check the format.',true);
+return;
+}
+
+let existing=
+questions.filter(q=>String(q.test_id)===String(testId));
+
+let startOrder=existing.length;
+
+let rows=parsed.map((q,i)=>({
+
+test_id:testId,
+
+question:q.question,
+
+option_a:q.option_a,
+option_b:q.option_b,
+option_c:q.option_c,
+option_d:q.option_d,
+
+correct_option:q.correct_option,
+
+explanation:q.explanation,
+
+marks:1,
+
+negative_marks:0,
+
+display_order:startOrder+i
+
+}));
+
+try{
+
+let r=await db
+.from('ls_test_questions')
+.insert(rows);
+
+if(r.error)throw r.error;
+
+$('bulkResult').innerHTML=
+`<div class="msg ok" style="display:block">
+${rows.length} questions added successfully.
+</div>`;
+
+$('bulkText').value='';
+
+await load();
+
+}catch(e){
+
+console.error(e);
+
+notice(e.message,true);
+
+}
+
+}
+
+$('testSubject').onchange=refreshTestTopics;
+
+$('questionTest').onchange=function(){
+
+$('bulkTest').value=$('questionTest').value;
+
+drawQuestions();
+
+};
+
+$('bulkTest').onchange=function(){
+
+$('questionTest').value=$('bulkTest').value;
+
+drawQuestions();
+
+};
+
+function drawPricing(){
+
+$('pricingList').innerHTML=
+
+series.map(x=>`
+
+<div class=item>
+
+${esc(x.title)}
+
+<span class=badge>
+Year ${x.exam_year||'-'}
+</span>
+
+<span class=badge>
+Price ${x.price??'Free'}
+</span>
+
+</div>
+
+`).join('')||
+'<p>No Test Series.</p>';
+
+}
+
+(async()=>{
+
+let s=await db.auth.getSession();
+
+if(!s.data.session){
+location='login.html';
+return;
+}
+
+tab('dashboard');
+
+await load();
+
+})();
+
 </script>
+
 </body>
 </html>

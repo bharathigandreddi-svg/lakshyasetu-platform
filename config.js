@@ -3,6 +3,14 @@ window.LAKSHYASETU_CONFIG = {
   supabasePublishableKey: "sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa"
 };
 
+/* Make the Supabase client available to the lesson upload code. */
+if (window.supabase && !window.db) {
+  window.db = window.supabase.createClient(
+    window.LAKSHYASETU_CONFIG.supabaseUrl,
+    window.LAKSHYASETU_CONFIG.supabasePublishableKey
+  );
+}
+
 /* LakshyaSetu: direct Video + PDF upload for Lesson Management */
 window.addEventListener('load', function () {
   try {

@@ -156,3 +156,11 @@ window.addEventListener('load', function () {
     console.error('Lesson file upload setup failed:', e);
   }
 });
+
+/* Load student payment/access module after the page scripts are ready. */
+window.addEventListener('load', function () {
+  const s = document.createElement('script');
+  s.src = 'payments.js';
+  s.defer = true;
+  document.head.appendChild(s);
+});

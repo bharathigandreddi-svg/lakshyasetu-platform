@@ -1595,30 +1595,24 @@ notice('No valid questions detected. Check the format.',true);
 return;
 }
 
-let existing=
-questions.filter(q=>String(q.test_id)===String(testId));
+let existing=questions.filter(
+q=>String(q.test_id)===String(testId)
+);
 
 let startOrder=existing.length;
 
 let rows=parsed.map((q,i)=>({
 
 test_id:testId,
-
 question:q.question,
-
 option_a:q.option_a,
 option_b:q.option_b,
 option_c:q.option_c,
 option_d:q.option_d,
-
 correct_option:q.correct_option,
-
-explanation:q.explanation,
-
+explanation:q.explanation||'',
 marks:1,
-
 negative_marks:0,
-
 display_order:startOrder+i
 
 }));
@@ -1642,14 +1636,13 @@ await load();
 
 }catch(e){
 
-console.error(e);
+console.error('Bulk upload error:',e);
 
 notice(e.message,true);
 
 }
 
 }
-
 $('testSubject').onchange=refreshTestTopics;
 
 $('questionTest').onchange=function(){

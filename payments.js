@@ -29,7 +29,7 @@
     });
     document.querySelectorAll('.test-item').forEach(item=>{if(item.querySelector('.ls-buy-btn'))return;const open=item.querySelector('[onclick*="openTest("]');if(!open)return;const m=(open.getAttribute('onclick')||'').match(/openTest\((\d+)\)/);if(m)addButton(item,{product_type:'test',test_id:Number(m[1])},'Buy Test','₹5');});
   }
-  window.addEventListener('load',()=>{
+  function initPaymentModule(){
     loadRazorpay().catch(()=>{});setTimeout(enhanceCards,500);const obs=new MutationObserver(()=>setTimeout(enhanceCards,50));obs.observe(document.body,{childList:true,subtree:true});
     const originalOpenTopic=window.openTopic;
     if(typeof originalOpenTopic==='function')window.openTopic=async function(topicId){
@@ -45,5 +45,6 @@
         if(!access){testsArea.innerHTML='<div class="card"><h3>'+escapeHtml(test.title)+'</h3><p>This test is locked.</p><div class="learning-box"><strong>Buy this test for ₹'+Number(test.price||5)+'</strong><br><button class="action-btn ls-buy-btn" type="button">Buy Test</button></div></div>';const b=testsArea.querySelector('.ls-buy-btn');b.onclick=()=>buy({product_type:'test',test_id:Number(testId)},'Buy Test');return;}
       }return originalOpenTest(testId);
     };
-  });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initPaymentModule);else initPaymentModule();
 })();

@@ -20,6 +20,32 @@ function getLakshyaSetuDb() {
 
   window.db = client;
   window.LAKSHYASETU_DB = client;
+
+  /*
+     Student payment compatibility:
+     payments.js historically used Supabase's own authenticated invoke path.
+     Do not replace the session token with a manually forwarded/refreshed token
+     on the student page; that handoff was the source of the repeated 401s.
+     Admin pages keep the normal Supabase auth methods untouched.
+  */
+  if (document.getElementById('coursesArea')) {
+    const originalInvoke = client.functions.invoke.bind(client.functions);
+    client.functions.invoke = function (functionName, options = {}) {
+      const safeOptions = { ...options };
+      if (safeOptions.headers) {
+        const headers = new Headers(safeOptions.headers);
+        headers.delete('Authorization');
+        safeOptions.headers = headers;
+      }
+      return originalInvoke(functionName, safeOptions);
+    };
+
+    const originalGetSession = client.auth.getSession.bind(client.auth);
+    client.auth.refreshSession = async function () {
+      return originalGetSession();
+    };
+  }
+
   return client;
 }
 

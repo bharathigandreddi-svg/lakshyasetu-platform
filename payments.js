@@ -14,15 +14,31 @@
   }
 
   async function getAuthenticatedSession(client){
-    const current=await client.auth.getSession();
-    if (current?.data?.session) return current.data.session;
-    return null;
+    try{
+      const current=await client.auth.getSession();
+      let session=current?.data?.session||null;
+      if(!session) return null;
+      const expiresAt=Number(session.expires_at||0);
+      if(expiresAt && expiresAt <= Math.floor(Date.now()/1000)+60){
+        const refreshed=await client.auth.refreshSession();
+        if(refreshed?.data?.session) session=refreshed.data.session;
+        else return null;
+      }
+      const checked=await client.auth.getUser(session.access_token);
+      if(checked?.error || !checked?.data?.user) return null;
+      return session;
+    }catch(_e){
+      return null;
+    }
   }
 
-  /* Let Supabase JS attach the currently authenticated session itself.
-     Manual Authorization headers caused the repeated 401/non-2xx failure. */
   async function invokePaymentFunction(client,functionName,body){
-    const result=await client.functions.invoke(functionName,{body});
+    const session=await getAuthenticatedSession(client);
+    if(!session) return {data:null,error:{message:'Authentication failed. Please login again.'}};
+    const result=await client.functions.invoke(functionName,{
+      body,
+      headers:{Authorization:`Bearer ${session.access_token}`}
+    });
     if(result.error){
       let detail=result.error.message||'Payment service request failed.';
       try{
@@ -55,8 +71,27 @@
   function closeLoginModal(){const modal=document.getElementById('lsLoginModal');if(modal)modal.classList.add('hidden');}
 
   function showLoginModal(product,label){
-    ensureLoginModal();const modal=document.getElementById('lsLoginModal');const form=document.getElementById('lsLoginForm');const email=document.getElementById('lsLoginEmail');const password=document.getElementById('lsLoginPassword');const error=document.getElementById('lsLoginError');const submit=document.getElementById('lsLoginSubmit');const create=document.getElementById('lsCreateAccount');create.href='signup.html?next='+encodeURIComponent(location.href);error.textContent='';form.reset();modal.classList.remove('hidden');setTimeout(()=>email.focus(),50);
-    form.onsubmit=async function(e){e.preventDefault();error.textContent='';submit.disabled=true;submit.textContent='Signing in...';try{const client=getLakshyaSetuDb();const result=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(result.error)throw result.error;closeLoginModal();submit.disabled=false;submit.textContent='Login & Continue';await buy(product,label);}catch(err){error.textContent=err?.message||'Unable to login. Please check your email and password.';submit.disabled=false;submit.textContent='Login & Continue';}};
+    ensureLoginModal();
+    const modal=document.getElementById('lsLoginModal');
+    const form=document.getElementById('lsLoginForm');
+    const email=document.getElementById('lsLoginEmail');
+    const password=document.getElementById('lsLoginPassword');
+    const error=document.getElementById('lsLoginError');
+    const submit=document.getElementById('lsLoginSubmit');
+    const create=document.getElementById('lsCreateAccount');
+    create.href='signup.html?next='+encodeURIComponent(location.href);
+    error.textContent='';form.reset();modal.classList.remove('hidden');setTimeout(()=>email.focus(),50);
+    form.onsubmit=async function(e){
+      e.preventDefault();error.textContent='';submit.disabled=true;submit.textContent='Signing in...';
+      try{
+        const client=getLakshyaSetuDb();
+        const result=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+        if(result.error)throw result.error;
+        const verified=await getAuthenticatedSession(client);
+        if(!verified)throw new Error('Login succeeded but the session could not be verified. Please try again.');
+        closeLoginModal();submit.disabled=false;submit.textContent='Login & Continue';await buy(product,label);
+      }catch(err){error.textContent=err?.message||'Unable to login. Please check your email and password.';submit.disabled=false;submit.textContent='Login & Continue';}
+    };
   }
 
   async function buy(product,label){
@@ -69,7 +104,8 @@
       if(orderError||!orderData?.success)throw new Error(orderData?.error||orderError?.message||'Unable to create payment order.');
       const rzp=new Razorpay({key:orderData.key_id,amount:orderData.order.amount,currency:orderData.order.currency||'INR',name:'LakshyaSetu',description:label||product.product_type,order_id:orderData.order.id,handler:async function(response){
         try{
-          const verifySession=await getAuthenticatedSession(client);if(!verifySession)throw new Error('Your login session expired. Please login again before payment verification.');
+          const verifySession=await getAuthenticatedSession(client);
+          if(!verifySession){showLoginModal(product,label);return;}
           const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});
           if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');
           alert('Payment successful. Access activated.');location.reload();

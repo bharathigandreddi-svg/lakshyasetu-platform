@@ -102,15 +102,37 @@
       await loadRazorpay();
       const {data:orderData,error:orderError}=await invokePaymentFunction(client,'create-razorpay-order',{...product});
       if(orderError||!orderData?.success)throw new Error(orderData?.error||orderError?.message||'Unable to create payment order.');
-      const rzp=new Razorpay({key:orderData.key_id,amount:orderData.order.amount,currency:orderData.order.currency||'INR',name:'LakshyaSetu',description:label||product.product_type,order_id:orderData.order.id,handler:async function(response){
-        try{
-          const verifySession=await getAuthenticatedSession(client);
-          if(!verifySession){showLoginModal(product,label);return;}
-          const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});
-          if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');
-          alert('Payment successful. Access activated.');location.reload();
-        }catch(e){alert(e.message||'Payment verification failed.');}
-      },theme:{color:'#2457a6'}});rzp.open();
+
+      const rzp=new Razorpay({
+        key:orderData.key_id,
+        amount:orderData.order.amount,
+        currency:orderData.order.currency||'INR',
+        name:'LakshyaSetu',
+        description:label||product.product_type,
+        order_id:orderData.order.id,
+        handler:async function(response){
+          try{
+            const verifySession=await getAuthenticatedSession(client);
+            if(!verifySession){showLoginModal(product,label);return;}
+            const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});
+            if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');
+            alert('Payment successful. Access activated.');location.reload();
+          }catch(e){alert(e.message||'Payment verification failed.');}
+        },
+        modal:{
+          ondismiss:function(){
+            console.info('Razorpay checkout dismissed by student.');
+          }
+        },
+        theme:{color:'#2457a6'}
+      });
+
+      rzp.on('payment.failed',function(response){
+        const description=response?.error?.description||'Payment could not be completed.';
+        alert('Payment failed: '+description);
+      });
+
+      rzp.open();
     }catch(e){alert(e.message||'Payment failed.');}
   }
 

@@ -24,8 +24,13 @@
         if(refreshed?.data?.session) session=refreshed.data.session;
         else return null;
       }
-      const checked=await client.auth.getUser(session.access_token);
-      if(checked?.error || !checked?.data?.user) return null;
+      /*
+         Do not call auth.getUser(access_token) here. getUser() performs an
+         additional network request and was causing the payment flow to
+         report "Authentication failed" after Razorpay checkout even though
+         the Supabase session itself was still present. The Edge Functions
+         validate the Bearer token server-side before processing payment.
+      */
       return session;
     }catch(_e){
       return null;

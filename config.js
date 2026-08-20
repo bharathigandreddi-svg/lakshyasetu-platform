@@ -3,7 +3,7 @@ window.LAKSHYASETU_CONFIG = {
   supabasePublishableKey: "sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa"
 };
 
-/* Create one reliable Supabase client for the whole admin page. */
+/* Create one reliable Supabase client for the whole page. */
 function getLakshyaSetuDb() {
   if (window.db && typeof window.db.from === 'function') {
     return window.db;
@@ -22,29 +22,12 @@ function getLakshyaSetuDb() {
   window.LAKSHYASETU_DB = client;
 
   /*
-     Student payment compatibility:
-     payments.js historically used Supabase's own authenticated invoke path.
-     Do not replace the session token with a manually forwarded/refreshed token
-     on the student page; that handoff was the source of the repeated 401s.
-     Admin pages keep the normal Supabase auth methods untouched.
+     IMPORTANT: payment Edge Functions require the student's authenticated
+     Bearer token. Supabase JS automatically attaches the current session
+     to functions.invoke(). Do not override functions.invoke() or
+     auth.refreshSession() here; doing so previously removed/broke the
+     authentication handoff and caused repeated 401/non-2xx failures.
   */
-  if (document.getElementById('coursesArea')) {
-    const originalInvoke = client.functions.invoke.bind(client.functions);
-    client.functions.invoke = function (functionName, options = {}) {
-      const safeOptions = { ...options };
-      if (safeOptions.headers) {
-        const headers = new Headers(safeOptions.headers);
-        headers.delete('Authorization');
-        safeOptions.headers = headers;
-      }
-      return originalInvoke(functionName, safeOptions);
-    };
-
-    const originalGetSession = client.auth.getSession.bind(client.auth);
-    client.auth.refreshSession = async function () {
-      return originalGetSession();
-    };
-  }
 
   return client;
 }

@@ -13,18 +13,35 @@
     });
   }
 
+  async function getAuthenticatedSession(client){
+    const current=await client.auth.getSession();
+    if (current?.data?.session) {
+      const refreshed=await client.auth.refreshSession();
+      if (!refreshed.error && refreshed?.data?.session) return refreshed.data.session;
+      return current.data.session;
+    }
+    return null;
+  }
+
+  async function invokePaymentFunction(client, functionName, body, session){
+    return client.functions.invoke(functionName, {
+      body,
+      headers:{ Authorization:`Bearer ${session.access_token}` }
+    });
+  }
+
   async function buy(product,label){
     try{
       const client=getLakshyaSetuDb();
-      const {data:sessionData}=await client.auth.getSession();
-      if(!sessionData?.session){
+      const session=await getAuthenticatedSession(client);
+      if(!session){
         alert('Please login first.');
         location.href='login.html';
         return;
       }
 
       await loadRazorpay();
-      const {data:orderData,error:orderError}=await client.functions.invoke('create-razorpay-order',{body:product});
+      const {data:orderData,error:orderError}=await invokePaymentFunction(client,'create-razorpay-order',{...product},session);
       if(orderError||!orderData?.success){
         throw new Error(orderData?.error||orderError?.message||'Unable to create payment order.');
       }
@@ -37,20 +54,24 @@
         description:label||product.product_type,
         order_id:orderData.order.id,
         handler:async function(response){
-          const {data,error}=await client.functions.invoke('verify-razorpay-payment',{
-            body:{
+          try{
+            const verifySession=await getAuthenticatedSession(client);
+            if(!verifySession) throw new Error('Your login session expired. Please login again before payment verification.');
+            const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{
               ...product,
               amount:orderData.amount,
               razorpay_order_id:response.razorpay_order_id,
               razorpay_payment_id:response.razorpay_payment_id,
               razorpay_signature:response.razorpay_signature
+            },verifySession);
+            if(error||!data?.success){
+              throw new Error(data?.error||error?.message||'Payment verification failed.');
             }
-          });
-          if(error||!data?.success){
-            throw new Error(data?.error||error?.message||'Payment verification failed.');
+            alert('Payment successful. Access activated.');
+            location.reload();
+          }catch(e){
+            alert(e.message||'Payment verification failed.');
           }
-          alert('Payment successful. Access activated.');
-          location.reload();
         },
         theme:{color:'#2457a6'}
       });
@@ -149,10 +170,10 @@
         const {data:topic}=await client.from('course_topics').select('*').eq('id',topicId).single();
 
         if(topic&&!topic.is_trial&&Number(topic.topic_fee||0)>0){
-          const {data:sess}=await client.auth.getSession();
+          const session=await getAuthenticatedSession(client);
           let access=false;
-          if(sess?.session){
-            access=await hasLegacyAccess(client,sess.session.user.id,topic);
+          if(session){
+            access=await hasLegacyAccess(client,session.user.id,topic);
           }
 
           if(!access){
@@ -173,10 +194,10 @@
         const {data:test}=await client.from('ls_tests').select('*').eq('id',testId).single();
 
         if(test&&Number(test.price||0)>0){
-          const {data:sess}=await client.auth.getSession();
+          const session=await getAuthenticatedSession(client);
           let access=false;
-          if(sess?.session){
-            access=await hasModernAccess(client,sess.session.user.id,test);
+          if(session){
+            access=await hasModernAccess(client,session.user.id,test);
           }
 
           if(!access){

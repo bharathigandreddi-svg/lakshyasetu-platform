@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIB / Current Affairs Admin | LakshyaSetu</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172b4d;font-family:Arial}.top{background:#173b67;color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}.top a{color:#fff}.wrap{width:min(1200px,94%);margin:20px auto}.card{background:#fff;padding:20px;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 10px #0001}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}input,textarea{width:100%;padding:10px;border:1px solid #ccd6e3;border-radius:6px}textarea{min-height:120px}button{border:0;border-radius:6px;padding:10px 14px;cursor:pointer;font-weight:700;background:#173b67;color:#fff}.secondary{background:#e8eef7;color:#173b67}.danger{background:#b42318;color:#fff}.item{border:1px solid #dce4ee;border-radius:8px;padding:14px;margin:10px 0}.muted{color:#64748b;font-size:13px}.ok{color:#166534}.bad{color:#991b1b}.actions{margin-top:10px}@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="top"><strong>LakshyaSetu — PIB / Current Affairs</strong><a href="admin.html">Back to Admin</a></header>
+<main class="wrap">
+<div id="msg" class="card" style="display:none"></div>
+<div class="card">
+<h2>Daily Current Affairs / PIB</h2>
+<p class="muted">Create one publishable current-affairs item per date. Existing items can be edited without creating duplicates.</p>
+<input type="hidden" id="itemId">
+<div class="grid">
+<div><label>Date</label><input id="date" type="date"></div>
+<div><label>Daily Fee</label><input id="fee" type="number" min="0" value="0"></div>
+<div class="full"><label>Title</label><input id="title"></div>
+<div class="full"><label>Description / Notes</label><textarea id="description"></textarea></div>
+<div><label>Video URL</label><input id="video"></div>
+<div><label>PDF URL</label><input id="pdf"></div>
+</div>
+<p><label><input id="published" type="checkbox" style="width:auto"> Published</label></p>
+<button onclick="saveItem()">Save Current Affair</button>
+<button class="secondary" onclick="clearForm()">Clear</button>
+</div>
+<div class="card">
+<h2>Published / Draft Items</h2>
+<div id="list">Loading...</div>
+</div>
+</main>
+<script>
+const sb=window.getLakshyaSetuDb?getLakshyaSetuDb():window.supabase.createClient(LAKSHYASETU_CONFIG.supabaseUrl,LAKSHYASETU_CONFIG.supabasePublishableKey);
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
+let items=[];
+function msg(t,bad=false){$('msg').style.display='block';$('msg').textContent=t;$('msg').className='card '+(bad?'bad':'ok');setTimeout(()=>$('msg').style.display='none',3500)}
+async function load(){const r=await sb.from('current_affairs_daily').select('*').order('affair_date',{ascending:false}).order('id',{ascending:false});if(r.error){msg(r.error.message,true);return}items=r.data||[];render()}
+function render(){$('list').innerHTML=items.map(x=>`<div class="item"><strong>${esc(x.title||'Untitled')}</strong><div class="muted">${esc(x.affair_date)} | ₹${Number(x.daily_fee||0).toLocaleString('en-IN')} | ${x.published?'Published':'Draft'}</div><div>${esc(x.description||'')}</div><div class="actions"><button onclick="editItem(${x.id})">Edit</button><button class="secondary" onclick="togglePublish(${x.id},${!x.published})">${x.published?'Unpublish':'Publish'}</button></div></div>`).join('')||'<p>No current-affairs items yet.</p>'}
+function editItem(id){const x=items.find(v=>v.id==id);if(!x)return;$('itemId').value=x.id;$('date').value=x.affair_date||'';$('title').value=x.title||'';$('description').value=x.description||'';$('video').value=x.video_url||'';$('pdf').value=x.pdf_url||'';$('fee').value=x.daily_fee??0;$('published').checked=!!x.published;window.scrollTo({top:0,behavior:'smooth'})}
+function clearForm(){$('itemId').value='';$('date').value=new Date().toISOString().slice(0,10);$('title').value='';$('description').value='';$('video').value='';$('pdf').value='';$('fee').value=0;$('published').checked=false}
+async function saveItem(){if(!$('date').value){msg('Select a date.',true);return}if(!$('title').value.trim()){msg('Enter a title.',true);return}const id=$('itemId').value;const payload={affair_date:$('date').value,title:$('title').value.trim(),description:$('description').value.trim()||null,video_url:$('video').value.trim()||null,pdf_url:$('pdf').value.trim()||null,published:$('published').checked,daily_fee:$('fee').value===''?null:Number($('fee').value)};const r=id?await sb.from('current_affairs_daily').update(payload).eq('id',id):await sb.from('current_affairs_daily').insert(payload);if(r.error){msg(r.error.message,true);return}msg(id?'Current affair updated.':'Current affair created.');clearForm();await load()}
+async function togglePublish(id,value){const r=await sb.from('current_affairs_daily').update({published:value}).eq('id',id);if(r.error){msg(r.error.message,true);return}await load()}
+clearForm();load();
+</script>
+</body>
+</html>

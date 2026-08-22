@@ -47,12 +47,16 @@
       if(orderError||!orderData?.success)throw new Error(orderData?.error||orderError?.message||'Unable to create payment order.');
       const user=session.user||{},metadata=user.user_metadata||{};
       const rzp=new Razorpay({
-        key:orderData.key_id,amount:orderData.order.amount,currency:orderData.order.currency||'INR',name:'LakshyaSetu',description:label||product.product_type,order_id:orderData.order.id,
-        one_click_checkout:false,
+        key:orderData.key_id,
+        amount:orderData.order.amount,
+        currency:orderData.order.currency||'INR',
+        name:'LakshyaSetu',
+        description:label||product.product_type,
+        order_id:orderData.order.id,
         prefill:{name:String(metadata.full_name||metadata.name||''),email:String(user.email||''),contact:String(metadata.phone||metadata.mobile||'')},
-        config:{display:{blocks:{lakshya_payment:{name:'Pay using',instruments:[{method:'upi'},{method:'card'},{method:'netbanking'},{method:'wallet'}]}},sequence:['block.lakshya_payment'],preferences:{show_default_blocks:true}}},
         handler:async response=>{try{const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');alert('Payment successful. Access activated.');location.reload();}catch(e){alert(e.message||'Payment verification failed.');}},
-        modal:{ondismiss:()=>console.info('Razorpay checkout dismissed.')},theme:{color:'#2457a6'}
+        modal:{ondismiss:()=>console.info('Razorpay checkout dismissed.')},
+        theme:{color:'#2457a6'}
       });
       rzp.on('payment.failed',response=>{const err=response?.error||{};const parts=[err.description||'Payment could not be completed.'];if(err.code)parts.push(`Code: ${err.code}`);if(err.reason)parts.push(`Reason: ${err.reason}`);if(err.step)parts.push(`Step: ${err.step}`);alert('Payment failed: '+parts.join(' | '));console.error('Razorpay payment.failed',response);});
       rzp.open();

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Learning | LakshyaSetu</title><link rel="stylesheet" href="styles.css">
+<style>body{background:#f5f7fb}.wrap{width:min(1050px,92%);margin:35px auto}.top{display:flex;justify-content:space-between;align-items:center}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.card{background:#fff;border:1px solid #e1e7ef;border-radius:16px;padding:20px}.tag{display:inline-block;padding:5px 8px;border-radius:7px;background:#eef4ff;color:#2457a6;font-size:12px;font-weight:700}.btn{display:inline-block;padding:10px 14px;border-radius:8px;background:#2457a6;color:#fff;text-decoration:none;font-weight:700;border:0;cursor:pointer}.muted{color:#667085}.error{padding:15px;background:#fff5f5;border:1px solid #f3caca;color:#a61b1b;border-radius:10px}.empty{padding:20px;background:#fff;border:1px dashed #ccd6e3;border-radius:12px}</style>
+</head>
+<body>
+<header class="top"><div><strong>LakshyaSetu</strong><small style="display:block">My Learning</small></div><div><a class="btn" href="student-v2.html">Browse</a> <button id="logout" class="btn">Logout</button></div></header>
+<main class="wrap"><h1>My Learning</h1><p id="who" class="muted">Checking your account...</p><div id="msg"></div><div id="items" class="grid"><div class="empty">Loading purchases...</div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+<script>
+const sb=window.supabase.createClient(LAKSHYASETU_CONFIG.supabaseUrl,LAKSHYASETU_CONFIG.supabasePublishableKey);
+const esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
+const money=v=>Number(v||0)?'₹'+Number(v).toLocaleString('en-IN'):'Free';
+const msg=document.getElementById('msg');
+async function load(){const s=(await sb.auth.getSession()).data.session;if(!s){location.href='login.html?next=student-account.html';return}document.getElementById('who').textContent='Signed in as '+(s.user.email||'Student');const r=await sb.from('ls_purchases').select('*').eq('user_id',s.user.id).order('purchased_at',{ascending:false});if(r.error){msg.innerHTML='<div class="error">Unable to load your purchases.</div>';return}const rows=r.data||[];if(!rows.length){document.getElementById('items').innerHTML='<div class="empty">No purchases yet. Browse courses and tests to get started.</div>';return}
+const ids={course:[],subject:[],topic:[],lesson:[],test_series:[],test:[]};rows.forEach(x=>{if(ids[x.product_type])ids[x.product_type].push(x)});
+const [courses,subjects,topics,lessons,series,tests]=await Promise.all([
+ sb.from('ls_courses').select('id,title').in('id',ids.course.map(x=>x.course_id).filter(Boolean)),
+ sb.from('ls_course_subjects').select('id,ls_subjects(title)').in('id',ids.subject.map(x=>x.course_subject_id).filter(Boolean)),
+ sb.from('ls_topics').select('id,title').in('id',ids.topic.map(x=>x.topic_id).filter(Boolean)),
+ sb.from('ls_lessons').select('id,title').in('id',ids.lesson.map(x=>x.lesson_id).filter(Boolean)),
+ sb.from('ls_test_series').select('id,title').in('id',ids.test_series.map(x=>x.test_series_id).filter(Boolean)),
+ sb.from('ls_tests').select('id,title').in('id',ids.test.map(x=>x.test_id).filter(Boolean))
+]);
+const maps={course:Object.fromEntries((courses.data||[]).map(x=>[x.id,x.title])),subject:Object.fromEntries((subjects.data||[]).map(x=>[x.id,x.ls_subjects?.title||'Subject'])),topic:Object.fromEntries((topics.data||[]).map(x=>[x.id,x.title])),lesson:Object.fromEntries((lessons.data||[]).map(x=>[x.id,x.title])),test_series:Object.fromEntries((series.data||[]).map(x=>[x.id,x.title])),test:Object.fromEntries((tests.data||[]).map(x=>[x.id,x.title]))};
+document.getElementById('items').innerHTML=rows.map(x=>{const key={course:x.course_id,subject:x.course_subject_id,topic:x.topic_id,lesson:x.lesson_id,test_series:x.test_series_id,test:x.test_id}[x.product_type];const title=maps[x.product_type]?.[key]||'Purchased content';const active=x.status==='ACTIVE';const href=x.product_type==='test'?'student-v2.html?test='+x.test_id:x.product_type==='course'?'student-v2.html?course='+x.course_id:'student-v2.html';return `<article class="card"><span class="tag">${esc(x.product_type)}</span><h3>${esc(title)}</h3><p class="muted">Paid ${money(x.amount)} · ${x.purchased_at?new Date(x.purchased_at).toLocaleDateString('en-IN'):''}</p><p><strong>${active?'Access Active':'Access '+esc(x.status||'Pending')}</strong></p>${active?`<a class="btn" href="${href}">Open</a>`:''}</article>`}).join('')}
+document.getElementById('logout').onclick=async()=>{await sb.auth.signOut();location.href='login.html'};load();
+</script></body></html>

@@ -1,38 +1,52 @@
 /* LakshyaSetu Razorpay + access control */
 (function(){
+  if(window.__LS_PAYMENT_MODULE_LOADED)return;
+  window.__LS_PAYMENT_MODULE_LOADED=true;
   const hasLegacyPage=!!document.getElementById('coursesArea');
   const isStudentV2=!!document.getElementById('pageTitle');
-  if(!hasLegacyPage&&!isStudentV2) return;
+  if(!hasLegacyPage&&!isStudentV2)return;
   function loadRazorpay(){if(window.Razorpay)return Promise.resolve();return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=resolve;s.onerror=()=>reject(new Error('Payment gateway failed to load.'));document.head.appendChild(s);});}
   async function getAuthenticatedSession(client){
     try{
       let session=(await client.auth.getSession())?.data?.session||null;
       if(!session)return null;
-      const expiresAt=Number(session.expires_at||0),now=Math.floor(Date.now()/1000);
-      if(expiresAt&&expiresAt<=now+120){
+      let userCheck=await client.auth.getUser(session.access_token);
+      if(userCheck?.data?.user)return session;
+      const refreshed=await client.auth.refreshSession();
+      session=refreshed?.data?.session||null;
+      if(!session)return null;
+      userCheck=await client.auth.getUser(session.access_token);
+      return userCheck?.data?.user?session:null;
+    }catch(_e){
+      try{
         const refreshed=await client.auth.refreshSession();
-        session=refreshed?.data?.session||null;
-      }
-      return session;
-    }catch(_e){return null;}
+        const session=refreshed?.data?.session||null;
+        if(!session)return null;
+        const userCheck=await client.auth.getUser(session.access_token);
+        return userCheck?.data?.user?session:null;
+      }catch(_e2){return null;}
+    }
   }
   async function invokePaymentFunction(client,functionName,body){
     let session=await getAuthenticatedSession(client);
-    if(!session)return {data:null,error:{message:'Authentication failed. Please login again.'}};
+    if(!session)return {data:null,error:{message:'Authentication failed. Please login again.',status:401}};
     const url=`${window.LAKSHYASETU_CONFIG.supabaseUrl}/functions/v1/${functionName}`;
     async function call(s){
-      const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','apikey':window.LAKSHYASETU_CONFIG.supabasePublishableKey,'Authorization':`Bearer ${s.access_token}`},body:JSON.stringify(body)});
+      const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','apikey':window.LAKSHYASETU_CONFIG.supabasePublishableKey,'Authorization':`Bearer ${s.access_token}`,'x-client-info':'lakshyasetu-student-payment'},body:JSON.stringify(body)});
       let payload=null;try{payload=await response.json();}catch(_e){}
       if(!response.ok)return {data:null,error:{message:payload?.error||payload?.message||`Payment service returned HTTP ${response.status}.`,status:response.status}};
       return {data:payload,error:null};
     }
     let result=await call(session);
-    if(result.error&&(result.error.status===401||/invalid login session|jwt|token|unauthorized/i.test(result.error.message||''))){
+    if(result.error&&result.error.status===401){
       try{
         const refreshed=await client.auth.refreshSession();
         session=refreshed?.data?.session||null;
         if(session)result=await call(session);
       }catch(_e){}
+    }
+    if(result.error&&result.error.status===401){
+      try{await client.auth.signOut();}catch(_e){}
     }
     return result;
   }
@@ -45,32 +59,8 @@
       const {data:orderData,error:orderError}=await invokePaymentFunction(client,'create-razorpay-order',{...product});
       if(orderError||!orderData?.success)throw new Error(orderData?.error||orderError?.message||'Unable to create payment order.');
       const user=session.user||{},metadata=user.user_metadata||{};
-      const rzp=new Razorpay({
-        key:orderData.key_id,
-        amount:orderData.order.amount,
-        currency:orderData.order.currency||'INR',
-        name:'LakshyaSetu',
-        description:label||product.product_type,
-        order_id:orderData.order.id,
-        prefill:{name:String(metadata.full_name||metadata.name||''),email:String(user.email||''),contact:String(metadata.phone||metadata.mobile||'')},
-        method:{card:true,netbanking:true,upi:true,wallet:true,emi:true,paylater:true},
-        retry:{enabled:true,max_count:3},
-        timeout:600,
-        handler:async response=>{try{const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');alert('Payment successful. Access activated.');location.reload();}catch(e){alert(e.message||'Payment verification failed.');}},
-        modal:{ondismiss:()=>console.info('Razorpay checkout dismissed.')},
-        theme:{color:'#2457a6'}
-      });
-      rzp.on('payment.failed',response=>{
-        const err=response?.error||{};
-        const parts=[err.description||'Payment could not be completed.'];
-        if(err.code)parts.push(`Code: ${err.code}`);
-        if(err.reason)parts.push(`Reason: ${err.reason}`);
-        if(err.step)parts.push(`Step: ${err.step}`);
-        if(err.source)parts.push(`Source: ${err.source}`);
-        if(err.metadata?.payment_id)parts.push(`Payment: ${err.metadata.payment_id}`);
-        console.error('Razorpay payment.failed',response);
-        alert('Payment failed: '+parts.join(' | ')+'\n\nYou can retry from the checkout.');
-      });
+      const rzp=new Razorpay({key:orderData.key_id,amount:orderData.order.amount,currency:orderData.order.currency||'INR',name:'LakshyaSetu',description:label||product.product_type,order_id:orderData.order.id,prefill:{name:String(metadata.full_name||metadata.name||''),email:String(user.email||''),contact:String(metadata.phone||metadata.mobile||'')},method:{card:true,netbanking:true,upi:true,wallet:true,emi:true,paylater:true},retry:{enabled:true,max_count:3},timeout:600,handler:async response=>{try{const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');alert('Payment successful. Access activated.');location.reload();}catch(e){alert(e.message||'Payment verification failed.');}},modal:{ondismiss:()=>console.info('Razorpay checkout dismissed.')},theme:{color:'#2457a6'}});
+      rzp.on('payment.failed',response=>{const err=response?.error||{};const parts=[err.description||'Payment could not be completed.'];if(err.code)parts.push(`Code: ${err.code}`);if(err.reason)parts.push(`Reason: ${err.reason}`);if(err.step)parts.push(`Step: ${err.step}`);if(err.source)parts.push(`Source: ${err.source}`);if(err.metadata?.payment_id)parts.push(`Payment: ${err.metadata.payment_id}`);console.error('Razorpay payment.failed',response);alert('Payment failed: '+parts.join(' | ')+'\n\nYou can retry from the checkout.');});
       rzp.open();
     }catch(e){alert(e.message||'Payment failed.');}
   }

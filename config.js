@@ -36,7 +36,7 @@ window.addEventListener('load', function () {
     videoWrapper.append(videoFile,videoHelp,videoCurrent);
     const pdfWrapper=pdfUrl.parentElement;
     const pdfFile=document.createElement('input'); pdfFile.type='file'; pdfFile.id='lessonPdfFile'; pdfFile.accept='application/pdf,.pdf'; pdfFile.style.marginTop='6px';
-    const pdfHelp=document.createElement('div'); pdfHelp.style.cssText='font-size:12px;color:#64748b;margin-top:5px'; pdfHelp.textContent='Or choose a PDF file. When you click Save, the PDF will be uploaded and its URL saved automatically.';
+    const pdfHelp=document.createElement('div'); pdfHelp.style.cssText='font-size:12px;color:#64748b;margin-top:5px'; pdfHelp.textContent='Or choose a PDF file. When you click Save, the file will be uploaded and its URL saved automatically.';
     const pdfCurrent=document.createElement('div'); pdfCurrent.style.cssText='font-size:12px;color:#166534;margin-top:5px;word-break:break-all';
     pdfUrl.type='hidden'; pdfUrl.setAttribute('aria-hidden','true'); const pdfLabel=pdfWrapper.querySelector('label'); if(pdfLabel)pdfLabel.textContent='PDF File'; pdfWrapper.append(pdfFile,pdfHelp,pdfCurrent);
     const originalSaveLesson=window.saveLesson, originalEditLesson=window.editLesson, originalClearLesson=window.clearLesson;
@@ -56,7 +56,7 @@ window.addEventListener('load', function () {
 
 /* Load the current student payment/access module with a cache-busting version. */
 window.addEventListener('load', function () {
-  const s=document.createElement('script'); s.src='payments.js?v=20260822-razorpay-auth-token-6'; s.defer=true; document.head.appendChild(s);
+  const s=document.createElement('script'); s.src='payments.js?v=20260822-razorpay-auth-token-7'; s.defer=true; document.head.appendChild(s);
 });
 window.addEventListener('load', function () {
   const s=document.createElement('script'); s.src='test-runner.js?v=20260822-2'; s.defer=true; document.head.appendChild(s);

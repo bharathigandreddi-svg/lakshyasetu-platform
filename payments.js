@@ -6,22 +6,17 @@
   function loadRazorpay(){if(window.Razorpay)return Promise.resolve();return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=resolve;s.onerror=()=>reject(new Error('Payment gateway failed to load.'));document.head.appendChild(s);});}
   async function getAuthenticatedSession(client){
     try{
-      let session=(await client.auth.getSession())?.data?.session||null;
-      if(!session)return null;
-      const expiresAt=Number(session.expires_at||0),now=Math.floor(Date.now()/1000);
-      if(expiresAt&&expiresAt<=now+120){
-        const refreshed=await client.auth.refreshSession();
-        session=refreshed?.data?.session||null;
-        if(!session)return null;
-      }
-      return session;
+      const current=(await client.auth.getSession())?.data?.session||null;
+      if(current)return current;
+      const refreshed=await client.auth.refreshSession();
+      return refreshed?.data?.session||null;
     }catch(_e){return null;}
   }
   async function invokePaymentFunction(client,functionName,body){
     let session=await getAuthenticatedSession(client);
     if(!session)return {data:null,error:{message:'Authentication failed. Please login again.'}};
-    async function call(s){return await client.functions.invoke(functionName,{body,headers:{Authorization:`Bearer ${s.access_token}`}});}
-    let result=await call(session);
+    async function call(){return await client.functions.invoke(functionName,{body});}
+    let result=await call();
     if(result.error){
       let status=0,detail=result.error.message||'Payment service request failed.';
       try{
@@ -30,8 +25,11 @@
         if(ctx&&typeof ctx.json==='function'){const payload=await ctx.json();detail=payload?.error||payload?.message||detail;}
       }catch(_e){}
       if(status===401||/invalid login session|jwt|token/i.test(detail)){
-        const refreshed=await client.auth.refreshSession();session=refreshed?.data?.session||null;
-        if(session){result=await call(session);if(!result.error)return result;}
+        try{
+          const refreshed=await client.auth.refreshSession();
+          session=refreshed?.data?.session||null;
+          if(session){result=await call();if(!result.error)return result;}
+        }catch(_e){}
       }
       return {data:null,error:{message:detail}};
     }

@@ -56,7 +56,7 @@ window.addEventListener('load', function () {
 
 /* Load the current student payment/access module with a cache-busting version. */
 window.addEventListener('load', function () {
-  const s=document.createElement('script'); s.src='payments.js?v=20260822-razorpay-standard-2'; s.defer=true; document.head.appendChild(s);
+  const s=document.createElement('script'); s.src='payments.js?v=20260822-razorpay-standard-3'; s.defer=true; document.head.appendChild(s);
 });
 window.addEventListener('load', function () {
   const s=document.createElement('script'); s.src='test-runner.js?v=20260822-2'; s.defer=true; document.head.appendChild(s);

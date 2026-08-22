@@ -19,23 +19,20 @@
   async function invokePaymentFunction(client,functionName,body){
     let session=await getAuthenticatedSession(client);
     if(!session)return {data:null,error:{message:'Authentication failed. Please login again.'}};
-    async function call(s){return await client.functions.invoke(functionName,{body,headers:{Authorization:`Bearer ${s.access_token}`}});}
+    const url=`${window.LAKSHYASETU_CONFIG.supabaseUrl}/functions/v1/${functionName}`;
+    async function call(s){
+      const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','apikey':window.LAKSHYASETU_CONFIG.supabasePublishableKey,'Authorization':`Bearer ${s.access_token}`},body:JSON.stringify(body)});
+      let payload=null;try{payload=await response.json();}catch(_e){}
+      if(!response.ok)return {data:null,error:{message:payload?.error||payload?.message||`Payment service returned HTTP ${response.status}.`,status:response.status}};
+      return {data:payload,error:null};
+    }
     let result=await call(session);
-    if(result.error){
-      let status=0,detail=result.error.message||'Payment service request failed.';
+    if(result.error&&(result.error.status===401||/invalid login session|jwt|token|unauthorized/i.test(result.error.message||''))){
       try{
-        status=Number(result.error.context?.status||result.error.context?.statusCode||0);
-        const ctx=result.error.context;
-        if(ctx&&typeof ctx.json==='function'){const payload=await ctx.json();detail=payload?.error||payload?.message||detail;}
+        const refreshed=await client.auth.refreshSession();
+        session=refreshed?.data?.session||null;
+        if(session)result=await call(session);
       }catch(_e){}
-      if(status===401||/invalid login session|jwt|token/i.test(detail)){
-        try{
-          const refreshed=await client.auth.refreshSession();
-          session=refreshed?.data?.session||null;
-          if(session){result=await call(session);if(!result.error)return result;}
-        }catch(_e){}
-      }
-      return {data:null,error:{message:detail}};
     }
     return result;
   }

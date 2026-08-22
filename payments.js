@@ -14,15 +14,10 @@
         session=refreshed?.data?.session||null;
         if(!session)return null;
       }
-      /* Confirm the access token is actually accepted by Supabase Auth. */
-      const who=await client.auth.getUser(session.access_token);
-      if(who?.error||!who?.data?.user){
-        const refreshed=await client.auth.refreshSession();
-        session=refreshed?.data?.session||null;
-        if(!session)return null;
-        const retry=await client.auth.getUser(session.access_token);
-        if(retry?.error||!retry?.data?.user)return null;
-      }
+      /* Do not call auth.getUser() here. Razorpay checkout can take the browser through
+         a separate iframe/redirect lifecycle, and a locally cached session may be valid
+         even when this extra client-side validation temporarily fails. The Edge Function
+         performs the authoritative token check. */
       return session;
     }catch(_e){return null;}
   }
@@ -43,8 +38,7 @@
           detail=payload?.error||payload?.message||detail;
         }
       }catch(_e){}
-      /* A stale access token can survive in the browser even though getSession() returns a session.
-         Refresh once and retry the same request before showing Authentication failed. */
+      /* If the server rejects the token, refresh once and retry the same request. */
       if(status===401||/invalid login session|jwt|token/i.test(detail)){
         const refreshed=await client.auth.refreshSession();
         session=refreshed?.data?.session||null;

@@ -38,7 +38,6 @@
           detail=payload?.error||payload?.message||detail;
         }
       }catch(_e){}
-      /* If the server rejects the token, refresh once and retry the same request. */
       if(status===401||/invalid login session|jwt|token/i.test(detail)){
         const refreshed=await client.auth.refreshSession();
         session=refreshed?.data?.session||null;
@@ -58,7 +57,7 @@
     }
     return result;
   }
-  function ensureLoginModal(){if(document.getElementById('lsLoginModal'))return;const style=document.createElement('style');style.textContent='#lsLoginModal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,25,45,.62)}#lsLoginModal.hidden{display:none!important}#lsLoginModal .ls-modal-card{width:min(430px,100%);background:#fff;border-radius:18px;padding:28px;position:relative}#lsLoginModal h2{margin:0 0 7px;color:#10233f}#lsLoginModal label{display:block;margin:12px 0 6px;font-size:13px;font-weight:700}#lsLoginModal input{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:9px}#lsLoginModal button{cursor:pointer}#lsLoginModal .ls-submit{width:100%;margin-top:18px;border:0;border-radius:9px;padding:12px;background:#2457a6;color:#fff;font-weight:700}#lsLoginModal .ls-close{position:absolute;right:15px;top:12px;border:0;background:transparent;font-size:25px}#lsLoginModal .ls-error{min-height:20px;margin-top:10px;color:#b42318;font-size:13px}';document.head.appendChild(style);const modal=document.createElement('div');modal.id='lsLoginModal';modal.className='hidden';modal.innerHTML='<div class="ls-modal-card"><button class="ls-close" type="button">×</button><h2>Student Login</h2><p>Please login to continue.</p><form id="lsLoginForm"><label>Email</label><input id="lsLoginEmail" type="email" required><label>Password</label><input id="lsLoginPassword" type="password" required><div id="lsLoginError" class="ls-error"></div><button class="ls-submit" type="submit">Login & Continue</button></form><p>New student? <a href="signup.html">Create an account</a></p></div>';document.body.appendChild(modal);modal.querySelector('.ls-close').onclick=()=>modal.classList.add('hidden');}
+  function ensureLoginModal(){if(document.getElementById('lsLoginModal'))return;const style=document.createElement('style');style.textContent='#lsLoginModal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,25,45,.62)}#lsLoginModal.hidden{display:none!important}#lsLoginModal .ls-modal-card{width:min(430px,100%);background:#fff;border-radius:18px;padding:28px;position:relative}#lsLoginModal h2{margin:0 0 7px;color:#10233f}#lsLoginModal label{display:block;margin:12px 0 6px;font-size:13px;font-weight:700}#lsLoginModal input{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:9px}#lsLoginModal button{cursor:pointer}#lsLoginModal .ls-submit{width:100%;margin-top:18px;border:0;border-radius:9px;padding:12px;background:#2457a6;color:#fff;font-weight:700}#lsLoginModal .ls-close{position:absolute;right:15px;top:12px;border:0;background:transparent;font-size:25px}#lsLoginModal .ls-error{min-height:20px;margin-top:10px;color:#b42318;font-size:13px}';document.head.appendChild(style);const modal=document.createElement('div');modal.id='lsLoginModal';modal.className='hidden';modal.innerHTML='<div class="ls-modal-card"><button class="ls-close" type="button">×</button><h2>Student Login</h2><p>Please login to continue.</p><form id="lsLoginForm"><label>Email</label><input id="lsLoginEmail" type="email" required><label>Password</label><input id="lsLoginPassword" type="password" required><div id="lsLoginError" class="ls-error"></div><button class="ls-submit" type="submit">Login & Continue</button></form><p>New student? <a href="signup.html">Create an account</a></p></div></div>';document.body.appendChild(modal);modal.querySelector('.ls-close').onclick=()=>modal.classList.add('hidden');}
   function showLoginModal(product,label){ensureLoginModal();const modal=document.getElementById('lsLoginModal'),form=document.getElementById('lsLoginForm'),error=document.getElementById('lsLoginError'),email=document.getElementById('lsLoginEmail');error.textContent='';form.reset();modal.classList.remove('hidden');setTimeout(()=>email.focus(),50);form.onsubmit=async e=>{e.preventDefault();error.textContent='Signing in...';try{const client=getLakshyaSetuDb();const r=await client.auth.signInWithPassword({email:email.value.trim(),password:document.getElementById('lsLoginPassword').value});if(r.error)throw r.error;if(!r.data?.session)throw new Error('Login completed but no active session was created.');modal.classList.add('hidden');await new Promise(resolve=>setTimeout(resolve,100));await buy(product,label,r.data.session);}catch(err){error.textContent=err?.message||'Unable to login.';}};}
   async function buy(product,label,knownSession=null){
     const client=getLakshyaSetuDb();
@@ -68,7 +67,58 @@
       await loadRazorpay();
       const {data:orderData,error:orderError}=await invokePaymentFunction(client,'create-razorpay-order',{...product});
       if(orderError||!orderData?.success)throw new Error(orderData?.error||orderError?.message||'Unable to create payment order.');
-      const rzp=new Razorpay({key:orderData.key_id,amount:orderData.order.amount,currency:orderData.order.currency||'INR',name:'LakshyaSetu',description:label||product.product_type,order_id:orderData.order.id,handler:async response=>{try{const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');alert('Payment successful. Access activated.');location.reload();}catch(e){alert(e.message||'Payment verification failed.');}},modal:{ondismiss:()=>console.info('Razorpay checkout dismissed.')},theme:{color:'#2457a6'}});rzp.on('payment.failed',response=>alert('Payment failed: '+(response?.error?.description||'Payment could not be completed.')));rzp.open();
+      const user=session.user||{};
+      const metadata=user.user_metadata||{};
+      const rzp=new Razorpay({
+        key:orderData.key_id,
+        amount:orderData.order.amount,
+        currency:orderData.order.currency||'INR',
+        name:'LakshyaSetu',
+        description:label||product.product_type,
+        order_id:orderData.order.id,
+        one_click_checkout:false,
+        prefill:{
+          name:String(metadata.full_name||metadata.name||''),
+          email:String(user.email||''),
+          contact:String(metadata.phone||metadata.mobile||'')
+        },
+        config:{
+          display:{
+            blocks:{
+              lakshya_payment:{
+                name:'Pay using',
+                instruments:[
+                  {method:'upi'},
+                  {method:'card'},
+                  {method:'netbanking'},
+                  {method:'wallet'}
+                ]
+              }
+            },
+            sequence:['block.lakshya_payment'],
+            preferences:{show_default_blocks:true}
+          }
+        },
+        handler:async response=>{
+          try{
+            const {data,error}=await invokePaymentFunction(client,'verify-razorpay-payment',{...product,amount:orderData.amount,razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});
+            if(error||!data?.success)throw new Error(data?.error||error?.message||'Payment verification failed.');
+            alert('Payment successful. Access activated.');location.reload();
+          }catch(e){alert(e.message||'Payment verification failed.');}
+        },
+        modal:{ondismiss:()=>console.info('Razorpay checkout dismissed.')},
+        theme:{color:'#2457a6'}
+      });
+      rzp.on('payment.failed',response=>{
+        const err=response?.error||{};
+        const parts=[err.description||'Payment could not be completed.'];
+        if(err.code)parts.push(`Code: ${err.code}`);
+        if(err.reason)parts.push(`Reason: ${err.reason}`);
+        if(err.step)parts.push(`Step: ${err.step}`);
+        alert('Payment failed: '+parts.join(' | '));
+        console.error('Razorpay payment.failed',response);
+      });
+      rzp.open();
     }catch(e){alert(e.message||'Payment failed.');}
   }
   window.LSBuy=buy;window.LSGetSession=getAuthenticatedSession;window.LSShowLogin=(product,label)=>showLoginModal(product,label);

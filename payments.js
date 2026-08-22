@@ -10,20 +10,16 @@
     try{
       let session=(await client.auth.getSession())?.data?.session||null;
       if(!session)return null;
-      let userCheck=await client.auth.getUser(session.access_token);
-      if(userCheck?.data?.user)return session;
-      const refreshed=await client.auth.refreshSession();
-      session=refreshed?.data?.session||null;
-      if(!session)return null;
-      userCheck=await client.auth.getUser(session.access_token);
-      return userCheck?.data?.user?session:null;
+      const expiresAt=Number(session.expires_at||0),now=Math.floor(Date.now()/1000);
+      if(expiresAt&&expiresAt<=now+120){
+        const refreshed=await client.auth.refreshSession();
+        session=refreshed?.data?.session||null;
+      }
+      return session;
     }catch(_e){
       try{
         const refreshed=await client.auth.refreshSession();
-        const session=refreshed?.data?.session||null;
-        if(!session)return null;
-        const userCheck=await client.auth.getUser(session.access_token);
-        return userCheck?.data?.user?session:null;
+        return refreshed?.data?.session||null;
       }catch(_e2){return null;}
     }
   }

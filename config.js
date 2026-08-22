@@ -63,16 +63,24 @@ window.addEventListener('load', function () {
 });
 
 /* Main Admin: expose Current Affairs as a dedicated management section. */
-window.addEventListener('load', function () {
-  if (!/\/admin\.html$/i.test(location.pathname)) return;
-  const nav = document.querySelector('.nav');
-  if (!nav || nav.querySelector('[data-current-affairs-tab]')) return;
-  const pricing = nav.querySelector('[data-t="pricing"]');
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.textContent = 'Current Affairs';
-  btn.setAttribute('data-current-affairs-tab', 'true');
-  btn.title = 'Manage Daily, Weekly, Monthly, Quarterly, Half-Yearly and Annual Current Affairs';
-  btn.onclick = function () { location.href = 'current-affairs-admin.html'; };
-  if (pricing) nav.insertBefore(btn, pricing); else nav.appendChild(btn);
-});
+(function addCurrentAffairsAdminTab(){
+  function mount(){
+    if (!/\/admin\.html$/i.test(location.pathname)) return;
+    const nav = document.querySelector('.nav');
+    if (!nav || nav.querySelector('[data-current-affairs-tab]')) return;
+    const pricing = nav.querySelector('[data-t="pricing"]');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Current Affairs';
+    btn.setAttribute('data-current-affairs-tab', 'true');
+    btn.title = 'Manage Daily, Weekly, Monthly, Quarterly, Half-Yearly and Annual Current Affairs';
+    btn.onclick = function(){ location.href = 'current-affairs-admin.html'; };
+    if (pricing) nav.insertBefore(btn, pricing); else nav.appendChild(btn);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mount, {once:true});
+    window.addEventListener('load', mount, {once:true});
+  } else {
+    mount();
+  }
+})();

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LakshyaSetu Admin — Current Affairs</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#f3f6fa;color:#172b4d}header{background:#173b67;color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}.wrap{width:min(1450px,95%);margin:20px auto}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.nav a,button{border:0;border-radius:6px;padding:10px 14px;cursor:pointer;font-weight:700;text-decoration:none}.nav a{background:#e8eef7;color:#173b67}.primary{background:#173b67;color:#fff}.secondary{background:#e8eef7;color:#173b67}.card{background:#fff;padding:20px;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 10px #0000000d}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}input,select,textarea{width:100%;padding:10px;border:1px solid #ccd6e3;border-radius:6px}textarea{min-height:100px}.msg{display:none;padding:12px;border-radius:7px;margin-bottom:15px}.ok{display:block;background:#e9f8ef;color:#146c43}.bad{display:block;background:#ffe9e7;color:#9b1c13}.item{border:1px solid #dce4ee;border-radius:8px;padding:14px;margin:10px 0}.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#edf2f7;font-size:11px;margin:3px}.green{background:#dcfce7;color:#166534}.red{background:#fee2e2;color:#991b1b}.muted{color:#667085;font-size:13px}.file{background:#f8fafc;border:1px dashed #ccd6e3;padding:12px;border-radius:7px}.periods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.period{background:#fff;border:1px solid #dce4ee;border-radius:9px;padding:14px}.period h3{margin:0 0 8px}.price{font-size:20px;font-weight:800}@media(max-width:900px){.grid,.periods{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h2>Current Affairs — Admin</h2><button class="secondary" id="logout">Logout</button></header>
+<div class="wrap">
+<div class="nav"><a href="admin.html">← Main Admin</a><a href="home.html">Student Home</a></div>
+<div id="msg" class="msg"></div>
+<section class="card">
+<h2>Current Affairs Course</h2><p class="muted">Separate product. Daily content automatically belongs to the weekly, monthly, quarterly, half-yearly and annual archive periods.</p>
+<div id="courseInfo"></div>
+</section>
+<section class="card">
+<h2>Daily Current Affairs</h2>
+<div class="grid">
+<div><label>Date</label><input id="dDate" type="date"></div><div><label>Fee</label><input id="dFee" type="number" min="0" step="0.01" value="0"></div>
+<div class="full"><label>Title</label><input id="dTitle"></div>
+<div class="full"><label>Notes / Description</label><textarea id="dDesc"></textarea></div>
+<div><label>Video URL (YouTube / external)</label><input id="dVideoUrl" type="url"></div>
+<div><label>PDF URL (external)</label><input id="dPdfUrl" type="url"></div>
+<div class="file"><label>Video File</label><input id="dVideoFile" type="file" accept="video/*"><div id="dVideoStatus" class="muted"></div></div>
+<div class="file"><label>PDF File</label><input id="dPdfFile" type="file" accept="application/pdf"><div id="dPdfStatus" class="muted"></div></div>
+</div><br><label><input id="dPublished" type="checkbox"> Published</label><br><button class="primary" id="saveDaily">Save Daily Current Affairs</button>
+</section>
+<section class="card"><h2>Period Packages</h2><p class="muted">Admin fixes a separate price and media for each package.</p><div id="periodList" class="periods"></div></section>
+<section class="card"><h2>Recent Daily Entries</h2><div id="dailyList"></div></section>
+</div>
+<script>
+const C=window.LAKSHYASETU_CONFIG;const db=supabase.createClient(C.supabaseUrl,C.supabasePublishableKey);const BUCKET='current-affairs-media';let daily=[];let periods=[];let course=null;
+const $=id=>document.getElementById(id);const msg=(text,bad=false)=>{const e=$('msg');e.textContent=text;e.className='msg '+(bad?'bad':'ok');setTimeout(()=>e.className='msg',4000)};
+async function init(){const {data:{user}}=await db.auth.getUser();if(!user){location='login.html';return}await loadAll()}
+$('logout').onclick=async()=>{await db.auth.signOut();location='login.html'};
+async function loadAll(){
+ const c=await db.from('ls_courses').select('id,title,slug,course_fee,published').eq('slug','current-affairs').maybeSingle();course=c.data;
+ if(!course){$('courseInfo').innerHTML='<b>Current Affairs course not found.</b>';return}
+ $('courseInfo').innerHTML='<div class="item"><b>'+esc(course.title)+'</b><span class="badge">Independent Course</span><span class="badge '+(course.published?'green':'red')+'">'+(course.published?'Published':'Draft')+'</span></div>';
+ const d=await db.from('current_affairs_daily').select('*').order('affair_date',{ascending:false}).order('id',{ascending:false}).limit(50);daily=d.data||[];
+ const p=await db.from('current_affairs_periods').select('*').eq('course_id',course.id).order('period_start',{ascending:false});periods=p.data||[];
+ renderDaily();renderPeriods();
+}
+async function upload(file,kind){if(!file)return '';const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path='current-affairs/'+kind+'/'+Date.now()+'-'+safe;const r=await db.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(r.error)throw r.error;return db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl}
+$('saveDaily').onclick=async()=>{try{if(!$('dDate').value||!$('dTitle').value.trim())throw new Error('Date and title are required.');$('saveDaily').disabled=true;msg('Saving daily current affairs...');const vf=await upload($('dVideoFile').files[0],'video');const pf=await upload($('dPdfFile').files[0],'pdf');const row={affair_date:$('dDate').value,title:$('dTitle').value.trim(),description:$('dDesc').value.trim(),video_url:$('dVideoUrl').value.trim()||null,pdf_url:$('dPdfUrl').value.trim()||null,video_file_url:vf||null,pdf_file_url:pf||null,daily_fee:Number($('dFee').value||0),published:$('dPublished').checked};const r=await db.from('current_affairs_daily').insert(row);if(r.error)throw r.error;msg('Daily Current Affairs saved.');clearDaily();await loadAll()}catch(e){msg(e.message||String(e),true)}finally{$('saveDaily').disabled=false}};
+function clearDaily(){$('dDate').value='';$('dTitle').value='';$('dDesc').value='';$('dVideoUrl').value='';$('dPdfUrl').value='';$('dFee').value='0';$('dPublished').checked=false;$('dVideoFile').value='';$('dPdfFile').value=''}
+function renderDaily(){$('dailyList').innerHTML=daily.length?daily.map(x=>'<div class="item"><b>'+esc(x.title)+'</b><div class="muted">'+x.affair_date+' · ₹'+Number(x.daily_fee||0)+'</div><span class="badge '+(x.published?'green':'red')+'">'+(x.published?'Published':'Draft')+'</span>'+(x.video_file_url?'<span class="badge">Video file</span>':'')+(x.video_url?'<span class="badge">Video URL</span>':'')+(x.pdf_file_url?'<span class="badge">PDF file</span>':'')+(x.pdf_url?'<span class="badge">PDF URL</span>':'')+'</div>').join(''):'<p class="muted">No daily entries yet.</p>'}
+function renderPeriods(){$('periodList').innerHTML=periods.map(p=>'<div class="period"><h3>'+label(p.period_type)+'</h3><div class="muted">'+p.period_start+' → '+p.period_end+'</div><p>'+esc(p.title)+'</p><div class="price">₹<input data-price="'+p.id+'" value="'+(p.price??'')+'" type="number" min="0" step="0.01"></div><label><input data-pub="'+p.id+'" type="checkbox" '+(p.published?'checked':'')+'> Published</label><label>Video URL<input data-vu="'+p.id+'" value="'+escAttr(p.video_url||'')+'" type="url"></label><label>PDF URL<input data-pu="'+p.id+'" value="'+escAttr(p.pdf_url||'')+'" type="url"></label><label class="file">Video File<input data-vf="'+p.id+'" type="file" accept="video/*"></label><label class="file">PDF File<input data-pf="'+p.id+'" type="file" accept="application/pdf"></label><button class="primary" onclick="savePeriod('+p.id+')">Save Package</button></div>').join('')||'<p class="muted">No period packages generated yet.</p>'}
+async function savePeriod(id){try{const p=periods.find(x=>x.id===id);const vf=document.querySelector('[data-vf="'+id+'"]')?.files[0];const pf=document.querySelector('[data-pf="'+id+'"]')?.files[0];msg('Saving '+label(p.period_type)+' package...');const videoFile=vf?await upload(vf,'period-video'):p.video_file_url;const pdfFile=pf?await upload(pf,'period-pdf'):p.pdf_file_url;const r=await db.from('current_affairs_periods').update({price:Number(document.querySelector('[data-price="'+id+'"]').value||0),published:document.querySelector('[data-pub="'+id+'"]').checked,video_url:document.querySelector('[data-vu="'+id+'"]').value.trim()||null,pdf_url:document.querySelector('[data-pu="'+id+'"]').value.trim()||null,video_file_url:videoFile||null,pdf_file_url:pdfFile||null}).eq('id',id);if(r.error)throw r.error;msg('Package saved.');await loadAll()}catch(e){msg(e.message||String(e),true)}}
+function label(t){return ({daily:'Daily',weekly:'Weekly',monthly:'Monthly',quarterly:'Quarterly',half_yearly:'Half-Yearly',yearly:'Annual'})[t]||t}
+function esc(s){return String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}function escAttr(s){return esc(s).replace(/"/g,'&quot;')}
+init();
+</script></body></html>

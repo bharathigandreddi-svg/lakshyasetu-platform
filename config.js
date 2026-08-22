@@ -61,3 +61,18 @@ window.addEventListener('load', function () {
 window.addEventListener('load', function () {
   const s=document.createElement('script'); s.src='test-runner.js?v=20260822-2'; s.defer=true; document.head.appendChild(s);
 });
+
+/* Main Admin: expose Current Affairs as a dedicated management section. */
+window.addEventListener('load', function () {
+  if (!/\/admin\.html$/i.test(location.pathname)) return;
+  const nav = document.querySelector('.nav');
+  if (!nav || nav.querySelector('[data-current-affairs-tab]')) return;
+  const pricing = nav.querySelector('[data-t="pricing"]');
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = 'Current Affairs';
+  btn.setAttribute('data-current-affairs-tab', 'true');
+  btn.title = 'Manage Daily, Weekly, Monthly, Quarterly, Half-Yearly and Annual Current Affairs';
+  btn.onclick = function () { location.href = 'current-affairs-admin.html'; };
+  if (pricing) nav.insertBefore(btn, pricing); else nav.appendChild(btn);
+});

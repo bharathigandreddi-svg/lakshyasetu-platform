@@ -8,7 +8,7 @@ Deno.serve(async(req)=>{
  if(req.method==="OPTIONS")return new Response("ok",{headers:cors});
  if(req.method!=="POST")return json({success:false,error:"POST required"},405);
  try{
-  const supabaseUrl=Deno.env.get("SUPABASE_URL")||"",serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"",keyId=Deno.env.get("RAZORPAY_KEY_ID")||"",keySecret=Deno.env.get("RAZORPAY_KEY_SECRET")||"";
+  const supabaseUrl=Deno.env.get("SUPABASE_URL")||"",serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"",anonKey=Deno.env.get("SUPABASE_ANON_KEY")||"",keyId=Deno.env.get("RAZORPAY_KEY_ID")||"",keySecret=Deno.env.get("RAZORPAY_KEY_SECRET")||"";
   if(!supabaseUrl||!serviceKey||!keyId||!keySecret)return json({success:false,error:"Payment gateway secrets are not configured."},500);
   const origin=req.headers.get("origin")||"";
   let isGithubPages=false;
@@ -19,7 +19,14 @@ Deno.serve(async(req)=>{
    return json({success:false,error:"Razorpay is using a Live/invalid API key on the Test website. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Supabase to the Test Mode key pair (rzp_test_...).",razorpay_mode:razorpayMode},500);
   }
   const auth=req.headers.get("Authorization")||"";if(!auth.startsWith("Bearer "))return json({success:false,error:"Login required."},401);
-  const admin=createClient(supabaseUrl,serviceKey),token=auth.slice(7);const {data:userData,error:userError}=await admin.auth.getUser(token);if(userError||!userData.user)return json({success:false,error:"Invalid login session."},401);
+  const token=auth.slice(7);
+  if(!anonKey)return json({success:false,error:"Supabase Auth verification key is not configured."},500);
+  // Validate the caller with a user-authenticated client. Keep the service-role
+  // client separate so its Authorization header cannot be confused with the user JWT.
+  const authClient=createClient(supabaseUrl,anonKey,{global:{headers:{Authorization:auth}}});
+  const {data:userData,error:userError}=await authClient.auth.getUser(token);
+  if(userError||!userData.user)return json({success:false,error:"Invalid login session."},401);
+  const admin=createClient(supabaseUrl,serviceKey);
   const product=await req.json(),type=String(product?.product_type||"");
   const tableMap:Record<string,[string,string]>={course:["ls_courses","course_id"],subject:["ls_course_subjects","course_subject_id"],topic:["ls_topics","topic_id"],lesson:["ls_lessons","lesson_id"],test:["ls_tests","test_id"],test_series:["ls_test_series","test_series_id"],test_package:["ls_test_packages","test_package_id"]};
   const mapping=tableMap[type];if(!mapping)return json({success:false,error:"Invalid product."},400);const id=Number(product?.[mapping[1]]);if(!id)return json({success:false,error:"Product ID is required."},400);

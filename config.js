@@ -59,7 +59,7 @@ window.addEventListener('load', function () {
   /* Some pages still include an older non-cache-busted payments.js tag.
      Clear its module guard so the current cache-busted module below becomes authoritative. */
   window.__LS_PAYMENT_MODULE_LOADED=false;
-  const s=document.createElement('script'); s.src='payments.js?v=20260823-razorpay-auth-fix-10'; s.defer=true; document.head.appendChild(s);
+  const s=document.createElement('script'); s.src='payments.js?v=20260824-razorpay-session-handoff-1'; s.defer=true; document.head.appendChild(s);
 });
 window.addEventListener('load', function () {
   const s=document.createElement('script'); s.src='test-runner.js?v=20260822-2'; s.defer=true; document.head.appendChild(s);

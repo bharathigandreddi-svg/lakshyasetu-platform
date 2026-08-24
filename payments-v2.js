@@ -6,17 +6,16 @@
   function db(){return window.getLakshyaSetuDb();}
   async function session(){
     const c=db();
+    // getSession() reads the locally persisted Supabase session. Do not call
+    // getUser(access_token) here: that extra network validation was causing
+    // valid browser sessions to be rejected before the Edge Function call.
     let r=await c.auth.getSession();
     let s=r.data?.session||null;
-    if(s){
-      const v=await c.auth.getUser(s.access_token);
-      if(!v.error&&v.data?.user)return s;
-    }
+    if(s)return s;
+    // Only refresh when there is no usable local session.
     const rr=await c.auth.refreshSession();
     s=rr.data?.session||null;
-    if(!s) return null;
-    const v=await c.auth.getUser(s.access_token);
-    return v.error||!v.data?.user?null:s;
+    return s||null;
   }
   async function loadRazorpay(){if(window.Razorpay)return;await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=resolve;s.onerror=()=>reject(new Error('Payment gateway failed to load.'));document.head.appendChild(s);});}
   async function invoke(name,body){
@@ -26,6 +25,8 @@
     const headers={'Authorization':'Bearer '+s.access_token,'apikey':window.LAKSHYASETU_CONFIG.supabasePublishableKey,'Content-Type':'application/json'};
     let r=await c.functions.invoke(name,{body,headers});
     if(r.error?.status===401){
+      // The access token may have expired between getSession() and the request.
+      // Refresh once and retry instead of forcing the student to log in again.
       const rr=await c.auth.refreshSession();
       s=rr.data?.session||null;
       if(!s)throw new Error('Your login session expired. Please login again.');

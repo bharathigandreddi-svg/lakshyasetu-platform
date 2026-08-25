@@ -8,14 +8,27 @@
     const c=db();
     let r=await c.auth.getSession();
     let s=r.data?.session||null;
-    // A browser can briefly hold an access token that is at or near expiry.
-    // Refresh it before starting a payment so the Edge Function receives a
-    // current user JWT rather than a stale token.
-    const expiresAt=Number(s?.expires_at||0);
-    if(s&&expiresAt&&expiresAt*1000>Date.now()+60000)return s;
-    const rr=await c.auth.refreshSession();
-    s=rr.data?.session||null;
-    return s||null;
+    if(!s)return null;
+
+    // Refresh early so payment calls never reuse a nearly-expired access token.
+    const expiresAt=Number(s.expires_at||0);
+    if(expiresAt&&expiresAt*1000<=Date.now()+120000){
+      const rr=await c.auth.refreshSession();
+      s=rr.data?.session||null;
+      if(!s)return null;
+    }
+
+    // getSession() reads browser storage; confirm the access token with Auth.
+    // If the stored token is stale/invalid, refresh once and validate again.
+    const checked=await c.auth.getUser(s.access_token);
+    if(!checked.data?.user){
+      const rr=await c.auth.refreshSession();
+      s=rr.data?.session||null;
+      if(!s)return null;
+      const checkedAgain=await c.auth.getUser(s.access_token);
+      if(!checkedAgain.data?.user)return null;
+    }
+    return s;
   }
   async function loadRazorpay(){if(window.Razorpay)return;await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=resolve;s.onerror=()=>reject(new Error('Payment gateway failed to load.'));document.head.appendChild(s);});}
   async function invoke(name,body){

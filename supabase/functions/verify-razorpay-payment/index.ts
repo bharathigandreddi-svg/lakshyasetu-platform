@@ -1,5 +1,4 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createSupabaseContext } from "npm:@supabase/server@^1";
 
 const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Content-Type":"application/json"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:cors});
@@ -11,23 +10,20 @@ Deno.serve(async(req)=>{
   if(req.method==="OPTIONS")return new Response("ok",{headers:cors});
   if(req.method!=="POST")return json({success:false,error:"POST required"},405);
   try{
-    const supabaseUrl=Deno.env.get("SUPABASE_URL")||"";
-    const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
     const keyId=Deno.env.get("RAZORPAY_KEY_ID")||"",keySecret=Deno.env.get("RAZORPAY_KEY_SECRET")||"";
-    if(!supabaseUrl||!serviceKey||!keyId||!keySecret)return json({success:false,error:"Payment verification configuration is incomplete."},500);
+    if(!keyId||!keySecret)return json({success:false,error:"Payment verification configuration is incomplete."},500);
 
-    const auth=req.headers.get("Authorization")||"";
-    if(!auth.startsWith("Bearer "))return json({success:false,error:"Login required."},401);
-    const token=auth.slice(7).trim();
-    if(!token)return json({success:false,error:"Login required."},401);
-    // Validate the browser's Supabase user token through the service-role
-    // Auth client, matching the order-creation function's authentication path.
-    const authClient=createClient(supabaseUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
-    const {data:userData,error:userError}=await authClient.auth.getUser(token);
-    if(userError||!userData.user){console.error("verify payment auth failed",userError);return json({success:false,error:"Invalid login session. Please login again."},401);}
+    // Validate the caller with the same current Supabase auth/JWKS layer
+    // used by order creation. Do not validate user JWTs through a legacy
+    // service-role Auth client.
+    const {data:ctx,error:authError}=await createSupabaseContext(req,{auth:"user"});
+    if(authError||!ctx?.userClaims?.id){
+      console.error("verify payment auth failed",authError);
+      return json({success:false,error:"Invalid login session. Please login again."},401);
+    }
 
-    const admin=createClient(supabaseUrl,serviceKey);
-    const userId=userData.user.id;
+    const admin=ctx.supabaseAdmin;
+    const userId=String(ctx.userClaims.id);
     const body=await req.json(),callbackOrderId=String(body?.razorpay_order_id||""),paymentId=String(body?.razorpay_payment_id||""),signature=String(body?.razorpay_signature||"");
     if(!callbackOrderId||!paymentId||!signature)return json({success:false,error:"Incomplete Razorpay response."},400);
 

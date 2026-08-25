@@ -30,7 +30,7 @@ window.addEventListener('load',function(){
 });
 window.addEventListener('load',function(){
   if(window.__LS_PAYMENT_V2_ACTIVE||window.__LS_PAYMENT_MODULE_LOADED)return;
-  const s=document.createElement('script');s.src='payments-v2.js?v=20260825-1135';s.defer=true;s.setAttribute('data-lakshyasetu-payment-v2','true');document.head.appendChild(s);
+  const s=document.createElement('script');s.src='payments-v2.js?v=20260825-1245';s.defer=true;s.setAttribute('data-lakshyasetu-payment-v2','true');document.head.appendChild(s);
 });
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='test-runner.js?v=20260822-2';s.defer=true;document.head.appendChild(s);});
 (function addCurrentAffairsAdminTab(){function mount(){if(!/\/admin\.html$/i.test(location.pathname))return;const nav=document.querySelector('.nav');if(!nav||nav.querySelector('[data-current-affairs-tab]'))return;const pricing=nav.querySelector('[data-t="pricing"]');const btn=document.createElement('button');btn.type='button';btn.textContent='Current Affairs';btn.setAttribute('data-current-affairs-tab','true');btn.title='Manage Daily, Weekly, Monthly, Quarterly, Half-Yearly and Annual Current Affairs';btn.onclick=function(){location.href='current-affairs-admin.html';};if(pricing)nav.insertBefore(btn,pricing);else nav.appendChild(btn);}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',mount,{once:true});window.addEventListener('load',mount,{once:true});}else mount();})();

@@ -1,5 +1,4 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createSupabaseContext } from "npm:@supabase/server@^1";
 
 const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Content-Type":"application/json"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:cors});
@@ -9,29 +8,25 @@ Deno.serve(async(req)=>{
   if(req.method==="OPTIONS")return new Response("ok",{headers:cors});
   if(req.method!=="POST")return json({success:false,error:"POST required"},405);
   try{
-    const supabaseUrl=Deno.env.get("SUPABASE_URL")||"";
-    const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
     const keyId=Deno.env.get("RAZORPAY_KEY_ID")||"",keySecret=Deno.env.get("RAZORPAY_KEY_SECRET")||"";
-    if(!supabaseUrl||!serviceKey||!keyId||!keySecret)return json({success:false,error:"Payment gateway configuration is incomplete."},500);
+    if(!keyId||!keySecret)return json({success:false,error:"Payment gateway configuration is incomplete."},500);
 
-    const auth=req.headers.get("Authorization")||"";
-    if(!auth.startsWith("Bearer "))return json({success:false,error:"Login required."},401);
-    const token=auth.slice(7).trim();
-    if(!token)return json({success:false,error:"Login required."},401);
-
-    // Validate the browser's Supabase user token through the service-role
-    // Auth client. The platform JWT gate is intentionally disabled for this
-    // function, so authentication is performed explicitly here.
-    const authClient=createClient(supabaseUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
-    const {data:userData,error:userError}=await authClient.auth.getUser(token);
-    if(userError||!userData.user){console.error("create order auth failed",userError);return json({success:false,error:"Invalid login session. Please login again."},401);}
+    // Validate the caller with Supabase's current JWT/JWKS auth layer.
+    // This avoids the false 401s caused by validating user JWTs through the
+    // legacy service-role client when the project uses newer signing keys.
+    const {data:ctx,error:authError}=await createSupabaseContext(req,{auth:"user"});
+    if(authError||!ctx?.userClaims?.id){
+      console.error("create order auth failed",authError);
+      return json({success:false,error:"Invalid login session. Please login again."},401);
+    }
+    const userId=String(ctx.userClaims.id);
 
     const origin=req.headers.get("origin")||"";
     let isGithubPages=false;try{isGithubPages=origin?new URL(origin).hostname.toLowerCase().endsWith(".github.io"):false;}catch(_e){}
     const razorpayMode=keyId.startsWith("rzp_test_")?"test":keyId.startsWith("rzp_live_")?"live":"unknown";
     if(isGithubPages&&razorpayMode!=="test")return json({success:false,error:"Razorpay is using a Live/invalid API key on the Test website. Set the Supabase Razorpay secrets to the Test Mode key pair (rzp_test_...).",razorpay_mode:razorpayMode},500);
 
-    const admin=createClient(supabaseUrl,serviceKey);
+    const admin=ctx.supabaseAdmin;
     const product=await req.json(),type=String(product?.product_type||"");
     const tableMap:Record<string,[string,string]>={course:["ls_courses","course_id"],subject:["ls_course_subjects","course_subject_id"],topic:["ls_topics","topic_id"],lesson:["ls_lessons","lesson_id"],test:["ls_tests","test_id"],test_series:["ls_test_series","test_series_id"],test_package:["ls_test_packages","test_package_id"]};
     const mapping=tableMap[type];if(!mapping)return json({success:false,error:"Invalid product."},400);
@@ -41,11 +36,11 @@ Deno.serve(async(req)=>{
     const amount=Math.round(amountRupees*100);if(amount<100)return json({success:false,error:"Minimum payment amount is ₹1."},400);
 
     const razor=btoa(`${keyId}:${keySecret}`);
-    const r=await fetch("https://api.razorpay.com/v1/orders",{method:"POST",headers:{Authorization:`Basic ${razor}`,"Content-Type":"application/json"},body:JSON.stringify({amount,currency:"INR",receipt:`ls_${type}_${id}_${Date.now()}`,notes:{user_id:userData.user.id,product_type:type,product_id:String(id)},payment_capture:1})});
+    const r=await fetch("https://api.razorpay.com/v1/orders",{method:"POST",headers:{Authorization:`Basic ${razor}`,"Content-Type":"application/json"},body:JSON.stringify({amount,currency:"INR",receipt:`ls_${type}_${id}_${Date.now()}`,notes:{user_id:userId,product_type:type,product_id:String(id)},payment_capture:1})});
     const order=await r.json();
     if(!r.ok){const description=order?.error?.description||"Razorpay order creation failed.";console.error("Razorpay create order failed",{status:r.status,code:order?.error?.code,description,razorpayMode});return json({success:false,error:description,razorpay_code:order?.error?.code||null},r.status===401?401:502);}
 
-    const purchase:Record<string,unknown>={user_id:userData.user.id,product_type:type,amount:amountRupees,status:"PENDING",payment_status:"pending",razorpay_order_id:order.id};purchase[mapping[1]]=id;
+    const purchase:Record<string,unknown>={user_id:userId,product_type:type,amount:amountRupees,status:"PENDING",payment_status:"pending",razorpay_order_id:order.id};purchase[mapping[1]]=id;
     const {error:purchaseError}=await admin.from("ls_purchases").insert(purchase);if(purchaseError){console.error("Pending purchase insert failed",purchaseError);return json({success:false,error:"Unable to initialise the purchase. Please try again."},500);}
     return json({success:true,key_id:keyId,razorpay_mode:razorpayMode,amount:amountRupees,order});
   }catch(e){console.error("create-razorpay-order unexpected error",e);return json({success:false,error:e instanceof Error?e.message:"Unexpected error."},500);}

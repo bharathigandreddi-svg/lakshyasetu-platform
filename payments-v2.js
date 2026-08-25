@@ -6,13 +6,13 @@
   function db(){return window.getLakshyaSetuDb();}
   async function session(){
     const c=db();
-    // getSession() reads the locally persisted Supabase session. Do not call
-    // getUser(access_token) here: that extra network validation was causing
-    // valid browser sessions to be rejected before the Edge Function call.
     let r=await c.auth.getSession();
     let s=r.data?.session||null;
-    if(s)return s;
-    // Only refresh when there is no usable local session.
+    // A browser can briefly hold an access token that is at or near expiry.
+    // Refresh it before starting a payment so the Edge Function receives a
+    // current user JWT rather than a stale token.
+    const expiresAt=Number(s?.expires_at||0);
+    if(s&&expiresAt&&expiresAt*1000>Date.now()+60000)return s;
     const rr=await c.auth.refreshSession();
     s=rr.data?.session||null;
     return s||null;
@@ -25,8 +25,6 @@
     const headers={'Authorization':'Bearer '+s.access_token,'apikey':window.LAKSHYASETU_CONFIG.supabasePublishableKey,'Content-Type':'application/json'};
     let r=await c.functions.invoke(name,{body,headers});
     if(r.error?.status===401){
-      // The access token may have expired between getSession() and the request.
-      // Refresh once and retry instead of forcing the student to log in again.
       const rr=await c.auth.refreshSession();
       s=rr.data?.session||null;
       if(!s)throw new Error('Your login session expired. Please login again.');

@@ -6,7 +6,7 @@
     if(window.__LS_PAYMENT_MODULE_LOADED||window.__LS_PAYMENT_V2_ACTIVE)return;
     if(document.querySelector('script[data-lakshyasetu-payment-v2]'))return;
     const s=document.createElement('script');
-    s.src='payments-v2.js?v=20260824-1500';
+    s.src='payments-v2.js?v=20260825-1135';
     s.defer=true;
     s.setAttribute('data-lakshyasetu-payment-v2','true');
     document.head.appendChild(s);

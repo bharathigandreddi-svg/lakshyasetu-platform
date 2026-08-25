@@ -1,51 +1,51 @@
-import { createSupabaseContext } from "npm:@supabase/server@^1";
-
 const cors={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Content-Type":"application/json"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:cors});
 function hex(bytes:ArrayBuffer){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,"0")).join("");}
 async function hmacSha256(secret:string,message:string){const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);return hex(await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(message)));}
 function safeEqual(a:string,b:string){if(a.length!==b.length)return false;let diff=0;for(let i=0;i<a.length;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);return diff===0;}
-
+async function authenticate(req:Request,supabaseUrl:string){
+  const auth=req.headers.get("Authorization")||"";if(!auth.startsWith("Bearer "))return {userId:null,error:"Login required."};
+  const token=auth.slice(7).trim();if(!token)return {userId:null,error:"Login required."};
+  let publishableKey=Deno.env.get("SUPABASE_PUBLISHABLE_KEY")||Deno.env.get("SUPABASE_ANON_KEY")||"";
+  const keys=Deno.env.get("SUPABASE_PUBLISHABLE_KEYS")||"";if(keys){try{const parsed=JSON.parse(keys);publishableKey=parsed.default||publishableKey||Object.values(parsed)[0]||"";}catch(_e){}}
+  if(!publishableKey)return {userId:null,error:"Supabase authentication configuration is incomplete."};
+  const r=await fetch(`${supabaseUrl}/auth/v1/user`,{headers:{apikey:publishableKey,Authorization:`Bearer ${token}`}});
+  if(!r.ok){console.error("verify payment auth rejected",{status:r.status});return {userId:null,error:"Invalid login session. Please login again."};}
+  const user=await r.json();if(!user?.id)return {userId:null,error:"Invalid login session. Please login again."};
+  return {userId:String(user.id),error:null};
+}
 Deno.serve(async(req)=>{
   if(req.method==="OPTIONS")return new Response("ok",{headers:cors});
   if(req.method!=="POST")return json({success:false,error:"POST required"},405);
   try{
+    const supabaseUrl=Deno.env.get("SUPABASE_URL")||"";
+    let serviceKey=Deno.env.get("SUPABASE_SECRET_KEY")||Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
+    const secretKeys=Deno.env.get("SUPABASE_SECRET_KEYS")||"";if(!serviceKey&&secretKeys){try{const parsed=JSON.parse(secretKeys);serviceKey=parsed.default||Object.values(parsed)[0]||"";}catch(_e){}}
     const keyId=Deno.env.get("RAZORPAY_KEY_ID")||"",keySecret=Deno.env.get("RAZORPAY_KEY_SECRET")||"";
+    if(!supabaseUrl||!serviceKey)return json({success:false,error:"Supabase server configuration is incomplete."},500);
     if(!keyId||!keySecret)return json({success:false,error:"Payment verification configuration is incomplete."},500);
-
-    // Validate the caller with the same current Supabase auth/JWKS layer
-    // used by order creation. Do not validate user JWTs through a legacy
-    // service-role Auth client.
-    const {data:ctx,error:authError}=await createSupabaseContext(req,{auth:"user"});
-    if(authError||!ctx?.userClaims?.id){
-      console.error("verify payment auth failed",authError);
-      return json({success:false,error:"Invalid login session. Please login again."},401);
-    }
-
-    const admin=ctx.supabaseAdmin;
-    const userId=String(ctx.userClaims.id);
+    const auth=await authenticate(req,supabaseUrl);if(!auth.userId)return json({success:false,error:auth.error||"Invalid login session. Please login again."},401);
+    const userId=auth.userId;
+    const {createClient}=await import("https://esm.sh/@supabase/supabase-js@2");
+    const admin=createClient(supabaseUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
     const body=await req.json(),callbackOrderId=String(body?.razorpay_order_id||""),paymentId=String(body?.razorpay_payment_id||""),signature=String(body?.razorpay_signature||"");
     if(!callbackOrderId||!paymentId||!signature)return json({success:false,error:"Incomplete Razorpay response."},400);
-
     const {data:purchase,error:purchaseError}=await admin.from("ls_purchases").select("*").eq("razorpay_order_id",callbackOrderId).eq("user_id",userId).maybeSingle();
     if(purchaseError)return json({success:false,error:"Unable to locate the pending purchase."},500);
     if(!purchase)return json({success:false,error:"Payment order is not recognised."},400);
     if(purchase.payment_status==="paid"||purchase.status==="ACTIVE")return json({success:true,message:"Payment already verified and access is active."});
-
     const expected=await hmacSha256(keySecret,`${callbackOrderId}|${paymentId}`);if(!safeEqual(expected,signature))return json({success:false,error:"Invalid payment signature."},400);
     const basic=btoa(`${keyId}:${keySecret}`);
     const paymentResponse=await fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}`,{headers:{Authorization:`Basic ${basic}`}});const payment=await paymentResponse.json();
     if(!paymentResponse.ok)return json({success:false,error:"Unable to confirm payment with Razorpay."},502);
     if(String(payment?.order_id||"")!==callbackOrderId)return json({success:false,error:"Payment does not belong to this order."},400);
     if(!["captured","authorized"].includes(String(payment?.status||"")))return json({success:false,error:"Razorpay payment is not successful yet."},400);
-
     const orderResponse=await fetch(`https://api.razorpay.com/v1/orders/${encodeURIComponent(callbackOrderId)}`,{headers:{Authorization:`Basic ${basic}`}});const order=await orderResponse.json();
     if(!orderResponse.ok)return json({success:false,error:"Unable to confirm Razorpay order."},502);
     if(Number(payment?.amount||0)!==Number(order?.amount||0))return json({success:false,error:"Payment amount does not match the Razorpay order."},400);
     const expectedType=String(purchase.product_type||""),callbackType=String(body?.product_type||expectedType);if(callbackType!==expectedType)return json({success:false,error:"Payment product mismatch."},400);
     const orderNotes=order?.notes||{};if(String(orderNotes.user_id||"")!==userId)return json({success:false,error:"Payment account mismatch."},403);if(String(orderNotes.product_type||"")!==expectedType)return json({success:false,error:"Payment product mismatch."},400);
     for(const key of ["course_id","course_subject_id","topic_id","lesson_id","test_id","test_series_id","test_package_id"]){const stored=purchase[key],note=orderNotes.product_id;if(stored!=null&&note!=null&&String(stored)!==String(note))return json({success:false,error:"Payment product ID mismatch."},400);}
-
     const type=String(purchase.product_type||""),map:any={course:["ls_courses","course_id"],subject:["ls_course_subjects","course_subject_id"],topic:["ls_topics","topic_id"],lesson:["ls_lessons","lesson_id"],test:["ls_tests","test_id"],test_series:["ls_test_series","test_series_id"],test_package:["ls_test_packages","test_package_id"]};
     let validityDays=null;const m=map[type];if(m&&purchase[m[1]]!=null){const {data:v}=await admin.from(m[0]).select("validity_days").eq("id",purchase[m[1]]).maybeSingle();if(v?.validity_days!=null&&Number(v.validity_days)>0)validityDays=Number(v.validity_days);}
     const expiry=validityDays?new Date(Date.now()+validityDays*24*60*60*1000).toISOString():null;

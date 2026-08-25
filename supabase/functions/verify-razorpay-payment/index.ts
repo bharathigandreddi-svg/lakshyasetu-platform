@@ -13,15 +13,16 @@ Deno.serve(async(req)=>{
   try{
     const supabaseUrl=Deno.env.get("SUPABASE_URL")||"";
     const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
-    const publishableKey=Deno.env.get("SUPABASE_PUBLISHABLE_KEY")||Deno.env.get("SUPABASE_ANON_KEY")||"";
     const keyId=Deno.env.get("RAZORPAY_KEY_ID")||"",keySecret=Deno.env.get("RAZORPAY_KEY_SECRET")||"";
-    if(!supabaseUrl||!serviceKey||!publishableKey||!keyId||!keySecret)return json({success:false,error:"Payment verification configuration is incomplete."},500);
+    if(!supabaseUrl||!serviceKey||!keyId||!keySecret)return json({success:false,error:"Payment verification configuration is incomplete."},500);
 
     const auth=req.headers.get("Authorization")||"";
     if(!auth.startsWith("Bearer "))return json({success:false,error:"Login required."},401);
     const token=auth.slice(7).trim();
     if(!token)return json({success:false,error:"Login required."},401);
-    const authClient=createClient(supabaseUrl,publishableKey,{auth:{persistSession:false,autoRefreshToken:false}});
+    // Validate the browser's Supabase user token through the service-role
+    // Auth client, matching the order-creation function's authentication path.
+    const authClient=createClient(supabaseUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
     const {data:userData,error:userError}=await authClient.auth.getUser(token);
     if(userError||!userData.user){console.error("verify payment auth failed",userError);return json({success:false,error:"Invalid login session. Please login again."},401);}
 

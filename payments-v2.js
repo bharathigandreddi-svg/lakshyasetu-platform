@@ -43,4 +43,39 @@
     }catch(e){alert(e.message||'Payment failed.');}
   }
   window.LSBuy=buy;window.LSGetSession=session;
+
+  // On the subject catalog, the blue CTA is the actual ₹99 package purchase.
+  // Keep a separate View topic link so students can browse without paying.
+  function enhanceSubjectCatalog(){
+    if(!/\/test-series\.html$/i.test(location.pathname))return;
+    document.querySelectorAll('.subject-card .action-row').forEach(row=>{
+      const original=row.querySelector('a.buy-btn:not(.secondary)');
+      if(!original||row.querySelector('[data-subject-buy]'))return;
+      const href=original.getAttribute('href')||'';
+      const match=href.match(/[?&]subject=(\d+)/);
+      if(!match)return; // examination cards have no subject id
+      const subjectId=Number(match[1]);
+      const viewTopic=document.createElement('a');
+      viewTopic.className='buy-btn secondary';
+      viewTopic.href=href;
+      viewTopic.textContent='View topic →';
+      viewTopic.setAttribute('data-topic-link','true');
+
+      const buyButton=document.createElement('button');
+      buyButton.type='button';
+      buyButton.className='buy-btn subject-package-buy';
+      buyButton.textContent='BUY ₹99 PACKAGE';
+      buyButton.setAttribute('data-subject-buy','true');
+      buyButton.addEventListener('click',()=>buy({product_type:'subject',course_subject_id:subjectId},'LakshyaSetu Subject Package · ₹99'));
+
+      row.innerHTML='';
+      row.append(buyButton,viewTopic);
+    });
+  }
+  function startCatalogEnhancer(){
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhanceSubjectCatalog,{once:true});
+    else enhanceSubjectCatalog();
+    window.addEventListener('load',enhanceSubjectCatalog,{once:true});
+  }
+  startCatalogEnhancer();
 })();

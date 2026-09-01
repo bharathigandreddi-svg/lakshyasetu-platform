@@ -54,5 +54,7 @@ function goBack(){if(historyState.length>1){historyState.pop();const last=histor
 async function init(){clearErr();const courseId=qs.get('course'),seriesId=qs.get('series'),testId=qs.get('test');if(testId)return openTest(Number(testId));if(courseId)return openCourse(Number(courseId));if(seriesId)return openSeries(Number(seriesId));await Promise.all([loadCourses(),loadSeries()])}
 init();
 </script>
+<script src="test-attempts-v4.js?v=20260901"></script>
+<script src="test-attempts-v5-fix.js?v=20260901"></script>
 </body>
 </html>

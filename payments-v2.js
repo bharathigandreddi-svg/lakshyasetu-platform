@@ -44,10 +44,17 @@
   }
   window.LSBuy=buy;window.LSGetSession=session;
 
-  // On the subject catalog, the blue CTA is the actual ₹99 package purchase.
-  // Keep a separate View topic link so students can browse without paying.
+  // The subject catalog needs two distinct actions:
+  // 1) Buy the ₹99 subject package through Razorpay.
+  // 2) Browse the subject topics without paying.
   function enhanceSubjectCatalog(){
     if(!/\/test-series\.html$/i.test(location.pathname))return;
+    if(!document.getElementById('ls-subject-cta-style')){
+      const style=document.createElement('style');
+      style.id='ls-subject-cta-style';
+      style.textContent='.subject-card .action-row .subject-package-buy{font-size:13px!important;background:#0b63ce!important;color:#fff!important;border:2px solid #f4b942!important;box-shadow:0 3px 10px rgba(11,99,206,.25)!important;font-weight:950!important}.subject-card .action-row .subject-package-buy::after{content:none!important}';
+      document.head.appendChild(style);
+    }
     document.querySelectorAll('.subject-card .action-row').forEach(row=>{
       const original=row.querySelector('a.buy-btn:not(.secondary)');
       if(!original||row.querySelector('[data-subject-buy]'))return;
@@ -55,10 +62,11 @@
       const match=href.match(/[?&]subject=(\d+)/);
       if(!match)return; // examination cards have no subject id
       const subjectId=Number(match[1]);
+
       const viewTopic=document.createElement('a');
       viewTopic.className='buy-btn secondary';
       viewTopic.href=href;
-      viewTopic.textContent='View topic →';
+      viewTopic.textContent='VIEW TOPIC →';
       viewTopic.setAttribute('data-topic-link','true');
 
       const buyButton=document.createElement('button');

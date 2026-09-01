@@ -11,8 +11,13 @@
     s.setAttribute('data-lakshyasetu-payment-v4','true');
     document.head.appendChild(s);
     if(location.pathname.endsWith('/student-v2.html')||location.pathname.endsWith('student-v2.html')){
+      const q=document.createElement('script');
+      q.src='student-question-enhancer.js?v=20260901-1';
+      q.defer=true;
+      q.setAttribute('data-lakshyasetu-question-enhancer','true');
+      document.head.appendChild(q);
       const p=document.createElement('script');
-      p.src='student-performance.js?v=20260901-1';
+      p.src='student-performance.js?v=20260901-2';
       p.defer=true;
       p.setAttribute('data-lakshyasetu-student-performance','true');
       document.head.appendChild(p);

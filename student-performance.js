@@ -25,15 +25,8 @@
     if(qs.error||ans.error)return null;
     return {attempt,questions:qs.data||[],answers:ans.data||[],testId,sb,userId:s.user.id}
   }
-  async function getRank(sb,testId,userId){
-    try{
-      const r=await sb.from('ls_test_attempts').select('user_id,score,percentage,submitted_at,created_at').eq('test_id',testId).not('submitted_at','is',null);
-      if(r.error||!r.data?.length)return null;
-      const best=new Map();
-      r.data.forEach(x=>{const old=best.get(x.user_id);const better=!old||Number(x.score||0)>Number(old.score||0)||(Number(x.score||0)===Number(old.score||0)&&Number(x.percentage||0)>Number(old.percentage||0));if(better)best.set(x.user_id,x)});
-      const rows=[...best.values()].sort((a,b)=>Number(b.score||0)-Number(a.score||0)||Number(b.percentage||0)-Number(a.percentage||0));
-      const rank=rows.findIndex(x=>x.user_id===userId)+1;return rank>0?{rank,total:rows.length,percentile:Math.round(((rows.length-rank+1)/rows.length)*100)}:null;
-    }catch(_){return null}
+  async function getRank(sb,testId){
+    try{const r=await sb.functions.invoke('test-performance',{body:{test_id:testId}});if(r.error||!r.data?.success||!r.data.rank)return null;return {rank:Number(r.data.rank),total:Number(r.data.total||0),percentile:Number(r.data.percentile||0)}}catch(_){return null}
   }
   function render(data,rank){
     if(document.getElementById('ls-performance'))return;
@@ -50,7 +43,7 @@
   }
   function enhanceQuestionLayout(){const r=findRunner();if(!r||isResult())return;r.querySelectorAll('h3').forEach(h=>{if(/Consider the following/i.test(h.textContent||'')){h.style.whiteSpace='pre-line';h.style.lineHeight='1.55'}})}
   let done=false,busy=false;
-  async function tick(){addCss();enhanceQuestionLayout();if(done||busy||!isResult())return;busy=true;const d=await getData();if(d){const rank=await getRank(d.sb,d.testId,d.userId);render(d,rank);done=true}busy=false}
+  async function tick(){addCss();enhanceQuestionLayout();if(done||busy||!isResult())return;busy=true;const d=await getData();if(d){const rank=await getRank(d.sb,d.testId);render(d,rank);done=true}busy=false}
   function start(){setInterval(tick,700);setTimeout(tick,400)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

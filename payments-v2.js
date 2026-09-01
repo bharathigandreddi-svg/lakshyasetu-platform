@@ -1,7 +1,7 @@
-/* LakshyaSetu Razorpay payment client v6 */
+/* LakshyaSetu Razorpay payment client v7 */
 (function(){
-  if(window.__LS_PAYMENT_V6_ACTIVE)return;
-  window.__LS_PAYMENT_V6_ACTIVE=true; window.__LS_PAYMENT_MODULE_LOADED=true;
+  if(window.__LS_PAYMENT_V7_ACTIVE)return;
+  window.__LS_PAYMENT_V7_ACTIVE=true; window.__LS_PAYMENT_MODULE_LOADED=true;
   function db(){return window.getLakshyaSetuDb();}
   async function session(){const c=db();const r=await c.auth.getSession();return r.data?.session||null;}
   async function loadRazorpay(){if(window.Razorpay)return;await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=resolve;s.onerror=()=>reject(new Error('Payment gateway failed to load.'));document.head.appendChild(s);});}
@@ -13,9 +13,8 @@
     document.querySelectorAll('.subject-card .action-row').forEach(row=>{
       row.querySelectorAll('a,button').forEach(el=>{
         const text=(el.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
-        if(text.includes('BUY / VIEW SUBJECT'))el.remove();
+        if(text.includes('BUY / VIEW SUBJECT')||text.includes('BUY / VIEW SUBJECT →')||text==='VIEW SUBJECT →')el.remove();
       });
-      row.querySelectorAll('[data-subject-buy]').forEach(el=>{if(el.tagName==='BUTTON')el.style.display='inline-flex';});
     });
   }
   function enhanceSubjectCatalog(){
@@ -38,6 +37,7 @@
     const target=document.getElementById('content');
     if(target){const mo=new MutationObserver(run);mo.observe(target,{childList:true,subtree:true});}
     else setTimeout(startCatalogEnhancer,250);
+    setInterval(cleanupLegacySubjectActions,250);
   }
   startCatalogEnhancer();
 })();

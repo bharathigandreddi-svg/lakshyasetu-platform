@@ -5,7 +5,7 @@ window.LAKSHYASETU_CONFIG = {
 function getLakshyaSetuDb() {
   if (window.db && typeof window.db.from === 'function') return window.db;
   if (!window.supabase || typeof window.supabase.createClient !== 'function') throw new Error('Supabase client library is not loaded. Please refresh the page and try again.');
-  const client = window.supabase.createClient(window.LAKSHYASETU_CONFIG.supabaseUrl,window.supabase.createClient ? window.supabase.createClient(window.LAKSHYASETU_CONFIG.supabaseUrl,window.LAKSHYASETU_CONFIG.supabasePublishableKey) : null);
+  const client = window.supabase.createClient(window.LAKSHYASETU_CONFIG.supabaseUrl,window.LAKSHYASETU_CONFIG.supabasePublishableKey);
   window.db=client;window.LAKSHYASETU_DB=client;return client;
 }
 try{getLakshyaSetuDb();}catch(e){console.error('Supabase initialization failed:',e);}

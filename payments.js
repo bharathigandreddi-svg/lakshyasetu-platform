@@ -10,6 +10,13 @@
     s.defer=true;
     s.setAttribute('data-lakshyasetu-payment-v4','true');
     document.head.appendChild(s);
+    if(location.pathname.endsWith('/student-v2.html')||location.pathname.endsWith('student-v2.html')){
+      const p=document.createElement('script');
+      p.src='student-performance.js?v=20260901-1';
+      p.defer=true;
+      p.setAttribute('data-lakshyasetu-student-performance','true');
+      document.head.appendChild(p);
+    }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
 })();

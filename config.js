@@ -30,7 +30,7 @@ window.addEventListener('load',function(){
 });
 window.addEventListener('load',function(){if(window.__LS_PAYMENT_V4_ACTIVE)return;const s=document.createElement('script');s.src='payments-v2.js?v=20260830-0745';s.defer=true;s.setAttribute('data-lakshyasetu-payment-v4','true');document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='test-attempts-v4.js?v=20260901-1200';s.defer=true;document.head.appendChild(s);});
-window.addEventListener('load',function(){const s=document.createElement('script');s.src='test-attempts-v6.js?v=20260901-1300';s.defer=true;document.head.appendChild(s);});
+window.addEventListener('load',function(){const s=document.createElement('script');s.src='test-attempts-v6.js?v=20260901-1700';s.defer=true;document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='exam-experience-v8.js?v=20260901-1400';s.defer=true;document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='exam-polish-v1.js?v=20260901-1500';s.defer=true;document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='student-dashboard.js?v=20260901-1600';s.defer=true;document.head.appendChild(s);});

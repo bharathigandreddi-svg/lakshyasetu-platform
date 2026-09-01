@@ -1,5 +1,6 @@
 (function(){
   'use strict';
+  if(!document.getElementById('lsExamInstructionsLoader')){const s=document.createElement('script');s.id='lsExamInstructionsLoader';s.src='exam-instructions.js?v=20260901';document.head.appendChild(s)}
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   async function run(){
     for(let i=0;i<240;i++){
@@ -13,7 +14,6 @@
             const r=await sb.functions.invoke('test-performance',{body:{test_id:testId}});
             if(!r.error&&r.data?.success){
               const d=r.data;
-              // Correct the visible official rank/percentile cards produced by the client UI.
               host.querySelectorAll('.ls6stat,.ls-stat').forEach(card=>{
                 const label=(card.innerText||'').toLowerCase();
                 const b=card.querySelector('b');

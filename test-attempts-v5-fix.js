@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  if(!document.getElementById('lsSolutionLoader')){const s=document.createElement('script');s.id='lsSolutionLoader';s.src='test-solutions.js?v=20260901';document.head.appendChild(s)}
+  if(!document.getElementById('lsSolutionLoader')){const s=document.createElement('script');s.id='lsSolutionLoader';s.src='test-solutions.js?v=20260901-1400';document.head.appendChild(s)}
   if(!document.getElementById('lsExamInstructionsLoader')){const s=document.createElement('script');s.id='lsExamInstructionsLoader';s.src='exam-instructions.js?v=20260901';document.head.appendChild(s)}
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   async function addLaunchButton(sb,host,testId){
@@ -9,10 +9,10 @@
     if(/Question Navigator|Question No\./i.test(text))return;
     const card=host.querySelector('.card');
     if(!card)return;
-    let count=0,max=3;
+    let count=0,max=4;
     try{
       const tr=await sb.from('ls_tests').select('max_attempts').eq('id',testId).single();
-      if(!tr.error)max=Math.max(1,Number(tr.data?.max_attempts||3));
+      if(!tr.error)max=Math.max(1,Number(tr.data?.max_attempts||4));
       const ss=await sb.auth.getSession();
       if(ss.data?.session){
         const ar=await sb.from('ls_test_attempts').select('id').eq('test_id',testId).eq('user_id',ss.data.session.user.id).not('submitted_at','is',null);

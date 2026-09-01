@@ -1,5 +1,6 @@
 (function(){
   'use strict';
+  if(!document.getElementById('lsSolutionLoader')){const s=document.createElement('script');s.id='lsSolutionLoader';s.src='test-solutions.js?v=20260901';document.head.appendChild(s)}
   if(!document.getElementById('lsExamInstructionsLoader')){const s=document.createElement('script');s.id='lsExamInstructionsLoader';s.src='exam-instructions.js?v=20260901';document.head.appendChild(s)}
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   async function addLaunchButton(sb,host,testId){

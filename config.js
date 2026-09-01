@@ -28,7 +28,7 @@ window.addEventListener('load',function(){
     window.clearLesson=function(){originalClearLesson();videoFile.value='';pdfFile.value='';videoCurrent.textContent='';pdfCurrent.textContent='';};
   }catch(e){console.error('Lesson file upload setup failed:',e);}
 });
-window.addEventListener('load',function(){if(window.__LS_PAYMENT_V5_ACTIVE)return;const s=document.createElement('script');s.src='payments-v2.js?v=20260901-2105';s.defer=true;document.head.appendChild(s);});
+window.addEventListener('load',function(){if(window.__LS_PAYMENT_V6_ACTIVE)return;const s=document.createElement('script');s.src='payments-v2.js?v=20260901-2115';s.defer=true;document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='test-attempts-v4.js?v=20260901-1200';s.defer=true;document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='test-attempts-v6.js?v=20260901-1700';s.defer=true;document.head.appendChild(s);});
 window.addEventListener('load',function(){const s=document.createElement('script');s.src='exam-experience-v8.js?v=20260901-1400';s.defer=true;document.head.appendChild(s);});

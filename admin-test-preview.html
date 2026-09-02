@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Test Preview | LakshyaSetu</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172b4d;font-family:Arial,sans-serif}.top{background:#173b67;color:#fff;padding:16px 5%;display:flex;justify-content:space-between;align-items:center}.top a{color:#fff;text-decoration:none;font-weight:700}.wrap{width:min(1100px,94%);margin:22px auto}.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 10px #0000000d}.hero{background:linear-gradient(135deg,#173b67,#285da7);color:#fff}.muted{color:#64748b}.q{font-size:20px;font-weight:700;line-height:1.55;margin-bottom:18px}.option{display:block;width:100%;text-align:left;padding:14px;margin:9px 0;border:1px solid #ccd6e3;border-radius:9px;background:#f8fafc;cursor:pointer;font-size:15px}.option:hover{background:#eef4ff}.option.selected{border:2px solid #2457a6;background:#eef4ff}.nav{display:flex;gap:8px;justify-content:space-between;margin-top:16px}.btn{padding:11px 16px;border:0;border-radius:8px;background:#173b67;color:#fff;font-weight:700;cursor:pointer}.btn:disabled{opacity:.45;cursor:not-allowed}.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8eef7;font-size:12px;margin-right:6px}.ok{background:#dcfce7;color:#166534}.error{background:#fee2e2;color:#991b1b}.center{text-align:center}@media(max-width:650px){.top{align-items:flex-start;gap:10px;flex-direction:column}.q{font-size:17px}}
+</style>
+</head>
+<body>
+<header class="top"><div><strong>LakshyaSetu Admin</strong><div style="font-size:12px;opacity:.8">Private Test Preview</div></div><div><a href="admin-tools.html">Admin Tools</a> &nbsp;|&nbsp; <a href="admin.html">Dashboard</a></div></header>
+<main class="wrap"><div id="status" class="card">Checking admin session...</div><div id="app"></div></main>
+<script>
+const sb=getLakshyaSetuDb();
+const params=new URLSearchParams(location.search);const testId=Number(params.get('test')||params.get('test_id')||0);let test=null,qs=[],idx=0,answers={};
+const esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
+async function guard(){const r=await sb.auth.getSession();const s=r?.data?.session;if(!s){location.href='login.html?next='+encodeURIComponent(location.href);return false}const p=await sb.from('profiles').select('role').eq('id',s.user.id).single();if(p.error||p.data?.role!=='admin'){document.getElementById('status').innerHTML='<div class="error">Admin access required.</div>';return false}document.getElementById('status').innerHTML='<span class="badge ok">Admin preview session active — no attempt, payment or rank is affected.</span>';return true}
+async function init(){if(!await guard())return;if(!testId){document.getElementById('app').innerHTML='<div class="card error">Missing test ID. Use <b>?test=ID</b>.</div>';return}const tr=await sb.from('ls_tests').select('*').eq('id',testId).single();if(tr.error){document.getElementById('app').innerHTML='<div class="card error">'+esc(tr.error.message)+'</div>';return}test=tr.data;const qr=await sb.from('ls_test_questions').select('*').eq('test_id',testId).order('display_order').order('id');if(qr.error){document.getElementById('app').innerHTML='<div class="card error">'+esc(qr.error.message)+'</div>';return}qs=qr.data||[];if(!qs.length){document.getElementById('app').innerHTML='<div class="card error">No questions found for this test.</div>';return}render()}
+function render(){const q=qs[idx],correct=String(q.correct_option||'').toUpperCase();document.getElementById('app').innerHTML='<div class="card hero"><h1 style="margin-top:0">'+esc(test.title)+'</h1><div><span class="badge">Admin Preview</span><span class="badge">Question '+(idx+1)+' of '+qs.length+'</span><span class="badge">Marks '+esc(q.marks??'—')+'</span></div></div><div class="card"><div class="q">Q'+(idx+1)+'. '+esc(q.question)+'</div>'+[['A',q.option_a],['B',q.option_b],['C',q.option_c],['D',q.option_d]].map(o=>'<button class="option '+(answers[q.id]===o[0]?'selected':'')+'" onclick="choose(\''+o[0]+'\')"><b>'+o[0]+'.</b> '+esc(o[1])+'</button>').join('')+'<div class="nav"><button class="btn" onclick="prev()" '+(idx===0?'disabled':'')+'>← Previous</button><button class="btn" onclick="next()" '+(idx===qs.length-1?'disabled':'')+'>Next →</button></div></div><div class="card center"><button class="btn" onclick="showAnswer()">Show Correct Answer & Explanation</button><button class="btn" onclick="clearAnswer()">Hide Answer</button><div id="solution"></div></div>'}
+function choose(a){answers[qs[idx].id]=a;render()}
+function prev(){if(idx>0){idx--;render()}}
+function next(){if(idx<qs.length-1){idx++;render()}}
+function showAnswer(){const q=qs[idx];document.getElementById('solution').innerHTML='<div class="card" style="margin-top:15px;text-align:left"><b>Correct answer: '+esc(q.correct_option||'Not set')+'</b><p class="muted">'+esc(q.explanation||'No explanation provided.')+'</p></div>'}
+function clearAnswer(){document.getElementById('solution').innerHTML=''}
+init();
+</script>
+</body></html>

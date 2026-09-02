@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Published Tests | LakshyaSetu</title>
+<link rel="stylesheet" href="styles.css?v=13">
+<style>
+.filter{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.filter select{padding:10px 12px;border:1px solid #dfe5ee;border-radius:9px;background:#fff;font:inherit}.test-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.test-meta span{padding:5px 8px;border-radius:999px;background:#eef4ff;color:#2457a6;font-size:11px;font-weight:800}.action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.action-row a{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:9px;text-decoration:none;font-size:12px;font-weight:900}.buy{background:#2457a6;color:#fff}.view{background:#eef4ff;color:#2457a6}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="home.html">LakshyaSetu<small>Learn. Prepare. Achieve.</small></a><nav class="actions"><a class="btn" href="home.html">Home</a><a class="btn" href="test-series.html">Layered Catalog</a><a class="btn" href="login.html">Student Login</a></nav></header>
+<main class="wrap"><div class="crumb"><a href="home.html">Home</a><span>›</span><span>Published Tests</span></div><section class="catalog-hero"><span class="pill">PUBLISHED MCQ TESTS</span><h1>All Available Tests</h1><p>Every currently published test is visible here for quick access. The normal catalog remains available through stage → subject → topic.</p></section>
+<div class="filter"><select id="exam"><option value="all">All examinations</option><option value="1">UPSC Civil Services Prelims</option><option value="2">APPSC Group 1</option><option value="3">APPSC Group 2</option></select><select id="sort"><option value="new">Newest first</option><option value="title">Title</option></select></div>
+<div id="status" class="loading">Loading published tests…</div><div id="tests" class="grid"></div></main><footer class="footer">LakshyaSetu © 2026 · Civil Services Learning Platform</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js?v=20260902-0915"></script>
+<script>
+(function(){'use strict';const db=getLakshyaSetuDb(),$=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m])),money=v=>Number(v||0)?'₹'+Number(v).toLocaleString('en-IN'):'Free';let tests=[];let subjects=[];
+async function load(){const [tr,sr]=await Promise.all([db.from('ls_tests').select('id,course_subject_id,topic_id,title,description,test_type,question_count,price,created_at,published,archived').eq('published',true).eq('archived',false),db.from('ls_course_subjects').select('id,course_id,subject_id,ls_subjects(title)')]);if(tr.error)throw tr.error;if(sr.error)throw sr.error;tests=tr.data||[];subjects=sr.data||[];render()}
+function render(){const exam=Number($('exam').value||0);const map={};subjects.forEach(s=>map[s.id]={course:s.course_id,title:s.ls_subjects?.title||'Subject'});let rows=tests.filter(t=>!exam||map[t.course_subject_id]?.course===exam);rows.sort((a,b)=>$('sort').value==='title'?String(a.title).localeCompare(String(b.title)):String(b.created_at||'').localeCompare(String(a.created_at||'')));$('status').className=rows.length?'':'loading';$('status').textContent=rows.length?rows.length+' published tests available':'No published tests in this examination yet.';$('tests').innerHTML=rows.map(t=>{const m=map[t.course_subject_id]||{};return '<article class="card"><span class="pill">'+esc(t.test_type||'MCQ TEST')+'</span><h3>'+esc(t.title)+'</h3><p>'+esc(t.description||'50-question exam-focused MCQ test.')+'</p><div class="test-meta"><span>'+esc(m.title||'Subject')+'</span><span>'+Number(t.question_count||50)+' questions</span><span>'+money(t.price||2)+'</span></div><div class="action-row"><a class="buy" href="login.html?next='+encodeURIComponent('student-v2.html?test='+t.id+'&action=buy')+'">BUY '+money(t.price||2)+'</a><a class="view" href="student-v2.html?test='+encodeURIComponent(t.id)+'">VIEW TEST →</a></div></article>'}).join('')}
+$('exam').addEventListener('change',render);$('sort').addEventListener('change',render);load().catch(e=>{$('status').className='error';$('status').textContent='Unable to load published tests. '+(e.message||e)});
+})();
+</script></body></html>

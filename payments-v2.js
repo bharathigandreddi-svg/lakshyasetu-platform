@@ -1,7 +1,7 @@
-/* LakshyaSetu Razorpay payment client v8 */
+/* LakshyaSetu Razorpay payment client v9 */
 (function(){
-  if(window.__LS_PAYMENT_V8_ACTIVE)return;
-  window.__LS_PAYMENT_V8_ACTIVE=true;
+  if(window.__LS_PAYMENT_V9_ACTIVE)return;
+  window.__LS_PAYMENT_V9_ACTIVE=true;
   window.__LS_PAYMENT_MODULE_LOADED=true;
 
   function db(){return window.getLakshyaSetuDb();}
@@ -71,8 +71,22 @@
     }catch(e){alert(e.message||'Payment failed.');}
   }
 
-  /* Subject-card UI is rendered directly by test-series.html.
-     This module intentionally does not rewrite or remove catalog buttons. */
   window.LSBuy=buy;
   window.LSGetSession=session;
+
+  /* Safety cleanup for older cached catalog scripts that may append a second
+     BUY / VIEW SUBJECT button. The current catalog owns exactly one package
+     button and one topic button per subject card. */
+  function cleanCatalogButtons(){
+    document.querySelectorAll('.subject-card .action-row').forEach(row=>{
+      const legacy=[...row.querySelectorAll('a,button')].filter(el=>/BUY\s*\/\s*VIEW\s*SUBJECT/i.test((el.textContent||'').trim()));
+      legacy.forEach(el=>el.remove());
+      const topic=[...row.querySelectorAll('.topic-btn')];
+      topic.slice(1).forEach(el=>el.remove());
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',cleanCatalogButtons,{once:true});
+  }else cleanCatalogButtons();
+  new MutationObserver(cleanCatalogButtons).observe(document.documentElement,{childList:true,subtree:true});
 })();

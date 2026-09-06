@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LakshyaSetu — Bulk MCQ Import</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=20260906-9"></script>
+<style>
+body{font-family:system-ui,Arial,sans-serif;margin:0;background:#f6f8fb;color:#172033}.wrap{max-width:1200px;margin:auto;padding:24px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:20px;margin:16px 0}.top{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.btn{padding:10px 14px;border:0;border-radius:9px;font-weight:700;text-decoration:none;cursor:pointer}.muted{background:#eef2f6;color:#172033}.primary{background:#155eef;color:#fff}.status{padding:10px;border-radius:8px;background:#f2f4f7;display:inline-block}.ok{background:#ecfdf3;color:#027a48}.bad{background:#fef3f2;color:#b42318}.warn{background:#fffaeb;color:#b54708}.hidden{display:none}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.field select,.field textarea{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:8px;font:inherit;box-sizing:border-box}.field textarea{min-height:430px;resize:vertical}.hint{font-size:13px;color:#667085;margin-top:8px;line-height:1.5}.table{overflow:auto}table{border-collapse:collapse;width:100%;min-width:1000px;font-size:12px}th,td{padding:8px;border-bottom:1px solid #eaecf0;text-align:left;vertical-align:top}th{background:#f9fafb}.pill{padding:3px 6px;border-radius:999px;font-size:11px;font-weight:700}.grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}}pre{white-space:pre-wrap;background:#f8fafc;padding:14px;border-radius:8px;border:1px solid #eaecf0;font-size:12px}
+</style></head>
+<body><div class="wrap">
+<div class="top"><div><h1 style="margin:0">LakshyaSetu Bulk MCQ Import</h1><div class="hint">Admin-only • Paste readable MCQs → Validate → Preview → Import</div></div><div class="actions"><a class="btn muted" href="test-builder-v2.html">← Test Builder</a><a class="btn muted" href="admin-v2.html">Admin Home</a></div></div>
+<div id="auth" class="card"><b>Connecting…</b><div class="hint">Checking your admin session.</div></div>
+<main id="app" class="hidden">
+<section class="card"><h3>1. Select Draft Test</h3><div class="grid"><div class="field"><label>Existing Draft Test</label><select id="test"><option>Loading…</option></select></div><div class="field"><label>Mode</label><select id="mode"><option value="append">Append</option><option value="replace">Replace</option></select></div></div><div id="info" class="hint">Only unpublished draft tests are shown.</div></section>
+<section class="card"><h3>2. Paste Structured Questions</h3><div class="hint">Use one block per question. Start each block with Q1, Q2, Q3…</div><div class="field" style="margin-top:12px"><textarea id="input" placeholder="Q1\nQuestion: ...\nA: ...\nB: ...\nC: ...\nD: ...\nAnswer: A\nExplanation: ...\nMarks: 1\nNegative: 0.33\nDifficulty: hard\nConcept: ...\nSource: ...\nStatements:\n\nQ2\n..."></textarea></div><div class="actions" style="margin-top:10px"><button id="validate" class="btn primary">Validate & Preview</button><button id="clear" class="btn muted">Clear</button><span id="status" class="status">No questions pasted</span></div></section>
+<section class="card"><h3>Format</h3><pre>Q1
+Question: Your question here
+A: Option A
+B: Option B
+C: Option C
+D: Option D
+Answer: A
+Explanation: Detailed explanation here
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Concept name
+Source: NCERT Class XI, Chapter 3
+Statements:
+
+Q2
+Question: Next question here
+A: Option A
+B: Option B
+C: Option C
+D: Option D
+Answer: B
+Explanation: Explanation here
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Concept name
+Source: NCERT Class XI, Chapter 3
+Statements:</pre><div class="hint">Difficulty can be written as easy, medium, or hard. The importer will adapt it to the actual database constraint automatically.</div></section>
+<section id="preview" class="card hidden"><div class="top"><div><h3 style="margin:0">3. Preview & Verification</h3><div id="summary" class="hint"></div></div><button id="import" class="btn primary" disabled>Confirm Import</button></div><div id="note" class="hint"></div><div class="table" style="margin-top:12px"><table><thead><tr><th>#</th><th>Question</th><th>Options</th><th>Answer</th><th>Difficulty</th><th>Validation</th></tr></thead><tbody id="body"></tbody></table></div></section>
+<section id="result" class="card hidden"></section>
+</main></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),n=x=>String(x??'').trim(),k=x=>n(x).toLowerCase().replace(/\s+/g,' '),esc=x=>String(x??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let db,tests=[],selected=null,rows=[];
+const wait=(p,ms,name)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(Error(name+' timed out')),ms))]);
+async function start(){try{const c=window.LAKSHYASETU_CONFIG||{};db=typeof getLakshyaSetuDb==='function'?getLakshyaSetuDb():window.supabase.createClient(c.supabaseUrl,c.supabasePublishableKey);const s=await wait(db.auth.getSession(),8000,'Session check');if(!s.data.session){$('auth').innerHTML='<b>Admin login required.</b>';return}const p=await wait(db.from('profiles').select('role').eq('id',s.data.session.user.id).maybeSingle(),8000,'Role check');if(p.error)throw p.error;if(p.data?.role!=='admin'){$('auth').innerHTML='<b>Access denied.</b><div class="hint">Admin account required.</div>';return}$('auth').classList.add('hidden');$('app').classList.remove('hidden');await load();}catch(e){$('auth').innerHTML='<b>Could not open admin tools.</b><div class="hint bad">'+esc(e.message)+'</div>';}}
+async function load(){const r=await wait(db.from('ls_tests').select('*').eq('archived',false).eq('published',false).order('created_at',{ascending:false}),10000,'Draft test list');if(r.error)throw r.error;tests=r.data||[];const s=$('test');s.innerHTML='<option value="">Choose a draft test…</option>';tests.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=(t.title||'Untitled')+' • DRAFT • '+(t.question_count??t.expected_question_count??0)+' Q';s.appendChild(o);});}
+function inspect(){selected=tests.find(t=>String(t.id)===String($('test').value))||null;$('info').textContent=selected?selected.title+' • '+(selected.question_count??selected.expected_question_count??0)+' existing questions • DRAFT':'Only unpublished draft tests are shown.';$('import').disabled=true;}
+function parse(text){const lines=text.replace(/\r/g,'').split('\n'),out=[];let cur=null,last=null;for(const raw of lines){const line=raw.trimEnd();if(/^Q\s*\d+\s*[:.)]?\s*$/i.test(line)){if(cur)out.push(cur);cur={};last=null;continue}if(!cur){if(!n(line))continue;return{error:'Start each question with Q1, Q2, Q3…'}}const m=line.match(/^(Question|A|B|C|D|Answer|Explanation|Marks|Negative|Difficulty|Concept|Source|Statements)\s*:\s?(.*)$/i);if(m){const map={question:'question',a:'option_a',b:'option_b',c:'option_c',d:'option_d',answer:'correct_option',explanation:'explanation',marks:'marks',negative:'negative_marks',difficulty:'difficulty',concept:'concept_tag',source:'source_reference',statements:'statements'};last=map[m[1].toLowerCase()];cur[last]=m[2]||''}else if(n(line)&&last)cur[last]=(cur[last]?cur[last]+'\n':'')+line}if(cur)out.push(cur);return out}
+function norm(o,i){return{row:i+1,question:n(o.question),option_a:n(o.option_a),option_b:n(o.option_b),option_c:n(o.option_c),option_d:n(o.option_d),correct_option:n(o.correct_option).toUpperCase(),explanation:n(o.explanation),marks:n(o.marks)||'1',negative_marks:n(o.negative_marks)||'0.33',difficulty:(n(o.difficulty)||'medium').toLowerCase(),concept_tag:n(o.concept_tag),source_reference:n(o.source_reference),statements:n(o.statements)}}
+async function validate(){try{if(!selected)return setStatus('Select a draft test first','warn');const text=$('input').value.trim();if(!text)throw Error('Paste structured questions first');const data=parse(text);if(data.error)throw Error(data.error);const seen=new Map();rows=data.map((x,i)=>{const r=norm(x,i),e=[];if(!r.question)e.push('question required');for(const z of ['option_a','option_b','option_c','option_d','explanation'])if(!r[z])e.push(z+' required');if(!/^[ABCD]$/.test(r.correct_option))e.push('answer must be A/B/C/D');if(!isFinite(Number(r.marks)))e.push('invalid marks');if(!isFinite(Number(r.negative_marks)))e.push('invalid negative');if(!['easy','medium','hard'].includes(r.difficulty))e.push('difficulty must be easy/medium/hard');const qk=k(r.question);if(qk&&seen.has(qk))e.push('duplicate in paste (Q'+seen.get(qk)+')');else if(qk)seen.set(qk,i+1);return{...r,errors:e}});const ex=await wait(db.from('ls_test_questions').select('question').eq('test_id',selected.id),10000,'Duplicate check');if(ex.error)throw ex.error;const set=new Set((ex.data||[]).map(x=>k(x.question)));rows=rows.map(r=>({...r,warning:set.has(k(r.question))?'matches existing question':''}));render();setStatus(rows.length+' questions parsed','ok')}catch(e){setStatus(e.message,'bad')}}
+function setStatus(t,c){$('status').textContent=t;$('status').className='status '+(c||'')}
+function render(){const bad=rows.filter(r=>r.errors.length).length,w=rows.filter(r=>r.warning).length;$('preview').classList.remove('hidden');$('summary').textContent=rows.length+' questions • '+(rows.length-bad)+' valid • '+bad+' invalid • '+w+' duplicate warning(s)';$('note').textContent=bad?'Fix invalid rows and validate again.':'All rows valid. Review and confirm import.';$('body').innerHTML=rows.map(r=>'<tr><td>'+r.row+'</td><td>'+esc(r.question.slice(0,260))+'</td><td>A. '+esc(r.option_a.slice(0,80))+'<br>B. '+esc(r.option_b.slice(0,80))+'<br>C. '+esc(r.option_c.slice(0,80))+'<br>D. '+esc(r.option_d.slice(0,80))+'</td><td><b>'+r.correct_option+'</b></td><td>'+esc(r.difficulty)+'</td><td>'+(r.errors.length?'<span class="pill bad">INVALID</span> '+r.errors.map(esc).join('<br>'):r.warning?'<span class="pill warn">WARNING</span> '+esc(r.warning):'<span class="pill ok">VALID</span>')+'</td></tr>').join('');$('import').disabled=bad>0||rows.length===0||!selected}
+function statementJson(s){if(!s)return{};try{const j=JSON.parse(s);return j&&typeof j==='object'?j:{text:s}}catch{return{text:s}}}
+async function tryInsert(base){let r=await db.from('ls_test_questions').insert(base);if(!r.error)return{ok:true,mode:'original'};if(!/difficulty_check/i.test(String(r.error.message||'')))return{ok:false,error:r.error};for(const value of ['difficult','Difficult','Hard','hard']){const p=base.map(x=>({...x,difficulty:x.difficulty==='hard'?value:x.difficulty}));r=await db.from('ls_test_questions').insert(p);if(!r.error)return{ok:true,mode:value}}const noDifficulty=base.map(x=>{const y={...x};delete y.difficulty;return y});r=await db.from('ls_test_questions').insert(noDifficulty);if(!r.error)return{ok:true,mode:'omitted'};return{ok:false,error:r.error}}
+async function doImport(){if(!selected||rows.some(r=>r.errors.length))return;if($('mode').value==='replace'&&!confirm('Replace existing questions for this DRAFT test?'))return;$('import').disabled=true;try{let existing=[];if($('mode').value==='append'){const ex=await db.from('ls_test_questions').select('id,display_order').eq('test_id',selected.id);if(ex.error)throw ex.error;existing=ex.data||[]}else{const d=await db.from('ls_test_questions').delete().eq('test_id',selected.id);if(d.error)throw d.error}const startOrder=existing.reduce((m,x)=>Math.max(m,Number(x.display_order)||0),0);const p=rows.map((r,i)=>({test_id:selected.id,question:r.question,option_a:r.option_a,option_b:r.option_b,option_c:r.option_c,option_d:r.option_d,correct_option:r.correct_option,explanation:r.explanation,marks:Number(r.marks),negative_marks:Number(r.negative_marks),display_order:startOrder+i+1,difficulty:r.difficulty,concept_tag:r.concept_tag||null,source_reference:r.source_reference||null,statements:statementJson(r.statements)}));let used='original';for(let i=0;i<p.length;i+=100){const rr=await tryInsert(p.slice(i,i+100));if(!rr.ok)throw rr.error;used=rr.mode}const count=($('mode').value==='append'?existing.length:0)+p.length;await db.from('ls_tests').update({question_count:count,published:false}).eq('id',selected.id);$('result').classList.remove('hidden');$('result').innerHTML='<div class="status ok"><b>Import complete.</b> '+p.length+' questions imported. Test remains Draft.</div><div class="hint">Difficulty compatibility: '+esc(used)+'. Now verify in Test Builder / Student Preview.</div>';await load();$('test').value=selected.id;inspect()}catch(e){$('result').classList.remove('hidden');$('result').innerHTML='<div class="status bad"><b>Import failed.</b> '+esc(e?.message||e)+'</div><div class="hint">No new rows were accepted from the failed batch.</div>'}finally{$('import').disabled=false}}
+$('test').onchange=inspect;$('validate').onclick=validate;$('import').onclick=doImport;$('clear').onclick=()=>{$('input').value='';rows=[];$('preview').classList.add('hidden');setStatus('No questions pasted','')};start();
+})();
+</script></body></html>

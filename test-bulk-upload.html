@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LakshyaSetu — Bulk Question Upload</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=20260906-1"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f8fb;color:#172033;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.wrap{max-width:1250px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.brand{font-size:24px;font-weight:800}.sub{color:#667085;font-size:13px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px #1018280a}.grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.field select,.field input{width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:9px;background:#fff}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:700;cursor:pointer}.primary{background:#155eef;color:#fff}.dark{background:#172033;color:#fff}.muted{background:#eef2f6;color:#172033}.danger{background:#fee4e2;color:#b42318}.btn:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.status{padding:11px 13px;border-radius:9px;background:#f2f4f7;color:#344054;font-size:13px}.ok{background:#ecfdf3;color:#027a48}.bad{background:#fef3f2;color:#b42318}.warn{background:#fffaeb;color:#b54708}.hint{font-size:12px;color:#667085;line-height:1.55;margin-top:8px}.mode{display:flex;gap:16px;align-items:center;margin:12px 0}.mode label{font-size:13px;font-weight:650}.table-wrap{overflow:auto;border:1px solid #eaecf0;border-radius:10px}table{border-collapse:collapse;width:100%;min-width:1000px;font-size:12px}th,td{border-bottom:1px solid #eaecf0;padding:9px;text-align:left;vertical-align:top}th{background:#f9fafb;position:sticky;top:0}.pill{display:inline-block;padding:4px 7px;border-radius:999px;font-size:11px;font-weight:700}.pill.ok{background:#dcfae6;color:#027a48}.pill.bad{background:#fee4e2;color:#b42318}.pill.warn{background:#fef0c7;color:#b54708}.small{font-size:11px;color:#667085}.dangerbox{border:1px solid #fecdca;background:#fffbfa;padding:12px;border-radius:10px;margin-top:12px;display:none}.hidden{display:none}@media(max-width:800px){.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><div class="brand">LakshyaSetu Bulk Question Upload</div><div class="sub">Admin-only • CSV / JSON • Validate → Preview → Import</div></div><div class="actions"><a class="btn muted" href="test-manager.html" style="text-decoration:none">← Test Builder</a><a class="btn muted" href="admin-v2.html" style="text-decoration:none">Admin Home</a></div></div>
+
+<div id="authCard" class="card"><b>Checking admin access…</b></div>
+<div id="app" class="hidden">
+<div class="card">
+<h3 style="margin-top:0">1. Select Test</h3>
+<div class="grid">
+<div class="field"><label>Existing Test</label><select id="testSelect"><option value="">Loading tests…</option></select></div>
+<div class="field"><label>Upload File</label><input id="fileInput" type="file" accept=".csv,.json,text/csv,application/json"></div>
+<div class="field"><label>Mode</label><select id="mode"><option value="append">Append Questions</option><option value="replace">Replace Questions</option></select></div>
+</div>
+<div id="testInfo" class="hint">Select a draft test. Published tests are protected from bulk edits.</div>
+<div id="replaceWarning" class="dangerbox">Replace mode will remove the selected draft test's existing questions before inserting this upload. This cannot be undone.</div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">2. Upload & Validate</h3>
+<div class="actions"><button class="btn muted" id="templateBtn">Download CSV Template</button><button class="btn dark" id="validateBtn" disabled>Validate File</button><span id="fileStatus" class="status">No file selected</span></div>
+<div class="hint">CSV columns: question, option_a, option_b, option_c, option_d, correct_option, explanation, marks, negative_marks, difficulty, concept_tag, source_reference, statements. JSON may be an array or <code>{"questions":[…]}</code>.</div>
+</div>
+
+<div id="previewCard" class="card hidden">
+<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h3 style="margin:0">3. Preview & Verification</h3><div id="summary" class="small"></div></div><div class="actions"><button class="btn muted" id="clearBtn">Clear Preview</button><button class="btn primary" id="importBtn" disabled>Confirm Import</button></div></div>
+<div id="previewNote" class="hint"></div>
+<div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>#</th><th>Question</th><th>Options</th><th>Answer</th><th>Marks</th><th>Difficulty</th><th>Validation</th></tr></thead><tbody id="previewBody"></tbody></table></div>
+</div>
+
+<div id="resultCard" class="card hidden"></div>
+</div>
+</div>
+<script>
+(() => {
+  const { createClient } = window.supabase;
+  const cfg = window.LAKSHYASETU_CONFIG || window.SUPABASE_CONFIG || {};
+  const SUPABASE_URL = cfg.url || cfg.supabaseUrl || cfg.SUPABASE_URL;
+  const SUPABASE_ANON_KEY = cfg.anonKey || cfg.anon_key || cfg.SUPABASE_ANON_KEY;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const $ = id => document.getElementById(id);
+  let tests=[], rows=[], selectedTest=null, file=null;
+
+  function esc(v){return String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function norm(v){return String(v??'').trim();}
+  function key(v){return norm(v).toLowerCase().replace(/\s+/g,' ');}
+  function setStatus(text, cls='status'){ $('fileStatus').className=cls; $('fileStatus').textContent=text; }
+
+  async function guard(){
+    try{
+      const {data:{session}}=await db.auth.getSession();
+      if(!session){ $('authCard').innerHTML='<b>Admin login required.</b><div class="hint">Please sign in through the admin dashboard, then reopen this page.</div>'; return; }
+      const {data:p,error}=await db.from('profiles').select('role').eq('id',session.user.id).maybeSingle();
+      if(error || !p || p.role!=='admin'){ $('authCard').innerHTML='<b>Access denied.</b><div class="hint">This page is restricted to admin users.</div>'; return; }
+      $('authCard').classList.add('hidden'); $('app').classList.remove('hidden'); await loadTests();
+    }catch(e){ $('authCard').innerHTML='<b>Admin access check failed.</b><div class="hint">'+esc(e.message)+'</div>'; }
+  }
+
+  async function loadTests(){
+    const {data,error}=await db.from('ls_tests').select('*').eq('archived',false).order('created_at',{ascending:false});
+    if(error){ $('testSelect').innerHTML='<option value="">Could not load tests</option>'; return; }
+    tests=data||[]; const s=$('testSelect'); s.innerHTML='<option value="">Choose a draft test…</option>';
+    tests.forEach(t=>{const pub=!!t.published; const q=t.question_count ?? t.expected_question_count ?? 0; const o=document.createElement('option');o.value=t.id;o.textContent=(t.title||'Untitled test')+' • '+(pub?'PUBLISHED':'DRAFT')+' • '+q+' Q';s.appendChild(o);});
+  }
+
+  function inspectTest(){
+    selectedTest=tests.find(t=>String(t.id)===String($('testSelect').value))||null;
+    if(!selectedTest){$('testInfo').textContent='Select a draft test. Published tests are protected from bulk edits.';return;}
+    const q=selectedTest.question_count ?? selectedTest.expected_question_count ?? 0;
+    $('testInfo').innerHTML='<b>'+esc(selectedTest.title)+'</b> • '+q+' existing questions • '+(selectedTest.published?'PUBLISHED — import disabled':'DRAFT — safe to import');
+    $('validateBtn').disabled=!file || !!selectedTest.published;
+    $('importBtn').disabled=true;
+  }
+
+  function parseCSV(text){
+    const out=[];let row=[],cell='',quoted=false;
+    for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'){if(quoted&&n==='"'){cell+='"';i++;}else quoted=!quoted;}else if(c===','&&!quoted){row.push(cell);cell='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&n==='\n')i++;row.push(cell);cell='';if(row.some(x=>norm(x)!==''))out.push(row);row=[];}else cell+=c;}
+    if(cell!==''||row.length){row.push(cell);if(row.some(x=>norm(x)!==''))out.push(row);} if(!out.length)return[];
+    const headers=out[0].map(h=>key(h).replace(/ /g,'_')); return out.slice(1).map(r=>{const o={};headers.forEach((h,i)=>o[h]=r[i]??'');return o;});
+  }
+  function aliases(o){
+    const get=(...names)=>{for(const n of names){if(o[n]!==undefined&&norm(o[n])!=='')return o[n];}return '';};
+    return {question:get('question','Question'),option_a:get('option_a','a','optiona'),option_b:get('option_b','b','optionb'),option_c:get('option_c','c','optionc'),option_d:get('option_d','d','optiond'),correct_option:get('correct_option','answer','correct','correct_answer'),explanation:get('explanation','solution'),marks:get('marks'),negative_marks:get('negative_marks','negative','negative_mark'),difficulty:get('difficulty'),concept_tag:get('concept_tag','concept'),source_reference:get('source_reference','source'),statements:get('statements')};
+  }
+  function validate(input){
+    const seen=new Map(); return input.map((raw,i)=>{const r=aliases(raw),e=[];r.question=norm(r.question);['option_a','option_b','option_c','option_d','explanation'].forEach(k=>{if(!norm(r[k]))e.push(k.replace(/_/g,' ')+' is required');});r.correct_option=norm(r.correct_option).toUpperCase();if(!/^[ABCD]$/.test(r.correct_option))e.push('correct_option must be A, B, C or D');r.marks=norm(r.marks)||'1';r.negative_marks=norm(r.negative_marks)||'0.33';if(isNaN(Number(r.marks))||Number(r.marks)<0)e.push('marks must be a valid number');if(isNaN(Number(r.negative_marks))||Number(r.negative_marks)<0)e.push('negative_marks must be a valid number');r.difficulty=(norm(r.difficulty)||'medium').toLowerCase();if(!['easy','medium','hard'].includes(r.difficulty))e.push('difficulty must be easy, medium or hard');const k=key(r.question);if(k){if(seen.has(k))e.push('duplicate in upload (row '+seen.get(k)+')');else seen.set(k,i+2);}return {...r,row:i+2,errors:e};});
+  }
+
+  async function validateAgainstDB(rs){
+    if(!selectedTest)return rs;
+    const {data,error}=await db.from('ls_test_questions').select('question').eq('test_id',selectedTest.id);
+    if(error)return rs.map(r=>({...r,dbWarning:'Could not check existing-question duplicates'}));
+    const existing=new Set((data||[]).map(x=>key(x.question)));
+    return rs.map(r=>({...r,dbWarning:existing.has(key(r.question))?'matches an existing question':''}));
+  }
+
+  function render(){
+    $('previewCard').classList.remove('hidden');
+    const valid=rows.filter(r=>!r.errors.length).length, bad=rows.length-valid, warns=rows.filter(r=>r.dbWarning).length;
+    $('summary').textContent=rows.length+' rows • '+valid+' valid • '+bad+' invalid • '+warns+' duplicate warning(s)';
+    $('previewNote').innerHTML=bad?'Fix the invalid rows and upload again. Import is locked until every row passes validation.':(warns?'Duplicate warnings found against existing questions. Review carefully before import.':'All rows passed validation. Review the preview, then Confirm Import.');
+    $('previewBody').innerHTML=rows.map(r=>{const errs=r.errors.map(esc).join('<br>');const status=errs?'<span class="pill bad">INVALID</span> '+errs:(r.dbWarning?'<span class="pill warn">WARNING</span> '+esc(r.dbWarning):'<span class="pill ok">VALID</span>');return '<tr><td>'+r.row+'</td><td><b>'+esc(r.question.slice(0,220))+'</b></td><td>A. '+esc(r.option_a.slice(0,90))+'<br>B. '+esc(r.option_b.slice(0,90))+'<br>C. '+esc(r.option_c.slice(0,90))+'<br>D. '+esc(r.option_d.slice(0,90))+'</td><td><b>'+esc(r.correct_option)+'</b></td><td>'+esc(r.marks)+' / −'+esc(r.negative_marks)+'</td><td>'+esc(r.difficulty)+'</td><td>'+status+'</td></tr>';}).join('');
+    $('importBtn').disabled=rows.length===0||rows.some(r=>r.errors.length)||!selectedTest||selectedTest.published;
+  }
+
+  async function readFile(){
+    if(!file)return; const text=await file.text();let parsed=[];
+    try{if(file.name.toLowerCase().endsWith('.json')){const j=JSON.parse(text);parsed=Array.isArray(j)?j:(Array.isArray(j.questions)?j.questions:[]);if(!parsed.length)throw new Error('JSON must contain an array or a questions array');}else{parsed=parseCSV(text);if(!parsed.length)throw new Error('CSV contains no data rows');}}
+    catch(e){setStatus(e.message,'status bad');return;}
+    rows=validate(parsed);rows=await validateAgainstDB(rows);render();setStatus(file.name+' loaded','status ok');
+  }
+
+  async function importRows(){
+    if(!selectedTest||selectedTest.published||rows.some(r=>r.errors.length))return;
+    if($('mode').value==='replace'&&!confirm('Replace existing questions for this DRAFT test? Existing questions will be deleted first.'))return;
+    $('importBtn').disabled=true;$('resultCard').classList.remove('hidden');$('resultCard').innerHTML='<b>Importing…</b><div class="hint">Please keep this page open.</div>';
+    try{
+      if($('mode').value==='replace'){const d=await db.from('ls_test_questions').delete().eq('test_id',selectedTest.id);if(d.error)throw d.error;}
+      const payload=rows.map((r,i)=>({test_id:selectedTest.id,question:r.question,option_a:r.option_a,option_b:r.option_b,option_c:r.option_c,option_d:r.option_d,correct_option:r.correct_option,explanation:r.explanation,marks:Number(r.marks),negative_marks:Number(r.negative_marks),display_order:i+1,difficulty:r.difficulty,concept_tag:r.concept_tag||null,source_reference:r.source_reference||null,statements:r.statements||null}));
+      for(let i=0;i<payload.length;i+=100){const d=await db.from('ls_test_questions').insert(payload.slice(i,i+100));if(d.error)throw d.error;}
+      const count=payload.length; const upd=await db.from('ls_tests').update({question_count:count,published:false}).eq('id',selectedTest.id);if(upd.error){
+        // Some legacy schemas may not expose question_count; do not undo a successful question import.
+        console.warn('Question-count sync failed',upd.error);
+      }
+      $('resultCard').innerHTML='<div class="status ok"><b>Import complete.</b> '+count+' questions added to <b>'+esc(selectedTest.title)+'</b>. The test remains Draft and is not published.</div><div class="hint">Next: verify the test in Test Builder / Student Preview, then publish separately.</div>';
+      await loadTests(); $('testSelect').value=selectedTest.id; inspectTest();
+    }catch(e){$('resultCard').innerHTML='<div class="status bad"><b>Import failed.</b> '+esc(e.message||e)+'</div><div class="hint">If Replace mode was used, verify the test before retrying.</div>';}
+    $('importBtn').disabled=false;
+  }
+
+  $('testSelect').addEventListener('change',inspectTest);$('fileInput').addEventListener('change',e=>{file=e.target.files[0]||null;setStatus(file?file.name:'No file selected',file?'status':'status');$('validateBtn').disabled=!file||!selectedTest||selectedTest.published;});$('validateBtn').addEventListener('click',readFile);$('importBtn').addEventListener('click',importRows);$('clearBtn').addEventListener('click',()=>{rows=[];$('previewCard').classList.add('hidden');$('importBtn').disabled=true;});$('mode').addEventListener('change',()=>{$('replaceWarning').style.display=$('mode').value==='replace'?'block':'none';});$('templateBtn').addEventListener('click',()=>{const h='question,option_a,option_b,option_c,option_d,correct_option,explanation,marks,negative_marks,difficulty,concept_tag,source_reference,statements';const sample='"India\'s constitutional head?","President","Prime Minister","Chief Justice","Vice President","A","The President is the constitutional head of the Union executive.",1,0.33,medium,Polity,NCERT,""';const blob=new Blob([h+'\n'+sample+'\n'],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lakshyasetu-mcq-template.csv';a.click();URL.revokeObjectURL(a.href);});
+  guard();
+})();
+</script>
+</body>
+</html>

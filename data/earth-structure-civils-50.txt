@@ -1,0 +1,749 @@
+Q1
+Question: Consider the following statements regarding seismic waves: 1. P-waves can travel through both solids and liquids. 2. S-waves cannot propagate through liquids. 3. The behaviour of seismic waves helps scientists infer the internal structure of Earth.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: P-waves are compressional waves and can travel through both solid and liquid media. S-waves involve shear deformation and therefore cannot travel through liquids. Seismic-wave behaviour provides crucial evidence about Earth's internal layers and discontinuities.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Seismic waves
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q2
+Question: The existence of the liquid outer core is most strongly supported by which of the following?
+A: Absence of all seismic waves beyond the core
+B: Disappearance of S-waves and strong refraction of P-waves in the relevant regions
+C: Increasing temperature of the crust
+D: Presence of mountains on continents
+Answer: B
+Explanation: S-waves cannot pass through liquids, while P-waves can. Their behaviour at the core therefore provides strong evidence that the outer core is liquid. P-wave refraction also produces characteristic shadow-zone patterns.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Outer core
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q3
+Question: A seismic station records P-waves from a distant earthquake but does not record the corresponding S-waves. Which inference is most appropriate?
+A: The earthquake did not generate S-waves.
+B: S-waves always travel slower and disappear with distance.
+C: The seismic path may have encountered a liquid portion of Earth's interior.
+D: The crust at the station must be liquid.
+Answer: C
+Explanation: Earthquakes generate both P- and S-waves. If S-waves are absent at a station while P-waves are detected, one possible explanation is that the S-wave path encountered a liquid layer, such as the outer core.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: S-wave shadow
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q4
+Question: Which of the following best distinguishes continental crust from oceanic crust?
+A: Continental crust is generally thinner and denser.
+B: Continental crust is generally thicker and less dense.
+C: Oceanic crust is generally thicker and less dense.
+D: Both have identical thickness and density.
+Answer: B
+Explanation: Continental crust is generally thicker and less dense, whereas oceanic crust is thinner and relatively denser. This difference is fundamental to understanding isostasy and plate tectonics.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Continental and oceanic crust
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapters 3–4
+Statements:
+
+Q5
+Question: Consider the following statements regarding the lithosphere: 1. It includes the crust and the uppermost rigid part of the mantle. 2. It behaves as a relatively rigid layer. 3. It corresponds exactly to the crust–mantle boundary.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: The lithosphere comprises the crust plus the rigid uppermost mantle. It is mechanically strong and broken into tectonic plates. The crust–mantle boundary is the Moho and is not the same as the lithosphere–asthenosphere boundary.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Lithosphere
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapters 3–4
+Statements:
+
+Q6
+Question: Which of the following best describes the asthenosphere?
+A: A completely molten layer beneath the crust
+B: A relatively weak and ductile zone beneath the lithosphere
+C: The solid inner core
+D: The boundary between crust and mantle
+Answer: B
+Explanation: The asthenosphere lies beneath the lithosphere and is relatively weak and ductile. It is not simply a completely molten layer. Its physical properties allow tectonic plates to move over geological timescales.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Asthenosphere
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 4
+Statements:
+
+Q7
+Question: Why are S-waves particularly important in determining the nature of Earth's outer core?
+A: They travel only through gases.
+B: Their inability to travel through liquids indicates the presence of a liquid region.
+C: They are faster than P-waves.
+D: They originate only inside the core.
+Answer: B
+Explanation: S-waves require a medium capable of supporting shear stress. Their inability to pass through liquids is therefore a powerful diagnostic feature. Their disappearance across particular regions of Earth helped establish the existence of the liquid outer core.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: S-waves and outer core
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q8
+Question: Which statement best describes the physical behaviour of Earth's mantle?
+A: It behaves as a completely rigid body at all depths and timescales.
+B: Although largely solid, portions of it can deform slowly over geological timescales.
+C: It is entirely liquid.
+D: It contains only gases.
+Answer: B
+Explanation: The mantle is predominantly solid, but under the enormous temperature and pressure conditions inside Earth, it can undergo slow ductile deformation over geological timescales. This behaviour is central to mantle convection and plate tectonics.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Mantle behaviour
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapters 3–4
+Statements:
+
+Q9
+Question: Consider the following statements about Earth's core: 1. The outer core is liquid. 2. The inner core is solid. 3. Both layers have identical physical states.
+A: 1 only
+B: 2 only
+C: 1 and 2 only
+D: 1, 2 and 3
+Answer: C
+Explanation: Seismic evidence indicates that the outer core is liquid, whereas the inner core is solid. Their differing physical states significantly influence seismic-wave propagation and Earth's magnetic field.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Inner and outer core
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q10
+Question: The time interval between the arrival of P-waves and S-waves at a seismic station is useful because it can help estimate:
+A: The distance of the station from the earthquake source
+B: The chemical composition of the atmosphere
+C: The latitude of the earthquake alone
+D: The age of the Earth's crust directly
+Answer: A
+Explanation: P-waves travel faster than S-waves. Therefore, as distance from the earthquake increases, the difference between their arrival times generally increases. Seismologists use this P–S time difference to estimate the distance to the earthquake epicentre.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: P-S arrival time
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q11
+Question: Consider the following statements regarding the Mohorovičić discontinuity: 1. It marks a significant change in seismic-wave velocity between the crust and mantle. 2. Its depth is generally greater beneath continents than beneath oceans. 3. It represents the boundary between the lithosphere and asthenosphere.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: The Moho is the boundary between crust and mantle and is associated with a change in seismic-wave velocity. It is generally deeper beneath continents. The lithosphere–asthenosphere boundary is a separate mechanical boundary.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Moho
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q12
+Question: Consider the following statements regarding the P-wave shadow zone: 1. P-waves undergo strong refraction when they encounter the core. 2. P-waves cannot pass through the outer core because it is liquid. 3. The P-wave shadow zone provided important evidence regarding Earth's core.
+A: 1 only
+B: 1 and 3 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: P-waves can pass through liquids, so statement 2 is incorrect. However, their velocity and direction change significantly when they enter the core. This produces the P-wave shadow zone and provides important evidence about Earth's core.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: P-wave shadow zone
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q13
+Question: Suppose seismic waves show a sudden increase in velocity at a particular depth inside Earth. What is the most appropriate interpretation?
+A: Temperature suddenly becomes constant.
+B: There is a significant change in the physical and/or compositional properties of Earth's interior.
+C: Density becomes zero.
+D: The region must consist entirely of gases.
+Answer: B
+Explanation: Seismic velocity depends on properties such as density, elasticity and physical state. A sudden change can therefore indicate a seismic discontinuity, where material properties change significantly.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Seismic discontinuity
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q14
+Question: Consider the following as possible sources of Earth's internal heat: 1. Radioactive decay 2. Residual heat from Earth's formation 3. Heat associated with differentiation and gravitational processes. Which of the above contribute to Earth's internal heat?
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: Earth's internal heat has multiple origins, including radioactive decay and primordial heat retained from Earth's formation. Heat generated or released during differentiation also contributed to Earth's thermal evolution. Internal heat is fundamental to Earth's geological activity.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Internal heat
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q15
+Question: Statement-I: Temperature generally increases with depth inside Earth. Statement-II: The geothermal gradient remains uniform throughout Earth's entire interior.
+A: Both are correct and II explains I.
+B: Both are correct but II does not explain I.
+C: I is correct but II is incorrect.
+D: I is incorrect but II is correct.
+Answer: C
+Explanation: Temperature generally increases with depth, but the rate of increase is not uniform throughout Earth. Heat-transfer mechanisms and material properties vary with depth.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Geothermal gradient
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q16
+Question: Consider the following statements: 1. Earth's average density is considerably greater than that of typical surface rocks. 2. Earth's interior contains much denser material than the crust. 3. The core is substantially denser than the crust.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: Earth's average density is much greater than the density of ordinary surface rocks. This implies the presence of substantially denser material toward the interior. The core represents the densest major layer.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Earth density
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q17
+Question: Earth's magnetic field provides important information about its deep interior. Which explanation is most appropriate?
+A: It proves the entire core is solid.
+B: It proves the crust is metallic.
+C: It is produced mainly by atmospheric circulation.
+D: Movement of electrically conducting material in the outer core contributes to Earth's magnetic field.
+Answer: D
+Explanation: The geodynamo is associated with convection and movement of electrically conducting material in the liquid outer core. This generates Earth's large-scale magnetic field.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Geodynamo
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q18
+Question: Consider the following pairs: 1. Moho — Crust and mantle 2. Lithosphere–asthenosphere boundary — Stronger lithosphere and weaker asthenosphere 3. Lehmann discontinuity — Mantle and outer core. Which of the pairs are correctly matched?
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: Moho separates crust and mantle. The lithosphere–asthenosphere boundary represents a major mechanical transition. The Lehmann discontinuity is associated with the boundary between the inner and outer core, not mantle and outer core.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Discontinuities
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q19
+Question: An earthquake-generated S-wave is detected at one station but not at another station located on a different side of Earth. Which inference is most appropriate?
+A: S-waves can travel only through gases.
+B: The wave path may have encountered a liquid region inside Earth.
+C: The crust must be completely liquid.
+D: S-waves always travel faster than P-waves.
+Answer: B
+Explanation: S-waves cannot travel through liquids. Their absence along particular paths therefore provides evidence for the liquid outer core. This is a classic example of using indirect seismic evidence to infer Earth's internal structure.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: S-wave behaviour
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q20
+Question: Consider the following statements regarding the Lehmann discontinuity: 1. It represents the boundary between Earth's outer and inner core. 2. Seismic observations played an important role in identifying this boundary. 3. Its identification supports the conclusion that Earth's core is not entirely liquid.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: The Lehmann discontinuity separates the liquid outer core from the solid inner core. Seismic-wave behaviour provided evidence for the inner core, demonstrating that Earth's core is not entirely liquid.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Lehmann discontinuity
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q21
+Question: Consider the following statements about Earth's crust: 1. Oceanic crust is generally thinner than continental crust. 2. Oceanic crust is generally denser than continental crust. 3. Oceanic crust is predominantly granitic in composition.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: Oceanic crust is generally thinner and denser than continental crust. It is predominantly basaltic, not granitic. Continental crust contains a greater proportion of lighter silica-rich rocks.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Oceanic crust
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q22
+Question: Which of the following observations would provide the strongest evidence for a change in Earth's internal material across a boundary?
+A: Constant seismic velocity
+B: Sudden change in seismic-wave velocity
+C: Constant atmospheric pressure
+D: Change in surface vegetation
+Answer: B
+Explanation: Seismic waves respond to changes in density, elasticity and physical state. A sudden velocity change therefore provides evidence for a discontinuity between regions with different properties.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Seismic velocity
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q23
+Question: Consider the following statements regarding P-waves: 1. They are compressional waves. 2. Particle motion is broadly parallel to the direction of propagation. 3. They cannot travel through liquids.
+A: 1 and 2 only
+B: 1 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: A
+Explanation: P-waves are primary/compressional waves. Particle motion is parallel to the direction of wave propagation. Unlike S-waves, P-waves can travel through liquids, so statement 3 is incorrect.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: P-waves
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q24
+Question: Consider the following statements regarding S-waves: 1. They are shear waves. 2. Their particle motion is perpendicular to the direction of propagation. 3. They can travel through liquids in the same way as solids.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: S-waves are shear/transverse waves and involve particle motion perpendicular to propagation. Liquids do not support the required shear deformation, so S-waves cannot propagate through them.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: S-waves
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q25
+Question: Why is the study of Earth's interior largely dependent on indirect evidence?
+A: Earth's interior contains no minerals.
+B: Humans cannot directly access most of the deep interior because of extreme depth, temperature and pressure.
+C: Seismic waves do not enter Earth.
+D: Earth's interior is entirely gaseous.
+Answer: B
+Explanation: Direct sampling is limited to relatively shallow depths. Scientists therefore rely on seismic waves, gravity, magnetic observations, heat flow, meteorites and other indirect evidence to reconstruct Earth's internal structure.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Indirect evidence
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q26
+Question: Which of the following combinations is most appropriate?
+A: Moho — Inner core boundary
+B: Gutenberg discontinuity — Mantle–core boundary
+C: Lehmann discontinuity — Crust–mantle boundary
+D: Lithosphere–asthenosphere boundary — Inner core boundary
+Answer: B
+Explanation: The Gutenberg discontinuity marks the transition between the mantle and outer core. Moho marks the crust–mantle transition, while Lehmann is associated with the inner-core boundary.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Gutenberg discontinuity
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q27
+Question: If S-waves are observed to disappear beyond a particular region of Earth's surface, which conclusion is most defensible?
+A: The entire Earth below that point is liquid.
+B: The seismic path may have intersected a liquid layer.
+C: The earthquake did not generate shear waves.
+D: The crust is absent.
+Answer: B
+Explanation: The disappearance of S-waves does not mean that the whole Earth beneath the station is liquid. It indicates that the relevant wave path likely encountered a liquid region, most importantly the outer core.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: S-wave shadow
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q28
+Question: Consider the following statements about Earth's mantle: 1. It constitutes the largest layer by volume among the major compositional layers. 2. It is entirely molten. 3. It is composed predominantly of silicate minerals.
+A: 1 and 3 only
+B: 1 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: A
+Explanation: The mantle is the largest major compositional layer and consists predominantly of silicate minerals rich in magnesium and iron. It is not entirely molten; most of it is solid but capable of slow deformation.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Mantle composition
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q29
+Question: Which of the following best explains why Earth's interior can be studied using seismic waves?
+A: Seismic waves are unaffected by material properties.
+B: Their velocity and path change according to the properties of the materials through which they travel.
+C: They travel only through Earth's crust.
+D: They originate continuously from the core.
+Answer: B
+Explanation: Seismic waves interact with Earth's internal materials. Changes in velocity, refraction, reflection and wave type allow scientists to infer boundaries and physical states deep inside Earth.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Seismic evidence
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q30
+Question: A region inside Earth causes seismic waves to change direction rather than simply continue along a straight path. Which process is most directly involved?
+A: Refraction
+B: Evaporation
+C: Condensation
+D: Weathering
+Answer: A
+Explanation: When seismic waves encounter materials with different physical properties, their velocity changes and their path can bend. This is known as refraction and is especially important in understanding the core.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Seismic refraction
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q31
+Question: Consider the following statements: 1. The lithosphere is mechanically stronger than the asthenosphere. 2. Tectonic plates are parts of the lithosphere. 3. The asthenosphere is necessarily completely liquid.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: The lithosphere is the relatively rigid outer shell and tectonic plates form part of it. The asthenosphere is weaker and more ductile, but it is not necessarily completely liquid.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Lithosphere and asthenosphere
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 4
+Statements:
+
+Q32
+Question: Which of the following is the most appropriate reason for the existence of Earth's internal layers?
+A: Earth's materials were completely homogeneous from its formation onward.
+B: Differentiation under early Earth conditions led denser materials to concentrate toward the interior.
+C: Continents moved into the core.
+D: Atmospheric pressure created the core.
+Answer: B
+Explanation: During Earth's early thermal evolution, materials underwent differentiation. Dense materials, particularly metallic components, migrated toward the interior, while lighter silicate materials became concentrated in the outer portions.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Differentiation
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q33
+Question: Which of the following pairs is correctly matched?
+A: S-waves — Compressional waves
+B: P-waves — Shear waves
+C: P-waves — Can travel through liquids
+D: S-waves — Can freely pass through the liquid outer core
+Answer: C
+Explanation: P-waves are compressional and can travel through both solids and liquids. S-waves are shear waves and cannot pass through liquids.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: P-wave properties
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q34
+Question: Consider the following statements regarding Earth's inner core: 1. It is solid. 2. It lies within the liquid outer core. 3. Its existence was inferred substantially from seismic evidence.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: The inner core is considered solid, surrounded by the liquid outer core. Its existence and properties were established through interpretation of seismic-wave behaviour.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Inner core
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q35
+Question: Why does the P-wave shadow zone not imply that P-waves cannot travel through liquids?
+A: P-waves are electromagnetic waves.
+B: P-waves can travel through liquids, but their velocity and direction change substantially at the core boundary.
+C: P-waves stop permanently at the crust.
+D: P-waves are slower than S-waves.
+Answer: B
+Explanation: The P-wave shadow zone arises primarily because of strong refraction and changes in propagation through the core, not because P-waves are unable to travel through liquids.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: P-wave shadow zone
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q36
+Question: Consider the following statements: 1. The crust is the outermost major compositional layer of Earth. 2. The mantle lies beneath the crust. 3. The core lies between the crust and mantle.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: Earth's major compositional structure is crust → mantle → core. Therefore, the core does not lie between crust and mantle.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Earth layers
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q37
+Question: Which of the following is the least useful for directly inferring Earth's deep internal structure?
+A: Seismic-wave behaviour
+B: Earth's gravitational field
+C: Earth's magnetic field
+D: Daily variation in surface vegetation
+Answer: D
+Explanation: Seismic, gravitational and magnetic observations provide information about Earth's mass distribution, internal materials and deep dynamics. Surface vegetation does not directly reveal the structure of the deep interior.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Evidence for interior
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q38
+Question: Consider the following statements about the continental crust: 1. It is generally thicker than oceanic crust. 2. It is generally less dense than oceanic crust. 3. Its greater buoyancy contributes to its persistence over geological timescales.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: Continental crust is generally thicker and less dense, making it relatively buoyant. This helps explain why continental crust tends to stand at higher elevations and survives longer than oceanic crust.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Continental crust
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapters 3–4
+Statements:
+
+Q39
+Question: A scientist observes that two seismic waves arrive at different times at a station from the same earthquake. Which property is primarily responsible?
+A: Different propagation velocities
+B: Different atmospheric humidity
+C: Earth's rotation alone
+D: Surface vegetation
+Answer: A
+Explanation: Different seismic waves travel at different velocities. In particular, P-waves travel faster than S-waves, producing a measurable difference in arrival times.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Seismic velocity
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q40
+Question: Which of the following best describes a seismic discontinuity?
+A: A region where atmospheric pressure suddenly changes
+B: A boundary across which physical or compositional properties of Earth change significantly
+C: A permanent earthquake zone at Earth's surface
+D: A region containing only magma
+Answer: B
+Explanation: Seismic discontinuities are inferred from changes in the propagation of seismic waves. They indicate significant transitions in composition, density, elasticity or physical state.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Seismic discontinuity
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q41
+Question: Statement-I: S-waves provide evidence for the liquid nature of Earth's outer core. Statement-II: S-waves cannot propagate through liquids.
+A: Both are correct and II explains I.
+B: Both are correct but II does not explain I.
+C: I is correct but II is incorrect.
+D: I is incorrect but II is correct.
+Answer: A
+Explanation: S-waves cannot travel through liquids. Their disappearance along paths crossing the outer core therefore provides strong evidence that the outer core is liquid.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: S-waves and outer core
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q42
+Question: Which of the following would most likely increase the P–S arrival-time difference at a seismic station?
+A: Moving the station closer to the earthquake
+B: Increasing the distance between the earthquake and the station
+C: Eliminating the earthquake source
+D: Making P-waves slower than S-waves
+Answer: B
+Explanation: Since P-waves travel faster than S-waves, the difference in their arrival times generally increases with distance from the earthquake source.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: P-S time difference
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q43
+Question: Which of the following best explains why the core is believed to contain a large proportion of metallic material?
+A: Seismic and density evidence combined with Earth's differentiation history
+B: Presence of vegetation at the surface
+C: Ocean currents
+D: Cloud formation
+Answer: A
+Explanation: Earth's high average density, internal differentiation and seismic evidence are consistent with a dense, metallic core. Iron and nickel are especially important in conventional models of core composition.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Core composition
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q44
+Question: Consider the following statements: 1. Seismic waves provide indirect evidence about Earth's interior. 2. Earth's internal heat influences geological processes. 3. The physical state of internal layers has no effect on seismic-wave propagation.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: Seismic evidence is fundamental to understanding Earth's interior, and internal heat drives important geological processes. Physical state does affect seismic propagation, particularly the inability of S-waves to travel through liquids.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Earth interior evidence
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q45
+Question: Which of the following represents the correct broad sequence from Earth's surface toward its centre?
+A: Crust → Mantle → Outer Core → Inner Core
+B: Crust → Outer Core → Mantle → Inner Core
+C: Mantle → Crust → Outer Core → Inner Core
+D: Crust → Inner Core → Mantle → Outer Core
+Answer: A
+Explanation: From the surface inward, Earth's major layers are crust, mantle, outer core and inner core.
+Marks: 1
+Negative: 0.33
+Difficulty: easy
+Concept: Earth layers
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q46
+Question: Consider the following statements regarding Earth's outer core: 1. It is predominantly liquid. 2. It lies below the mantle. 3. Its movement contributes to Earth's magnetic field.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: D
+Explanation: The outer core is a liquid layer beneath the mantle. Motion of its electrically conducting material is associated with Earth's magnetic-field generation through the geodynamo.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Outer core and geodynamo
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q47
+Question: Which of the following best captures the importance of the Moho?
+A: It proves that the entire mantle is liquid.
+B: It represents a major seismic boundary between crust and mantle.
+C: It separates the outer and inner core.
+D: It represents Earth's magnetic-field boundary.
+Answer: B
+Explanation: The Mohorovičić discontinuity is the seismic boundary separating Earth's crust from the mantle, identified through changes in seismic-wave behaviour.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Moho
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q48
+Question: Consider the following statements about Earth's internal heat: 1. It contributes to mantle convection and geological activity. 2. Radioactive decay contributes to internal heat. 3. Earth's interior has completely lost all primordial heat.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: Internal heat contributes to Earth's geological activity, and radioactive decay is an important heat source. Earth has also retained some primordial heat; therefore, statement 3 is incorrect.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: Internal heat
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q49
+Question: A researcher concludes that a particular internal layer must be liquid solely because P-waves pass through it. Is this conclusion justified?
+A: Yes, because P-waves pass only through liquids.
+B: Yes, because P-waves cannot pass through solids.
+C: No, because P-waves can propagate through both solids and liquids.
+D: No, because P-waves exist only at Earth's surface.
+Answer: C
+Explanation: P-waves are capable of travelling through both solid and liquid media. Therefore, their presence alone cannot establish that a layer is liquid. S-wave behaviour and changes in P-wave velocity and refraction provide additional evidence.
+Marks: 1
+Negative: 0.33
+Difficulty: hard
+Concept: P-wave interpretation
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3
+Statements:
+
+Q50
+Question: Consider the following statements: 1. Seismic waves provide indirect evidence about Earth's interior. 2. Differences in seismic-wave behaviour help identify internal boundaries. 3. Earth's entire internal structure has been directly sampled by drilling.
+A: 1 only
+B: 1 and 2 only
+C: 2 and 3 only
+D: 1, 2 and 3
+Answer: B
+Explanation: Scientists largely understand Earth's deep interior through indirect evidence, especially seismic waves. Changes in velocity, refraction, reflection and the presence or absence of different wave types reveal internal boundaries. Humans have not directly sampled Earth's entire deep interior.
+Marks: 1
+Negative: 0.33
+Difficulty: medium
+Concept: Indirect evidence
+Source: NCERT Class XI, Fundamentals of Physical Geography, Chapter 3 — Interior of the Earth
+Statements:

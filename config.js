@@ -85,3 +85,16 @@ if(location.pathname.endsWith('/test-series.html')){
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootCASeries,{once:true});else bootCASeries();
 }
+
+// Homepage layout fix: remove the redundant standalone Published Tests section.
+// Individual tests remain available inside their respective Test Series pages.
+if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.pathname.endsWith('/')){
+  const removePublishedTestsSection=()=>{
+    const headings=[...document.querySelectorAll('h2')];
+    const heading=headings.find(h=>h.textContent.trim()==='Published Tests');
+    if(!heading)return;
+    const section=heading.closest('section');
+    if(section)section.remove();
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',removePublishedTestsSection,{once:true});else removePublishedTestsSection();
+}

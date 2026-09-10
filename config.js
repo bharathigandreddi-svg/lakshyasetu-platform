@@ -40,6 +40,11 @@ if(location.pathname.endsWith('/student-results.html')||location.pathname.endsWi
 
 // Homepage CA structure: keep Current Affairs monthly practice in the main Test Series area.
 if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.pathname.endsWith('/')){
+  // Hide the old standalone Published Tests block immediately, before homepage rendering.
+  const style=document.createElement('style');
+  style.textContent='section:has(#testCards){display:none!important}';
+  (document.head||document.documentElement).appendChild(style);
+
   const arrangeHomepageCA=()=>{
     const cards=document.getElementById('seriesCards');
     if(!cards)return;
@@ -50,6 +55,8 @@ if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.p
     }
     const lower=[...document.querySelectorAll('a')].find(a=>a.textContent.trim()==='Practice CA Tests'&&a.closest('.ca-card'));
     if(lower)lower.remove();
+    const heading=[...document.querySelectorAll('h2')].find(h=>h.textContent.trim()==='Published Tests');
+    if(heading?.closest('section'))heading.closest('section').remove();
   };
   const bootCA=()=>{
     arrangeHomepageCA();
@@ -84,17 +91,4 @@ if(location.pathname.endsWith('/test-series.html')){
     if(content)new MutationObserver(arrangeCASeries).observe(content,{childList:true,subtree:true});
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootCASeries,{once:true});else bootCASeries();
-}
-
-// Homepage layout fix: remove the redundant standalone Published Tests section.
-// Individual tests remain available inside their respective Test Series pages.
-if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.pathname.endsWith('/')){
-  const removePublishedTestsSection=()=>{
-    const headings=[...document.querySelectorAll('h2')];
-    const heading=headings.find(h=>h.textContent.trim()==='Published Tests');
-    if(!heading)return;
-    const section=heading.closest('section');
-    if(section)section.remove();
-  };
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',removePublishedTestsSection,{once:true});else removePublishedTestsSection();
 }

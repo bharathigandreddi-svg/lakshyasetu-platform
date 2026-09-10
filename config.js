@@ -58,3 +58,30 @@ if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.p
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootCA,{once:true});else bootCA();
 }
+
+// Test Series page CA structure: Current Affairs is monthly, not static subject/topic based.
+if(location.pathname.endsWith('/test-series.html')){
+  const arrangeCASeries=()=>{
+    const params=new URLSearchParams(location.search);
+    const seriesId=Number(params.get('series')||0);
+    if(!seriesId)return;
+    const title=document.getElementById('title');
+    const content=document.getElementById('content');
+    if(!content||!title)return;
+    const isCA=seriesId===4||/current\s*affairs/i.test(title.textContent||'');
+    if(!isCA||content.dataset.caMonthly)return;
+    title.textContent='Current Affairs Test Series';
+    const sub=document.getElementById('sub');
+    if(sub)sub.textContent='Year → Month → 6 Tests';
+    const crumb=document.getElementById('crumb');
+    if(crumb)crumb.innerHTML='<a class="back" href="test-series.html">← All Test Series</a>';
+    content.innerHTML='<div class="card"><div class="row"><div><h2>Current Affairs Test Series</h2><p class="meta">Monthly current-affairs MCQs: six 50-question tests per month · ₹2 per test · ₹10 monthly · ₹100 yearly.</p></div><button class="btnx buy" type="button" onclick="window.LSBuy?window.LSBuy({product_type:\'current_affairs_year\',product_key:\'2026\'},\'LakshyaSetu - Current Affairs 2026 — Year Package\'):alert(\'Payment module is loading. Please try again\')">Buy Year ₹100</button></div><div class="actions"><a class="btnx" href="current-affairs-tests.html">Open Monthly Current Affairs Tests →</a></div></div>';
+    content.dataset.caMonthly='1';
+  };
+  const bootCASeries=()=>{
+    arrangeCASeries();
+    const content=document.getElementById('content');
+    if(content)new MutationObserver(arrangeCASeries).observe(content,{childList:true,subtree:true});
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootCASeries,{once:true});else bootCASeries();
+}

@@ -38,12 +38,13 @@ jobs:
               if p.name.lower()=='admin.html' and 'exam-experience-v8.js' not in text and '</body>' in text:
                   text=text.replace('</body>','<script src="exam-experience-v8.js?v=20260901-1600" defer></script></body>')
               if p.name.lower()=='home.html':
-                  # Only remove the duplicate standalone Published Tests section.
                   text=text.replace('src="config.js"','src="config.js?v=20260910-0800"')
                   text=re.sub(r'<section class="section">(?:(?!</section>).)*<div id="testCards"\b.*?</section>','',text,flags=re.S)
-                  # Preserve the existing JS target so the unchanged homepage logic does not throw.
                   if 'id="testCards"' not in text:
                       text=text.replace('</main>','<div id="testCards" style="display:none"></div></main>',1)
+              if p.name.lower()=='test-builder-v2.html' and '</body>' in text:
+                  patch='''<script>(function(){function boot(){const series=document.getElementById("series"),subject=document.getElementById("subject"),topic=document.getElementById("topic");if(!series||!subject||!topic||String(series.value)!=="4"||subject.dataset.caStable)return;subject.dataset.caStable="1";const original=subject.onchange;subject.onchange=async function(){const chosen=String(this.value);if(chosen==="19"){if(original)await original.call(this);this.value="19";topic.innerHTML="<option value=\\"\\">Choose…</option><option value=\\"54\\">National Current Affairs</option><option value=\\"new\\">＋ Create New Topic</option>";topic.value="54";return;}if(original)await original.call(this)};if(String(subject.value)==="19")subject.onchange()}const tick=setInterval(()=>{if(String(document.getElementById("series")?.value)==="4"){boot();clearInterval(tick)}},100);setTimeout(()=>clearInterval(tick),15000)})();</script>'''
+                  text=text.replace('</body>',patch+'</body>')
               p.write_text(text,encoding='utf-8')
           PY
       - name: Upload artifact

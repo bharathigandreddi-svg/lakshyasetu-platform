@@ -11,3 +11,29 @@ window.getLakshyaSetuDb=function(){
   );
   return window.__LS_DB;
 };
+
+// Results-page QA fix: make Attempted Rate explicit without changing the DB schema.
+if(location.pathname.endsWith('/student-results.html')||location.pathname.endsWith('student-results.html')){
+  const addAttemptedRate=()=>{
+    const detail=document.getElementById('detail');
+    if(!detail||detail.dataset.attemptedRateFixed)return;
+    const stat=[...detail.querySelectorAll('.stat')].find(el=>el.querySelector('b')?.textContent.trim()==='Attempted');
+    if(!stat)return;
+    const m=stat.querySelector('strong')?.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+    if(!m)return;
+    const attempted=Number(m[1]),total=Number(m[2]);
+    const rate=total?attempted/total*100:0;
+    const rateStat=document.createElement('div');
+    rateStat.className='stat';
+    rateStat.innerHTML='<b>Attempted Rate</b><strong>'+rate.toFixed(1)+'%</strong>';
+    const grid=stat.parentElement;
+    grid.appendChild(rateStat);
+    detail.dataset.attemptedRateFixed='1';
+  };
+  const boot=()=>{
+    addAttemptedRate();
+    const detail=document.getElementById('detail');
+    if(detail)new MutationObserver(addAttemptedRate).observe(detail,{childList:true,subtree:true});
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+}

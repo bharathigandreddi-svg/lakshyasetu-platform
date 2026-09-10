@@ -38,10 +38,10 @@ jobs:
               if p.name.lower()=='admin.html' and 'exam-experience-v8.js' not in text and '</body>' in text:
                   text=text.replace('</body>','<script src="exam-experience-v8.js?v=20260901-1600" defer></script></body>')
               if p.name.lower()=='home.html':
-                  # Home must not show a duplicate standalone Published Tests block.
-                  # Individual tests remain available inside their respective Test Series pages.
+                  # Only remove the duplicate standalone Published Tests section.
+                  text=text.replace('src="config.js"','src="config.js?v=20260910-0800"')
                   text=re.sub(r'<section class="section">(?:(?!</section>).)*<div id="testCards"\b.*?</section>','',text,flags=re.S)
-                  # Keep the existing homepage JavaScript safe after removing that section.
+                  # Preserve the existing JS target so the unchanged homepage logic does not throw.
                   if 'id="testCards"' not in text:
                       text=text.replace('</main>','<div id="testCards" style="display:none"></div></main>',1)
               p.write_text(text,encoding='utf-8')

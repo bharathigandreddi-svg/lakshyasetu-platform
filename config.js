@@ -53,3 +53,33 @@ if(location.pathname.endsWith('/test-series.html')){
   const boot=()=>{arrangeCASeries();const c=document.getElementById('content');if(c)new MutationObserver(arrangeCASeries).observe(c,{childList:true,subtree:true});};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 }
+
+// Current Affairs Test Builder: when Test Series 4 is selected, use the existing
+// Current Affairs → National Current Affairs mapping automatically. Do not create
+// a new subject/topic or change the regular builder flow for other series.
+if(location.pathname.endsWith('/test-builder-v2.html')){
+  const forceCurrentAffairsMapping=()=>{
+    const series=document.getElementById('series'),subject=document.getElementById('subject'),topic=document.getElementById('topic');
+    if(!series||!subject||!topic||String(series.value)!=='4')return false;
+    const currentOption=[...subject.options].find(o=>String(o.value)==='19');
+    if(!currentOption)return false;
+    [...subject.options].forEach(o=>{if(String(o.value)!=='19'&&o.value!=='')o.hidden=true});
+    subject.value='19';
+    if(typeof subject.onchange==='function')subject.onchange();
+    setTimeout(()=>{
+      const national=[...topic.options].find(o=>String(o.value)==='54');
+      if(national){[...topic.options].forEach(o=>{if(String(o.value)!=='54'&&o.value!=='')o.hidden=true});topic.value='54';if(typeof topic.onchange==='function')topic.onchange();}
+    },0);
+    return true;
+  };
+  const installCurrentAffairsBuilder=()=>{
+    const series=document.getElementById('series');if(!series)return;
+    if(series.dataset.caMappingInstalled)return;
+    series.dataset.caMappingInstalled='1';
+    const original=series.onchange;
+    series.onchange=async function(){if(original)await original.call(this);setTimeout(forceCurrentAffairsMapping,0)};
+    const timer=setInterval(()=>{if(forceCurrentAffairsMapping()){clearInterval(timer)}},250);
+    setTimeout(()=>clearInterval(timer),15000);
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installCurrentAffairsBuilder,{once:true});else installCurrentAffairsBuilder();
+}

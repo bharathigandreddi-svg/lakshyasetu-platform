@@ -21,21 +21,26 @@
     if(!qbox||!qs?.length)return;
     const lang=getLang();
     if(lang==='en')return;
-    const m=(qbox.querySelector('p')?.textContent||'').match(/Question\s+(\d+)\s+of\s+(\d+)/i);if(!m)return;
-    const index=Number(m[1])-1;
+    let index=-1;
+    const marker=(qbox.querySelector('.qnum')||qbox.querySelector('p'))?.textContent||'';
+    const m=marker.match(/Question\s+(\d+)\s+of\s+(\d+)/i);if(m)index=Number(m[1])-1;
+    if(index<0){const text=qbox.querySelector('.question, h2')?.textContent?.trim()||'';index=qs.findIndex(q=>String(q.question||'').trim()===text);}
+    if(index<0)return;
     if(cache.__lang!==lang){cache=await getTranslations(lang);cache.__lang=lang;}
     const q=qs[index],tr=q&&cache[q.id];
     if(!tr)return;
-    const h=qbox.querySelector('h2');if(h)h.textContent=tr.question||h.textContent;
-    const opts=[...qbox.querySelectorAll('.opt')];['a','b','c','d'].forEach((k,i)=>{const b=opts[i];if(!b)return;b.innerHTML='<b>'+k.toUpperCase()+'.</b> '+(tr['option_'+k]||q['option_'+k]||'')});
+    const h=qbox.querySelector('.question')||qbox.querySelector('h2');if(h)h.textContent=tr.question||h.textContent;
+    const opts=[...qbox.querySelectorAll('.option, .opt')];['a','b','c','d'].forEach((k,i)=>{const b=opts[i];if(!b)return;const letter=b.querySelector('.letter')?.textContent?.trim()||k.toUpperCase()+'.';const text=tr['option_'+k]||q['option_'+k]||'';if(b.classList.contains('option'))b.innerHTML='<span class="letter">'+letter+'</span><span>'+text+'</span>';else b.innerHTML='<b>'+k.toUpperCase()+'.</b> '+text});
     const st=qbox.querySelector('.statement');if(st&&tr.statements)st.innerHTML='<b>Statements / Data</b><br>'+String(tr.statements).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));
   }
   async function applyCurrentLanguage(){
-    const qbox=document.getElementById('question');if(!qbox)return;
     const testId=Number(new URLSearchParams(location.search).get('test')||new URLSearchParams(location.search).get('test_id')||0);
     const qs=window.__LS_TRANSLATION_QS||(testId?await loadTranslationQuestions(testId):[]);
     window.__LS_TRANSLATION_QS=qs;
-    await applyLanguageToQuestionBox(qbox,qs);
+    const qbox=document.getElementById('question');
+    if(qbox)await applyLanguageToQuestionBox(qbox,qs);
+    const adminQ=document.querySelector('#app .qcard');
+    if(adminQ)await applyLanguageToQuestionBox(adminQ,qs);
   }
   function adminPreviewGate(){
     const app=document.getElementById('app');
@@ -46,7 +51,7 @@
     wrap.style.cssText='position:fixed;inset:0;background:rgba(15,35,63,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
     wrap.innerHTML='<div style="background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:28px;max-width:560px;width:100%;box-shadow:0 18px 50px rgba(15,35,63,.22)"><div style="font-size:11px;font-weight:900;color:#2457a6;letter-spacing:.04em">LAKSHYASETU · TEST LANGUAGE</div><h1 style="margin:8px 0;color:#173b67;font-size:25px">Select Test Language</h1><p style="color:#526174;line-height:1.5;margin-bottom:0">Choose the language before beginning this test. The Home page does not have a language selector.</p>'+languageButtons()+'<p style="font-size:12px;color:#64748b;margin:14px 0 0">Your selection is used for this test only.</p></div>';
     document.body.appendChild(wrap);
-    wrap.querySelectorAll('[data-lang]').forEach(btn=>btn.onclick=async()=>{setLang(btn.dataset.lang);wrap.remove();cache={};if(getLang()!=='en')await applyCurrentLanguage()});
+    wrap.querySelectorAll('[data-lang]').forEach(btn=>btn.onclick=async()=>{setLang(btn.dataset.lang);wrap.remove();cache={};await applyCurrentLanguage()});
   }
   function installStudent(){
     const app=document.getElementById('app'),qbox=document.getElementById('question');if(!app||!qbox)return;
@@ -63,8 +68,9 @@
   function installAdminPreview(){
     adminPreviewGate();
     const app=document.getElementById('app');if(!app)return;
-    const observer=new MutationObserver(()=>adminPreviewGate());
-    observer.observe(app,{childList:true,subtree:true});
+    const run=()=>{adminPreviewGate();if(!document.getElementById('lsAdminLanguageGate'))setTimeout(applyCurrentLanguage,50)};
+    new MutationObserver(run).observe(app,{childList:true,subtree:true});
+    window.addEventListener('ls-language-change',()=>{cache={};setTimeout(applyCurrentLanguage,50)});
   }
   function boot(){if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.pathname.endsWith('/'))installHome();if(location.pathname.endsWith('/student-test.html'))installStudent();if(location.pathname.endsWith('/student-v2.html'))installStudentHub();if(location.pathname.endsWith('/admin-test-builder.html'))installAdmin();if(location.pathname.endsWith('/admin-test-preview.html'))installAdminPreview()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

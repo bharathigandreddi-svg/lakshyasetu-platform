@@ -9,6 +9,7 @@ window.addEventListener("load",function(){const s=document.createElement("script
 window.addEventListener("load",function(){const s=document.createElement("script");s.src="exam-polish-v1.js?v=20260903-1600";s.defer=true;document.head.appendChild(s)});
 window.addEventListener("load",function(){const s=document.createElement("script");s.src="student-dashboard.js?v=20260903-1600";s.defer=true;document.head.appendChild(s)});
 window.addEventListener("load",function(){if(location.pathname.endsWith('/student-results.html')||location.pathname.endsWith('student-results.html')){const s=document.createElement('script');s.src='results-review-fix.js?v=20260912-1';s.defer=true;document.head.appendChild(s)}});
+window.addEventListener("load",function(){if(location.pathname.endsWith('/admin-test-preview.html')||location.pathname.endsWith('admin-test-preview.html')){const s=document.createElement('script');s.src='admin-preview-review-fix.js?v=20260912-1';s.defer=true;document.head.appendChild(s)}});
 
 // Results-page QA fix: Attempted Rate = Attempted / Total x 100.
 if(location.pathname.endsWith('/student-results.html')||location.pathname.endsWith('student-results.html')){

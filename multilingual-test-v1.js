@@ -1,6 +1,6 @@
 /* LakshyaSetu multilingual test layer — additive only. */
 (function(){
-  const KEY='ls_test_language', labels={en:'English',te:'తెలుగు',hi:'हिन्दీ'};
+  const KEY='ls_test_language', labels={en:'English',te:'తెలుగు',hi:'हिन्दी'};
   const getLang=()=>localStorage.getItem(KEY)||'en';
   const setLang=l=>{localStorage.setItem(KEY,l);window.dispatchEvent(new CustomEvent('ls-language-change',{detail:l}));};
   window.LSLanguage={get:getLang,set:setLang,labels};
@@ -44,14 +44,14 @@
   }
   function adminPreviewGate(){
     const app=document.getElementById('app');
-    if(!app||document.getElementById('lsAdminLanguageGate'))return;
+    if(!app||document.getElementById('lsAdminLanguageGate')||window.__LS_ADMIN_LANGUAGE_SELECTED)return;
     if(!/admin-test-preview\.html$/i.test(location.pathname))return;
     const wrap=document.createElement('div');
     wrap.id='lsAdminLanguageGate';
     wrap.style.cssText='position:fixed;inset:0;background:rgba(15,35,63,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
     wrap.innerHTML='<div style="background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:28px;max-width:560px;width:100%;box-shadow:0 18px 50px rgba(15,35,63,.22)"><div style="font-size:11px;font-weight:900;color:#2457a6;letter-spacing:.04em">LAKSHYASETU · TEST LANGUAGE</div><h1 style="margin:8px 0;color:#173b67;font-size:25px">Select Test Language</h1><p style="color:#526174;line-height:1.5;margin-bottom:0">Choose the language before beginning this test. The Home page does not have a language selector.</p>'+languageButtons()+'<p style="font-size:12px;color:#64748b;margin:14px 0 0">Your selection is used for this test only.</p></div>';
     document.body.appendChild(wrap);
-    wrap.querySelectorAll('[data-lang]').forEach(btn=>btn.onclick=async()=>{setLang(btn.dataset.lang);wrap.remove();cache={};await applyCurrentLanguage()});
+    wrap.querySelectorAll('[data-lang]').forEach(btn=>btn.onclick=async()=>{window.__LS_ADMIN_LANGUAGE_SELECTED=true;setLang(btn.dataset.lang);wrap.remove();cache={};await applyCurrentLanguage()});
   }
   function installStudent(){
     const app=document.getElementById('app'),qbox=document.getElementById('question');if(!app||!qbox)return;
@@ -68,7 +68,7 @@
   function installAdminPreview(){
     adminPreviewGate();
     const app=document.getElementById('app');if(!app)return;
-    const run=()=>{adminPreviewGate();if(!document.getElementById('lsAdminLanguageGate'))setTimeout(applyCurrentLanguage,50)};
+    const run=()=>{adminPreviewGate();if(!document.getElementById('lsAdminLanguageGate')&&window.__LS_ADMIN_LANGUAGE_SELECTED)setTimeout(applyCurrentLanguage,50)};
     new MutationObserver(run).observe(app,{childList:true,subtree:true});
     window.addEventListener('ls-language-change',()=>{cache={};setTimeout(applyCurrentLanguage,50)});
   }

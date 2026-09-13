@@ -21,5 +21,5 @@
   function installAdminPreview(){adminPreviewGate();const app=document.getElementById('app');if(!app)return;const run=()=>{adminPreviewGate();if(!document.getElementById('lsAdminLanguageGate')&&window.__LS_ADMIN_LANGUAGE_SELECTED)setTimeout(applyCurrentLanguage,50)};new MutationObserver(run).observe(app,{childList:true,subtree:true});window.addEventListener('ls-language-change',()=>{cache={};setTimeout(applyCurrentLanguage,50)})}
   function boot(){if(location.pathname.endsWith('/home.html')||location.pathname==='/'||location.pathname.endsWith('/'))installHome();if(location.pathname.endsWith('/student-test.html'))installStudent();if(location.pathname.endsWith('/student-v2.html'))installStudentHub();if(location.pathname.endsWith('/admin-test-builder.html'))installAdmin();if(location.pathname.endsWith('/admin-test-preview.html'))installAdminPreview()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  const fixScript=document.createElement('script');fixScript.src='multilingual-translation-fix.js?v=20260912-2';fixScript.defer=true;document.head.appendChild(fixScript);
+  const fixScript=document.createElement('script');fixScript.src='multilingual-translation-fix.js?v=20260913-5';fixScript.defer=true;document.head.appendChild(fixScript);
 })();

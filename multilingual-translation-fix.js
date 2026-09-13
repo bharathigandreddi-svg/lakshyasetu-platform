@@ -4,7 +4,7 @@
   const testId=()=>{const p=new URLSearchParams(location.search);return Number(p.get('test')||p.get('test_id')||0)};
   const lang=()=>window.LSLanguage?.get?.()||localStorage.getItem('ls_test_language')||'en';
   const db=()=>getLakshyaSetuDb();
-  async function rows(language){const id=testId();if(!id||language==='en')return [];try{const r=await db().from('ls_test_question_translations').select('test_question_id,question,option_a,option_b,option_c,option_d,explanation,statements').eq('language',language);return r.error?[]:(r.data||[])}catch{return []}}
+  async function rows(language,qs){const id=testId();if(!id||language==='en')return [];try{const ids=(qs||[]).map(q=>q.id).filter(Boolean);if(!ids.length)return [];const r=await db().from('ls_test_question_translations').select('test_question_id,question,option_a,option_b,option_c,option_d,explanation,statements').eq('language',language).in('test_question_id',ids);return r.error?[]:(r.data||[])}catch{return []}}
   async function questions(){const id=testId();if(!id)return [];try{const r=await db().from('ls_test_questions').select('id,question,option_a,option_b,option_c,option_d,explanation,statements').eq('test_id',id).order('display_order',{ascending:true});return r.error?[]:(r.data||[])}catch{return []}}
   async function invokeTranslate(language){
     const id=testId();
@@ -28,9 +28,9 @@
   }
   async function ensure(language,qs){
     const id=testId(),key=id+':'+language;if(!id||!['te','hi'].includes(language))return [];
-    const existing=await rows(language);if(existing.length>=qs.length)return existing;
+    const existing=await rows(language,qs);if(existing.length>=qs.length)return existing;
     if(inflight[key])return inflight[key];
-    inflight[key]=(async()=>{try{showStatus('Generating '+(language==='te'?'Telugu':'Hindi')+' translation… please wait.');await invokeTranslate(language);return await rows(language)}catch(e){console.warn('LakshyaSetu translation service:',e);showStatus('Translation service error: '+(e.message||'Please try again.'));return []}finally{delete inflight[key]}})();
+    inflight[key]=(async()=>{try{showStatus('Generating '+(language==='te'?'Telugu':'Hindi')+' translation… please wait.');await invokeTranslate(language);return await rows(language,qs)}catch(e){console.warn('LakshyaSetu translation service:',e);showStatus('Translation service error: '+(e.message||'Please try again.'));return []}finally{delete inflight[key]}})();
     return inflight[key];
   }
   function escapeHtml(v){return String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[m]));}
@@ -47,7 +47,7 @@
   }
   async function apply(){
     const language=lang();if(language==='en')return;const qs=await questions();if(!qs.length)return;
-    let data=await rows(language);if(data.length<qs.length)data=await ensure(language,qs);if(data.length<qs.length)return;
+    let data=await rows(language,qs);if(data.length<qs.length)data=await ensure(language,qs);if(data.length<qs.length)return;
     const map={};data.forEach(x=>map[x.test_question_id]=x);
     const box=document.getElementById('question');if(box)await applyBox(box,qs,map,language);
     const admin=document.querySelector('#app .qcard');if(admin)await applyBox(admin,qs,map,language);

@@ -46,6 +46,13 @@ jobs:
                   text=text.replace('</body>','<script src="ca-builder-fix.js?v=20260910-0840" defer></script></body>')
               if p.name.lower()=='admin-test-builder.html' and '</body>' in text and 'ca-bulk-ui-fix.js' not in text:
                   text=text.replace('</body>','<script src="ca-bulk-ui-fix.js?v=20260911-1810" defer></script></body>')
+              if p.name.lower()=='admin-test-preview.html':
+                  old='async function guard(){const r=await sb.auth.getSession(),s=r?.data?.session;if(!s){location.href=\'login.html?next=\'+encodeURIComponent(location.href);return false}const p=await sb.from(\'profiles\').select(\'role\').eq(\'id\',s.user.id).maybeSingle();const role=p.data?.role||s.user.app_metadata?.role||s.user.user_metadata?.role||\'\';if(p.error||role!==\'admin\'){$(\'status\').className=\'card error\';$(\'status\').textContent=\'Admin access required.\';return false}$(\'status\').innerHTML=\'<b>Admin preview active.</b> Simulated student mode — no payment, real attempt, rank or publication is affected.\';return true}'
+                  new='async function guard(){let u=null;try{const r=await Promise.race([sb.auth.getUser(),new Promise((_,rej)=>setTimeout(()=>rej(new Error(\'Session check timed out\')),8000))]);u=r?.data?.user||null}catch(e){$(\'status\').className=\'card error\';$(\'status\').textContent=\'Unable to verify admin session. Please refresh once.\';return false}if(!u){location.href=\'login.html?next=\'+encodeURIComponent(location.href);return false}let p;try{p=await Promise.race([sb.from(\'profiles\').select(\'role\').eq(\'id\',u.id).maybeSingle(),new Promise((_,rej)=>setTimeout(()=>rej(new Error(\'Profile check timed out\')),8000))])}catch(e){$(\'status\').className=\'card error\';$(\'status\').textContent=\'Admin profile check timed out. Please refresh once.\';return false}const role=p.data?.role||u.app_metadata?.role||u.user_metadata?.role||\'\';if(p.error||role!==\'admin\'){$(\'status\').className=\'card error\';$(\'status\').textContent=\'Admin access required.\';return false}$(\'status\').innerHTML=\'<b>Admin preview active.</b> Simulated student mode — no payment, real attempt, rank or publication is affected.\';return true}'
+                  if old in text:
+                      text=text.replace(old,new)
+                  else:
+                      raise SystemExit('Expected admin preview guard not found')
               p.write_text(text,encoding='utf-8')
           PY
       - name: Upload artifact

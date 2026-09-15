@@ -48,6 +48,8 @@ jobs:
                   text=text.replace('</body>','<script src="ca-builder-fix.js?v=20260910-0840" defer></script></body>')
               if p.name.lower()=='admin-test-builder.html' and '</body>' in text and 'ca-bulk-ui-fix.js' not in text:
                   text=text.replace('</body>','<script src="ca-bulk-ui-fix.js?v=20260911-1810" defer></script></body>')
+              if p.name.lower()=='admin-test-preview.html' and '</body>' in text and 'admin-preview-init.js' not in text:
+                  text=text.replace('</body>','<script src="admin-preview-init.js?v=20260915-1800" defer></script></body>')
               p.write_text(text,encoding='utf-8')
           PY
       - name: Upload artifact

@@ -42,6 +42,8 @@ jobs:
                   text=re.sub(r'<section class="section">(?:(?!</section>).)*<div id="testCards"\b.*?</section>','',text,flags=re.S)
                   if 'id="testCards"' not in text:
                       text=text.replace('</main>','<div id="testCards" style="display:none"></div></main>',1)
+                  if '</body>' in text and 'home-data-fix.js' not in text:
+                      text=text.replace('</body>','<script src="home-data-fix.js?v=20260915-1740" defer></script></body>')
               if p.name.lower()=='test-builder-v2.html' and '</body>' in text and 'ca-builder-fix.js' not in text:
                   text=text.replace('</body>','<script src="ca-builder-fix.js?v=20260910-0840" defer></script></body>')
               if p.name.lower()=='admin-test-builder.html' and '</body>' in text and 'ca-bulk-ui-fix.js' not in text:
@@ -53,6 +55,8 @@ jobs:
                       text=text.replace(old,new)
                   else:
                       raise SystemExit('Expected admin preview guard not found')
+                  if '</body>' in text and 'admin-preview-boot-fix.js' not in text:
+                      text=text.replace('</body>','<script src="admin-preview-boot-fix.js?v=20260915-1740" defer></script></body>')
               p.write_text(text,encoding='utf-8')
           PY
       - name: Upload artifact

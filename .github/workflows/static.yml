@@ -48,8 +48,12 @@ jobs:
                   text=text.replace('</body>','<script src="ca-builder-fix.js?v=20260910-0840" defer></script></body>')
               if p.name.lower()=='admin-test-builder.html' and '</body>' in text and 'ca-bulk-ui-fix.js' not in text:
                   text=text.replace('</body>','<script src="ca-bulk-ui-fix.js?v=20260911-1810" defer></script></body>')
-              if p.name.lower()=='admin-test-preview.html' and '</body>' in text and 'admin-preview-init.js' not in text:
-                  text=text.replace('</body>','<script src="admin-preview-init.js?v=20260915-1800" defer></script></body>')
+              if p.name.lower()=='admin-test-preview.html':
+                  if '</body>' in text and 'admin-preview-init.js' not in text:
+                      text=text.replace('</body>','<script src="admin-preview-init.js?v=20260915-1800" defer></script></body>')
+                  text=text.replace('const sb=getLakshyaSetuDb(),params=', 'const sb=window.supabase.createClient("https://byounbmdyuytoqqyhgos.supabase.co","sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}),params=', 1)
+                  text=text.replace("new Promise((_,rej)=>setTimeout(()=>rej(new Error('Session check timed out')),8000))", "new Promise((_,rej)=>setTimeout(()=>rej(new Error('Session check timed out — please sign in again')),5000))", 1)
+                  text=text.replace('config.js?v=20260915-1', 'config.js?v=20260915-2', 1)
               p.write_text(text,encoding='utf-8')
           PY
       - name: Upload artifact

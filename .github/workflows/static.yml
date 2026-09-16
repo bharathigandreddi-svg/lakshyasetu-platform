@@ -54,6 +54,7 @@ jobs:
                   text=text.replace('const sb=getLakshyaSetuDb(),params=', 'const sb=window.supabase.createClient("https://byounbmdyuytoqqyhgos.supabase.co","sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}),params=', 1)
                   text=text.replace("new Promise((_,rej)=>setTimeout(()=>rej(new Error('Session check timed out')),8000))", "new Promise((_,rej)=>setTimeout(()=>rej(new Error('Session check timed out — please sign in again')),5000))", 1)
                   text=text.replace('config.js?v=20260915-1', 'config.js?v=20260915-2', 1)
+              text=text.replace('multilingual-test-v1.js?v=20260913-6','multilingual-test-v1.js?v=20260916-1')
               p.write_text(text,encoding='utf-8')
           PY
       - name: Upload artifact

@@ -68,12 +68,14 @@
   async function applyBox(box,qs,map,lang){
     const i=questionIndex(box,qs);if(!box||i<0)return;
     const q=qs[i],tr=map[q.id]||{};
-    const field=async n=>String(tr[n]||'').trim()||await translate(q[n]||'',lang);
-    const h=box.querySelector('.question')||box.querySelector('h2');if(h)h.textContent=await field('question');
+    const fields=['question','option_a','option_b','option_c','option_d','statements','explanation'];
+    const values={};
+    await Promise.all(fields.map(async n=>{if(q[n])values[n]=String(tr[n]||'').trim()||await translate(q[n],lang)}));
+    const h=box.querySelector('.question')||box.querySelector('h2');if(h&&values.question)h.textContent=values.question;
     const opts=[...box.querySelectorAll('.option,.opt')];
-    for(let j=0;j<4;j++){const k=['a','b','c','d'][j],b=opts[j];if(!b)continue;const text=await field('option_'+k);if(b.classList.contains('option')){const letter=b.querySelector('.letter')?.textContent?.trim()||k.toUpperCase()+'.';b.innerHTML='<span class="letter">'+letter+'</span><span>'+text+'</span>'}else b.innerHTML='<b>'+k.toUpperCase()+'.</b> '+text;}
-    const st=box.querySelector('.statement');if(st&&q.statements){const t=await field('statements');if(t)st.innerHTML='<b>Statements / Data</b><br>'+t;}
-    const ex=box.querySelector('.explanation');if(ex&&q.explanation)ex.textContent=await field('explanation');
+    for(let j=0;j<4;j++){const k=['a','b','c','d'][j],b=opts[j];if(!b||!values['option_'+k])continue;const text=values['option_'+k];if(b.classList.contains('option')){const letter=b.querySelector('.letter')?.textContent?.trim()||k.toUpperCase()+'.';b.innerHTML='<span class="letter">'+letter+'</span><span>'+text+'</span>'}else b.innerHTML='<b>'+k.toUpperCase()+'.</b> '+text;}
+    const st=box.querySelector('.statement');if(st&&values.statements)st.innerHTML='<b>Statements / Data</b><br>'+values.statements;
+    const ex=box.querySelector('.explanation');if(ex&&values.explanation)ex.textContent=values.explanation;
     box.dataset.lsTranslated=lang+':'+q.id;
   }
   let running=false;

@@ -93,19 +93,31 @@
   }
   function install(){
     const path=location.pathname.toLowerCase();
+    const waitFor=(selector,cb)=>{
+      if(document.querySelector(selector)){cb();return;}
+      const mo=new MutationObserver(()=>{if(document.querySelector(selector)){mo.disconnect();cb()}});
+      mo.observe(document.documentElement,{childList:true,subtree:true});
+      setTimeout(()=>mo.disconnect(),15000);
+    };
     if(path.endsWith('/student-test.html')){
-      const q=document.getElementById('question');if(!q)return;
-      languageGate();
-      window.addEventListener('ls-language-change',()=>setTimeout(apply,100));
-      new MutationObserver(()=>{if(getLang()!=='en'&&!running)setTimeout(apply,250)}).observe(q,{childList:true,subtree:true});
+      waitFor('#question',()=>{
+        if(document.getElementById('lsLanguageGate'))return;
+        languageGate();
+        const q=document.getElementById('question');
+        window.addEventListener('ls-language-change',()=>setTimeout(apply,100));
+        new MutationObserver(()=>{if(getLang()!=='en'&&!running)setTimeout(apply,250)}).observe(q,{childList:true,subtree:true});
+      });
     }
     if(path.endsWith('/admin-test-preview.html')){
-      const app=document.getElementById('app');if(!app)return;
-      const gate=document.createElement('div');gate.id='lsAdminLanguageGate';gate.style.cssText='position:fixed;inset:0;background:rgba(15,35,63,.58);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
-      gate.innerHTML='<div style="background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:28px;max-width:560px;width:100%"><div style="font-size:11px;font-weight:900;color:#2457a6">LAKSHYASETU · TEST LANGUAGE</div><h1 style="margin:8px 0;color:#173b67">Select Test Language</h1><p style="color:#526174">Choose the language before beginning this test.</p>'+buttons()+'</div>';document.body.appendChild(gate);
-      gate.querySelectorAll('[data-lang]').forEach(b=>b.onclick=async()=>{setLang(b.dataset.lang);await apply();gate.remove()});
-      window.addEventListener('ls-language-change',()=>setTimeout(apply,100));
-      new MutationObserver(()=>{if(getLang()!=='en'&&!running)setTimeout(apply,250)}).observe(app,{childList:true,subtree:true});
+      waitFor('#app',()=>{
+        if(document.getElementById('lsAdminLanguageGate'))return;
+        const app=document.getElementById('app');
+        const gate=document.createElement('div');gate.id='lsAdminLanguageGate';gate.style.cssText='position:fixed;inset:0;background:rgba(15,35,63,.58);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+        gate.innerHTML='<div style="background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:28px;max-width:560px;width:100%"><div style="font-size:11px;font-weight:900;color:#2457a6">LAKSHYASETU · TEST LANGUAGE</div><h1 style="margin:8px 0;color:#173b67">Select Test Language</h1><p style="color:#526174">Choose the language before beginning this test.</p>'+buttons()+'</div>';document.body.appendChild(gate);
+        gate.querySelectorAll('[data-lang]').forEach(b=>b.onclick=async()=>{setLang(b.dataset.lang);await apply();gate.remove()});
+        window.addEventListener('ls-language-change',()=>setTimeout(apply,100));
+        new MutationObserver(()=>{if(getLang()!=='en'&&!running)setTimeout(apply,250)}).observe(app,{childList:true,subtree:true});
+      });
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();

@@ -2,7 +2,7 @@
   if(!/\/home\.html$/i.test(location.pathname))return;
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   const money=v=>Number(v||0).toLocaleString('en-IN');
-  const cfg=window.LAKSHYASETU_CONFIG||{};
+  const cfg=window.LAKSHYASETU_CONFIG||{supabaseUrl:'https://byounbmdyuytoqqyhgos.supabase.co',supabasePublishableKey:'sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa'};
   const base=(cfg.supabaseUrl||'')+'/rest/v1/';
   const hdr={apikey:cfg.supabasePublishableKey||'',Authorization:'Bearer '+(cfg.supabasePublishableKey||'')};
   const get=async path=>{const r=await Promise.race([fetch(base+path,{headers:hdr}),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),7000))]);if(!r.ok)throw new Error('Supabase request failed: '+r.status);return r.json()};
@@ -11,7 +11,8 @@
     {id:1,course_id:1,title:'UPSC Prelims Test Series 2027',description:'Comprehensive UPSC Civil Services Preliminary Examination test series.',price:999,n:2},
     {id:2,course_id:2,title:'APPSC Group 1 Test Series 2027',description:'APPSC Group 1 Preliminary Examination Test Series 2027.',price:799,n:2},
     {id:3,course_id:3,title:'APPSC Group 2',description:'APPSC Group 2 preliminary examination practice.',price:599,n:2},
-    {id:4,course_id:2,title:'Current Affairs Test Series',description:'Monthly current-affairs MCQs: six 50-question tests per month; ₹2 per test, ₹10 monthly and ₹100 yearly.',price:100,n:0}
+    {id:4,course_id:2,title:'Current Affairs Test Series',description:'Monthly current-affairs MCQs: six 50-question tests per month; ₹2 per test, ₹10 monthly and ₹100 yearly.',price:100,n:1},
+    {id:5,course_id:null,title:'PIB Current Affairs',description:'Ministry/Department → Year → Month → Tests. Official PIB-based exam revision.',price:0,n:3}
   ];
   function render(series,courses,tests,forcedCounts){
     const cm=new Map((courses||[]).map(c=>[Number(c.id),c]));
@@ -19,7 +20,7 @@
     const counts=new Map(),mcq=(tests||[]).reduce((n,t)=>n+Number(t.question_count||0),0);
     (tests||[]).forEach(t=>{const id=Number(t.test_series_id);counts.set(id,(counts.get(id)||0)+1)});
     const tc=document.getElementById('testCount'),mc=document.getElementById('mcqCount'),scn=document.getElementById('seriesCount');
-    if(tc)tc.textContent=(tests||[]).length||6;if(mc)mc.textContent=money(mcq||300);if(scn)scn.textContent=series.length;
+    if(tc)tc.textContent=(tests||[]).length || series.reduce((n,s)=>n+Number(forcedCounts?.[Number(s.id)]??s.n??0),0);if(mc)mc.textContent=money(mcq || 550);if(scn)scn.textContent=series.length;
     const cards=document.getElementById('seriesCards');
     if(cards)cards.innerHTML=series.map(s=>{const c=cm.get(Number(s.course_id)),n=forcedCounts?.[Number(s.id)]??counts.get(Number(s.id))??0;return `<article class="card"><div class="meta"><span>${esc(exam(c))}</span><span>${n} published tests</span></div><h3>${esc(s.title)}</h3><p>${esc(s.description||'Structured MCQ test series for focused preparation.')}</p><div class="actions"><span class="price">${Number(s.price)>0?'₹'+money(s.price):'Free'}</span>${Number(s.price)>0?`<button class="mini-btn buy" onclick="window.LSBuy&&window.LSBuy({product_type:'test_series',test_series_id:${Number(s.id)}},'LakshyaSetu - Test Series')">Buy Series</button>`:''}<a class="btn primary" href="test-series.html?exam=${encodeURIComponent(c?.id||'')}&series=${encodeURIComponent(s.id)}">View Series</a></div></article>`}).join('');
     const pub=document.getElementById('testCards');

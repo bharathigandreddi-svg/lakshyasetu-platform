@@ -102,6 +102,7 @@
       mo.observe(document.documentElement,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),15000);
     };
     if(path.endsWith('/student-test.html')){
+      if(window.__LS_DISABLE_INTERNAL_STUDENT_GATE)return;
       waitFor('#question',()=>{
         if(document.getElementById('lsLanguageGate'))return;
         languageGate();

@@ -34,7 +34,7 @@ async function boot(){
   const role=p.data?.role||s.user.app_metadata?.role||s.user.user_metadata?.role||'';
   if(role!=='admin'){$('status').className='card error';$('status').textContent='Admin access required.';return}
   $('status').className='card';$('status').innerHTML='<b>Admin preview active.</b> Select any test below. No real attempt, payment, rank or publication is affected.';$('app').classList.remove('hidden');
-  const q=await wait(db.from('ls_tests').select('id,title,question_count,duration_minutes,published,archived,test_series_id,course_subject_id,topic_id').eq('archived',false).order('id',{ascending:false}),8000);
+  const q=await wait(db.from('ls_tests').select('id,title,question_count,duration_minutes,published,archived,test_series_id,course_subject_id,topic_id').eq('archived',false).order('id',{ascending:true}),8000);
   if(q.error)throw q.error;tests=q.data||[];render();$('search').addEventListener('input',render)
 }
 function render(){const q=$('search').value.trim().toLowerCase();const rows=tests.filter(t=>(t.title||'').toLowerCase().includes(q));$('list').innerHTML=rows.length?rows.map(t=>'<div class="test"><div><div class="title">'+esc(t.title||'Untitled Test')+'</div><div class="meta"><span class="badge">ID '+t.id+'</span><span class="badge">'+Number(t.question_count||0)+' Q</span><span class="badge">'+Number(t.duration_minutes||0)+' min</span><span class="badge '+(!t.published?'draft':'')+'">'+(t.published?'PUBLISHED':'DRAFT')+'</span></div></div><a class="btn" href="admin-test-preview.html?test='+encodeURIComponent(t.id)+'">Open Preview →</a></div>').join(''):'<div class="card"><b>No tests found.</b><div class="muted">Try another search.</div></div>'}

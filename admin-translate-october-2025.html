@@ -41,7 +41,7 @@ main{max-width:820px;margin:32px auto;padding:20px}.panel{background:#fff;border
    for(const language of ['te','hi']){
     say('Generating '+(language==='te'?'Telugu':'Hindi')+'…');
     const {data,error}=await db.functions.invoke('translate-test',{body:{test_id:2735,language}});
-    if(error)throw new Error((language==='te'?'Telugu':'Hindi')+' translation failed: '+(error.message||error));
+    if(error){let detail=error.message||String(error);try{const ctx=error.context;if(ctx&&typeof ctx.json==='function'){const body=await ctx.json();detail=(body.error||body.message||JSON.stringify(body)||detail)}}catch{}throw new Error((language==='te'?'Telugu':'Hindi')+' translation failed: '+detail)}
     if(!data||!data.ok)throw new Error((language==='te'?'Telugu':'Hindi')+' translation failed: '+(data?.error||'No success confirmation'));
     say((language==='te'?'Telugu':'Hindi')+': function saved '+data.count+' translations.');
    }
@@ -52,7 +52,7 @@ main{max-width:820px;margin:32px auto;padding:20px}.panel{background:#fff;border
     if(count!==50)throw new Error('Verification failed for '+language+': expected 50 translation rows, found '+count+'.');
    }
    say('SUCCESS: both translation sets verified. Test remains unpublished for content review.');
-  }catch(e){say('ERROR: '+(e?.message||String(e)));console.error(e)}
+  }catch(e){say('ERROR: '+(e?.message||String(e)));say('If the function returns an error body, it will be shown here on the next attempt. No publishing was performed.');console.error(e)}
   finally{btn.disabled=false}
  };
 })();

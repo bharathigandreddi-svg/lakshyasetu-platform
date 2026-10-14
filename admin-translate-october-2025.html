@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>October 2025 Translation Helper | LakshyaSetu</title>
+<link rel="stylesheet" href="styles.css?v=21">
+<style>
+main{max-width:820px;margin:32px auto;padding:20px}.panel{background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:24px;box-shadow:0 8px 24px #102b4d12}h1{color:#173b67}.muted{color:#64748b;line-height:1.6}.btn{border:0;border-radius:9px;padding:12px 16px;background:#173b67;color:#fff;font-weight:800;cursor:pointer}.btn:disabled{opacity:.55;cursor:wait}.log{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;min-height:100px;margin-top:16px;font-size:13px}.warning{background:#fff8e8;border:1px solid #f1d28a;padding:12px;border-radius:10px;color:#77520a}
+</style></head>
+<body>
+<header class="top"><a class="brand" href="home.html">LakshyaSetu<small>Learn. Prepare. Achieve.</small></a></header>
+<main><section class="panel">
+<h1>October 2025 — Translation Helper</h1>
+<p class="muted">This helper runs the existing Supabase <code>translate-test</code> function for the October 2025 AP Current Affairs Test 1 (ID 2735). It generates Telugu and Hindi translations for the English master questions and saves them in the existing translation table. It does not publish the test.</p>
+<div class="warning"><b>Before starting:</b> Sign in to LakshyaSetu with an account that has permission to use the test translation function. Do not share this page as a public admin link.</div>
+<p><b>Test:</b> Test 1 — AP Current Affairs October 2025<br><b>Questions:</b> 50 · <b>Languages:</b> తెలుగు, हिन्दी</p>
+<button class="btn" id="run">Generate Telugu + Hindi translations</button>
+<div id="log" class="log" aria-live="polite">Ready. Click the button to begin.</div>
+</section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=20260924-pibfix"></script>
+<script>
+(async()=>{
+ const $=id=>document.getElementById(id), btn=$('run'), log=$('log');
+ const cfg=window.LAKSHYASETU_CONFIG||{supabaseUrl:'https://byounbmdyuytoqqyhgos.supabase.co',supabasePublishableKey:'sb_publishable_tCvBH8eh95-nXOChd2_sLQ__iDZIfNa'};
+ const db=typeof getLakshyaSetuDb==='function'?getLakshyaSetuDb():window.supabase.createClient(cfg.supabaseUrl,cfg.supabasePublishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ const say=t=>{log.textContent+=('\n'+t);log.scrollTop=log.scrollHeight};
+ btn.onclick=async()=>{
+  btn.disabled=true;log.textContent='Checking signed-in session…';
+  try{
+   const {data:{session},error:se}=await db.auth.getSession();
+   if(se)throw se;
+   if(!session){say('No active session found. Sign in to LakshyaSetu in this browser, then reload this page.');return}
+   const {data:test,error:te}=await db.from('ls_tests').select('id,title,published,question_count').eq('id',2735).maybeSingle();
+   if(te)throw te;
+   if(!test||test.title!=='Test 1 — AP Current Affairs October 2025')throw new Error('The expected October 2025 test was not found. No changes made.');
+   const {count,error:ce}=await db.from('ls_test_questions').select('id',{count:'exact',head:true}).eq('test_id',2735);
+   if(ce)throw ce;
+   if(count!==50)throw new Error('Expected 50 questions but found '+count+'. No translations attempted.');
+   say('Verified test ID 2735 and '+count+' questions. Published status remains '+test.published+'.');
+   for(const language of ['te','hi']){
+    say('Generating '+(language==='te'?'Telugu':'Hindi')+'…');
+    const {data,error}=await db.functions.invoke('translate-test',{body:{test_id:2735,language}});
+    if(error)throw new Error((language==='te'?'Telugu':'Hindi')+' translation failed: '+(error.message||error));
+    if(!data||!data.ok)throw new Error((language==='te'?'Telugu':'Hindi')+' translation failed: '+(data?.error||'No success confirmation'));
+    say((language==='te'?'Telugu':'Hindi')+': function saved '+data.count+' translations.');
+   }
+   for(const language of ['te','hi']){
+    const {count,error}=await db.from('ls_test_question_translations').select('id',{count:'exact',head:true}).eq('language',language).in('test_question_id',(await db.from('ls_test_questions').select('id').eq('test_id',2735)).data.map(x=>x.id));
+    if(error)throw error;
+    say((language==='te'?'Telugu':'Hindi')+' database rows: '+count+'/50');
+    if(count!==50)throw new Error('Verification failed for '+language+': expected 50 translation rows, found '+count+'.');
+   }
+   say('SUCCESS: both translation sets verified. Test remains unpublished for content review.');
+  }catch(e){say('ERROR: '+(e?.message||String(e)));console.error(e)}
+  finally{btn.disabled=false}
+ };
+})();
+</script></body></html>
